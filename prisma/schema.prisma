@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  student
+  teacher
+  admin
+}
+
+model User {
+  id        String    @id @default(uuid()) @db.Uuid
+  visitorId String?   @unique
+  role      UserRole  @default(student)
+  createdAt DateTime  @default(now())
+  attempts  Attempt[]
+  variants  Variant[] @relation("VariantOwner")
+}
+
+model Attempt {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  topicId     String
+  skillId     String
+  taskId      String
+  isCorrect   Boolean
+  userAnswer  String
+  durationMs  Int
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, skillId, createdAt])
+}
+
+model Variant {
+  id          String        @id @default(uuid()) @db.Uuid
+  ownerUserId String        @db.Uuid
+  topicId      String
+  templateId   String
+  title        String
+  seed         String
+  createdAt    DateTime     @default(now())
+  owner        User         @relation("VariantOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  tasks        VariantTask[]
+
+  @@index([ownerUserId, createdAt])
+  @@index([topicId, createdAt])
+}
+
+model VariantTask {
+  id          String   @id @default(uuid()) @db.Uuid
+  variantId   String   @db.Uuid
+  taskId      String
+  sectionLabel String
+  orderIndex   Int
+  variant      Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([variantId, orderIndex])
+  @@index([variantId, sectionLabel])
+}

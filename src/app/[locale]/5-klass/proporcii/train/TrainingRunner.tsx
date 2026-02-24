@@ -6,6 +6,7 @@ import { MarkdownMath } from "@/lib/ui/MarkdownMath";
 import type { Task } from "@/lib/tasks/schema";
 
 const STORAGE_KEY = "attempts:g5.proporcii";
+const TOPIC_ID = "g5.proporcii";
 
 type TrainingTask = Pick<Task, "id" | "skill_id" | "statement_md" | "answer">;
 
@@ -59,6 +60,33 @@ function writeStoredAttempt(attempt: AttemptRecord) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {
     // Ignore localStorage write failures; training UI should still work.
+  }
+}
+
+async function persistAttempt(
+  attempt: AttemptRecord,
+  payload: {
+    topicId: string;
+    skillId: string;
+    taskId: string;
+    isCorrect: boolean;
+    userAnswer: string;
+    durationMs: number;
+  },
+) {
+  try {
+    const response = await fetch("/api/attempts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    });
+
+    if (!response.ok) {
+      writeStoredAttempt(attempt);
+    }
+  } catch {
+    writeStoredAttempt(attempt);
   }
 }
 
@@ -133,7 +161,7 @@ export default function TrainingRunner({
       { taskId: currentTask.id, isCorrect: ok, taskElapsedMs },
     ]);
 
-    writeStoredAttempt({
+    const attemptRecord: AttemptRecord = {
       session_id: sessionId,
       task_id: currentTask.id,
       skill_id: currentTask.skill_id,
@@ -144,6 +172,15 @@ export default function TrainingRunner({
       task_elapsed_ms: taskElapsedMs,
       total_elapsed_ms: totalMs,
       checked_at: new Date().toISOString(),
+    };
+
+    void persistAttempt(attemptRecord, {
+      topicId: TOPIC_ID,
+      skillId: currentTask.skill_id,
+      taskId: currentTask.id,
+      isCorrect: ok,
+      userAnswer: inputValue,
+      durationMs: taskElapsedMs,
     });
   }
 

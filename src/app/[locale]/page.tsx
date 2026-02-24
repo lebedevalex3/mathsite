@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { Container } from "@/src/components/ui/Container";
+import { HomeProgressCta } from "@/src/components/ui/HomeProgressCta";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 
 type PageProps = {
@@ -61,6 +63,9 @@ const copy = {
 
 export default async function LocaleHomePage({ params }: PageProps) {
   const { locale } = await params;
+  if (!(locale in copy)) {
+    notFound();
+  }
   const t = copy[locale];
 
   return (
@@ -79,12 +84,7 @@ export default async function LocaleHomePage({ params }: PageProps) {
               {t.heroSubtitle}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <ButtonLink
-                href={`/${locale}/5-klass/proporcii/trainer`}
-                variant="primary"
-              >
-                Начать тренировку
-              </ButtonLink>
+              <HomeProgressCta locale={locale} />
               <ButtonLink href={`/${locale}/5-klass/proporcii`} variant="secondary">
                 Открыть тему «Пропорции»
               </ButtonLink>

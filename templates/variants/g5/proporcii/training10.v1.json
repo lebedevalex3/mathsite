@@ -1,0 +1,29 @@
+{
+  "id": "g5.proporcii.training10.v1",
+  "title": "Тренировочный вариант (10 заданий)",
+  "topicId": "g5.proporcii",
+  "sections": [
+    {
+      "label": "Основное свойство пропорции",
+      "skillIds": [
+        "g5.proporcii.naiti_neizvestnyi_krainei",
+        "g5.proporcii.naiti_neizvestnyi_srednii"
+      ],
+      "count": 6,
+      "difficulty": [1, 4]
+    },
+    {
+      "label": "Задачи на цену и масштаб",
+      "skillIds": [
+        "g5.proporcii.reshit_zadachu_na_cenu",
+        "g5.proporcii.reshit_zadachu_na_masshtab"
+      ],
+      "count": 4,
+      "difficulty": [1, 4]
+    }
+  ],
+  "header": {
+    "gradeLabel": "5 класс",
+    "topicLabel": "Пропорции"
+  }
+}

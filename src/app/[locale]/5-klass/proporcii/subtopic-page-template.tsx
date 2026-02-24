@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { getTasksForTopic } from "@/lib/tasks/query";
 import { ArticleProse } from "@/src/components/ui/ArticleProse";
@@ -16,9 +17,15 @@ type TemplateProps = {
   locale: string;
   slug: ProporciiSubtopic["slug"];
   intro: string;
+  children?: ReactNode;
 };
 
-export async function SubtopicPageTemplate({ locale, slug, intro }: TemplateProps) {
+export async function SubtopicPageTemplate({
+  locale,
+  slug,
+  intro,
+  children,
+}: TemplateProps) {
   const subtopic = getSubtopicBySlug(slug);
   if (!subtopic) return null;
 
@@ -100,32 +107,36 @@ export async function SubtopicPageTemplate({ locale, slug, intro }: TemplateProp
 
       <SurfaceCard className="p-6">
         <ArticleProse className="max-w-none">
-          <h2>Определение / идея</h2>
-          <p>{subtopic.description}</p>
+          {children ?? (
+            <>
+              <h2>Определение / идея</h2>
+              <p>{subtopic.description}</p>
 
-          <h2>Алгоритм</h2>
-          <ol>
-            <li>Определи, какие величины связаны и как именно.</li>
-            <li>Запиши отношение или пропорцию в одном порядке величин.</li>
-            <li>Примени нужное правило и найди неизвестное.</li>
-            <li>Проверь ответ по смыслу задачи.</li>
-          </ol>
+              <h2>Алгоритм</h2>
+              <ol>
+                <li>Определи, какие величины связаны и как именно.</li>
+                <li>Запиши отношение или пропорцию в одном порядке величин.</li>
+                <li>Примени нужное правило и найди неизвестное.</li>
+                <li>Проверь ответ по смыслу задачи.</li>
+              </ol>
 
-          <h2>Примеры</h2>
-          <p>Добавьте 2-3 разобранных примера для этой подтемы (MVP-заглушка).</p>
+              <h2>Примеры</h2>
+              <p>Добавьте 2-3 разобранных примера для этой подтемы (MVP-заглушка).</p>
 
-          <h2>Типичные ошибки</h2>
-          <ul>
-            <li>Перепутан порядок величин в отношениях.</li>
-            <li>Составлена пропорция из несоответствующих единиц измерения.</li>
-            <li>Нет проверки полученного ответа.</li>
-          </ul>
+              <h2>Типичные ошибки</h2>
+              <ul>
+                <li>Перепутан порядок величин в отношениях.</li>
+                <li>Составлена пропорция из несоответствующих единиц измерения.</li>
+                <li>Нет проверки полученного ответа.</li>
+              </ul>
 
-          <h2>Практика</h2>
-          <p>
-            Ниже размещён каталог навыков этой подтемы: можно найти нужный навык,
-            открыть объяснение или перейти в тренажёр.
-          </p>
+              <h2>Практика</h2>
+              <p>
+                Ниже размещён каталог навыков этой подтемы: можно найти нужный навык,
+                открыть объяснение или перейти в тренажёр.
+              </p>
+            </>
+          )}
         </ArticleProse>
       </SurfaceCard>
 
