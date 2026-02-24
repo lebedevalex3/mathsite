@@ -300,6 +300,8 @@ Teacher API endpoints возвращают нормализованные оши
 - `DB_NOT_READY` — миграции не применены / схема БД не готова
 - `PRISMA_CLIENT_ERROR` — Prisma client не сгенерирован или не инициализировался
 
+Все `/api/teacher/*` endpoints (кроме dev-only `POST /api/teacher/become`) требуют роль `teacher`/`admin` и возвращают `403` (`FORBIDDEN`) при отсутствии роли.
+
 ## G. Print / PDF
 
 ### Print pages (работают без PDF)
