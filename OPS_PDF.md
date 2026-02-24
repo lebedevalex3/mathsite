@@ -7,6 +7,9 @@
 - staging/prod
 - self-hosted deployment
 
+После выкладки/изменений PDF или teacher flow прогоните короткий smoke-check:
+- `SMOKE_CHECKLIST.md`
+
 ## A. Overview
 
 ### Что делает PDF export
@@ -351,4 +354,3 @@ curl -I "$BASE_URL/ru"
    - Linux libs установлены
    - `BASE_URL` корректен
 4. Повтори проверку endpoint
-
