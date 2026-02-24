@@ -237,6 +237,14 @@ pnpm dev
 
 ### Как получить роль teacher
 
+Сначала включите dev-only endpoint в `.env.local`:
+
+```bash
+ALLOW_DEV_BECOME_TEACHER=1
+```
+
+И перезапустите `pnpm dev`.
+
 Вариант 1 (UI, рекомендуемый):
 - открыть `/{locale}/teacher/variants`
 - нажать `Стать учителем (dev)`
@@ -247,9 +255,18 @@ pnpm dev
 curl -X POST http://localhost:3000/api/teacher/become
 ```
 
+Если флаг не включён, endpoint вернёт:
+
+```json
+{"code":"DISABLED","message":"Endpoint disabled in production."}
+```
+
+со статусом `404`.
+
 Важно:
 - роль привязана к текущему анонимному `visitor_id` cookie
 - для `curl` без cookie это будет отдельный анонимный пользователь
+- в production этот endpoint должен быть отключён (не включать `ALLOW_DEV_BECOME_TEACHER`)
 
 ### Где работать с вариантами
 

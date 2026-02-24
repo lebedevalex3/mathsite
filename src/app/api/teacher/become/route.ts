@@ -7,6 +7,13 @@ import { getCurrentUserWithRole } from "@/src/lib/variants/auth";
 export const runtime = "nodejs";
 
 export async function POST() {
+  if (process.env.ALLOW_DEV_BECOME_TEACHER !== "1") {
+    return NextResponse.json(
+      { code: "DISABLED", message: "Endpoint disabled in production." },
+      { status: 404 },
+    );
+  }
+
   const cookieStore = await cookies();
   const user = await getCurrentUserWithRole(cookieStore);
 
