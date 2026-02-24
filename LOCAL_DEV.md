@@ -299,6 +299,9 @@ API пытается:
 
 Это ожидаемый fallback для MVP.
 
+Для production/staging настройки и диагностики PDF см. отдельный документ:
+- `OPS_PDF.md`
+
 ### Настройка PDF (локально)
 
 #### 1) Установить зависимости
@@ -487,4 +490,3 @@ pnpm dev
 ```bash
 pnpm validate:tasks
 ```
-
