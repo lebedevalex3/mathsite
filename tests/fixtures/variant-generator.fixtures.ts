@@ -35,6 +35,8 @@ export function createTaskBankFixture(): Task[] {
 
   addSeries("g5.proporcii.naiti_neizvestnyi_krainei", 12, [1, 2, 3, 4]);
   addSeries("g5.proporcii.naiti_neizvestnyi_srednii", 12, [1, 2, 3, 4]);
+  addSeries("g5.proporcii.primenit_svoistvo_proporcii", 12, [1, 2, 3, 4]);
+  addSeries("g5.proporcii.proverit_proporciyu", 12, [1, 2, 3, 4]);
   addSeries("g5.proporcii.reshit_zadachu_na_cenu", 12, [1, 2, 3, 4]);
   addSeries("g5.proporcii.reshit_zadachu_na_masshtab", 12, [2, 3, 4]);
 

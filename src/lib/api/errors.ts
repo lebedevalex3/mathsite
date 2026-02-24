@@ -96,6 +96,10 @@ export function toApiError(error: unknown, options: ToApiErrorOptions = {}): Api
   }
 
   if (isErrorWithMessage(error)) {
+    if (hasCodeAndDetails(error) && error.code === "INVALID_TEMPLATE") {
+      return apiError(422, "INVALID_TEMPLATE", "Invalid variant template.", error.details);
+    }
+
     if (hasCodeAndDetails(error) && error.code === "INSUFFICIENT_TASKS") {
       return apiError(
         422,
