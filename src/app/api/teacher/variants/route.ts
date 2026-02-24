@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { badRequest, notFound, toApiError } from "@/src/lib/api/errors";
 import { requireTeacherFromCookies } from "@/src/lib/variants/auth";
 import { generateAndSaveVariant } from "@/src/lib/variants/generator";
 import { listVariantsForOwner } from "@/src/lib/variants/repository";
@@ -27,14 +28,8 @@ export async function GET() {
       })),
     });
   } catch (error) {
-    const status =
-      error instanceof Error && "status" in error && typeof error.status === "number"
-        ? error.status
-        : 500;
-    return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Failed to load variants" },
-      { status },
-    );
+    const { status, body } = toApiError(error, { defaultMessage: "Failed to load variants." });
+    return NextResponse.json(body, { status });
   }
 }
 
@@ -43,15 +38,14 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
+    const { status, body } = badRequest("Invalid JSON");
+    return NextResponse.json(body, { status });
   }
 
   const payload = body as { templateId?: unknown; topicId?: unknown };
   if (typeof payload.templateId !== "string" || typeof payload.topicId !== "string") {
-    return NextResponse.json(
-      { ok: false, error: "templateId and topicId are required" },
-      { status: 400 },
-    );
+    const { status, body } = badRequest("templateId and topicId are required");
+    return NextResponse.json(body, { status });
   }
 
   try {
@@ -59,7 +53,8 @@ export async function POST(request: Request) {
     const user = await requireTeacherFromCookies(cookieStore);
     const template = await getVariantTemplateById(payload.topicId, payload.templateId);
     if (!template) {
-      return NextResponse.json({ ok: false, error: "Template not found" }, { status: 404 });
+      const { status, body } = notFound("Template not found");
+      return NextResponse.json(body, { status });
     }
 
     const result = await generateAndSaveVariant({
@@ -70,13 +65,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ ok: true, variantId: result.variantId, seed: result.seed });
   } catch (error) {
-    const status =
-      error instanceof Error && "status" in error && typeof error.status === "number"
-        ? error.status
-        : 500;
-    return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Failed to generate variant" },
-      { status },
-    );
+    const { status, body } = toApiError(error, { defaultMessage: "Failed to generate variant." });
+    return NextResponse.json(body, { status });
   }
 }

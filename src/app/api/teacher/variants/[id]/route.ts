@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { notFound, toApiError } from "@/src/lib/api/errors";
 import { requireTeacherFromCookies } from "@/src/lib/variants/auth";
 import { getVariantDetailForOwner } from "@/src/lib/variants/repository";
 
@@ -18,7 +19,8 @@ export async function GET(_request: Request, { params }: RouteProps) {
     const detail = await getVariantDetailForOwner(id, user.id);
 
     if (!detail) {
-      return NextResponse.json({ ok: false, error: "Variant not found" }, { status: 404 });
+      const { status, body } = notFound("Variant not found");
+      return NextResponse.json(body, { status });
     }
 
     const groups = new Map<
@@ -57,13 +59,7 @@ export async function GET(_request: Request, { params }: RouteProps) {
       },
     });
   } catch (error) {
-    const status =
-      error instanceof Error && "status" in error && typeof error.status === "number"
-        ? error.status
-        : 500;
-    return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Failed to load variant" },
-      { status },
-    );
+    const { status, body } = toApiError(error, { defaultMessage: "Failed to load variant." });
+    return NextResponse.json(body, { status });
   }
 }

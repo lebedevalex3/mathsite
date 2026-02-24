@@ -286,6 +286,20 @@ curl -X POST http://localhost:3000/api/teacher/become
 - диапазон `difficulty`
 - `skillIds` (должны существовать в таксономии и банке задач)
 
+### Формат ошибок Teacher API (MVP)
+
+Teacher API endpoints возвращают нормализованные ошибки в формате:
+
+```json
+{ "ok": false, "code": "SOME_CODE", "message": "Human-readable message" }
+```
+
+Частые коды:
+- `FORBIDDEN` — нет роли teacher/admin
+- `INSUFFICIENT_TASKS` — шаблон нельзя собрать из текущего банка задач
+- `DB_NOT_READY` — миграции не применены / схема БД не готова
+- `PRISMA_CLIENT_ERROR` — Prisma client не сгенерирован или не инициализировался
+
 ## G. Print / PDF
 
 ### Print pages (работают без PDF)

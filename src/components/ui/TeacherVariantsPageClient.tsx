@@ -59,23 +59,25 @@ export function TeacherVariantsPageClient({
       const templatesPayload = (await templatesResponse.json()) as {
         ok?: boolean;
         error?: string;
+        message?: string;
         templates?: TemplateSummary[];
       };
       const variantsPayload = (await variantsResponse.json()) as {
         ok?: boolean;
         error?: string;
+        message?: string;
         variants?: VariantSummary[];
       };
 
       if (!templatesResponse.ok || !templatesPayload.ok) {
-        setMessage(templatesPayload.error || "Не удалось загрузить шаблоны.");
+        setMessage(templatesPayload.message || templatesPayload.error || "Не удалось загрузить шаблоны.");
         setTemplates([]);
       } else {
         setTemplates(templatesPayload.templates ?? []);
       }
 
       if (!variantsResponse.ok || !variantsPayload.ok) {
-        setMessage((prev) => prev || variantsPayload.error || "Не удалось загрузить варианты.");
+        setMessage((prev) => prev || variantsPayload.message || variantsPayload.error || "Не удалось загрузить варианты.");
         setVariants([]);
       } else {
         setVariants(variantsPayload.variants ?? []);
@@ -99,9 +101,9 @@ export function TeacherVariantsPageClient({
         method: "POST",
         credentials: "same-origin",
       });
-      const payload = (await response.json()) as { ok?: boolean; role?: typeof role; error?: string };
+      const payload = (await response.json()) as { ok?: boolean; role?: typeof role; error?: string; message?: string };
       if (!response.ok || !payload.ok || !payload.role) {
-        setMessage(payload.error || "Не удалось выдать роль учителя.");
+        setMessage(payload.message || payload.error || "Не удалось выдать роль учителя.");
         return;
       }
       setRole(payload.role);
@@ -124,9 +126,10 @@ export function TeacherVariantsPageClient({
         ok?: boolean;
         variantId?: string;
         error?: string;
+        message?: string;
       };
       if (!response.ok || !payload.ok || !payload.variantId) {
-        setMessage(payload.error || "Не удалось сгенерировать вариант.");
+        setMessage(payload.message || payload.error || "Не удалось сгенерировать вариант.");
         return;
       }
       await loadData();

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { notFound, toApiError } from "@/src/lib/api/errors";
 import { requireTeacherFromCookies } from "@/src/lib/variants/auth";
 import { renderPdfFromPrintPath } from "@/src/lib/variants/pdf";
 import { getVariantDetailForOwner } from "@/src/lib/variants/repository";
@@ -18,7 +19,8 @@ export async function GET(request: Request, { params }: RouteProps) {
     const user = await requireTeacherFromCookies(cookieStore);
     const detail = await getVariantDetailForOwner(id, user.id);
     if (!detail) {
-      return NextResponse.json({ ok: false, error: "Variant not found" }, { status: 404 });
+      const { status, body } = notFound("Variant not found");
+      return NextResponse.json(body, { status });
     }
 
     const locale = new URL(request.url).searchParams.get("locale") || "ru";
@@ -36,13 +38,10 @@ export async function GET(request: Request, { params }: RouteProps) {
 
     return response;
   } catch (error) {
-    const status =
-      error instanceof Error && "status" in error && typeof error.status === "number"
-        ? error.status
-        : 500;
-    return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Failed to export answers PDF" },
-      { status },
-    );
+    const { status, body } = toApiError(error, {
+      defaultCode: "PDF_ERROR",
+      defaultMessage: "Failed to export answers PDF.",
+    });
+    return NextResponse.json(body, { status });
   }
 }

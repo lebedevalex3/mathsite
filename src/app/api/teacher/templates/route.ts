@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { badRequest, toApiError } from "@/src/lib/api/errors";
 import { requireTeacherFromCookies } from "@/src/lib/variants/auth";
 import { listVariantTemplates } from "@/src/lib/variants/templates";
 
@@ -10,7 +11,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const topicId = searchParams.get("topicId")?.trim();
   if (!topicId) {
-    return NextResponse.json({ ok: false, error: "Missing topicId" }, { status: 400 });
+    const { status, body } = badRequest("Missing topicId");
+    return NextResponse.json(body, { status });
   }
 
   try {
@@ -34,13 +36,7 @@ export async function GET(request: Request) {
       })),
     });
   } catch (error) {
-    const status =
-      error instanceof Error && "status" in error && typeof error.status === "number"
-        ? error.status
-        : 500;
-    return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Failed to load templates" },
-      { status },
-    );
+    const { status, body } = toApiError(error, { defaultMessage: "Failed to load templates." });
+    return NextResponse.json(body, { status });
   }
 }
