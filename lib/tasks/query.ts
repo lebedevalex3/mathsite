@@ -1,7 +1,5 @@
-import path from "node:path";
-
+import { loadTaskBank } from "@/lib/taskbank";
 import { type Task } from "./schema";
-import { loadTaskBanks } from "./load";
 
 export type TopicTasksResult = {
   tasks: Task[];
@@ -9,8 +7,7 @@ export type TopicTasksResult = {
 };
 
 export async function getTasksForTopic(topicId: string): Promise<TopicTasksResult> {
-  const rootDir = path.join(process.cwd(), "data", "tasks");
-  const { banks, errors } = await loadTaskBanks(rootDir);
+  const { banks, errors } = await loadTaskBank();
 
   const tasks = banks
     .filter(({ bank }) => bank.topic_id === topicId)
@@ -21,4 +18,3 @@ export async function getTasksForTopic(topicId: string): Promise<TopicTasksResul
     errors: errors.map((error) => `${error.filePath}: ${error.message}`),
   };
 }
-
