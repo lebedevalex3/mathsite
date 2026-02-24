@@ -34,11 +34,26 @@ function apiError(
 }
 
 function hasNumericStatus(error: unknown): error is { status: number } {
-  return typeof error === "object" && error !== null && "status" in error && typeof (error as { status: unknown }).status === "number";
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    typeof (error as { status: unknown }).status === "number"
+  );
 }
 
 function isErrorWithMessage(error: unknown): error is Error {
   return error instanceof Error;
+}
+
+function hasCodeAndDetails(
+  error: unknown,
+): error is Error & { code: string; details?: unknown } {
+  return (
+    error instanceof Error &&
+    "code" in error &&
+    typeof (error as { code: unknown }).code === "string"
+  );
 }
 
 function looksLikeInsufficientTasks(error: Error) {
@@ -81,6 +96,15 @@ export function toApiError(error: unknown, options: ToApiErrorOptions = {}): Api
   }
 
   if (isErrorWithMessage(error)) {
+    if (hasCodeAndDetails(error) && error.code === "INSUFFICIENT_TASKS") {
+      return apiError(
+        422,
+        "INSUFFICIENT_TASKS",
+        "Not enough tasks to satisfy the template.",
+        error.details,
+      );
+    }
+
     if (looksLikeInsufficientTasks(error)) {
       return apiError(422, "INSUFFICIENT_TASKS", "Not enough tasks to satisfy the template.");
     }

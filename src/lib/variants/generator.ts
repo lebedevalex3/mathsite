@@ -2,7 +2,7 @@ import type { Task } from "@/lib/tasks/schema";
 import { getTasksForTopic } from "@/lib/tasks/query";
 import { prisma } from "@/src/lib/db/prisma";
 
-import { createSeededRng } from "./rng";
+import { buildVariantPlan } from "./plan";
 import type { VariantTemplate } from "./types";
 
 type GenerateVariantParams = {
@@ -14,22 +14,6 @@ type GenerateVariantParams = {
 
 function makeSeed() {
   return `${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
-}
-
-function sampleWithoutReplacement<T>(
-  items: T[],
-  count: number,
-  pickIndex: (length: number) => number,
-): T[] {
-  const pool = [...items];
-  const result: T[] = [];
-  for (let i = 0; i < count; i += 1) {
-    const index = pickIndex(pool.length);
-    const [picked] = pool.splice(index, 1);
-    if (!picked) throw new Error("Failed to pick item from non-empty pool");
-    result.push(picked);
-  }
-  return result;
 }
 
 function byTaskId(tasks: Task[]) {
@@ -47,35 +31,7 @@ export async function generateAndSaveVariant({
     throw new Error(`Task bank errors: ${errors[0]}`);
   }
 
-  const rng = createSeededRng(seed);
-  const usedTaskIds = new Set<string>();
-  const selected: Array<{ task: Task; sectionLabel: string; orderIndex: number }> = [];
-  let orderIndex = 0;
-
-  for (const section of template.sections) {
-    const [minDifficulty, maxDifficulty] = section.difficulty;
-    const candidates = tasks.filter((task) => {
-      return (
-        !usedTaskIds.has(task.id) &&
-        section.skillIds.includes(task.skill_id) &&
-        task.difficulty >= minDifficulty &&
-        task.difficulty <= maxDifficulty
-      );
-    });
-
-    if (candidates.length < section.count) {
-      throw new Error(
-        `Недостаточно задач для секции "${section.label}": нужно ${section.count}, доступно ${candidates.length}`,
-      );
-    }
-
-    const picked = sampleWithoutReplacement(candidates, section.count, rng.pickIndex);
-    for (const task of picked) {
-      usedTaskIds.add(task.id);
-      selected.push({ task, sectionLabel: section.label, orderIndex });
-      orderIndex += 1;
-    }
-  }
+  const selected = buildVariantPlan({ tasks, template, seed });
 
   const timestamp = new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "short",
