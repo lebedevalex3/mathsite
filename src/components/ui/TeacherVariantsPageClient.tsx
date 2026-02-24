@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
+import { TeacherErrorState, type TeacherApiError } from "@/src/components/ui/TeacherErrorState";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 
 type TemplateSummary = {
@@ -42,14 +43,37 @@ export function TeacherVariantsPageClient({
   const [variants, setVariants] = useState<VariantSummary[]>([]);
   const [loading, setLoading] = useState(false);
   const [busyTemplateId, setBusyTemplateId] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [error, setError] = useState<TeacherApiError | null>(null);
 
   const isTeacher = role === "teacher" || role === "admin";
+
+  function parseApiError(payload: unknown, fallbackMessage: string): TeacherApiError {
+    if (payload && typeof payload === "object") {
+      const data = payload as {
+        code?: unknown;
+        message?: unknown;
+        error?: unknown;
+        details?: unknown;
+      };
+      return {
+        code: typeof data.code === "string" ? data.code : undefined,
+        message:
+          typeof data.message === "string"
+            ? data.message
+            : typeof data.error === "string"
+              ? data.error
+              : fallbackMessage,
+        details: data.details,
+      };
+    }
+    return { message: fallbackMessage };
+  }
 
   async function loadData() {
     if (!isTeacher) return;
     setLoading(true);
-    setMessage(null);
+    setError(null);
     try {
       const [templatesResponse, variantsResponse] = await Promise.all([
         fetch("/api/teacher/templates?topicId=g5.proporcii", { credentials: "same-origin" }),
@@ -64,26 +88,28 @@ export function TeacherVariantsPageClient({
       };
       const variantsPayload = (await variantsResponse.json()) as {
         ok?: boolean;
+        code?: string;
         error?: string;
         message?: string;
+        details?: unknown;
         variants?: VariantSummary[];
       };
 
       if (!templatesResponse.ok || !templatesPayload.ok) {
-        setMessage(templatesPayload.message || templatesPayload.error || "Не удалось загрузить шаблоны.");
+        setError(parseApiError(templatesPayload, "Не удалось загрузить шаблоны."));
         setTemplates([]);
       } else {
         setTemplates(templatesPayload.templates ?? []);
       }
 
       if (!variantsResponse.ok || !variantsPayload.ok) {
-        setMessage((prev) => prev || variantsPayload.message || variantsPayload.error || "Не удалось загрузить варианты.");
+        setError((prev) => prev ?? parseApiError(variantsPayload, "Не удалось загрузить варианты."));
         setVariants([]);
       } else {
         setVariants(variantsPayload.variants ?? []);
       }
     } catch {
-      setMessage("Ошибка сети при загрузке teacher-инструментов.");
+      setError({ message: "Ошибка сети при загрузке teacher-инструментов." });
     } finally {
       setLoading(false);
     }
@@ -95,26 +121,35 @@ export function TeacherVariantsPageClient({
   }, [isTeacher]);
 
   async function handleBecomeTeacher() {
-    setMessage(null);
+    setNotice(null);
+    setError(null);
     try {
       const response = await fetch("/api/teacher/become", {
         method: "POST",
         credentials: "same-origin",
       });
-      const payload = (await response.json()) as { ok?: boolean; role?: typeof role; error?: string; message?: string };
+      const payload = (await response.json()) as {
+        ok?: boolean;
+        role?: typeof role;
+        code?: string;
+        error?: string;
+        message?: string;
+      };
       if (!response.ok || !payload.ok || !payload.role) {
-        setMessage(payload.message || payload.error || "Не удалось выдать роль учителя.");
+        setError(parseApiError(payload, "Не удалось выдать роль учителя."));
         return;
       }
       setRole(payload.role);
+      setNotice("Роль учителя выдана.");
     } catch {
-      setMessage("Ошибка сети при выдаче роли учителя.");
+      setError({ message: "Ошибка сети при выдаче роли учителя." });
     }
   }
 
   async function handleGenerate(templateId: string) {
     setBusyTemplateId(templateId);
-    setMessage(null);
+    setNotice(null);
+    setError(null);
     try {
       const response = await fetch("/api/teacher/variants", {
         method: "POST",
@@ -125,21 +160,25 @@ export function TeacherVariantsPageClient({
       const payload = (await response.json()) as {
         ok?: boolean;
         variantId?: string;
+        code?: string;
         error?: string;
         message?: string;
+        details?: unknown;
       };
       if (!response.ok || !payload.ok || !payload.variantId) {
-        setMessage(payload.message || payload.error || "Не удалось сгенерировать вариант.");
+        setError(parseApiError(payload, "Не удалось сгенерировать вариант."));
         return;
       }
       await loadData();
-      setMessage("Вариант сгенерирован.");
+      setNotice("Вариант сгенерирован.");
     } catch {
-      setMessage("Ошибка сети при генерации варианта.");
+      setError({ message: "Ошибка сети при генерации варианта." });
     } finally {
       setBusyTemplateId(null);
     }
   }
+
+  const showInitialLoading = loading && templates.length === 0 && variants.length === 0;
 
   return (
     <main className="space-y-6">
@@ -173,17 +212,48 @@ export function TeacherVariantsPageClient({
               Страница для учителей
             </ButtonLink>
           </div>
-          {message ? <p className="mt-3 text-sm text-slate-700">{message}</p> : null}
+          {notice ? <p className="mt-3 text-sm text-slate-700">{notice}</p> : null}
+          {error ? <TeacherErrorState error={error} locale={locale} className="mt-4 p-4" /> : null}
         </SurfaceCard>
       ) : (
         <>
-          {message ? (
+          {notice ? (
             <SurfaceCard className="p-4">
-              <p className="text-sm text-slate-700">{message}</p>
+              <p className="text-sm text-slate-700">{notice}</p>
             </SurfaceCard>
           ) : null}
+          {error ? <TeacherErrorState error={error} locale={locale} /> : null}
 
-          <section className="space-y-3">
+          {showInitialLoading ? (
+            <>
+              <section className="space-y-3">
+                <div className="h-8 w-40 animate-pulse rounded bg-slate-200" />
+                <div className="space-y-3">
+                  {[0, 1].map((index) => (
+                    <SurfaceCard key={`tpl-skeleton-${index}`} className="p-4">
+                      <div className="space-y-3">
+                        <div className="h-5 w-64 animate-pulse rounded bg-slate-200" />
+                        <div className="h-4 w-40 animate-pulse rounded bg-slate-100" />
+                        <div className="h-4 w-full animate-pulse rounded bg-slate-100" />
+                        <div className="h-4 w-5/6 animate-pulse rounded bg-slate-100" />
+                      </div>
+                    </SurfaceCard>
+                  ))}
+                </div>
+              </section>
+              <section className="space-y-3">
+                <div className="h-8 w-52 animate-pulse rounded bg-slate-200" />
+                <SurfaceCard className="p-4">
+                  <div className="space-y-3">
+                    <div className="h-5 w-72 animate-pulse rounded bg-slate-200" />
+                    <div className="h-4 w-48 animate-pulse rounded bg-slate-100" />
+                  </div>
+                </SurfaceCard>
+              </section>
+            </>
+          ) : null}
+
+          <section className={`space-y-3 ${showInitialLoading ? "hidden" : ""}`}>
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
                 Шаблоны
@@ -193,10 +263,17 @@ export function TeacherVariantsPageClient({
                 onClick={() => void loadData()}
                 className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50"
               >
-                Обновить
+                {loading ? "Обновление..." : "Обновить"}
               </button>
             </div>
             <div className="space-y-3">
+              {templates.length === 0 ? (
+                <SurfaceCard className="p-4">
+                  <p className="text-sm text-slate-600">
+                    Шаблоны недоступны или ещё не загружены.
+                  </p>
+                </SurfaceCard>
+              ) : null}
               {templates.map((template) => (
                 <SurfaceCard key={template.id} className="p-4">
                   <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
@@ -227,13 +304,21 @@ export function TeacherVariantsPageClient({
             </div>
           </section>
 
-          <section className="space-y-3">
-            <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
-              Последние варианты
-            </h2>
+          <section className={`space-y-3 ${showInitialLoading ? "hidden" : ""}`}>
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
+                Последние варианты
+              </h2>
+              {loading ? <p className="text-xs text-slate-500">Загрузка...</p> : null}
+            </div>
             {variants.length === 0 ? (
-              <SurfaceCard className="p-4">
-                <p className="text-sm text-slate-600">Пока нет сгенерированных вариантов.</p>
+              <SurfaceCard className="p-5">
+                <h3 className="text-sm font-semibold text-slate-900">
+                  Пока нет сгенерированных вариантов
+                </h3>
+                <p className="mt-2 text-sm text-slate-600">
+                  Выберите шаблон выше и нажмите «Сгенерировать», чтобы создать первый вариант.
+                </p>
               </SurfaceCard>
             ) : (
               <div className="space-y-3">

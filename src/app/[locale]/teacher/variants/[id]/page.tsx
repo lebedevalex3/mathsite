@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { TeacherErrorState } from "@/src/components/ui/TeacherErrorState";
+import { toApiError } from "@/src/lib/api/errors";
 import { requireTeacherFromCookies } from "@/src/lib/variants/auth";
 import { getVariantDetailForOwner } from "@/src/lib/variants/repository";
 import { MarkdownMath } from "@/lib/ui/MarkdownMath";
@@ -13,34 +15,31 @@ type PageProps = {
 
 export default async function TeacherVariantDetailPage({ params }: PageProps) {
   const { locale, id } = await params;
-  const cookieStore = await cookies();
-
   let userId: string;
   try {
+    const cookieStore = await cookies();
     const user = await requireTeacherFromCookies(cookieStore);
     userId = user.id;
-  } catch {
+  } catch (error) {
+    const { body } = toApiError(error, { defaultMessage: "Failed to load variant." });
     return (
       <main className="space-y-4">
-        <SurfaceCard className="p-6">
-          <h1 className="text-2xl font-semibold text-slate-950">Доступ только для учителя</h1>
-          <p className="mt-2 text-sm text-slate-600">
-            Перейдите на страницу инструментов учителя и выдайте роль для dev-режима.
-          </p>
-          <div className="mt-4">
-            <Link
-              href={`/${locale}/teacher/variants`}
-              className="text-sm font-medium text-blue-700 hover:text-blue-900"
-            >
-              Открыть teacher / variants
-            </Link>
-          </div>
-        </SurfaceCard>
+        <TeacherErrorState error={body} locale={locale} />
       </main>
     );
   }
 
-  const detail = await getVariantDetailForOwner(id, userId);
+  let detail;
+  try {
+    detail = await getVariantDetailForOwner(id, userId);
+  } catch (error) {
+    const { body } = toApiError(error, { defaultMessage: "Failed to load variant." });
+    return (
+      <main className="space-y-4">
+        <TeacherErrorState error={body} locale={locale} />
+      </main>
+    );
+  }
   if (!detail) notFound();
 
   const sections = new Map<typeof detail.tasks[number]["sectionLabel"], typeof detail.tasks>();
