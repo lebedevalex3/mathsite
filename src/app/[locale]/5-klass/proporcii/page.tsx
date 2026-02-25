@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-import { MarkdownMath } from "@/lib/ui/MarkdownMath";
-import { ArticleProse } from "@/src/components/ui/ArticleProse";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { TopicMapCard } from "@/src/components/topic/TopicMapCard";
+import { topicMaps } from "@/src/lib/topicMaps";
 
 import {
   proporciiSkills,
@@ -16,6 +16,8 @@ type PageProps = {
 
 export default async function ProporciiTopicPage({ params }: PageProps) {
   const { locale } = await params;
+  const topicMap = topicMaps["g5.proporcii"];
+  const readConspetsHref = `/${locale}/5-klass/proporcii/rule`;
 
   return (
     <main className="space-y-6">
@@ -28,7 +30,7 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
           </li>
           <li>/</li>
           <li>
-            <span>5 класс</span>
+            <span>{locale === "ru" ? "Арифметика" : locale === "de" ? "Arithmetik" : "Arithmetic"}</span>
           </li>
           <li>/</li>
           <li className="font-medium text-slate-950">Пропорции</li>
@@ -38,59 +40,40 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
-              Тема • 5 класс
-            </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-              Пропорции
-            </h1>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">Тема</p>
+              <span className="rounded-full border border-slate-300 bg-slate-50 px-2.5 py-0.5 text-xs font-semibold text-slate-700">
+                Level 5
+              </span>
+            </div>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Пропорции</h1>
             <p className="mt-3 text-base leading-7 text-slate-600">
               Короткий конспект, микро-умения и тренировки по навыкам в формате
               «10 задач подряд».
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <ButtonLink href={`/${locale}/5-klass/proporcii`} variant="secondary">
-              PDF (скоро)
-            </ButtonLink>
             <ButtonLink
               href={`/${locale}/5-klass/proporcii/trainer`}
               variant="primary"
             >
               Тренировать
             </ButtonLink>
+            <ButtonLink href={readConspetsHref} variant="secondary">
+              Читать конспекты
+            </ButtonLink>
           </div>
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+      {topicMap ? (
+        <TopicMapCard map={topicMap} />
+      ) : (
         <SurfaceCard className="p-6">
-          <ArticleProse className="max-w-none">
-            <h2>Быстрый конспект</h2>
-            <p>Основное свойство пропорции:</p>
-            <MarkdownMath>{`$$\\frac{a}{b}=\\frac{c}{d}\\Rightarrow ad=bc$$`}</MarkdownMath>
-            <p>
-              Обычно решение сводится к применению свойства пропорции и выражению
-              неизвестного члена.
-            </p>
-          </ArticleProse>
+          <h2 className="text-lg font-semibold text-slate-950">Карта темы</h2>
+          <p className="mt-2 text-sm text-slate-600">Карта темы скоро появится.</p>
         </SurfaceCard>
-
-        <SurfaceCard className="p-6">
-          <h2 className="text-lg font-semibold text-slate-950">Действия в теме</h2>
-          <ul className="mt-4 space-y-3 text-sm text-slate-700">
-            <li className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              Открой микро-умение и разберите типовой алгоритм.
-            </li>
-            <li className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              Перейди в тренажёр по конкретному навыку.
-            </li>
-            <li className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              Реши 10 задач подряд и сравни время/точность.
-            </li>
-          </ul>
-        </SurfaceCard>
-      </section>
+      )}
 
       <section className="space-y-4">
         <div className="flex items-end justify-between gap-4">
