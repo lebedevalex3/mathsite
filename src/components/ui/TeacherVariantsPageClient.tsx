@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { TeacherErrorState, type TeacherApiError } from "@/src/components/ui/TeacherErrorState";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { formatDateTime, formatNumber } from "@/src/lib/i18n/format";
 
 type TemplateSummary = {
   id: string;
@@ -382,7 +383,7 @@ export function TeacherVariantsPageClient({
                       <div className="min-w-0">
                         <h3 className="text-base font-semibold text-slate-950">{variant.title}</h3>
                         <p className="mt-1 text-sm text-slate-600">
-                          {new Date(variant.createdAt).toLocaleString("ru-RU")} • {variant.tasksCount} задач
+                          {formatDateTime(locale, variant.createdAt)} • {formatNumber(locale, variant.tasksCount)} задач
                         </p>
                       </div>
                       <div className="flex shrink-0 flex-wrap gap-2">

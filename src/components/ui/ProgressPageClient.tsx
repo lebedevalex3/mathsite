@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { formatNumber, formatPercent } from "@/src/lib/i18n/format";
 import type { SkillProgressMap } from "@/src/lib/progress/types";
 
 type SubtopicItem = {
@@ -149,10 +150,6 @@ const copy = {
   },
 } as const;
 
-function percent(value: number) {
-  return `${Math.round(value * 100)}%`;
-}
-
 function buildSkillReadHref(locale: string, skillSlug: string) {
   return `/${locale}/5-klass/proporcii/skills/${skillSlug}`;
 }
@@ -172,6 +169,10 @@ export function ProgressPageClient({
   skills,
 }: ProgressPageClientProps) {
   const t = copy[locale];
+  const percent = (value: number) => formatPercent(locale, value, { valueKind: "ratio" });
+  const integer = (value: number | null | undefined) =>
+    formatNumber(locale, value, { maximumFractionDigits: 0 });
+
   const [state, setState] = useState<LoadState>({ status: "loading", progress: {} });
   const [compareState, setCompareState] = useState<CompareState>({
     status: "loading",
@@ -377,11 +378,11 @@ export function ProgressPageClient({
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               {t.summaryAttempts}
             </p>
-            <p className="mt-1 text-2xl font-semibold text-slate-950">{derived.totalAttempts}</p>
+            <p className="mt-1 text-2xl font-semibold text-slate-950">{integer(derived.totalAttempts)}</p>
           </div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Верно</p>
-            <p className="mt-1 text-2xl font-semibold text-slate-950">{derived.totalCorrect}</p>
+            <p className="mt-1 text-2xl font-semibold text-slate-950">{integer(derived.totalCorrect)}</p>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
@@ -419,8 +420,11 @@ export function ProgressPageClient({
                 {t.comparePercentile}
               </p>
               <p className="mt-1 text-2xl font-semibold text-slate-950">
-                {compareState.data.percentile !== null
-                  ? `${Math.round(compareState.data.percentile)}%`
+              {compareState.data.percentile !== null
+                  ? formatPercent(locale, compareState.data.percentile, {
+                      valueKind: "percent",
+                      maximumFractionDigits: 0,
+                    })
                   : "—"}
               </p>
             </div>
@@ -440,7 +444,7 @@ export function ProgressPageClient({
               </p>
               <p className="mt-1 text-2xl font-semibold text-slate-950">
                 {compareState.data.platform.medianTotal !== null
-                  ? Math.round(compareState.data.platform.medianTotal)
+                  ? integer(compareState.data.platform.medianTotal)
                   : "—"}
               </p>
             </div>
@@ -460,7 +464,7 @@ export function ProgressPageClient({
                   <p className="text-sm font-semibold text-slate-950">{row.title}</p>
                   <p className="mt-1 text-xs text-slate-600">
                     {row.attempts > 0
-                      ? `${percent(row.accuracy)} • ${row.correct}/${row.attempts}`
+                      ? `${percent(row.accuracy)} • ${integer(row.correct)}/${integer(row.attempts)}`
                       : t.noAttemptsShort}
                   </p>
                 </div>
@@ -505,7 +509,9 @@ export function ProgressPageClient({
                       ) : null}
                     </div>
                     <p className="mt-1 text-sm text-slate-600">
-                      {progress ? `${percent(progress.accuracy)} (${progress.correct}/${progress.total})` : "—"}
+                      {progress
+                        ? `${percent(progress.accuracy)} (${integer(progress.correct)}/${integer(progress.total)})`
+                        : "—"}
                     </p>
                   </div>
                   <div className="flex shrink-0 flex-wrap gap-2">
