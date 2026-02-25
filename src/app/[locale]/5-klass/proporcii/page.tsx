@@ -67,7 +67,7 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
       </section>
 
       {topicMap ? (
-        <TopicMapCard map={topicMap} />
+        <TopicMapCard map={topicMap} locale={locale} />
       ) : (
         <SurfaceCard className="p-6">
           <h2 className="text-lg font-semibold text-slate-950">Карта темы</h2>

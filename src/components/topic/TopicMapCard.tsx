@@ -1,17 +1,35 @@
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import type { TopicMapData } from "@/src/lib/topicMaps";
 
-import { SkillMap } from "./SkillMap";
+import { SkillMapFlow } from "./SkillMapFlow";
 
 type TopicMapCardProps = {
   title?: string;
   map: TopicMapData;
+  locale?: string;
 };
 
 export function TopicMapCard({
   title = "Карта темы",
   map,
+  locale = "ru",
 }: TopicMapCardProps) {
+  const mapNodes = map.skills.nodes.map((node) => ({
+    id: node.id,
+    title: node.title,
+    subtitle: node.subtitle,
+    status: node.status,
+    href:
+      node.status === "soon" || !node.skillId
+        ? undefined
+        : `/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(node.skillId)}`,
+  }));
+
+  const mapEdges = map.skills.edges.map((edge) => ({
+    from: edge.from,
+    to: edge.to,
+  }));
+
   return (
     <SurfaceCard className="p-6 sm:p-8">
       <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
@@ -64,14 +82,13 @@ export function TopicMapCard({
             Схема навыков
           </h3>
           <p className="mt-1 text-xs text-slate-500">
-            Ветвления показывают порядок освоения и зависимость навыков.
+            Ветвления показывают порядок освоения. Нажми на навык, чтобы начать тренировку.
           </p>
           <div className="mt-3">
-            <SkillMap nodes={map.skills.nodes} edges={map.skills.edges} />
+            <SkillMapFlow nodes={mapNodes} edges={mapEdges} />
           </div>
         </section>
       </div>
     </SurfaceCard>
   );
 }
-

@@ -12,15 +12,17 @@
     "validate:tasks": "tsx scripts/validate-tasks.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.4.1",
     "@mdx-js/loader": "^3.1.1",
     "@next/mdx": "^16.1.6",
+    "@prisma/client": "^6.4.1",
+    "dagre": "^0.8.5",
     "katex": "^0.16.33",
     "next": "16.1.6",
     "puppeteer": "^24.4.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
+    "reactflow": "^11.11.4",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0"
   },

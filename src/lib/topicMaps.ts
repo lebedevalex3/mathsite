@@ -1,12 +1,14 @@
 export type TopicMapNode = {
   id: string;
   title: string;
+  subtitle?: string;
+  status?: "ready" | "soon";
+  skillId?: string;
 };
 
 export type TopicMapEdge = {
-  id: string;
-  source: string;
-  target: string;
+  from: string;
+  to: string;
 };
 
 export type TopicMapData = {
@@ -38,20 +40,44 @@ export const topicMaps: Record<string, TopicMapData> = {
     ],
     skills: {
       nodes: [
-        { id: "recognize", title: "Распознать пропорцию" },
-        { id: "check", title: "Проверить пропорцию" },
-        { id: "find_outer", title: "Найти неизвестный крайний" },
-        { id: "find_middle", title: "Найти неизвестный средний" },
-        { id: "word_problems", title: "Решать задачи на пропорции" },
+        {
+          id: "recognize",
+          title: "Распознать пропорцию",
+          status: "soon",
+          skillId: "g5.proporcii.raspoznat_proporciyu",
+        },
+        {
+          id: "check",
+          title: "Проверить пропорцию",
+          status: "ready",
+          skillId: "g5.proporcii.proverit_proporciyu",
+        },
+        {
+          id: "find_outer",
+          title: "Найти неизвестный крайний",
+          status: "ready",
+          skillId: "g5.proporcii.naiti_neizvestnyi_krainei",
+        },
+        {
+          id: "find_middle",
+          title: "Найти неизвестный средний",
+          status: "ready",
+          skillId: "g5.proporcii.naiti_neizvestnyi_srednii",
+        },
+        {
+          id: "word_problems",
+          title: "Решать задачи на пропорции",
+          status: "ready",
+          skillId: "g5.proporcii.reshit_zadachu_na_masshtab",
+        },
       ],
       edges: [
-        { id: "e1", source: "recognize", target: "check" },
-        { id: "e2", source: "check", target: "find_outer" },
-        { id: "e3", source: "check", target: "find_middle" },
-        { id: "e4", source: "find_outer", target: "word_problems" },
-        { id: "e5", source: "find_middle", target: "word_problems" },
+        { from: "recognize", to: "check" },
+        { from: "check", to: "find_outer" },
+        { from: "check", to: "find_middle" },
+        { from: "find_outer", to: "word_problems" },
+        { from: "find_middle", to: "word_problems" },
       ],
     },
   },
 };
-
