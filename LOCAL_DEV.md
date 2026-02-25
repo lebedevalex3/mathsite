@@ -298,7 +298,13 @@ Teacher API endpoints возвращают нормализованные оши
 - `FORBIDDEN` — нет роли teacher/admin
 - `INSUFFICIENT_TASKS` — шаблон нельзя собрать из текущего банка задач
 - `DB_NOT_READY` — миграции не применены / схема БД не готова
+- `DB_CONNECTION_FAILED` — API не может подключиться к Postgres
 - `PRISMA_CLIENT_ERROR` — Prisma client не сгенерирован или не инициализировался
+
+В `development` для Prisma-ошибок (`DB_NOT_READY`, `DB_CONNECTION_FAILED`, `PRISMA_CLIENT_ERROR`) API может возвращать дополнительные поля `hints` / `steps` с подсказками:
+- `pnpm prisma migrate dev`
+- `pnpm prisma generate`
+- `docker compose up -d`
 
 Все `/api/teacher/*` endpoints (кроме dev-only `POST /api/teacher/become`) требуют роль `teacher`/`admin` и возвращают `403` (`FORBIDDEN`) при отсутствии роли.
 
