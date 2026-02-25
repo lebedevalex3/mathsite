@@ -15,10 +15,28 @@ export type TopicMapData = {
   essence: string[];
   algorithm: string[];
   pitfalls: string[];
+  path: TopicSkillPath;
   skills: {
     nodes: TopicMapNode[];
     edges: TopicMapEdge[];
   };
+};
+
+export type TopicSkillStepRef =
+  | { type: "skill"; id: string }
+  | {
+      type: "branch";
+      id: string;
+      options: Array<{
+        key: string;
+        label: string;
+        steps: TopicSkillStepRef[];
+      }>;
+      convergeTo?: string;
+    };
+
+export type TopicSkillPath = {
+  steps: TopicSkillStepRef[];
 };
 
 export const topicMaps: Record<string, TopicMapData> = {
@@ -38,6 +56,29 @@ export const topicMaps: Record<string, TopicMapData> = {
       "Путают крайние и средние члены пропорции.",
       "Делят не ту пару чисел и нарушают правило крест-накрест.",
     ],
+    path: {
+      steps: [
+        { type: "skill", id: "recognize" },
+        { type: "skill", id: "check" },
+        {
+          type: "branch",
+          id: "solve-unknown",
+          options: [
+            {
+              key: "extreme",
+              label: "Крайний",
+              steps: [{ type: "skill", id: "find_outer" }],
+            },
+            {
+              key: "mean",
+              label: "Средний",
+              steps: [{ type: "skill", id: "find_middle" }],
+            },
+          ],
+          convergeTo: "word_problems",
+        },
+      ],
+    },
     skills: {
       nodes: [
         {

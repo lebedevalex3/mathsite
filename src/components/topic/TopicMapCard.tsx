@@ -1,7 +1,7 @@
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import type { TopicMapData } from "@/src/lib/topicMaps";
 
-import { SkillMapFlow } from "./SkillMapFlow";
+import { SkillStepper } from "./SkillStepper";
 
 type TopicMapCardProps = {
   title?: string;
@@ -23,11 +23,6 @@ export function TopicMapCard({
       node.status === "soon" || !node.skillId
         ? undefined
         : `/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(node.skillId)}`,
-  }));
-
-  const mapEdges = map.skills.edges.map((edge) => ({
-    from: edge.from,
-    to: edge.to,
   }));
 
   return (
@@ -79,13 +74,13 @@ export function TopicMapCard({
 
         <section className="rounded-2xl border border-slate-200 bg-white p-4">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700">
-            Схема навыков
+            Путь навыков
           </h3>
           <p className="mt-1 text-xs text-slate-500">
-            Ветвления показывают порядок освоения. Нажми на навык, чтобы начать тренировку.
+            Иди сверху вниз. На развилке выбери ветку.
           </p>
           <div className="mt-3">
-            <SkillMapFlow nodes={mapNodes} edges={mapEdges} />
+            <SkillStepper nodes={mapNodes} path={map.path} />
           </div>
         </section>
       </div>
