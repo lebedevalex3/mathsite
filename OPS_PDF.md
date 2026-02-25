@@ -233,6 +233,7 @@ curl -i "https://your-domain.example/api/teacher/variants/<ID>/pdf?locale=ru"
 
 Если `501`:
 - см. `Troubleshooting` ниже (это диагностируемый fallback, не silent failure)
+- ответ теперь структурированный (`code = "PDF_UNAVAILABLE"`, `hints`, `docs`)
 
 ### 4) Проверить print fallback
 
@@ -325,22 +326,45 @@ curl -I "$BASE_URL/ru"
 - PDF-движок недоступен или сломан
 - но приложение работает, и есть fallback на print-страницы
 
+Типовой JSON-ответ:
+
+```json
+{
+  "ok": false,
+  "code": "PDF_UNAVAILABLE",
+  "message": "PDF export is not available in this environment. Use print-to-PDF via /print pages. See OPS_PDF.md.",
+  "hints": [
+    "Use browser Print to PDF via /print pages.",
+    "Set BASE_URL to the public URL of the app.",
+    "Install Chromium and required system libraries on the server.",
+    "Set PUPPETEER_EXECUTABLE_PATH if using system Chromium.",
+    "See OPS_PDF.md."
+  ],
+  "docs": "OPS_PDF.md"
+}
+```
+
+В `development` может дополнительно прийти `details` (без секретов) для быстрой диагностики.
+
 Что делать:
-1. Прочитать `error` в JSON-ответе API
+1. Прочитать `code/message/hints` в JSON-ответе API
 2. Исправить причину (puppeteer/browser/libs/env)
 3. Пока не исправлено — использовать `/print` и browser Print-to-PDF
 
 ### 6) Где смотреть логи и что искать
 
-В текущей реализации нет отдельного кастомного логгирования для PDF. Основные источники:
+PDF helper пишет server-side лог при `501` (без секретов). Основные источники:
 - логи Next.js / process stdout-stderr
-- JSON `error` в ответе PDF endpoint (`501`)
+- JSON-ответ PDF endpoint (`501`)
 
-Ищите строки:
-- `PDF export unavailable: puppeteer is not installed`
-- `Could not find Chrome`
-- `Failed to launch the browser process`
-- `error while loading shared libraries`
+Ищите запись вида:
+- `event: "pdf_unavailable"`
+- `code`: `PUPPETEER_NOT_INSTALLED` / `CHROME_NOT_FOUND` / `LAUNCH_FAILED` / `NAVIGATION_FAILED`
+- `flags.hasBaseUrl`
+- `flags.hasExecutablePath`
+
+В `production` лог намеренно без stack trace/секретов.
+В `development` лог может включать исходную ошибку (stack trace) для диагностики.
 
 ## Быстрая памятка (оператору)
 
