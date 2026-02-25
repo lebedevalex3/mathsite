@@ -43,6 +43,7 @@ export function TeacherVariantsPageClient({
   const [variants, setVariants] = useState<VariantSummary[]>([]);
   const [loading, setLoading] = useState(false);
   const [busyTemplateId, setBusyTemplateId] = useState<string | null>(null);
+  const [clearingVariants, setClearingVariants] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<TeacherApiError | null>(null);
 
@@ -178,6 +179,49 @@ export function TeacherVariantsPageClient({
     }
   }
 
+  async function handleClearVariants() {
+    if (variants.length === 0 || clearingVariants) return;
+    const confirmed = window.confirm(
+      `Удалить все сгенерированные варианты (${variants.length})? Это действие нельзя отменить.`,
+    );
+    if (!confirmed) return;
+
+    setClearingVariants(true);
+    setNotice(null);
+    setError(null);
+    try {
+      const response = await fetch("/api/teacher/variants", {
+        method: "DELETE",
+        credentials: "same-origin",
+      });
+      const payload = (await response.json()) as {
+        ok?: boolean;
+        deletedCount?: number;
+        code?: string;
+        message?: string;
+        error?: string;
+        details?: unknown;
+      };
+
+      if (!response.ok || !payload.ok) {
+        setError(parseApiError(payload, "Не удалось очистить список вариантов."));
+        return;
+      }
+
+      const deletedCount = typeof payload.deletedCount === "number" ? payload.deletedCount : 0;
+      setVariants([]);
+      setNotice(
+        deletedCount > 0
+          ? `Удалено вариантов: ${deletedCount}.`
+          : "Список вариантов уже был пуст.",
+      );
+    } catch {
+      setError({ message: "Ошибка сети при очистке списка вариантов." });
+    } finally {
+      setClearingVariants(false);
+    }
+  }
+
   const showInitialLoading = loading && templates.length === 0 && variants.length === 0;
 
   return (
@@ -309,7 +353,17 @@ export function TeacherVariantsPageClient({
               <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
                 Последние варианты
               </h2>
-              {loading ? <p className="text-xs text-slate-500">Загрузка...</p> : null}
+              <div className="flex items-center gap-3">
+                {loading ? <p className="text-xs text-slate-500">Загрузка...</p> : null}
+                <button
+                  type="button"
+                  onClick={() => void handleClearVariants()}
+                  disabled={variants.length === 0 || clearingVariants || loading}
+                  className="rounded-lg border border-rose-200 bg-white px-3 py-2 text-xs font-medium text-rose-700 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {clearingVariants ? "Очистка..." : "Очистить список"}
+                </button>
+              </div>
             </div>
             {variants.length === 0 ? (
               <SurfaceCard className="p-5">

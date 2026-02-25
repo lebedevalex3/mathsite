@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { badRequest, notFound, toApiError } from "@/src/lib/api/errors";
 import { requireTeacherFromCookies } from "@/src/lib/variants/auth";
 import { generateAndSaveVariant } from "@/src/lib/variants/generator";
-import { listVariantsForOwner } from "@/src/lib/variants/repository";
+import { deleteAllVariantsForOwner, listVariantsForOwner } from "@/src/lib/variants/repository";
 import { getVariantTemplateById } from "@/src/lib/variants/templates";
 
 export const runtime = "nodejs";
@@ -66,6 +66,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, variantId: result.variantId, seed: result.seed });
   } catch (error) {
     const { status, body } = toApiError(error, { defaultMessage: "Failed to generate variant." });
+    return NextResponse.json(body, { status });
+  }
+}
+
+export async function DELETE() {
+  try {
+    const cookieStore = await cookies();
+    const user = await requireTeacherFromCookies(cookieStore);
+    const result = await deleteAllVariantsForOwner(user.id);
+
+    return NextResponse.json({ ok: true, deletedCount: result.count });
+  } catch (error) {
+    const { status, body } = toApiError(error, { defaultMessage: "Failed to clear variants." });
     return NextResponse.json(body, { status });
   }
 }

@@ -35,6 +35,18 @@ export async function listVariantsForOwner(ownerUserId: string) {
   });
 }
 
+export async function deleteAllVariantsForOwner(ownerUserId: string) {
+  const db = prisma as unknown as {
+    variant: {
+      deleteMany(args: unknown): Promise<{ count: number }>;
+    };
+  };
+
+  return db.variant.deleteMany({
+    where: { ownerUserId },
+  });
+}
+
 export async function getVariantDetailForOwner(
   variantId: string,
   ownerUserId: string,
