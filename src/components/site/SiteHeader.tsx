@@ -8,6 +8,13 @@ type SiteHeaderProps = {
 };
 
 export function SiteHeader({ locale }: SiteHeaderProps) {
+  const teacherLabel =
+    locale === "ru"
+      ? "Учительский кабинет (ранний доступ)"
+      : locale === "de"
+        ? "Lehrkräfte-Bereich (Früher Zugang)"
+        : "Teacher Workspace (Early Access)";
+
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <Container className="flex h-16 items-center justify-between gap-4">
@@ -61,12 +68,14 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
           >
             Тренажёр
           </ButtonLink>
-          <ButtonLink href={`/${locale}`} variant="primary">
-            Войти
+          <ButtonLink href={`/${locale}/teacher`} variant="primary">
+            <span className="hidden lg:inline">{teacherLabel}</span>
+            <span className="lg:hidden">
+              {locale === "ru" ? "Учительский кабинет" : locale === "de" ? "Lehrkräfte" : "Teacher"}
+            </span>
           </ButtonLink>
         </div>
       </Container>
     </header>
   );
 }
-
