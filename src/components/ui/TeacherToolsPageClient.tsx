@@ -259,7 +259,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const topics = useMemo(
     () =>
       topicConfigs.map((cfg) => ({
-        topicId: cfg.topicSlug === "proporcii" ? "g5.proporcii" : cfg.topicSlug,
+        topicId: cfg.topicSlug.includes(".") ? cfg.topicSlug : `g5.${cfg.topicSlug}`,
         title: cfg.titles?.[locale] ?? cfg.titles?.ru ?? cfg.topicSlug,
       })),
     [locale, topicConfigs],

@@ -86,13 +86,18 @@ export function buildDemoTemplate({
   skillsById,
   mode,
 }: BuildDemoTemplateParams): VariantTemplate {
+  const topicLabels: Record<string, string> = {
+    "g5.proporcii": "Пропорции",
+    "g5.uravneniya": "Уравнения",
+  };
+
   return {
     id: `demo.${topicId}.${mode ?? "custom"}`,
     title: mode ? `Конструктор вариантов • ${mode}` : "Конструктор вариантов",
     topicId,
     header: {
       gradeLabel: topicId.startsWith("g5.") ? "5 класс" : "Класс",
-      topicLabel: topicId === "g5.proporcii" ? "Пропорции" : topicId,
+      topicLabel: topicLabels[topicId] ?? topicId,
     },
     sections: plan.map((item) => ({
       label: skillsById.get(item.skillId)?.title ?? item.skillId,

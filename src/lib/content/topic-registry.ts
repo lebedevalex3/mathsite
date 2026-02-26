@@ -20,6 +20,17 @@ const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {
       de: "Proportionen",
     },
   },
+  uravneniya: {
+    topicSlug: "uravneniya",
+    domain: "algebra",
+    routePathSegments: ["5-klass", "uravneniya"],
+    defaultLocale: "ru",
+    titles: {
+      ru: "Уравнения",
+      en: "Equations",
+      de: "Gleichungen",
+    },
+  },
 };
 
 export function getContentTopicConfig(topicSlug: string): ContentTopicRegistryItem | null {

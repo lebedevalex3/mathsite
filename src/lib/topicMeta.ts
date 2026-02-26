@@ -65,11 +65,11 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canTrain: false,
   },
   {
-    id: "g5.equations",
+    id: "g5.uravneniya",
     slug: "5-klass/uravneniya",
     domain: "algebra",
     levels: [5],
-    status: "soon",
+    status: "ready",
     title: {
       ru: "Уравнения",
       en: "Equations",
@@ -137,4 +137,3 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canTrain: false,
   },
 ];
-

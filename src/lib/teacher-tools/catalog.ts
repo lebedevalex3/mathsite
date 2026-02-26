@@ -4,24 +4,77 @@ import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 
 import type { TeacherToolsSkill, TeacherToolsTopicConfig } from "./types";
 
+const uravneniyaSkills: TeacherToolsSkill[] = [
+  {
+    id: "g5.uravneniya.ponyat_uravnenie_i_koren",
+    title: "Понимать, что такое уравнение и корень",
+    summary: "Различать уравнение и находить число, которое делает равенство верным.",
+    status: "ready",
+  },
+  {
+    id: "g5.uravneniya.proverit_koren",
+    title: "Проверять, является ли число корнем уравнения",
+    summary: "Подставлять число и определять, верно ли равенство.",
+    status: "ready",
+  },
+  {
+    id: "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+    title: "Решать x + a = b и x - a = b",
+    summary: "Находить неизвестное при сложении и вычитании, когда x стоит слева.",
+    status: "ready",
+  },
+  {
+    id: "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+    title: "Решать a + x = b и a - x = b",
+    summary: "Решать уравнения, где неизвестное стоит после числа.",
+    status: "ready",
+  },
+  {
+    id: "g5.uravneniya.reshat_mnozhenie_i_delenie",
+    title: "Решать a·x = b и x : a = b",
+    summary: "Решать уравнения на умножение и деление с целыми ответами.",
+    status: "ready",
+  },
+  {
+    id: "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+    title: "Составлять и решать простые уравнения по условию",
+    summary: "Короткие текстовые задачи в 1 шаг на составление уравнения.",
+    status: "ready",
+  },
+];
+
 export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
   const topics: TeacherToolsTopicConfig[] = [];
   for (const cfg of listContentTopicConfigs()) {
-    if (cfg.topicSlug !== "proporcii") continue;
-    topics.push({
-      topicId: "g5.proporcii",
-      title: {
-        ru: cfg.titles?.ru ?? "Пропорции",
-        en: cfg.titles?.en ?? "Proportions",
-        de: cfg.titles?.de ?? "Proportionen",
-      },
-      skills: proporciiSkills.map((skill) => ({
-        id: skill.id,
-        title: skill.title,
-        summary: skill.summary,
-        status: "ready" as const,
-      })),
-    });
+    if (cfg.topicSlug === "proporcii") {
+      topics.push({
+        topicId: "g5.proporcii",
+        title: {
+          ru: cfg.titles?.ru ?? "Пропорции",
+          en: cfg.titles?.en ?? "Proportions",
+          de: cfg.titles?.de ?? "Proportionen",
+        },
+        skills: proporciiSkills.map((skill) => ({
+          id: skill.id,
+          title: skill.title,
+          summary: skill.summary,
+          status: "ready" as const,
+        })),
+      });
+      continue;
+    }
+
+    if (cfg.topicSlug === "uravneniya") {
+      topics.push({
+        topicId: "g5.uravneniya",
+        title: {
+          ru: cfg.titles?.ru ?? "Уравнения",
+          en: cfg.titles?.en ?? "Equations",
+          de: cfg.titles?.de ?? "Gleichungen",
+        },
+        skills: uravneniyaSkills,
+      });
+    }
   }
   return topics;
 }
