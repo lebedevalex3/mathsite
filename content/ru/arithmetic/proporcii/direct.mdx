@@ -1,21 +1,28 @@
 import { KeyIdea, Steps, Mistakes } from "@/src/components/mdx";
-import { SubtopicPageTemplate } from "../subtopic-page-template";
+import { SubtopicPageTemplate } from "@/src/app/[locale]/5-klass/proporcii/subtopic-page-template";
+
+export const subtopicMeta = {
+  title: "Прямая пропорциональность",
+  slug: "direct",
+  order: 20,
+};
 
 export default async function DirectSubtopicPage({ params }) {
   const { locale } = await params;
 
-  return (
-    <SubtopicPageTemplate
+return (
+
+<SubtopicPageTemplate
       locale={locale}
       slug="direct"
       intro="Подтема про прямую пропорциональность: как величины меняются вместе и как это использовать в записях отношений."
     >
-      <h2 id="toc">Содержание</h2>
-      <ul>
-        <li><a href="#opredelenie">Определение / идея</a></li>
-        <li><a href="#algoritm">Алгоритм</a></li>
-        <li><a href="#tipichnye-oshibki">Типичные ошибки</a></li>
-      </ul>
+<h2 id="toc">Содержание</h2>
+<ul>
+<li><a href="#opredelenie">Определение / идея</a></li>
+<li><a href="#algoritm">Алгоритм</a></li>
+<li><a href="#tipichnye-oshibki">Типичные ошибки</a></li>
+</ul>
 
       <h2 id="opredelenie">Определение / идея</h2>
       <KeyIdea title="Прямая пропорциональность">
@@ -38,6 +45,6 @@ export default async function DirectSubtopicPage({ params }) {
         <li>Отношения записаны в разном порядке.</li>
       </Mistakes>
     </SubtopicPageTemplate>
-  );
-}
 
+);
+}

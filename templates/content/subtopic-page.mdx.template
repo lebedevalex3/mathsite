@@ -1,0 +1,45 @@
+import { KeyIdea, Steps, Mistakes } from "@/src/components/mdx";
+import { SubtopicPageTemplate } from "@/src/app/[locale]/5-klass/proporcii/subtopic-page-template";
+
+export const subtopicMeta = {
+  title: "Название подтемы",
+  slug: "your-slug",
+  order: 50,
+};
+
+export default async function SubtopicPage({ params }) {
+  const { locale } = await params;
+
+  return (
+    <SubtopicPageTemplate
+      locale={locale}
+      slug="your-slug"
+      intro="Короткое описание подтемы для hero-блока."
+    >
+      <h2 id="toc">Содержание</h2>
+      <ul>
+        <li><a href="#opredelenie">Определение / идея</a></li>
+        <li><a href="#algoritm">Алгоритм</a></li>
+        <li><a href="#tipichnye-oshibki">Типичные ошибки</a></li>
+      </ul>
+
+      <h2 id="opredelenie">Определение / идея</h2>
+      <KeyIdea title="Ключевая идея">
+        <p>Короткое объяснение подтемы.</p>
+      </KeyIdea>
+
+      <h2 id="algoritm">Алгоритм</h2>
+      <Steps>
+        <li>Шаг 1.</li>
+        <li>Шаг 2.</li>
+        <li>Шаг 3.</li>
+      </Steps>
+
+      <h2 id="tipichnye-oshibki">Типичные ошибки</h2>
+      <Mistakes>
+        <li>Ошибка 1.</li>
+        <li>Ошибка 2.</li>
+      </Mistakes>
+    </SubtopicPageTemplate>
+  );
+}

@@ -118,7 +118,10 @@ function pdfUnavailableResponse(
 
   return new Response(JSON.stringify(body), {
     status: 501,
-    headers: { "Content-Type": "application/json; charset=utf-8" },
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-PDF-Engine": "chromium",
+    },
   });
 }
 
@@ -159,6 +162,15 @@ export async function renderPdfFromPrintPath(request: Request, printPath: string
   const baseUrl = getBaseUrlFromRequest(request);
   const targetUrl = new URL(printPath, `${baseUrl}/`).toString();
 
+  if (context.isDev) {
+    console.log({
+      event: "pdf_render_request",
+      engine: "chromium",
+      endpoint: context.endpoint,
+      targetPath: context.targetPath,
+    });
+  }
+
   let browser: Awaited<ReturnType<typeof puppeteer.launch>> | null = null;
   try {
     browser = await puppeteer.launch({
@@ -184,6 +196,7 @@ export async function renderPdfFromPrintPath(request: Request, printPath: string
 
     const pdf = await page.pdf({
       format: "A4",
+      preferCSSPageSize: true,
       printBackground: true,
       margin: {
         top: "12mm",
@@ -198,6 +211,7 @@ export async function renderPdfFromPrintPath(request: Request, printPath: string
       headers: {
         "Content-Type": "application/pdf",
         "Cache-Control": "no-store",
+        "X-PDF-Engine": "chromium",
       },
     });
   } catch (error) {

@@ -1,0 +1,28 @@
+export const topicMeta = {
+  title: "TOPIC_TITLE",
+  topic: "TOPIC_SLUG",
+  domain: "TOPIC_DOMAIN",
+};
+
+export default function TopicIndexPage() {
+  return (
+    <>
+      <h1>TOPIC_TITLE</h1>
+      <p>TOPIC_INTRO</p>
+
+      <h2 id="what-you-will-learn">TOPIC_LEARN_LABEL</h2>
+      <ul>
+        <li>TOPIC_LEARN_ITEM_1</li>
+        <li>TOPIC_LEARN_ITEM_2</li>
+        <li>TOPIC_LEARN_ITEM_3</li>
+      </ul>
+
+      <h2 id="subtopics">TOPIC_SUBTOPICS_LABEL</h2>
+      <p>TOPIC_SUBTOPICS_NOTE</p>
+
+      <h2 id="practice">TOPIC_PRACTICE_LABEL</h2>
+      <p>TOPIC_PRACTICE_NOTE</p>
+    </>
+  );
+}
+

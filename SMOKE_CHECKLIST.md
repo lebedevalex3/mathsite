@@ -179,6 +179,64 @@ curl -i "http://localhost:3000/api/teacher/variants/<VARIANT_ID>/answers-pdf?loc
 - `501` здесь — ожидаемый fallback MVP, а не обязательно “красная” ошибка деплоя
 - если PDF должен работать в production, см. `OPS_PDF.md`
 
+### 7.2 Work PDF engine policy (teacher-tools)
+
+После генерации работы в `/{locale}/teacher-tools`:
+
+1. Открыть страницу работы `/{locale}/teacher-tools/works/{WORK_ID}`
+2. Проверить `Печать всех` / `PDF всех` при `1 вариант/стр` и `2 варианта/стр`
+
+Ожидаемый результат:
+- `layout=single`: обычно `chromium` (если не переопределено env/query)
+- `layout=two`: может автоматически выбираться `latex` (если `LATEX_PDF_ENABLED=1`)
+
+Как проверить:
+- `Network` -> response headers:
+  - `X-PDF-Engine`
+  - `X-PDF-Engine-Source`
+
+Проверка явного override:
+
+```bash
+curl -i "http://localhost:3000/api/teacher/demo/works/<WORK_ID>/pdf?locale=ru&layout=single&orientation=portrait&engine=latex"
+```
+
+Ожидаемый результат:
+- `X-PDF-Engine: latex`
+- либо `200 PDF`, либо диагностируемый `LATEX_*` JSON
+
+### 7.1 Teacher-tools / Work print profile (work-based flow)
+
+После генерации вариантов в `/{locale}/teacher-tools`:
+1. Нажать `Открыть работу`
+2. На странице работы проверить блок `Оформление` / `Рекомендация`
+
+Ожидаемый результат:
+- есть `Тип работы`
+- есть `Оформление` (`1 вариант/стр` / `2 варианта/стр`)
+- есть рекомендация с причинами
+
+Проверка default profile:
+1. На странице работы выбрать оформление (например `1 вариант/стр`)
+2. Открыть `Печать всех` / `PDF всех` **без ручного дописывания query**
+
+Ожидаемый результат:
+- `/{locale}/teacher-tools/works/{id}/print` использует `Work.printProfileJson` как дефолт
+- `/api/teacher/demo/works/{id}/pdf` даёт тот же layout (или `501` fallback при недоступном PDF)
+
+Проверка блокировки `2/стр`:
+- для “тяжёлой” работы (длинные условия / много задач) UI должен:
+  - рекомендовать `1 вариант/стр`
+  - отключать или явно предупреждать про `2 варианта/стр`
+
+Проверка force override:
+- нажать `Всё равно попробовать (force)` (если доступно)
+- открыть `Печать всех` / `PDF всех`
+
+Ожидаемый результат:
+- в URL появляется `force=1`
+- вывод всё равно генерируется (print/PDF/fallback), несмотря на запрет рекомендации
+
 ### 8. Локали (минимум)
 
 Минимум:
@@ -225,7 +283,25 @@ curl -i "http://localhost:3000/api/teacher/variants/<VARIANT_ID>/answers-pdf?loc
   - `BASE_URL`
   - `PUPPETEER_EXECUTABLE_PATH`
   - наличие Chromium/Chrome
-  - системные Linux-библиотеки
+- системные Linux-библиотеки
+
+### LaTeX beta (teacher work PDF)
+
+Симптомы:
+- `LATEX_UNAVAILABLE`
+- `LATEX_COMPILE_ERROR`
+- `LATEX_UNSUPPORTED_PROFILE`
+
+Что смотреть:
+- `OPS_PDF.md` (LaTeX beta env + troubleshooting)
+- `details` в JSON (в dev)
+- заголовки `X-PDF-Engine`, `X-PDF-Engine-Source`
+
+Полезная проверка:
+
+```bash
+pnpm validate:tasks -- --latex-warn
+```
 
 ### Teacher API auth / role
 

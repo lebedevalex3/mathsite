@@ -1,0 +1,46 @@
+export const subtopicMeta = {
+  title: "SUBTOPIC_TITLE",
+  slug: "SUBTOPIC_SLUG",
+  order: SUBTOPIC_ORDER,
+};
+
+export default function SubtopicPage() {
+  return (
+    <>
+      <h1>SUBTOPIC_TITLE</h1>
+      <p>SUBTOPIC_INTRO</p>
+
+      <h2 id="toc">TOC_LABEL</h2>
+      <ul>
+        <li><a href="#idea">TOC_ITEM_IDEA</a></li>
+        <li><a href="#algorithm">TOC_ITEM_ALGORITHM</a></li>
+        <li><a href="#examples">TOC_ITEM_EXAMPLES</a></li>
+        <li><a href="#mistakes">TOC_ITEM_MISTAKES</a></li>
+        <li><a href="#practice">TOC_ITEM_PRACTICE</a></li>
+      </ul>
+
+      <h2 id="idea">SECTION_IDEA</h2>
+      <p>SECTION_IDEA_TEXT</p>
+
+      <h2 id="algorithm">SECTION_ALGORITHM</h2>
+      <ol>
+        <li>ALGORITHM_STEP_1</li>
+        <li>ALGORITHM_STEP_2</li>
+        <li>ALGORITHM_STEP_3</li>
+      </ol>
+
+      <h2 id="examples">SECTION_EXAMPLES</h2>
+      <p>SECTION_EXAMPLES_TEXT</p>
+
+      <h2 id="mistakes">SECTION_MISTAKES</h2>
+      <ul>
+        <li>MISTAKE_1</li>
+        <li>MISTAKE_2</li>
+      </ul>
+
+      <h2 id="practice">SECTION_PRACTICE</h2>
+      <p>SECTION_PRACTICE_TEXT</p>
+    </>
+  );
+}
+

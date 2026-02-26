@@ -5,6 +5,7 @@ import { Container } from "@/src/components/ui/Container";
 import { HomeProgressCta } from "@/src/components/ui/HomeProgressCta";
 import { HomeTopicCatalog } from "@/src/components/ui/HomeTopicCatalog";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { TeacherQuickStartWidget } from "@/src/components/ui/TeacherQuickStartWidget";
 
 type PageProps = {
   params: Promise<{ locale: "ru" | "en" | "de" }>;
@@ -14,18 +15,29 @@ const copy = {
   ru: {
     heroTitle: "Электронный учебник по математике",
     heroSubtitle:
-      "Короткие объяснения, микро-умения и тренировки по 10 задач подряд для устойчивой практики.",
+      "Понятные объяснения, тренажёр и прогресс — плюс конструктор вариантов для учителя: печать и ответы.",
+    primaryCta: "Собрать вариант",
+    secondaryCta: "Открыть тренажёр",
     browseTopics: "Смотреть темы",
     howTitle: "Как это работает",
     howSteps: [
-      "Найдите тему в каталоге по домену, уровню и статусу.",
-      "Откройте конспект и выберите микро-умение.",
-      "Тренируйтесь и возвращайтесь к прогрессу и слабым навыкам.",
+      "Выберите тему для урока или самостоятельной практики.",
+      "Соберите вариант для печати и откройте ответы.",
+      "Тренируйтесь в тренажёре и отслеживайте прогресс по навыкам.",
     ],
-    teacherTitle: "Учительский кабинет (ранний доступ)",
+    teacherTitle: "Учителю / репетитору",
     teacherBody:
-      "Шаблоны вариантов, печать, PDF и ранние teacher-инструменты для работы с классом.",
-    teacherCta: "Перейти в кабинет",
+      "Конструктор вариантов встроен в учебник: собирайте варианты по теме и быстро получайте печать и ответы.",
+    teacherCta: "Перейти в конструктор вариантов",
+    teacherBullets: [
+      "Варианты по теме без повторов",
+      "Ключ ответов",
+      "Печать / PDF",
+      "Сборка по навыкам темы",
+    ],
+    studentTitle: "Ученику",
+    studentBody: "Откройте тренажёр или продолжите практику по теме «Пропорции».",
+    studentProgressLink: "Открыть прогресс",
     sectionsTitle: "Навигация по материалам",
     sectionsBody: "Переходите от темы к навыку и обратно без потери контекста.",
     sectionsLink: "5 класс → Пропорции",
@@ -36,18 +48,29 @@ const copy = {
   en: {
     heroTitle: "Electronic Math Textbook",
     heroSubtitle:
-      "Short explanations, micro-skills, and 10-in-a-row practice sessions for steady learning.",
+      "Clear explanations, a trainer, and progress tracking — plus a teacher variant builder with print and answers.",
+    primaryCta: "Assemble variant",
+    secondaryCta: "Open trainer",
     browseTopics: "Browse topics",
     howTitle: "How it works",
     howSteps: [
-      "Find a topic in the catalog by domain, level, and status.",
-      "Open the topic note and choose a micro-skill.",
-      "Practice and return to progress and weak skills.",
+      "Choose a topic for classwork or self-study.",
+      "Assemble a printable variant and open the answer key.",
+      "Practice in the trainer and track progress by skills.",
     ],
-    teacherTitle: "Teacher Workspace (Early Access)",
+    teacherTitle: "For teachers / tutors",
     teacherBody:
-      "Variant templates, print/PDF export, and early teacher tools for classroom work.",
-    teacherCta: "Open workspace",
+      "The variant builder is part of the textbook workflow: assemble topic-based variants and get print + answers quickly.",
+    teacherCta: "Open variant builder",
+    teacherBullets: [
+      "Topic-based variants without repeats",
+      "Answer key",
+      "Print / PDF",
+      "Skill-based assembly",
+    ],
+    studentTitle: "For students",
+    studentBody: "Open the trainer or continue practice in the Proportions topic.",
+    studentProgressLink: "Open progress",
     sectionsTitle: "Content navigation",
     sectionsBody: "Move between topics and skills without losing context.",
     sectionsLink: "Grade 5 → Proportions",
@@ -58,18 +81,29 @@ const copy = {
   de: {
     heroTitle: "Elektronisches Mathematik-Lehrbuch",
     heroSubtitle:
-      "Kurze Erklärungen, Mikro-Fähigkeiten und Training mit 10 Aufgaben am Stück.",
+      "Klare Erklärungen, Trainer und Fortschritt — plus Varianten-Baukasten für Lehrkräfte mit Druck und Lösungen.",
+    primaryCta: "Variante zusammenstellen",
+    secondaryCta: "Trainer öffnen",
     browseTopics: "Themen ansehen",
     howTitle: "So funktioniert es",
     howSteps: [
-      "Thema im Katalog nach Bereich, Level und Status finden.",
-      "Kurzkonzept öffnen und Mikro-Fähigkeit auswählen.",
-      "Trainieren und zum Fortschritt zurückkehren.",
+      "Thema für Unterricht oder Selbstlernen auswählen.",
+      "Druckbare Variante zusammenstellen und Lösungen öffnen.",
+      "Im Trainer üben und Fortschritt nach Fähigkeiten verfolgen.",
     ],
-    teacherTitle: "Lehrkräfte-Bereich (Früher Zugang)",
+    teacherTitle: "Für Lehrkräfte / Nachhilfe",
     teacherBody:
-      "Variantenvorlagen, Druck/PDF und frühe Teacher-Tools für den Unterricht.",
-    teacherCta: "Bereich öffnen",
+      "Der Varianten-Baukasten ist im Lehrbuch integriert: thematische Varianten mit Druck und Lösungen schnell zusammenstellen.",
+    teacherCta: "Zum Varianten-Baukasten",
+    teacherBullets: [
+      "Varianten ohne Wiederholungen",
+      "Lösungsschlüssel",
+      "Druck / PDF",
+      "Zusammenstellung nach Fähigkeiten",
+    ],
+    studentTitle: "Für Schüler:innen",
+    studentBody: "Trainer öffnen oder die Praxis im Thema Proportionen fortsetzen.",
+    studentProgressLink: "Fortschritt öffnen",
     sectionsTitle: "Navigation",
     sectionsBody: "Zwischen Themen und Fähigkeiten wechseln ohne Kontextverlust.",
     sectionsLink: "Klasse 5 → Proportionen",
@@ -92,7 +126,7 @@ export default async function LocaleHomePage({ params }: PageProps) {
         <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-r from-blue-100 via-cyan-50 to-emerald-100" />
         <div className="relative">
           <p className="mb-3 inline-flex rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700">
-            MVP • docs + trainer
+            MVP • textbook + trainer + teacher tools
           </p>
           <h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl">
             {t.heroTitle}
@@ -101,16 +135,23 @@ export default async function LocaleHomePage({ params }: PageProps) {
             {t.heroSubtitle}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <HomeProgressCta locale={locale} />
             <Link
-              href="#topics-catalog"
+              href={`/${locale}/teacher-tools`}
+              className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+            >
+              {t.primaryCta}
+            </Link>
+            <Link
+              href={`/${locale}/5-klass/proporcii/trainer`}
               className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100"
             >
-              {t.browseTopics}
+              {t.secondaryCta}
             </Link>
           </div>
         </div>
       </section>
+
+      <TeacherQuickStartWidget locale={locale} />
 
       <SurfaceCard className="p-6">
         <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.howTitle}</h2>
@@ -129,31 +170,51 @@ export default async function LocaleHomePage({ params }: PageProps) {
         </ol>
       </SurfaceCard>
 
-      <HomeTopicCatalog locale={locale} />
-
       <SurfaceCard className="p-6">
         <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.teacherTitle}</h2>
         <p className="mt-3 text-sm leading-6 text-slate-600">{t.teacherBody}</p>
         <ul className="mt-4 space-y-2 text-sm text-slate-700">
-          <li className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-            Шаблоны контрольных по микро-умениям
-          </li>
-          <li className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-            Печать PDF + ключ ответов
-          </li>
-          <li className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-            Банк задач по темам 5 класса
-          </li>
+          {t.teacherBullets.map((item) => (
+            <li key={item} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+              {item}
+            </li>
+          ))}
         </ul>
         <div className="mt-5">
           <Link
-            href={`/${locale}/teacher`}
+            href={`/${locale}/teacher-tools`}
             className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
           >
             {t.teacherCta}
           </Link>
         </div>
       </SurfaceCard>
+
+      <SurfaceCard className="p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight text-slate-950">{t.studentTitle}</h2>
+            <p className="mt-1 text-sm leading-6 text-slate-600">{t.studentBody}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <HomeProgressCta locale={locale} />
+            <Link
+              href={`/${locale}/progress`}
+              className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100"
+            >
+              {t.studentProgressLink}
+            </Link>
+            <Link
+              href="#topics-catalog"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100"
+            >
+              {t.browseTopics}
+            </Link>
+          </div>
+        </div>
+      </SurfaceCard>
+
+      <HomeTopicCatalog locale={locale} />
 
       <section>
         <Container className="px-0">
@@ -188,4 +249,3 @@ export default async function LocaleHomePage({ params }: PageProps) {
     </main>
   );
 }
-

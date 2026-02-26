@@ -81,6 +81,60 @@ PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
 
 В текущей реализации **других env нет**.
 
+## B.1 LaTeX Beta (Teacher Work PDF)
+
+В проекте есть второй PDF backend (`latex`) для `teacher-tools` work PDF/answers PDF (beta).
+
+### `LATEX_PDF_ENABLED`
+
+Включает LaTeX backend:
+
+```bash
+LATEX_PDF_ENABLED=1
+```
+
+Если не задано:
+- `engine=latex` вернёт `LATEX_UNAVAILABLE`
+- авто-выбор LaTeX для `layout=two` не сработает
+
+### `PDF_PREFER_LATEX_FOR_TWO_UP` (optional)
+
+Если LaTeX включён, work PDF routes могут автоматически выбирать LaTeX для двухвариантных профилей (`layout=two`, `layout=two_cut`).
+
+Чтобы отключить автополитику:
+
+```bash
+PDF_PREFER_LATEX_FOR_TWO_UP=0
+```
+
+### `PDF_ENGINE_DEFAULT` (optional)
+
+Дефолтный движок для work PDF routes, если `engine=` не передан:
+
+```bash
+PDF_ENGINE_DEFAULT=chromium
+```
+
+или
+
+```bash
+PDF_ENGINE_DEFAULT=latex
+```
+
+Примечания:
+- `engine=chromium|latex` в query всегда имеет приоритет
+- если профиль не поддерживается LaTeX beta (например `two_cut`), API вернёт `501` (`LATEX_UNSUPPORTED_PROFILE`)
+
+### `DISABLE_CHROMIUM_PDF` (dev only)
+
+Удобно для отладки LaTeX, чтобы не путаться с Chromium:
+
+```bash
+DISABLE_CHROMIUM_PDF=1
+```
+
+Работает только в dev и только для work PDF routes.
+
 ## C. Chromium Setup Options
 
 Есть два практических варианта.
@@ -241,6 +295,32 @@ curl -i "https://your-domain.example/api/teacher/variants/<ID>/pdf?locale=ru"
 - `/{locale}/teacher/variants/{id}/print`
 - `/{locale}/teacher/variants/{id}/answers/print`
 
+### 5) Проверить LaTeX beta (teacher-tools work PDF)
+
+Только если используется/тестируется LaTeX backend:
+
+1. Убедиться, что установлены `latexmk` и `xelatex`
+2. Включить:
+
+```bash
+LATEX_PDF_ENABLED=1
+```
+
+3. Проверить work PDF endpoint c явным движком:
+
+```bash
+curl -i "http://localhost:3000/api/teacher/demo/works/<WORK_ID>/pdf?locale=ru&layout=single&orientation=portrait&engine=latex"
+```
+
+Что смотреть:
+- `200` и `Content-Type: application/pdf`, либо диагностируемый JSON (`LATEX_*`)
+- `X-PDF-Engine: latex`
+- `X-PDF-Engine-Source: query|layout_policy|default`
+
+4. Проверить auto-policy для двухвариантного профиля (без `engine=`):
+- для `layout=two` route может выбрать LaTeX автоматически
+- это видно по `X-PDF-Engine` и `X-PDF-Engine-Source`
+
 ## F. Troubleshooting
 
 ### 1) `501` + `puppeteer is not installed`
@@ -365,6 +445,21 @@ PDF helper пишет server-side лог при `501` (без секретов).
 
 В `production` лог намеренно без stack trace/секретов.
 В `development` лог может включать исходную ошибку (stack trace) для диагностики.
+
+### 7) LaTeX compile errors (beta)
+
+Если LaTeX backend включён и вы видите:
+- `LATEX_COMPILE_ERROR`
+
+Что делать:
+1. В `development` смотреть `details` в JSON ответа (tail stderr / `document.log`)
+2. Прогнать warn-only совместимость задач:
+
+```bash
+pnpm validate:tasks -- --latex-warn
+```
+
+3. Временно использовать `engine=chromium` или browser Print-to-PDF, пока не исправлен проблемный markdown/экранирование
 
 ## Быстрая памятка (оператору)
 

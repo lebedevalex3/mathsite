@@ -20,6 +20,7 @@ function PrintStyles() {
         html, body { background: #fff !important; }
         body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         .no-print { display: none !important; }
+        .site-header, .site-footer { display: none !important; }
         .print-root {
           max-width: none !important;
           padding: 0 !important;

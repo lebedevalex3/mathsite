@@ -2,14 +2,15 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { getTasksForTopic } from "@/lib/tasks/query";
+import { loadTopicSubtopicIndex } from "@/src/lib/content";
 import { ArticleProse } from "@/src/components/ui/ArticleProse";
+import { MobileSubtopicSelect } from "@/src/components/ui/MobileSubtopicSelect";
 import { SkillCatalogList } from "@/src/components/ui/SkillCatalogList";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 
 import {
   getSkillsForSubtopic,
   getSubtopicBySlug,
-  proporciiSubtopics,
   type ProporciiSubtopic,
 } from "./module-data";
 
@@ -28,6 +29,11 @@ export async function SubtopicPageTemplate({
 }: TemplateProps) {
   const subtopic = getSubtopicBySlug(slug);
   if (!subtopic) return null;
+  const contentIndex = await loadTopicSubtopicIndex("proporcii", {
+    locale,
+    domain: "arithmetic",
+  });
+  const contentSubtopic = contentIndex.subtopics.find((item) => item.slug === slug);
 
   const skills = getSkillsForSubtopic(subtopic.id);
   const { tasks } = await getTasksForTopic("g5.proporcii");
@@ -49,6 +55,14 @@ export async function SubtopicPageTemplate({
     };
   });
 
+  const subtopicNavItems = contentIndex.subtopics.map((item) => ({
+    id: item.slug,
+    title: item.title,
+    href: `/${locale}/5-klass/proporcii/${item.slug}`,
+  }));
+  const currentSubtopicHref = `/${locale}/5-klass/proporcii/${subtopic.slug}`;
+  const currentSubtopicTitle = contentSubtopic?.title ?? subtopic.title;
+
   return (
     <main className="space-y-6">
       <nav aria-label="Breadcrumbs" className="text-sm text-slate-600">
@@ -60,7 +74,7 @@ export async function SubtopicPageTemplate({
           </li>
           <li>/</li>
           <li>
-            <span>5 класс</span>
+            <span>{locale === "ru" ? "Арифметика" : locale === "de" ? "Arithmetik" : "Arithmetic"}</span>
           </li>
           <li>/</li>
           <li>
@@ -69,44 +83,30 @@ export async function SubtopicPageTemplate({
             </Link>
           </li>
           <li>/</li>
-          <li className="font-medium text-slate-950">{subtopic.title}</li>
+          <li className="font-medium text-slate-950">{currentSubtopicTitle}</li>
         </ol>
       </nav>
 
-      <nav aria-label="Подтемы" className="overflow-x-auto">
-        <div className="flex min-w-max gap-2">
-          {proporciiSubtopics.map((item) => {
-            const active = item.slug === subtopic.slug;
-            return (
-              <Link
-                key={item.id}
-                href={`/${locale}/5-klass/proporcii/${item.slug}`}
-                className={[
-                  "rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50",
-                ].join(" ")}
-              >
-                {item.title}
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+      <div className="pt-1">
+        <MobileSubtopicSelect
+          locale={locale}
+          value={currentSubtopicHref}
+          items={subtopicNavItems}
+        />
+      </div>
 
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
           Подтема • Пропорции
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
-          {subtopic.title}
+          {currentSubtopicTitle}
         </h1>
         <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">{intro}</p>
       </section>
 
       <SurfaceCard className="p-6">
-        <ArticleProse className="max-w-none">
+        <ArticleProse className="max-w-none lg:[&_h2#toc]:hidden lg:[&_h2#toc+ul]:hidden">
           {children ?? (
             <>
               <h2>Определение / идея</h2>

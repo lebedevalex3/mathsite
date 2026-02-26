@@ -1,9 +1,9 @@
 import Link from "next/link";
 
+import { MasteryLevels } from "@/src/components/topic/MasteryLevels";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
-import { TopicMapCard } from "@/src/components/topic/TopicMapCard";
-import { topicMaps } from "@/src/lib/topicMaps";
+import { topicMastery } from "@/src/lib/topicMastery";
 
 import {
   proporciiSkills,
@@ -16,8 +16,29 @@ type PageProps = {
 
 export default async function ProporciiTopicPage({ params }: PageProps) {
   const { locale } = await params;
-  const topicMap = topicMaps["g5.proporcii"];
+  const mastery = topicMastery["g5.proporcii"];
   const readConspetsHref = `/${locale}/5-klass/proporcii/rule`;
+  const skillById = new Map(proporciiSkills.map((skill) => [skill.id, skill]));
+  const masteryLevels = (mastery?.masteryLevels ?? [])
+    .map((level) => ({
+      id: level.id,
+      title: level.title,
+      hint: level.hint,
+      skills: level.skillIds
+        .map((skillId) => skillById.get(skillId))
+        .filter((skill): skill is (typeof proporciiSkills)[number] => Boolean(skill))
+        .map((skill) => ({
+          id: skill.id,
+          title: skill.title,
+          summary: skill.summary,
+          status: skill.id === "g5.proporcii.raspoznat_proporciyu" ? "soon" as const : "ready" as const,
+          href:
+            skill.id === "g5.proporcii.raspoznat_proporciyu"
+              ? undefined
+              : `/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(skill.id)}`,
+        })),
+    }))
+    .filter((level) => level.skills.length > 0);
 
   return (
     <main className="space-y-6">
@@ -66,20 +87,11 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
         </div>
       </section>
 
-      {topicMap ? (
-        <TopicMapCard map={topicMap} locale={locale} />
-      ) : (
-        <SurfaceCard className="p-6">
-          <h2 className="text-lg font-semibold text-slate-950">Карта темы</h2>
-          <p className="mt-2 text-sm text-slate-600">Карта темы скоро появится.</p>
-        </SurfaceCard>
-      )}
-
       <section className="space-y-4">
         <div className="flex items-end justify-between gap-4">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
-              Подтемы
+              Структура темы
             </h2>
             <p className="mt-1 text-sm text-slate-600">
               Выберите подтему и откройте краткий конспект с навигацией по практике.
@@ -116,6 +128,12 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
           ))}
         </div>
       </section>
+
+      <MasteryLevels
+        title="Освоение навыков"
+        subtitle="Выбери уровень и начни тренировку."
+        levels={masteryLevels}
+      />
 
       <section className="space-y-6">
         <div className="flex flex-wrap items-end justify-between gap-4">

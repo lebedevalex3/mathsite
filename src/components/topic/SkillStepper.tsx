@@ -52,7 +52,13 @@ export function SkillStepper({ nodes, path, onSelectSkill }: SkillStepperProps) 
   );
   const [activeSkillId, setActiveSkillId] = useState<string | null>(null);
 
-  function activateSkill(nodeId: string) {
+  function selectSkill(nodeId: string) {
+    const node = nodeMap.get(nodeId);
+    if (!node || node.status === "soon") return;
+    setActiveSkillId(nodeId);
+  }
+
+  function openSkill(nodeId: string) {
     const node = nodeMap.get(nodeId);
     if (!node || node.status === "soon") return;
     setActiveSkillId(nodeId);
@@ -96,7 +102,7 @@ export function SkillStepper({ nodes, path, onSelectSkill }: SkillStepperProps) 
               <button
                 type="button"
                 disabled={disabled}
-                onClick={() => activateSkill(step.id)}
+                onClick={() => selectSkill(step.id)}
                 className={[
                   "w-full rounded-xl border bg-white px-3 py-2 text-left transition-colors",
                   disabled
@@ -120,7 +126,7 @@ export function SkillStepper({ nodes, path, onSelectSkill }: SkillStepperProps) 
                 <div className="mt-2">
                   <button
                     type="button"
-                    onClick={() => activateSkill(step.id)}
+                    onClick={() => openSkill(step.id)}
                     className="inline-flex items-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100"
                   >
                     Тренировать этот навык

@@ -9,7 +9,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 1,
       "statement_md": "Найди $x$: $$\\frac{x}{3}=\\frac{8}{12}$$",
-      "answer": { "type": "number", "value": 2 }
+      "answer": {
+        "type": "number",
+        "value": 2
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_krainei.000002",
@@ -17,7 +20,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 1,
       "statement_md": "Найди $x$: $$\\frac{5}{7}=\\frac{10}{x}$$",
-      "answer": { "type": "number", "value": 14 }
+      "answer": {
+        "type": "number",
+        "value": 14
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_krainei.000003",
@@ -25,7 +31,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 2,
       "statement_md": "Реши пропорцию: $$\\frac{x}{9}=\\frac{4}{6}$$",
-      "answer": { "type": "number", "value": 6 }
+      "answer": {
+        "type": "number",
+        "value": 6
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_krainei.000004",
@@ -33,7 +42,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 2,
       "statement_md": "Реши пропорцию: $$\\frac{12}{15}=\\frac{x}{5}$$",
-      "answer": { "type": "number", "value": 4 }
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_krainei.000005",
@@ -41,7 +53,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 2,
       "statement_md": "Найди крайний член $x$: $$\\frac{7}{14}=\\frac{x}{8}$$",
-      "answer": { "type": "number", "value": 4 }
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_krainei.000006",
@@ -49,7 +64,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 3,
       "statement_md": "Найди $x$: $$\\frac{9}{x}=\\frac{3}{11}$$",
-      "answer": { "type": "number", "value": 33 }
+      "answer": {
+        "type": "number",
+        "value": 33
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_krainei.000007",
@@ -57,7 +75,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 3,
       "statement_md": "Найди $x$: $$\\frac{x}{16}=\\frac{15}{20}$$",
-      "answer": { "type": "number", "value": 12 }
+      "answer": {
+        "type": "number",
+        "value": 12
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_krainei.000008",
@@ -65,7 +86,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 3,
       "statement_md": "Реши: $$\\frac{18}{24}=\\frac{9}{x}$$",
-      "answer": { "type": "number", "value": 12 }
+      "answer": {
+        "type": "number",
+        "value": 12
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_krainei.000009",
@@ -73,7 +97,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 4,
       "statement_md": "Найди $x$: $$\\frac{x}{2.5}=\\frac{6}{10}$$",
-      "answer": { "type": "number", "value": 1.5 }
+      "answer": {
+        "type": "number",
+        "value": 1.5
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_krainei.000010",
@@ -81,16 +108,21 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
       "difficulty": 4,
       "statement_md": "Найди $x$: $$\\frac{4.5}{9}=\\frac{x}{6}$$",
-      "answer": { "type": "number", "value": 3 }
+      "answer": {
+        "type": "number",
+        "value": 3
+      }
     },
-
     {
       "id": "g5.proporcii.naiti_neizvestnyi_srednii.000001",
       "topic_id": "g5.proporcii",
       "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
       "difficulty": 1,
       "statement_md": "Найди $x$: $$\\frac{3}{x}=\\frac{6}{10}$$",
-      "answer": { "type": "number", "value": 5 }
+      "answer": {
+        "type": "number",
+        "value": 5
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_srednii.000002",
@@ -98,7 +130,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
       "difficulty": 1,
       "statement_md": "Найди $x$: $$\\frac{4}{8}=\\frac{x}{10}$$",
-      "answer": { "type": "number", "value": 5 }
+      "answer": {
+        "type": "number",
+        "value": 5
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_srednii.000003",
@@ -106,7 +141,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
       "difficulty": 2,
       "statement_md": "Реши: $$\\frac{7}{x}=\\frac{14}{18}$$",
-      "answer": { "type": "number", "value": 9 }
+      "answer": {
+        "type": "number",
+        "value": 9
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_srednii.000004",
@@ -114,7 +152,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
       "difficulty": 2,
       "statement_md": "Реши: $$\\frac{5}{15}=\\frac{x}{21}$$",
-      "answer": { "type": "number", "value": 7 }
+      "answer": {
+        "type": "number",
+        "value": 7
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_srednii.000005",
@@ -122,7 +163,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
       "difficulty": 2,
       "statement_md": "Найди средний член $x$: $$\\frac{12}{x}=\\frac{3}{4}$$",
-      "answer": { "type": "number", "value": 16 }
+      "answer": {
+        "type": "number",
+        "value": 16
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_srednii.000006",
@@ -130,7 +174,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
       "difficulty": 3,
       "statement_md": "Найди $x$: $$\\frac{2.4}{6}=\\frac{x}{15}$$",
-      "answer": { "type": "number", "value": 6 }
+      "answer": {
+        "type": "number",
+        "value": 6
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_srednii.000007",
@@ -138,7 +185,10 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
       "difficulty": 3,
       "statement_md": "Найди $x$: $$\\frac{9}{12}=\\frac{x}{20}$$",
-      "answer": { "type": "number", "value": 15 }
+      "answer": {
+        "type": "number",
+        "value": 15
+      }
     },
     {
       "id": "g5.proporcii.naiti_neizvestnyi_srednii.000008",
@@ -146,16 +196,21 @@
       "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
       "difficulty": 4,
       "statement_md": "Реши: $$\\frac{11}{x}=\\frac{22}{30}$$",
-      "answer": { "type": "number", "value": 15 }
+      "answer": {
+        "type": "number",
+        "value": 15
+      }
     },
-
     {
       "id": "g5.proporcii.reshit_zadachu_na_masshtab.000001",
       "topic_id": "g5.proporcii",
       "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
       "difficulty": 2,
       "statement_md": "Масштаб карты $1:100000$. Отрезок на карте равен $3$ см. Найди расстояние на местности в километрах.",
-      "answer": { "type": "number", "value": 3 }
+      "answer": {
+        "type": "number",
+        "value": 3
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_masshtab.000002",
@@ -163,7 +218,10 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
       "difficulty": 2,
       "statement_md": "Масштаб карты $1:50000$. Расстояние на местности равно $1$ км. Какой длины отрезок на карте (в см)?",
-      "answer": { "type": "number", "value": 2 }
+      "answer": {
+        "type": "number",
+        "value": 2
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_masshtab.000003",
@@ -171,7 +229,10 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
       "difficulty": 3,
       "statement_md": "Масштаб плана $1:200$. Комната имеет длину $8$ м. Найди длину на плане в сантиметрах.",
-      "answer": { "type": "number", "value": 4 }
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_masshtab.000004",
@@ -179,7 +240,10 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
       "difficulty": 3,
       "statement_md": "Масштаб модели $1:25$. Длина модели $12$ см. Найди реальную длину предмета в сантиметрах.",
-      "answer": { "type": "number", "value": 300 }
+      "answer": {
+        "type": "number",
+        "value": 300
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_masshtab.000005",
@@ -187,7 +251,10 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
       "difficulty": 4,
       "statement_md": "На карте с масштабом $1:250000$ расстояние между пунктами равно $8$ см. Найди расстояние на местности в километрах.",
-      "answer": { "type": "number", "value": 20 }
+      "answer": {
+        "type": "number",
+        "value": 20
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_masshtab.000006",
@@ -195,16 +262,21 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
       "difficulty": 4,
       "statement_md": "План участка выполнен в масштабе $1:400$. На плане дорожка имеет длину $5.5$ см. Найди реальную длину в метрах.",
-      "answer": { "type": "number", "value": 22 }
+      "answer": {
+        "type": "number",
+        "value": 22
+      }
     },
-
     {
       "id": "g5.proporcii.reshit_zadachu_na_cenu.000001",
       "topic_id": "g5.proporcii",
       "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
       "difficulty": 1,
       "statement_md": "3 тетради стоят 90 руб. Сколько рублей стоят 5 тетрадей (цена одинакова)?",
-      "answer": { "type": "number", "value": 150 }
+      "answer": {
+        "type": "number",
+        "value": 150
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_cenu.000002",
@@ -212,7 +284,10 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
       "difficulty": 1,
       "statement_md": "4 кг яблок стоят 280 руб. Сколько стоит 1 кг яблок?",
-      "answer": { "type": "number", "value": 70 }
+      "answer": {
+        "type": "number",
+        "value": 70
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_cenu.000003",
@@ -220,7 +295,10 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
       "difficulty": 2,
       "statement_md": "6 ручек стоят 270 руб. Сколько рублей стоят 8 таких ручек?",
-      "answer": { "type": "number", "value": 360 }
+      "answer": {
+        "type": "number",
+        "value": 360
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_cenu.000004",
@@ -228,7 +306,10 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
       "difficulty": 2,
       "statement_md": "2.5 кг сыра стоят 1000 руб. Сколько стоят 4 кг такого сыра?",
-      "answer": { "type": "number", "value": 1600 }
+      "answer": {
+        "type": "number",
+        "value": 1600
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_cenu.000005",
@@ -236,7 +317,10 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
       "difficulty": 3,
       "statement_md": "За $7$ м ткани заплатили $1260$ руб. Сколько рублей стоят $9$ м той же ткани?",
-      "answer": { "type": "number", "value": 1620 }
+      "answer": {
+        "type": "number",
+        "value": 1620
+      }
     },
     {
       "id": "g5.proporcii.reshit_zadachu_na_cenu.000006",
@@ -244,16 +328,21 @@
       "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
       "difficulty": 4,
       "statement_md": "5 одинаковых блокнотов стоят 425 руб. Сколько стоят 12 таких блокнотов?",
-      "answer": { "type": "number", "value": 1020 }
+      "answer": {
+        "type": "number",
+        "value": 1020
+      }
     },
-
     {
       "id": "g5.proporcii.proverit_proporciyu.000001",
       "topic_id": "g5.proporcii",
       "skill_id": "g5.proporcii.proverit_proporciyu",
       "difficulty": 2,
       "statement_md": "Найди число $x$, при котором пропорция верна: $$\\frac{3}{5}=\\frac{12}{x}$$",
-      "answer": { "type": "number", "value": 20 }
+      "answer": {
+        "type": "number",
+        "value": 20
+      }
     },
     {
       "id": "g5.proporcii.primenit_svoistvo_proporcii.000001",
@@ -261,7 +350,758 @@
       "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
       "difficulty": 3,
       "statement_md": "Используй свойство пропорции $ad=bc$: найди $x$ из $$\\frac{x}{14}=\\frac{9}{21}$$",
-      "answer": { "type": "number", "value": 6 }
+      "answer": {
+        "type": "number",
+        "value": 6
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000001",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 1,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{2}{3}=\\frac{4}{6}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000002",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 1,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{3}{5}=\\frac{9}{15}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000003",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 2,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{4}{7}=\\frac{8}{14}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000004",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 2,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{5}{8}=\\frac{15}{24}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000005",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 2,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{6}{10}=\\frac{9}{15}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000006",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 3,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{2}{3}=\\frac{5}{6}$$",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000007",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 3,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{7}{9}=\\frac{14}{19}$$",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000008",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 4,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{4}{5}=\\frac{12}{14}$$",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000009",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 4,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{3}{8}=\\frac{9}{20}$$",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "g5.proporcii.raspoznat_proporciyu.000010",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.raspoznat_proporciyu",
+      "difficulty": 5,
+      "statement_md": "Определи, является ли запись пропорцией. Ответь $1$, если да, и $0$, если нет: $$\\frac{5}{12}=\\frac{11}{24}$$",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "g5.proporcii.proverit_proporciyu.000002",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.proverit_proporciyu",
+      "difficulty": 1,
+      "statement_md": "Проверь пропорцию по основному свойству. Ответь $1$, если пропорция верна, и $0$, если нет: $$\\frac{4}{6}=\\frac{10}{15}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.proverit_proporciyu.000003",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.proverit_proporciyu",
+      "difficulty": 2,
+      "statement_md": "Проверь пропорцию по основному свойству. Ответь $1$, если пропорция верна, и $0$, если нет: $$\\frac{8}{12}=\\frac{14}{21}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.proverit_proporciyu.000004",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.proverit_proporciyu",
+      "difficulty": 2,
+      "statement_md": "Проверь пропорцию по основному свойству. Ответь $1$, если пропорция верна, и $0$, если нет: $$\\frac{9}{15}=\\frac{6}{10}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.proverit_proporciyu.000005",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.proverit_proporciyu",
+      "difficulty": 2,
+      "statement_md": "Проверь пропорцию по основному свойству. Ответь $1$, если пропорция верна, и $0$, если нет: $$\\frac{7}{14}=\\frac{5}{10}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.proverit_proporciyu.000006",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.proverit_proporciyu",
+      "difficulty": 3,
+      "statement_md": "Проверь пропорцию по основному свойству. Ответь $1$, если пропорция верна, и $0$, если нет: $$\\frac{12}{16}=\\frac{9}{12}$$",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "g5.proporcii.proverit_proporciyu.000007",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.proverit_proporciyu",
+      "difficulty": 3,
+      "statement_md": "Проверь пропорцию по основному свойству. Ответь $1$, если пропорция верна, и $0$, если нет: $$\\frac{3}{4}=\\frac{9}{10}$$",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "g5.proporcii.proverit_proporciyu.000008",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.proverit_proporciyu",
+      "difficulty": 4,
+      "statement_md": "Проверь пропорцию по основному свойству. Ответь $1$, если пропорция верна, и $0$, если нет: $$\\frac{5}{7}=\\frac{10}{13}$$",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "g5.proporcii.proverit_proporciyu.000009",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.proverit_proporciyu",
+      "difficulty": 4,
+      "statement_md": "Проверь пропорцию по основному свойству. Ответь $1$, если пропорция верна, и $0$, если нет: $$\\frac{11}{22}=\\frac{3}{5}$$",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "g5.proporcii.proverit_proporciyu.000010",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.proverit_proporciyu",
+      "difficulty": 5,
+      "statement_md": "Проверь пропорцию по основному свойству. Ответь $1$, если пропорция верна, и $0$, если нет: $$\\frac{6}{8}=\\frac{15}{19}$$",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "g5.proporcii.naiti_neizvestnyi_srednii.000009",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
+      "difficulty": 4,
+      "statement_md": "Найди средний член $x$: $$\\frac{3}{x}=\\frac{9}{15}$$",
+      "answer": {
+        "type": "number",
+        "value": 5
+      }
+    },
+    {
+      "id": "g5.proporcii.naiti_neizvestnyi_srednii.000010",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.naiti_neizvestnyi_srednii",
+      "difficulty": 5,
+      "statement_md": "Найди средний член $x$: $$\\frac{8}{x}=\\frac{4}{7}$$",
+      "answer": {
+        "type": "number",
+        "value": 14
+      }
+    },
+    {
+      "id": "g5.proporcii.primenit_svoistvo_proporcii.000002",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
+      "difficulty": 1,
+      "statement_md": "Используй основное свойство пропорции. Для $$\\frac{2}{7}=\\frac{x}{3}$$ получаем 7x=2\\cdot3. Найди значение произведения $2\\cdot3$$.",
+      "answer": {
+        "type": "number",
+        "value": 21
+      }
+    },
+    {
+      "id": "g5.proporcii.primenit_svoistvo_proporcii.000003",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
+      "difficulty": 2,
+      "statement_md": "Используй основное свойство пропорции. Для $$\\frac{4}{9}=\\frac{x}{5}$$ получаем 9x=4\\cdot5. Найди значение произведения $4\\cdot5$$.",
+      "answer": {
+        "type": "number",
+        "value": 45
+      }
+    },
+    {
+      "id": "g5.proporcii.primenit_svoistvo_proporcii.000004",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
+      "difficulty": 2,
+      "statement_md": "Используй основное свойство пропорции. Для $$\\frac{6}{11}=\\frac{x}{7}$$ получаем 11x=6\\cdot7. Найди значение произведения $6\\cdot7$$.",
+      "answer": {
+        "type": "number",
+        "value": 77
+      }
+    },
+    {
+      "id": "g5.proporcii.primenit_svoistvo_proporcii.000005",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
+      "difficulty": 2,
+      "statement_md": "Используй основное свойство пропорции. Для $$\\frac{8}{13}=\\frac{x}{3}$$ получаем 13x=8\\cdot3. Найди значение произведения $8\\cdot3$$.",
+      "answer": {
+        "type": "number",
+        "value": 39
+      }
+    },
+    {
+      "id": "g5.proporcii.primenit_svoistvo_proporcii.000006",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
+      "difficulty": 3,
+      "statement_md": "Используй основное свойство пропорции. Для $$\\frac{10}{15}=\\frac{x}{4}$$ получаем 15x=10\\cdot4. Найди значение произведения $10\\cdot4$$.",
+      "answer": {
+        "type": "number",
+        "value": 60
+      }
+    },
+    {
+      "id": "g5.proporcii.primenit_svoistvo_proporcii.000007",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
+      "difficulty": 3,
+      "statement_md": "Используй основное свойство пропорции. Для $$\\frac{12}{5}=\\frac{x}{9}$$ получаем 5x=12\\cdot9. Найди значение произведения $12\\cdot9$$.",
+      "answer": {
+        "type": "number",
+        "value": 45
+      }
+    },
+    {
+      "id": "g5.proporcii.primenit_svoistvo_proporcii.000008",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
+      "difficulty": 4,
+      "statement_md": "Используй основное свойство пропорции. Для $$\\frac{14}{6}=\\frac{x}{5}$$ получаем 6x=14\\cdot5. Найди значение произведения $14\\cdot5$$.",
+      "answer": {
+        "type": "number",
+        "value": 30
+      }
+    },
+    {
+      "id": "g5.proporcii.primenit_svoistvo_proporcii.000009",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
+      "difficulty": 4,
+      "statement_md": "Используй основное свойство пропорции. Для $$\\frac{18}{7}=\\frac{x}{4}$$ получаем 7x=18\\cdot4. Найди значение произведения $18\\cdot4$$.",
+      "answer": {
+        "type": "number",
+        "value": 28
+      }
+    },
+    {
+      "id": "g5.proporcii.primenit_svoistvo_proporcii.000010",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.primenit_svoistvo_proporcii",
+      "difficulty": 5,
+      "statement_md": "Используй основное свойство пропорции. Для $$\\frac{20}{9}=\\frac{x}{7}$$ получаем 9x=20\\cdot7. Найди значение произведения $20\\cdot7$$.",
+      "answer": {
+        "type": "number",
+        "value": 63
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000001",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 1,
+      "statement_md": "Преобразуй отношение 2:3 к равному отношению, у которого первый член равен 10. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 15
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000002",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 1,
+      "statement_md": "Преобразуй отношение 3:5 к равному отношению, у которого первый член равен 12. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 20
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000003",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 2,
+      "statement_md": "Преобразуй отношение 4:7 к равному отношению, у которого первый член равен 20. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 35
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000004",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 2,
+      "statement_md": "Преобразуй отношение 5:8 к равному отношению, у которого первый член равен 15. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 24
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000005",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 2,
+      "statement_md": "Преобразуй отношение 7:9 к равному отношению, у которого первый член равен 14. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 18
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000006",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 3,
+      "statement_md": "Преобразуй отношение 6:11 к равному отношению, у которого первый член равен 18. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 33
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000007",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 3,
+      "statement_md": "Преобразуй отношение 8:13 к равному отношению, у которого первый член равен 16. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 26
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000008",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 4,
+      "statement_md": "Преобразуй отношение 9:4 к равному отношению, у которого первый член равен 27. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 12
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000009",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 4,
+      "statement_md": "Преобразуй отношение 11:6 к равному отношению, у которого первый член равен 22. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 12
+      }
+    },
+    {
+      "id": "g5.proporcii.preobrazovat_otnoshenie.000010",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.preobrazovat_otnoshenie",
+      "difficulty": 5,
+      "statement_md": "Преобразуй отношение 12:5 к равному отношению, у которого первый член равен 36. Найди второй член.",
+      "answer": {
+        "type": "number",
+        "value": 15
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000001",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 1,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 3 тетради стоят 120 руб. Сколько стоят 5 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 200
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000002",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 1,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 4 тетради стоят 84 руб. Сколько стоят 6 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 126
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000003",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 2,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 7 тетради стоят 210 руб. Сколько стоят 9 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 270
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000004",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 2,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 5 тетради стоят 45 руб. Сколько стоят 8 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 72
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000005",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 2,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 2 тетради стоят 18 руб. Сколько стоят 11 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 99
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000006",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 3,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 6 тетради стоят 54 руб. Сколько стоят 10 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 90
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000007",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 3,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 8 тетради стоят 40 руб. Сколько стоят 12 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 60
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000008",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 4,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 9 тетради стоят 63 руб. Сколько стоят 4 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 28
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000009",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 4,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 15 тетради стоят 75 руб. Сколько стоят 7 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 35
+      }
+    },
+    {
+      "id": "g5.proporcii.sostavit_proporciyu_po_usloviyu.000010",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+      "difficulty": 5,
+      "statement_md": "По условию составь пропорцию и найди стоимость. 12 тетради стоят 96 руб. Сколько стоят 5 таких же тетрадей?",
+      "answer": {
+        "type": "number",
+        "value": 40
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000001",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 1,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 4 рабочих выполняют работу за 12 ч, то за сколько часов выполнят ту же работу 6 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 8
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000002",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 2,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 3 рабочих выполняют работу за 15 ч, то за сколько часов выполнят ту же работу 5 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 9
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000003",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 2,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 8 рабочих выполняют работу за 10 ч, то за сколько часов выполнят ту же работу 4 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 20
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000004",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 2,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 6 рабочих выполняют работу за 18 ч, то за сколько часов выполнят ту же работу 9 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 12
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000005",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 3,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 5 рабочих выполняют работу за 20 ч, то за сколько часов выполнят ту же работу 10 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 10
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000006",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 3,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 7 рабочих выполняют работу за 14 ч, то за сколько часов выполнят ту же работу 2 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 49
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000007",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 4,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 12 рабочих выполняют работу за 6 ч, то за сколько часов выполнят ту же работу 3 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 24
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000008",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 4,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 9 рабочих выполняют работу за 16 ч, то за сколько часов выполнят ту же работу 12 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 12
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000009",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 5,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 10 рабочих выполняют работу за 9 ч, то за сколько часов выполнят ту же работу 15 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 6
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost.000010",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+      "difficulty": 1,
+      "statement_md": "Одинаковую работу выполняют за одинаковый объём. Если 4 рабочих выполняют работу за 25 ч, то за сколько часов выполнят ту же работу 20 рабочих?",
+      "answer": {
+        "type": "number",
+        "value": 5
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_masshtab.000007",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
+      "difficulty": 3,
+      "statement_md": "Масштаб карты $1:50000$. Отрезок на карте равен 8 см. Найди расстояние на местности в километрах.",
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_masshtab.000008",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
+      "difficulty": 4,
+      "statement_md": "Масштаб карты $1:25000$. Отрезок на карте равен 12 см. Найди расстояние на местности в километрах.",
+      "answer": {
+        "type": "number",
+        "value": 3
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_masshtab.000009",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
+      "difficulty": 4,
+      "statement_md": "Масштаб карты $1:200000$. Отрезок на карте равен 2.5 см. Найди расстояние на местности в километрах.",
+      "answer": {
+        "type": "number",
+        "value": 5
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_masshtab.000010",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_masshtab",
+      "difficulty": 5,
+      "statement_md": "Масштаб карты $1:100000$. Отрезок на карте равен 7 см. Найди расстояние на местности в километрах.",
+      "answer": {
+        "type": "number",
+        "value": 7
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_cenu.000007",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
+      "difficulty": 3,
+      "statement_md": "Цена за единицу одинаковая. За 4 кг заплатили 280 руб. Сколько стоят 7 кг?",
+      "answer": {
+        "type": "number",
+        "value": 490
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_cenu.000008",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
+      "difficulty": 4,
+      "statement_md": "Цена за единицу одинаковая. За 9 кг заплатили 360 руб. Сколько стоят 5 кг?",
+      "answer": {
+        "type": "number",
+        "value": 200
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_cenu.000009",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
+      "difficulty": 4,
+      "statement_md": "Цена за единицу одинаковая. За 6 кг заплатили 150 руб. Сколько стоят 14 кг?",
+      "answer": {
+        "type": "number",
+        "value": 350
+      }
+    },
+    {
+      "id": "g5.proporcii.reshit_zadachu_na_cenu.000010",
+      "topic_id": "g5.proporcii",
+      "skill_id": "g5.proporcii.reshit_zadachu_na_cenu",
+      "difficulty": 5,
+      "statement_md": "Цена за единицу одинаковая. За 8 кг заплатили 96 руб. Сколько стоят 25 кг?",
+      "answer": {
+        "type": "number",
+        "value": 300
+      }
     }
   ]
 }

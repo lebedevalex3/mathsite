@@ -9,7 +9,12 @@
     "lint": "eslint",
     "test": "node --test --import tsx tests/*.test.ts",
     "typecheck": "tsc --noEmit",
-    "validate:tasks": "tsx scripts/validate-tasks.ts"
+    "validate:tasks": "tsx scripts/validate-tasks.ts",
+    "validate:content": "tsx scripts/validate-content.ts",
+    "content:new-subtopic": "tsx scripts/content-new-subtopic.ts",
+    "content:new-topic": "tsx scripts/content-new-topic.ts",
+    "content:migrate-topic-stage2c": "tsx scripts/content-migrate-topic-stage2c.ts",
+    "cleanup:demo-works": "tsx scripts/cleanup-demo-works.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

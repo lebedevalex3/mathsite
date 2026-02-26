@@ -1,29 +1,36 @@
 import { KeyIdea, Steps, Mistakes, Practice } from "@/src/components/mdx";
 import { MarkdownMath } from "@/lib/ui/MarkdownMath";
-import { SubtopicPageTemplate } from "../subtopic-page-template";
+import { SubtopicPageTemplate } from "@/src/app/[locale]/5-klass/proporcii/subtopic-page-template";
+
+export const subtopicMeta = {
+  title: "Основное правило пропорции",
+  slug: "rule",
+  order: 10,
+};
 
 export default async function RuleSubtopicPage({ params }) {
   const { locale } = await params;
 
-  return (
-    <SubtopicPageTemplate
+return (
+
+<SubtopicPageTemplate
       locale={locale}
       slug="rule"
       intro="Подтема про основное свойство пропорции, проверку пропорций и вычисление неизвестного члена."
     >
-      <h2 id="toc">Содержание</h2>
-      <ul>
-        <li><a href="#opredelenie">Определение</a></li>
-        <li><a href="#osnovnoe-svoystvo">Основное свойство</a></li>
-        <li><a href="#algoritm-resheniya">Алгоритм решения</a></li>
-        <li><a href="#primery">Примеры</a></li>
-        <li><a href="#tipichnye-oshibki">Типичные ошибки</a></li>
-        <li><a href="#praktika">Практика</a></li>
-      </ul>
+<h2 id="toc">Содержание</h2>
+<ul>
+<li><a href="#opredelenie">Определение</a></li>
+<li><a href="#osnovnoe-svoystvo">Основное свойство</a></li>
+<li><a href="#algoritm-resheniya">Алгоритм решения</a></li>
+<li><a href="#primery">Примеры</a></li>
+<li><a href="#tipichnye-oshibki">Типичные ошибки</a></li>
+<li><a href="#praktika">Практика</a></li>
+</ul>
 
       <h2 id="opredelenie">Определение</h2>
       <p>
-        Пропорция — это равенство двух отношений. В задачах 5 класса это удобный
+        Пропорци — это равенство двух отношений. В задачах 5 класса это удобный
         способ записать одинаковую зависимость между величинами и найти неизвестное.
       </p>
       <p>
@@ -113,5 +120,6 @@ export default async function RuleSubtopicPage({ params }) {
         ]}
       />
     </SubtopicPageTemplate>
-  );
+
+);
 }

@@ -23,10 +23,16 @@ export async function GET(request: Request, { params }: RouteProps) {
       return NextResponse.json(body, { status });
     }
 
-    const locale = new URL(request.url).searchParams.get("locale") || "ru";
+    const requestUrl = new URL(request.url);
+    const locale = requestUrl.searchParams.get("locale") || "ru";
+    const forwardParams = new URLSearchParams();
+    for (const [key, value] of requestUrl.searchParams.entries()) {
+      if (key === "locale") continue;
+      forwardParams.append(key, value);
+    }
     const response = await renderPdfFromPrintPath(
       request,
-      `/${locale}/teacher/variants/${id}/print`,
+      `/${locale}/teacher/variants/${id}/print${forwardParams.toString() ? `?${forwardParams.toString()}` : ""}`,
     );
 
     if (response.status === 200) {

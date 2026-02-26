@@ -272,9 +272,32 @@ curl -X POST http://localhost:3000/api/teacher/become
 
 - `/{locale}/teacher/variants` — шаблоны + список сгенерированных вариантов
 - `/{locale}/teacher/variants/{id}` — детали варианта
+- `/{locale}/teacher-tools` — публичный конструктор вариантов по навыкам (demo flow)
 
 Пример:
 - `http://localhost:3000/ru/teacher/variants`
+
+### Очистка demo-работ (`teacher-tools`)
+
+В `/{locale}/teacher-tools` demo-варианты сохраняются в БД (через `Work` + `Variant`), поэтому при активном тестировании данные копятся.
+
+Dry-run (ничего не удаляет):
+
+```bash
+pnpm cleanup:demo-works
+```
+
+Удаление истёкших demo-работ и осиротевших вариантов:
+
+```bash
+pnpm cleanup:demo-works -- --apply
+```
+
+Свой горизонт очистки (по умолчанию 168 часов = 7 дней):
+
+```bash
+pnpm cleanup:demo-works -- --older-than-hours 24 --apply
+```
 
 ### Если генератор пишет “недостаточно задач”
 

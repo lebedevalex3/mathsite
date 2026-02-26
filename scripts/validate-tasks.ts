@@ -2,12 +2,16 @@ import path from "node:path";
 
 import { loadTaskBanks } from "../lib/tasks/load";
 import { parseTaxonomyMarkdown } from "../lib/tasks/taxonomy";
+import { analyzeLatexTaskMarkdownCompatibility } from "../src/lib/latex/task-latex-compat";
 
 function rel(filePath: string) {
   return path.relative(process.cwd(), filePath) || filePath;
 }
 
 async function main() {
+  const args = new Set(process.argv.slice(2));
+  const latexWarn = args.has("--latex-warn");
+
   const rootDir = path.join(process.cwd(), "data", "tasks");
   const taxonomyPath = path.join(process.cwd(), "docs", "TAXONOMY.md");
   const taxonomy = await parseTaxonomyMarkdown(taxonomyPath);
@@ -18,6 +22,7 @@ async function main() {
   );
 
   const validationErrors: string[] = [];
+  const latexWarnings: string[] = [];
   const seenTaskIds = new Map<string, string>();
 
   for (const { filePath, task } of allTasks) {
@@ -38,6 +43,16 @@ async function main() {
 
     if (task.statement_md.trim().length === 0) {
       validationErrors.push(`Empty statement_md for ${task.id} in ${rel(filePath)}`);
+    }
+
+    if (latexWarn) {
+      const report = analyzeLatexTaskMarkdownCompatibility(task.statement_md);
+      if (!report.compatible) {
+        const codes = report.issues.map((issue) => issue.code).join(", ");
+        latexWarnings.push(
+          `${rel(filePath)} | ${task.id} | latex-compat warnings: ${codes}`,
+        );
+      }
     }
 
     if (task.topic_id !== taxonomy.topicId) {
@@ -66,6 +81,9 @@ async function main() {
   console.log(`- Valid files: ${banks.length}`);
   console.log(`- Tasks checked: ${allTasks.length}`);
   console.log(`- Unique skills: ${uniqueSkills.size}`);
+  if (latexWarn) {
+    console.log(`- LaTeX compatibility warnings: ${latexWarnings.length}`);
+  }
 
   if (totalErrors.length > 0) {
     console.error(`- Errors: ${totalErrors.length}`);
@@ -77,6 +95,12 @@ async function main() {
   }
 
   console.log("- Errors: 0");
+  if (latexWarn && latexWarnings.length > 0) {
+    console.warn("LaTeX compatibility warnings (warn-only)");
+    for (const message of latexWarnings) {
+      console.warn(`  - ${message}`);
+    }
+  }
   console.log("OK");
 }
 

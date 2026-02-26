@@ -1,5 +1,11 @@
 import { KeyIdea, Steps, Mistakes } from "@/src/components/mdx";
-import { SubtopicPageTemplate } from "../subtopic-page-template";
+import { SubtopicPageTemplate } from "@/src/app/[locale]/5-klass/proporcii/subtopic-page-template";
+
+export const subtopicMeta = {
+  title: "Обратная пропорциональность",
+  slug: "inverse",
+  order: 30,
+};
 
 export default async function InverseSubtopicPage({ params }) {
   const { locale } = await params;
@@ -40,4 +46,3 @@ export default async function InverseSubtopicPage({ params }) {
     </SubtopicPageTemplate>
   );
 }
-

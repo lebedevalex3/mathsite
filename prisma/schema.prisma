@@ -13,6 +13,13 @@ enum UserRole {
   admin
 }
 
+enum WorkType {
+  lesson
+  quiz
+  homework
+  test
+}
+
 model User {
   id        String    @id @default(uuid()) @db.Uuid
   visitorId String?   @unique
@@ -20,6 +27,7 @@ model User {
   createdAt DateTime  @default(now())
   attempts  Attempt[]
   variants  Variant[] @relation("VariantOwner")
+  works     Work[]    @relation("WorkOwner")
 }
 
 model Attempt {
@@ -48,9 +56,45 @@ model Variant {
   createdAt    DateTime     @default(now())
   owner        User         @relation("VariantOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
   tasks        VariantTask[]
+  workLinks    WorkVariant[]
 
   @@index([ownerUserId, createdAt])
   @@index([topicId, createdAt])
+}
+
+model Work {
+  id             String       @id @default(uuid()) @db.Uuid
+  ownerUserId    String       @db.Uuid
+  topicId        String
+  title          String
+  workType       WorkType
+  printProfileJson Json
+  isDemo         Boolean      @default(false)
+  expiresAt      DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  owner          User         @relation("WorkOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  variants       WorkVariant[]
+
+  @@index([ownerUserId, createdAt])
+  @@index([topicId, createdAt])
+  @@index([isDemo, expiresAt])
+}
+
+model WorkVariant {
+  id         String   @id @default(uuid()) @db.Uuid
+  workId      String   @db.Uuid
+  variantId   String   @db.Uuid
+  orderIndex  Int
+  createdAt   DateTime @default(now())
+
+  work        Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  variant     Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([workId, orderIndex])
+  @@unique([workId, variantId])
+  @@index([variantId])
 }
 
 model VariantTask {

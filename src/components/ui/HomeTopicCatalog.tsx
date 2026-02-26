@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
@@ -25,7 +26,7 @@ const copy = {
     noResults: "По выбранным фильтрам пока ничего не найдено.",
     read: "Читать",
     train: "Тренировать",
-    ready: "Готово",
+    ready: "Доступно",
     soon: "Скоро",
     levelLabel: "Level",
     statusLabel: "Статус",
@@ -43,7 +44,7 @@ const copy = {
     noResults: "No topics found for the current filters.",
     read: "Read",
     train: "Train",
-    ready: "Ready",
+    ready: "Available",
     soon: "Soon",
     levelLabel: "Level",
     statusLabel: "Status",
@@ -61,7 +62,7 @@ const copy = {
     noResults: "Keine Themen für die aktuellen Filter gefunden.",
     read: "Lesen",
     train: "Trainieren",
-    ready: "Fertig",
+    ready: "Verfügbar",
     soon: "Bald",
     levelLabel: "Level",
     statusLabel: "Status",
@@ -76,6 +77,13 @@ const copy = {
 
 const domainOrder: TopicDomain[] = ["arithmetic", "algebra", "geometry", "data"];
 const levels = [5, 6];
+
+function parseDomainParam(value: string | null): TopicDomain | null {
+  if (value === "arithmetic" || value === "algebra" || value === "geometry" || value === "data") {
+    return value;
+  }
+  return null;
+}
 
 function statusBadge(status: TopicStatus, locale: AppLocale) {
   const t = copy[locale];
@@ -106,10 +114,21 @@ function buildTrainerHref(locale: AppLocale, entry: TopicCatalogEntry) {
 
 export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
   const t = copy[locale];
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const queryDomain = parseDomainParam(searchParams.get("domain"));
+  const domain = queryDomain ?? "arithmetic";
   const [query, setQuery] = useState("");
-  const [domain, setDomain] = useState<TopicDomain>("arithmetic");
   const [level, setLevel] = useState<number>(5);
   const [status, setStatus] = useState<TopicStatus>("ready");
+
+  function handleDomainChange(nextDomain: TopicDomain) {
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.set("domain", nextDomain);
+
+    router.replace(`${pathname}?${nextParams.toString()}#topics-catalog`, { scroll: false });
+  }
 
   const filtered = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -160,7 +179,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
               <button
                 key={item}
                 type="button"
-                onClick={() => setDomain(item)}
+                onClick={() => handleDomainChange(item)}
                 className={[
                   "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
                   domain === item
@@ -270,4 +289,3 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
     </section>
   );
 }
-

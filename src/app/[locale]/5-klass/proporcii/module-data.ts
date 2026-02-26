@@ -14,6 +14,11 @@ export type ProporciiSkill = {
   skillSlug: string;
 };
 
+export type SubtopicTocItem = {
+  id: string;
+  label: string;
+};
+
 export const proporciiSubtopics: ProporciiSubtopic[] = [
   {
     id: "g5.proporcii.rule",
@@ -44,6 +49,32 @@ export const proporciiSubtopics: ProporciiSubtopic[] = [
     status: "ready",
   },
 ];
+
+export const proporciiSubtopicToc: Record<ProporciiSubtopic["slug"], SubtopicTocItem[]> = {
+  rule: [
+    { id: "opredelenie", label: "Определение" },
+    { id: "osnovnoe-svoystvo", label: "Основное свойство" },
+    { id: "algoritm-resheniya", label: "Алгоритм решения" },
+    { id: "primery", label: "Примеры" },
+    { id: "tipichnye-oshibki", label: "Типичные ошибки" },
+    { id: "praktika", label: "Практика" },
+  ],
+  direct: [
+    { id: "opredelenie", label: "Определение / идея" },
+    { id: "algoritm", label: "Алгоритм" },
+    { id: "tipichnye-oshibki", label: "Типичные ошибки" },
+  ],
+  inverse: [
+    { id: "ideya", label: "Идея" },
+    { id: "algoritm", label: "Алгоритм" },
+    { id: "oshibki", label: "Типичные ошибки" },
+  ],
+  problems: [
+    { id: "ideya", label: "Идея" },
+    { id: "algoritm", label: "Алгоритм" },
+    { id: "oshibki", label: "Типичные ошибки" },
+  ],
+};
 
 const DEFAULT_SKILL_PAGE_SLUG = "naiti-neizvestnyi";
 
@@ -127,4 +158,3 @@ export function getSubtopicBySlug(slug: string) {
 export function getSkillsForSubtopic(subtopicId: ProporciiSubtopic["id"]) {
   return proporciiSkills.filter((skill) => skill.subtopicId === subtopicId);
 }
-

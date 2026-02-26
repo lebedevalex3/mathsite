@@ -1,13 +1,20 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { Container } from "@/src/components/ui/Container";
+import type { TopicDomain } from "@/src/lib/topicMeta";
 
 type SiteHeaderProps = {
   locale: "ru" | "en" | "de";
 };
 
 export function SiteHeader({ locale }: SiteHeaderProps) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const teacherLabel =
     locale === "ru"
       ? "Учительский кабинет (ранний доступ)"
@@ -15,8 +22,41 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
         ? "Lehrkräfte-Bereich (Früher Zugang)"
         : "Teacher Workspace (Early Access)";
 
+  const domainLabels: Record<TopicDomain, string> =
+    locale === "ru"
+      ? {
+          arithmetic: "Арифметика",
+          algebra: "Алгебра",
+          geometry: "Геометрия",
+          data: "Данные",
+        }
+      : locale === "de"
+        ? {
+            arithmetic: "Arithmetik",
+            algebra: "Algebra",
+            geometry: "Geometrie",
+            data: "Daten",
+          }
+        : {
+            arithmetic: "Arithmetic",
+            algebra: "Algebra",
+            geometry: "Geometry",
+            data: "Data",
+          };
+
+  const navDomains: TopicDomain[] = ["arithmetic", "algebra", "geometry"];
+  const isCatalogRoute = pathname === `/${locale}`;
+  const requestedDomain = searchParams.get("domain");
+  const activeCatalogDomain =
+    requestedDomain === "arithmetic" ||
+    requestedDomain === "algebra" ||
+    requestedDomain === "geometry" ||
+    requestedDomain === "data"
+      ? requestedDomain
+      : "arithmetic";
+
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+    <header className="site-header sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <Container className="flex h-16 items-center justify-between gap-4">
         <div className="flex items-center gap-6">
           <Link
@@ -29,18 +69,20 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
             <span>Mathsite</span>
           </Link>
           <nav className="hidden items-center gap-1 text-sm md:flex">
-            <Link
-              href={`/${locale}/5-klass/proporcii`}
-              className="rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100 hover:text-slate-950"
-            >
-              5 класс
-            </Link>
-            <Link
-              href={`/${locale}/5-klass/proporcii`}
-              className="rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100 hover:text-slate-950"
-            >
-              Темы
-            </Link>
+            {navDomains.map((domain) => (
+              <Link
+                key={domain}
+                href={`/${locale}?domain=${domain}#topics-catalog`}
+                className={[
+                  "rounded-md px-3 py-2 transition-colors",
+                  isCatalogRoute && activeCatalogDomain === domain
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-700 hover:bg-slate-100 hover:text-slate-950",
+                ].join(" ")}
+              >
+                {domainLabels[domain]}
+              </Link>
+            ))}
           </nav>
         </div>
 
