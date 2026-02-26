@@ -15,6 +15,14 @@ export type BuildVariantPlanParams = {
   seed: string;
 };
 
+type PlannerSlot = {
+  slotIndex: number;
+  sectionIndex: number;
+  sectionLabel: string;
+  skillIds: string[];
+  difficulty: [number, number];
+};
+
 export class InsufficientTasksError extends Error {
   code = "INSUFFICIENT_TASKS" as const;
   details: {
@@ -50,26 +58,48 @@ function sampleWithoutReplacement<T>(
   return result;
 }
 
+function matchesSlot(task: Task, slot: Pick<PlannerSlot, "skillIds" | "difficulty">) {
+  const [minDifficulty, maxDifficulty] = slot.difficulty;
+  return (
+    slot.skillIds.includes(task.skill_id) &&
+    task.difficulty >= minDifficulty &&
+    task.difficulty <= maxDifficulty
+  );
+}
+
+function buildPlannerSlots(template: VariantTemplate): PlannerSlot[] {
+  const slots: PlannerSlot[] = [];
+
+  let slotIndex = 0;
+  template.sections.forEach((section, sectionIndex) => {
+    for (let i = 0; i < section.count; i += 1) {
+      slots.push({
+        slotIndex,
+        sectionIndex,
+        sectionLabel: section.label,
+        skillIds: [...section.skillIds],
+        difficulty: section.difficulty,
+      });
+      slotIndex += 1;
+    }
+  });
+
+  return slots;
+}
+
 export function buildVariantPlan({
   tasks,
   template,
   seed,
 }: BuildVariantPlanParams): VariantPlannedTask[] {
   const rng = createSeededRng(seed);
-  const usedTaskIds = new Set<string>();
-  const selected: VariantPlannedTask[] = [];
-  let orderIndex = 0;
+  const slots = buildPlannerSlots(template);
 
+  // Fast fail for obviously impossible sections before entering backtracking.
   for (const section of template.sections) {
-    const [minDifficulty, maxDifficulty] = section.difficulty;
-    const candidates = tasks.filter((task) => {
-      return (
-        !usedTaskIds.has(task.id) &&
-        section.skillIds.includes(task.skill_id) &&
-        task.difficulty >= minDifficulty &&
-        task.difficulty <= maxDifficulty
-      );
-    });
+    const candidates = tasks.filter((task) =>
+      matchesSlot(task, { skillIds: section.skillIds, difficulty: section.difficulty }),
+    );
 
     if (candidates.length < section.count) {
       throw new InsufficientTasksError({
@@ -80,14 +110,87 @@ export function buildVariantPlan({
         difficulty: section.difficulty,
       });
     }
-
-    const picked = sampleWithoutReplacement(candidates, section.count, rng.pickIndex);
-    for (const task of picked) {
-      usedTaskIds.add(task.id);
-      selected.push({ task, sectionLabel: section.label, orderIndex });
-      orderIndex += 1;
-    }
   }
 
-  return selected;
+  const assignedBySlot = new Array<Task | null>(slots.length).fill(null);
+  const usedTaskIds = new Set<string>();
+  let failureDetails: InsufficientTasksError["details"] | null = null;
+
+  function candidatesForSlot(slot: PlannerSlot) {
+    return tasks.filter((task) => !usedTaskIds.has(task.id) && matchesSlot(task, slot));
+  }
+
+  function setFailure(slot: PlannerSlot, availableCount: number) {
+    const section = template.sections[slot.sectionIndex]!;
+    failureDetails = {
+      sectionLabel: section.label,
+      requiredCount: section.count,
+      availableCount,
+      skillIds: [...section.skillIds],
+      difficulty: section.difficulty,
+    };
+  }
+
+  function solve(): boolean {
+    let nextSlot: PlannerSlot | null = null;
+    let nextCandidates: Task[] | null = null;
+
+    for (const slot of slots) {
+      if (assignedBySlot[slot.slotIndex]) continue;
+      const candidates = candidatesForSlot(slot);
+
+      if (candidates.length === 0) {
+        setFailure(slot, 0);
+        return false;
+      }
+
+      if (!nextCandidates || candidates.length < nextCandidates.length) {
+        nextSlot = slot;
+        nextCandidates = candidates;
+      }
+    }
+
+    if (!nextSlot || !nextCandidates) {
+      return true;
+    }
+
+    const orderedCandidates = sampleWithoutReplacement(
+      nextCandidates,
+      nextCandidates.length,
+      rng.pickIndex,
+    );
+
+    for (const task of orderedCandidates) {
+      assignedBySlot[nextSlot.slotIndex] = task;
+      usedTaskIds.add(task.id);
+
+      if (solve()) return true;
+
+      usedTaskIds.delete(task.id);
+      assignedBySlot[nextSlot.slotIndex] = null;
+    }
+
+    setFailure(nextSlot, nextCandidates.length);
+    return false;
+  }
+
+  if (!solve()) {
+    throw new InsufficientTasksError(
+      failureDetails ?? {
+        sectionLabel: template.sections[0]?.label ?? "unknown",
+        requiredCount: template.sections[0]?.count ?? 1,
+        availableCount: 0,
+        skillIds: template.sections[0]?.skillIds ?? [],
+        difficulty: template.sections[0]?.difficulty ?? [1, 5],
+      },
+    );
+  }
+
+  return slots.map((slot, orderIndex) => {
+    const task = assignedBySlot[slot.slotIndex];
+    if (!task) {
+      throw new Error(`Planner internal error: unassigned slot ${slot.slotIndex}`);
+    }
+    return { task, sectionLabel: slot.sectionLabel, orderIndex };
+  });
 }

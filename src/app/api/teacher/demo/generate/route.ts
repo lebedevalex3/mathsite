@@ -6,10 +6,9 @@ import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 import { getTeacherToolsTopicSkills } from "@/src/lib/teacher-tools/catalog";
 import {
   buildDemoTemplate,
-  createDemoWork,
   DemoRateLimitError,
   enforceDemoRateLimit,
-  generateAndSaveDemoVariants,
+  generateDemoWorkWithVariants,
   validateDemoPlan,
 } from "@/src/lib/teacher-tools/demo";
 import type { DemoPlanItem } from "@/src/lib/teacher-tools/types";
@@ -84,7 +83,7 @@ export async function POST(request: Request) {
       mode,
     });
 
-    const variants = await generateAndSaveDemoVariants({
+    const result = await generateDemoWorkWithVariants({
       ownerUserId: userId,
       topicId: body.topicId,
       template,
@@ -93,22 +92,15 @@ export async function POST(request: Request) {
       shuffleOrder: typeof (body as { shuffleOrder?: unknown }).shuffleOrder === "boolean"
         ? (body as { shuffleOrder: boolean }).shuffleOrder
         : false,
-    });
-
-    const work = await createDemoWork({
-      ownerUserId: userId,
-      topicId: body.topicId,
       mode,
-      variantIds: variants.map((variant) => variant.id),
       workType,
       printLayout,
-      variantFits: variants.map((variant) => variant.fit),
     });
 
     return NextResponse.json({
       ok: true,
-      workId: work.id,
-      variants: variants.map((item) => ({
+      workId: result.work.id,
+      variants: result.variants.map((item) => ({
         id: item.id,
         title: item.title,
         createdAt: item.createdAt.toISOString(),

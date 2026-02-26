@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import type { Task } from "@/lib/tasks/schema";
 import { buildVariantPlan, InsufficientTasksError } from "@/src/lib/variants/plan";
 
 import { createTaskBankFixture, createTemplateFixture } from "./fixtures/variant-generator.fixtures";
@@ -100,4 +101,64 @@ test("variant generator throws InsufficientTasksError when template cannot be sa
       return true;
     },
   );
+});
+
+test("variant generator backtracks on overlapping sections instead of false INSUFFICIENT_TASKS", () => {
+  const tasks: Task[] = [
+    {
+      id: "g5.proporcii.skill_a.000001",
+      topic_id: "g5.proporcii",
+      skill_id: "g5.proporcii.skill_a",
+      difficulty: 1,
+      statement_md: "A1",
+      answer: { type: "number", value: 1 },
+    },
+    {
+      id: "g5.proporcii.skill_a.000002",
+      topic_id: "g5.proporcii",
+      skill_id: "g5.proporcii.skill_a",
+      difficulty: 2,
+      statement_md: "A2",
+      answer: { type: "number", value: 2 },
+    },
+    {
+      id: "g5.proporcii.skill_b.000001",
+      topic_id: "g5.proporcii",
+      skill_id: "g5.proporcii.skill_b",
+      difficulty: 2,
+      statement_md: "B1",
+      answer: { type: "number", value: 3 },
+    },
+  ];
+
+  const template = {
+    id: "g5.proporcii.overlap.v1",
+    title: "Overlap",
+    topicId: "g5.proporcii",
+    header: {
+      gradeLabel: "5 класс",
+      topicLabel: "Пропорции",
+    },
+    sections: [
+      {
+        label: "Широкая секция",
+        skillIds: ["g5.proporcii.skill_a", "g5.proporcii.skill_b"],
+        count: 2,
+        difficulty: [1, 2] as [number, number],
+      },
+      {
+        label: "Узкая секция",
+        skillIds: ["g5.proporcii.skill_b"],
+        count: 1,
+        difficulty: [2, 2] as [number, number],
+      },
+    ],
+  };
+
+  const plan = buildVariantPlan({ tasks, template, seed: "s0" });
+
+  assert.equal(plan.length, 3);
+  assert.equal(new Set(plan.map((item) => item.task.id)).size, 3);
+  assert.equal(plan[2]?.sectionLabel, "Узкая секция");
+  assert.equal(plan[2]?.task.id, "g5.proporcii.skill_b.000001");
 });

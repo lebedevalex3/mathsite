@@ -10,6 +10,7 @@ import type { PrintLayoutMode } from "@/src/lib/variants/print-layout";
 import type { VariantTemplate } from "@/src/lib/variants/types";
 import { buildVariantPlan } from "@/src/lib/variants/plan";
 import type { WorkType } from "@/src/lib/variants/print-recommendation";
+import { createSeededRng } from "@/src/lib/variants/rng";
 
 import type { DemoPlanItem } from "./types";
 
@@ -97,6 +98,77 @@ function makeSeed(index: number) {
   return `${Date.now()}-${index}-${crypto.randomUUID().slice(0, 8)}`;
 }
 
+export function shuffleItemsWithSeed<T>(items: T[], seed: string): T[] {
+  const rng = createSeededRng(seed);
+  const shuffled = [...items];
+
+  // Fisher-Yates shuffle with seeded RNG for reproducibility.
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = rng.pickIndex(i + 1);
+    [shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!];
+  }
+
+  return shuffled;
+}
+
+type CreatedDemoVariantSummary = {
+  id: string;
+  title: string;
+  createdAt: Date;
+  tasksCount: number;
+  fit: VariantPrintFitMetrics;
+};
+
+type DemoVariantDraft = {
+  seed: string;
+  ordered: Array<{
+    task: { id: string; statement_md: string };
+    sectionLabel: string;
+    orderIndex: number;
+  }>;
+  title: string;
+  fit: VariantPrintFitMetrics;
+};
+
+function buildDemoVariantDrafts(params: {
+  tasks: Awaited<ReturnType<typeof getTasksForTopic>>["tasks"];
+  template: VariantTemplate;
+  variantsCount: number;
+  seed?: number;
+  shuffleOrder?: boolean;
+  topicId: string;
+}) {
+  const { tasks, template, variantsCount } = params;
+
+  const drafts: DemoVariantDraft[] = [];
+  for (let i = 0; i < variantsCount; i += 1) {
+    const seed = params.seed != null ? `${params.seed}-${i}` : makeSeed(i);
+    const selected = buildVariantPlan({ tasks, template, seed });
+    const ordered = params.shuffleOrder
+      ? shuffleItemsWithSeed(selected, `${seed}:shuffle`)
+          .map((item) => ({ ...item }))
+          .map((item, orderIndex) => ({ ...item, orderIndex }))
+      : selected;
+    const timestamp = new Intl.DateTimeFormat("ru-RU", {
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(new Date());
+
+    drafts.push({
+      seed,
+      ordered: ordered.map((item) => ({
+        task: { id: item.task.id, statement_md: item.task.statement_md },
+        sectionLabel: item.sectionLabel,
+        orderIndex: item.orderIndex,
+      })),
+      title: `${template.title} • ${timestamp} • ${i + 1}`,
+      fit: analyzeVariantPrintFit(ordered.map((item) => ({ statement_md: item.task.statement_md }))),
+    });
+  }
+
+  return drafts;
+}
+
 export async function generateAndSaveDemoVariants(params: {
   ownerUserId: string;
   topicId: string;
@@ -115,27 +187,17 @@ export async function generateAndSaveDemoVariants(params: {
     $transaction: <T>(fn: (tx: unknown) => Promise<T>) => Promise<T>;
   };
 
-  const created: Array<{
-    id: string;
-    title: string;
-    createdAt: Date;
-    tasksCount: number;
-    fit: VariantPrintFitMetrics;
-  }> = [];
-  for (let i = 0; i < variantsCount; i += 1) {
-    const seed = params.seed != null ? `${params.seed}-${i}` : makeSeed(i);
-    const selected = buildVariantPlan({ tasks, template, seed });
-    const ordered = params.shuffleOrder
-      ? selected
-          .map((item) => ({ ...item }))
-          .sort(() => Math.random() - 0.5)
-          .map((item, orderIndex) => ({ ...item, orderIndex }))
-      : selected;
-    const timestamp = new Intl.DateTimeFormat("ru-RU", {
-      dateStyle: "short",
-      timeStyle: "short",
-    }).format(new Date());
+  const drafts = buildDemoVariantDrafts({
+    tasks,
+    template,
+    variantsCount,
+    seed: params.seed,
+    shuffleOrder: params.shuffleOrder,
+    topicId,
+  });
 
+  const created: CreatedDemoVariantSummary[] = [];
+  for (const draft of drafts) {
     const variant = await db.$transaction(async (tx) => {
       const trx = tx as {
         variant: { create(args: unknown): Promise<{ id: string; createdAt: Date; title: string }> };
@@ -146,12 +208,12 @@ export async function generateAndSaveDemoVariants(params: {
           ownerUserId,
           topicId,
           templateId: template.id,
-          title: `${template.title} • ${timestamp} • ${i + 1}`,
-          seed,
+          title: draft.title,
+          seed: draft.seed,
         },
       });
       await trx.variantTask.createMany({
-        data: ordered.map((item) => ({
+        data: draft.ordered.map((item) => ({
           variantId: createdVariant.id,
           taskId: item.task.id,
           sectionLabel: item.sectionLabel,
@@ -165,12 +227,123 @@ export async function generateAndSaveDemoVariants(params: {
       id: variant.id,
       title: variant.title,
       createdAt: variant.createdAt,
-      tasksCount: ordered.length,
-      fit: analyzeVariantPrintFit(ordered.map((item) => ({ statement_md: item.task.statement_md }))),
+      tasksCount: draft.ordered.length,
+      fit: draft.fit,
     });
   }
 
   return created;
+}
+
+export async function generateDemoWorkWithVariants(params: {
+  ownerUserId: string;
+  topicId: string;
+  template: VariantTemplate;
+  variantsCount: number;
+  seed?: number;
+  shuffleOrder?: boolean;
+  mode?: string;
+  workType: WorkType;
+  printLayout: PrintLayoutMode;
+}): Promise<{ work: { id: string }; variants: CreatedDemoVariantSummary[] }> {
+  const { ownerUserId, topicId, template, variantsCount, mode, workType, printLayout } = params;
+  const { tasks, errors } = await getTasksForTopic(topicId);
+  if (errors.length > 0) {
+    throw new Error(`Task bank errors: ${errors[0]}`);
+  }
+
+  const drafts = buildDemoVariantDrafts({
+    tasks,
+    template,
+    variantsCount,
+    seed: params.seed,
+    shuffleOrder: params.shuffleOrder,
+    topicId,
+  });
+
+  const variantFits = drafts.map((draft) => draft.fit);
+  const now = new Date();
+  const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const title = mode ? `Работа • ${mode}` : "Работа";
+  const fit = analyzeWorkPrintFit({
+    workType,
+    variants: variantFits,
+  });
+
+  const db = prisma as unknown as {
+    $transaction: <T>(fn: (tx: unknown) => Promise<T>) => Promise<T>;
+  };
+
+  return db.$transaction(async (tx) => {
+    const trx = tx as {
+      variant: { create(args: unknown): Promise<{ id: string; createdAt: Date; title: string }> };
+      variantTask: { createMany(args: unknown): Promise<unknown> };
+      work: { create(args: unknown): Promise<{ id: string }> };
+      workVariant: { createMany(args: unknown): Promise<unknown> };
+    };
+
+    const createdVariants: CreatedDemoVariantSummary[] = [];
+
+    for (const draft of drafts) {
+      const createdVariant = await trx.variant.create({
+        data: {
+          ownerUserId,
+          topicId,
+          templateId: template.id,
+          title: draft.title,
+          seed: draft.seed,
+        },
+      });
+
+      await trx.variantTask.createMany({
+        data: draft.ordered.map((item) => ({
+          variantId: createdVariant.id,
+          taskId: item.task.id,
+          sectionLabel: item.sectionLabel,
+          orderIndex: item.orderIndex,
+        })),
+      });
+
+      createdVariants.push({
+        id: createdVariant.id,
+        title: createdVariant.title,
+        createdAt: createdVariant.createdAt,
+        tasksCount: draft.ordered.length,
+        fit: draft.fit,
+      });
+    }
+
+    const createdWork = await trx.work.create({
+      data: {
+        ownerUserId,
+        topicId,
+        title,
+        workType,
+        printProfileJson: {
+          version: 1,
+          layout: printLayout,
+          orientation: defaultOrientationForLayout(printLayout),
+          workType,
+          fit,
+        },
+        isDemo: true,
+        expiresAt,
+      },
+    });
+
+    await trx.workVariant.createMany({
+      data: createdVariants.map((variant, orderIndex) => ({
+        workId: createdWork.id,
+        variantId: variant.id,
+        orderIndex,
+      })),
+    });
+
+    return {
+      work: createdWork,
+      variants: createdVariants,
+    };
+  });
 }
 
 export async function createDemoWork(params: {
