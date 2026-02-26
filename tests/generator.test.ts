@@ -162,3 +162,71 @@ test("variant generator backtracks on overlapping sections instead of false INSU
   assert.equal(plan[2]?.sectionLabel, "Узкая секция");
   assert.equal(plan[2]?.task.id, "g5.proporcii.skill_b.000001");
 });
+
+test("variant generator returns INSUFFICIENT_TASKS for global overlap conflict with useful details", () => {
+  const tasks: Task[] = [
+    {
+      id: "g5.proporcii.skill_a.000001",
+      topic_id: "g5.proporcii",
+      skill_id: "g5.proporcii.skill_a",
+      difficulty: 2,
+      statement_md: "A",
+      answer: { type: "number", value: 1 },
+    },
+    {
+      id: "g5.proporcii.skill_b.000001",
+      topic_id: "g5.proporcii",
+      skill_id: "g5.proporcii.skill_b",
+      difficulty: 2,
+      statement_md: "B",
+      answer: { type: "number", value: 2 },
+    },
+  ];
+
+  const template = {
+    id: "g5.proporcii.overlap-impossible.v1",
+    title: "Overlap impossible",
+    topicId: "g5.proporcii",
+    header: {
+      gradeLabel: "5 класс",
+      topicLabel: "Пропорции",
+    },
+    sections: [
+      {
+        label: "Широкая секция",
+        skillIds: ["g5.proporcii.skill_a", "g5.proporcii.skill_b"],
+        count: 1,
+        difficulty: [2, 2] as [number, number],
+      },
+      {
+        label: "Узкая секция 1",
+        skillIds: ["g5.proporcii.skill_a"],
+        count: 1,
+        difficulty: [2, 2] as [number, number],
+      },
+      {
+        label: "Узкая секция 2",
+        skillIds: ["g5.proporcii.skill_a"],
+        count: 1,
+        difficulty: [2, 2] as [number, number],
+      },
+    ],
+  };
+
+  assert.throws(
+    () => buildVariantPlan({ tasks, template, seed: "conflict-seed" }),
+    (error: unknown) => {
+      assert.ok(error instanceof InsufficientTasksError);
+      assert.equal(error.code, "INSUFFICIENT_TASKS");
+      assert.ok(
+        ["Узкая секция 1", "Узкая секция 2"].includes(error.details.sectionLabel),
+        `unexpected section ${error.details.sectionLabel}`,
+      );
+      assert.equal(error.details.requiredCount, 1);
+      assert.ok(error.details.availableCount <= 1);
+      assert.deepEqual(error.details.skillIds, ["g5.proporcii.skill_a"]);
+      assert.deepEqual(error.details.difficulty, [2, 2]);
+      return true;
+    },
+  );
+});

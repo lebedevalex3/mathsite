@@ -19,8 +19,6 @@ export const DEMO_MAX_TOTAL_TASKS = 60;
 const DEMO_MAX_REQUESTS_PER_WINDOW = 8;
 const DEMO_RATE_WINDOW_MS = 5 * 60 * 1000;
 
-const requestBuckets = new Map<string, number[]>();
-
 export class DemoRateLimitError extends Error {
   status = 429;
   code = "RATE_LIMITED";
@@ -36,14 +34,25 @@ type BuildDemoTemplateParams = {
   mode?: string;
 };
 
-export function enforceDemoRateLimit(bucketKey: string) {
-  const now = Date.now();
-  const bucket = (requestBuckets.get(bucketKey) ?? []).filter((ts) => now - ts < DEMO_RATE_WINDOW_MS);
-  if (bucket.length >= DEMO_MAX_REQUESTS_PER_WINDOW) {
+export async function enforceDemoRateLimit(ownerUserId: string) {
+  const db = prisma as unknown as {
+    work: {
+      count(args: unknown): Promise<number>;
+    };
+  };
+
+  const windowStart = new Date(Date.now() - DEMO_RATE_WINDOW_MS);
+  const recentDemoWorks = await db.work.count({
+    where: {
+      ownerUserId,
+      isDemo: true,
+      createdAt: { gte: windowStart },
+    },
+  });
+
+  if (recentDemoWorks >= DEMO_MAX_REQUESTS_PER_WINDOW) {
     throw new DemoRateLimitError();
   }
-  bucket.push(now);
-  requestBuckets.set(bucketKey, bucket);
 }
 
 export function validateDemoPlan(plan: DemoPlanItem[], variantsCount: number) {
@@ -169,72 +178,6 @@ function buildDemoVariantDrafts(params: {
   return drafts;
 }
 
-export async function generateAndSaveDemoVariants(params: {
-  ownerUserId: string;
-  topicId: string;
-  template: VariantTemplate;
-  variantsCount: number;
-  seed?: number;
-  shuffleOrder?: boolean;
-}) {
-  const { ownerUserId, topicId, template, variantsCount } = params;
-  const { tasks, errors } = await getTasksForTopic(topicId);
-  if (errors.length > 0) {
-    throw new Error(`Task bank errors: ${errors[0]}`);
-  }
-
-  const db = prisma as unknown as {
-    $transaction: <T>(fn: (tx: unknown) => Promise<T>) => Promise<T>;
-  };
-
-  const drafts = buildDemoVariantDrafts({
-    tasks,
-    template,
-    variantsCount,
-    seed: params.seed,
-    shuffleOrder: params.shuffleOrder,
-    topicId,
-  });
-
-  const created: CreatedDemoVariantSummary[] = [];
-  for (const draft of drafts) {
-    const variant = await db.$transaction(async (tx) => {
-      const trx = tx as {
-        variant: { create(args: unknown): Promise<{ id: string; createdAt: Date; title: string }> };
-        variantTask: { createMany(args: unknown): Promise<unknown> };
-      };
-      const createdVariant = await trx.variant.create({
-        data: {
-          ownerUserId,
-          topicId,
-          templateId: template.id,
-          title: draft.title,
-          seed: draft.seed,
-        },
-      });
-      await trx.variantTask.createMany({
-        data: draft.ordered.map((item) => ({
-          variantId: createdVariant.id,
-          taskId: item.task.id,
-          sectionLabel: item.sectionLabel,
-          orderIndex: item.orderIndex,
-        })),
-      });
-      return createdVariant;
-    });
-
-    created.push({
-      id: variant.id,
-      title: variant.title,
-      createdAt: variant.createdAt,
-      tasksCount: draft.ordered.length,
-      fit: draft.fit,
-    });
-  }
-
-  return created;
-}
-
 export async function generateDemoWorkWithVariants(params: {
   ownerUserId: string;
   topicId: string;
@@ -344,72 +287,4 @@ export async function generateDemoWorkWithVariants(params: {
       variants: createdVariants,
     };
   });
-}
-
-export async function createDemoWork(params: {
-  ownerUserId: string;
-  topicId: string;
-  mode?: string;
-  variantIds: string[];
-  workType: WorkType;
-  printLayout: PrintLayoutMode;
-  variantFits: VariantPrintFitMetrics[];
-}) {
-  const { ownerUserId, topicId, mode, variantIds, workType, printLayout, variantFits } = params;
-  if (variantIds.length === 0) {
-    throw new Error("variantIds is required");
-  }
-
-  const db = prisma as unknown as {
-    $transaction: <T>(fn: (tx: unknown) => Promise<T>) => Promise<T>;
-  };
-
-  const now = new Date();
-  const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-  const title = mode ? `Работа • ${mode}` : "Работа";
-  const fit = analyzeWorkPrintFit({
-    workType,
-    variants: variantFits,
-  });
-
-  const work = await db.$transaction(async (tx) => {
-    const trx = tx as {
-      work: {
-        create(args: unknown): Promise<{ id: string }>;
-      };
-      workVariant: {
-        createMany(args: unknown): Promise<unknown>;
-      };
-    };
-
-    const createdWork = await trx.work.create({
-      data: {
-        ownerUserId,
-        topicId,
-        title,
-        workType,
-        printProfileJson: {
-          version: 1,
-          layout: printLayout,
-          orientation: defaultOrientationForLayout(printLayout),
-          workType,
-          fit,
-        },
-        isDemo: true,
-        expiresAt,
-      },
-    });
-
-    await trx.workVariant.createMany({
-      data: variantIds.map((variantId, orderIndex) => ({
-        workId: createdWork.id,
-        variantId,
-        orderIndex,
-      })),
-    });
-
-    return createdWork;
-  });
-
-  return work;
 }
