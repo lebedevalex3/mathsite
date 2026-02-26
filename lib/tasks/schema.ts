@@ -2,15 +2,17 @@ import { z } from "zod";
 
 export const TOPIC_ID = "g5.proporcii" as const;
 
-const topicIdSchema = z.literal(TOPIC_ID);
+const topicIdSchema = z
+  .string()
+  .regex(/^g5\.[a-z][a-z0-9_]*$/, "Invalid topic_id format (expected g5.<topic>)");
 const skillIdSchema = z
   .string()
-  .regex(/^g5\.proporcii\.[a-z][a-z0-9_]*$/, "Invalid skill_id format");
+  .regex(/^g5\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/, "Invalid skill_id format");
 const taskIdSchema = z
   .string()
   .regex(
-    /^g5\.proporcii\.[a-z][a-z0-9_]*\.\d{6}$/,
-    "Invalid task_id format (expected g5.proporcii.<skill>.000001)",
+    /^g5\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.\d{6}$/,
+    "Invalid task_id format (expected g5.<topic>.<skill>.000001)",
   );
 
 export const numberAnswerSchema = z.object({

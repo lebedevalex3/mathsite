@@ -1,4 +1,5 @@
 import path from "node:path";
+import { promises as fs } from "node:fs";
 
 import { loadTaskBanks } from "../lib/tasks/load";
 import { parseTaxonomyMarkdown } from "../lib/tasks/taxonomy";
@@ -8,13 +9,41 @@ function rel(filePath: string) {
   return path.relative(process.cwd(), filePath) || filePath;
 }
 
+async function loadTaxonomies() {
+  const docsDir = path.join(process.cwd(), "docs");
+  const entries = await fs.readdir(docsDir, { withFileTypes: true });
+  const taxonomyFiles = entries
+    .filter((entry) => entry.isFile() && /^TAXONOMY.*\.md$/i.test(entry.name))
+    .map((entry) => path.join(docsDir, entry.name))
+    .sort();
+
+  const items = await Promise.all(
+    taxonomyFiles.map(async (filePath) => ({ filePath, parsed: await parseTaxonomyMarkdown(filePath) })),
+  );
+
+  const byTopicId = new Map<string, { filePath: string; allowedSkillIds: Set<string> }>();
+  for (const item of items) {
+    if (byTopicId.has(item.parsed.topicId)) {
+      const previous = byTopicId.get(item.parsed.topicId)!;
+      throw new Error(
+        `Duplicate taxonomy topic_id "${item.parsed.topicId}" in ${rel(item.filePath)} and ${rel(previous.filePath)}`,
+      );
+    }
+    byTopicId.set(item.parsed.topicId, {
+      filePath: item.filePath,
+      allowedSkillIds: item.parsed.allowedSkillIds,
+    });
+  }
+
+  return { files: taxonomyFiles, byTopicId };
+}
+
 async function main() {
   const args = new Set(process.argv.slice(2));
   const latexWarn = args.has("--latex-warn");
 
   const rootDir = path.join(process.cwd(), "data", "tasks");
-  const taxonomyPath = path.join(process.cwd(), "docs", "TAXONOMY.md");
-  const taxonomy = await parseTaxonomyMarkdown(taxonomyPath);
+  const taxonomies = await loadTaxonomies();
   const { files, banks, errors } = await loadTaskBanks(rootDir);
 
   const allTasks = banks.flatMap(({ filePath, bank }) =>
@@ -55,15 +84,17 @@ async function main() {
       }
     }
 
-    if (task.topic_id !== taxonomy.topicId) {
+    const taxonomy = taxonomies.byTopicId.get(task.topic_id);
+    if (!taxonomy) {
       validationErrors.push(
-        `${rel(filePath)} | ${task.id} | topic_id mismatch: "${task.topic_id}" (expected "${taxonomy.topicId}")`,
+        `${rel(filePath)} | ${task.id} | no taxonomy found for topic_id "${task.topic_id}"`,
       );
+      continue;
     }
 
     if (!taxonomy.allowedSkillIds.has(task.skill_id)) {
       validationErrors.push(
-        `${rel(filePath)} | ${task.id} | skill_id not in docs/TAXONOMY.md: "${task.skill_id}"`,
+        `${rel(filePath)} | ${task.id} | skill_id not in ${rel(taxonomy.filePath)}: "${task.skill_id}"`,
       );
     }
   }
@@ -75,8 +106,8 @@ async function main() {
   const uniqueSkills = new Set(allTasks.map(({ task }) => task.skill_id));
 
   console.log("Task bank validation summary");
-  console.log(`- Taxonomy topic_id: ${taxonomy.topicId}`);
-  console.log(`- Taxonomy allowed skill_id count: ${taxonomy.allowedSkillIds.size}`);
+  console.log(`- Taxonomy files: ${taxonomies.files.length}`);
+  console.log(`- Taxonomy topics: ${taxonomies.byTopicId.size}`);
   console.log(`- JSON files found: ${files.length}`);
   console.log(`- Valid files: ${banks.length}`);
   console.log(`- Tasks checked: ${allTasks.length}`);
