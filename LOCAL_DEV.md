@@ -268,6 +268,36 @@ curl -X POST http://localhost:3000/api/teacher/become
 - для `curl` без cookie это будет отдельный анонимный пользователь
 - в production этот endpoint должен быть отключён (не включать `ALLOW_DEV_BECOME_TEACHER`)
 
+## F2. Auth Provider (Sprint 1)
+
+В проект добавлен базовый auth provider с email/password и cookie-сессией.
+
+### API endpoints
+
+- `POST /api/auth/sign-up`
+  - body: `{ "email": "user@example.com", "password": "secret123" }`
+  - привязывает credentials к текущему visitor-user и создаёт auth-сессию
+- `POST /api/auth/sign-in`
+  - body: `{ "email": "user@example.com", "password": "secret123" }`
+  - создаёт auth-сессию при валидных credentials
+- `POST /api/auth/sign-out`
+  - удаляет auth-сессию и очищает cookie
+- `GET /api/auth/session`
+  - возвращает текущий статус авторизации:
+    - `{ ok: true, authenticated: false }`
+    - или `{ ok: true, authenticated: true, user: { ... } }`
+
+### Cookie/session
+
+- HTTP-only cookie: `auth_session`
+- TTL: 30 дней
+- в `production` ставится `secure=true`
+
+### Важно про visitor flow
+
+- Если есть активная auth-сессия, `getOrCreateVisitorUser` возвращает `userId` авторизованного пользователя.
+- Если auth-сессии нет, работает текущая visitor-модель через `visitor_id`.
+
 ### Где работать с вариантами
 
 - `/{locale}/teacher/variants` — шаблоны + список сгенерированных вариантов

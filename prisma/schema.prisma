@@ -23,11 +23,14 @@ enum WorkType {
 model User {
   id        String    @id @default(uuid()) @db.Uuid
   visitorId String?   @unique
+  email     String?   @unique
+  passwordHash String?
   role      UserRole  @default(student)
   createdAt DateTime  @default(now())
   attempts  Attempt[]
   variants  Variant[] @relation("VariantOwner")
   works     Work[]    @relation("WorkOwner")
+  sessions  AuthSession[]
 }
 
 model Attempt {
@@ -107,4 +110,16 @@ model VariantTask {
 
   @@unique([variantId, orderIndex])
   @@index([variantId, sectionLabel])
+}
+
+model AuthSession {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
 }

@@ -1,4 +1,5 @@
 import { prisma } from "@/src/lib/db/prisma";
+import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 
 const VISITOR_COOKIE_NAME = "visitor_id";
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
@@ -17,6 +18,11 @@ type CookieStoreLike = {
 };
 
 export async function getOrCreateVisitorUser(cookieStore: CookieStoreLike) {
+  const authUser = await getAuthenticatedUserFromCookie(cookieStore);
+  if (authUser) {
+    return { userId: authUser.id, visitorId: null };
+  }
+
   let visitorId = cookieStore.get(VISITOR_COOKIE_NAME)?.value;
 
   if (!visitorId) {

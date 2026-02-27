@@ -115,6 +115,14 @@ export function badRequest(message: string, code = "BAD_REQUEST"): ApiErrorResul
   return apiError(400, code, message);
 }
 
+export function unauthorized(message: string, code = "UNAUTHORIZED"): ApiErrorResult {
+  return apiError(401, code, message);
+}
+
+export function conflict(message: string, code = "CONFLICT"): ApiErrorResult {
+  return apiError(409, code, message);
+}
+
 export function notFound(message: string, code = "NOT_FOUND"): ApiErrorResult {
   return apiError(404, code, message);
 }
