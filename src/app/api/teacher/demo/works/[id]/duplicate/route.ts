@@ -42,9 +42,14 @@ function parseTitleTemplate(value: unknown): WorkTitleTemplate | undefined {
   return { customTitle, date };
 }
 
-export async function POST(_: Request, { params }: RouteProps) {
+export async function POST(request: Request, { params }: RouteProps) {
   try {
     const { id } = await params;
+    const body = (await request.json().catch(() => ({}))) as { locale?: unknown };
+    const locale =
+      body.locale === "ru" || body.locale === "en" || body.locale === "de"
+        ? body.locale
+        : "ru";
     const cookieStore = await cookies();
     const { userId } = await getOrCreateVisitorUser(cookieStore);
 
@@ -189,6 +194,7 @@ export async function POST(_: Request, { params }: RouteProps) {
       ownerUserId: userId,
       topicId: topicIds[0] ?? work.topicId,
       topicIds,
+      locale,
       template,
       variantsCount,
       shuffleOrder,

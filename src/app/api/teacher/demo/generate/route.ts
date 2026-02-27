@@ -20,6 +20,7 @@ export const runtime = "nodejs";
 type GeneratePayload = {
   topicId?: unknown;
   topics?: unknown;
+  locale?: unknown;
   variantsCount?: unknown;
   plan?: unknown;
   mode?: unknown;
@@ -76,6 +77,10 @@ export async function POST(request: Request) {
   const printLayout = parsePrintLayout(
     typeof body.printLayout === "string" ? body.printLayout : undefined,
   );
+  const locale =
+    body.locale === "ru" || body.locale === "en" || body.locale === "de"
+      ? body.locale
+      : "ru";
   const titleTemplate = parseTitleTemplate(body.titleTemplate);
 
   try {
@@ -113,6 +118,7 @@ export async function POST(request: Request) {
       ownerUserId: userId,
       topicId: body.topicId,
       topicIds,
+      locale,
       template,
       variantsCount,
       seed: typeof body.seed === "number" ? body.seed : undefined,

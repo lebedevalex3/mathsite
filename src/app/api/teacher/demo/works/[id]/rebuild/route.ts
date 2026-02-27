@@ -52,9 +52,14 @@ export async function POST(request: Request, { params }: RouteProps) {
     const cookieStore = await cookies();
     const { userId } = await getOrCreateVisitorUser(cookieStore);
     const body = (await request.json().catch(() => ({}))) as {
+      locale?: unknown;
       variantsCount?: unknown;
       shuffleOrder?: unknown;
     };
+    const locale =
+      body.locale === "ru" || body.locale === "en" || body.locale === "de"
+        ? body.locale
+        : "ru";
 
     const db = prisma as unknown as {
       work: {
@@ -188,6 +193,7 @@ export async function POST(request: Request, { params }: RouteProps) {
       ownerUserId: userId,
       topicId: topicIds[0] ?? work.topicId,
       topicIds,
+      locale,
       template,
       variantsCount,
       shuffleOrder,

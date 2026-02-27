@@ -25,9 +25,10 @@ function parseWorkType(value: unknown): "lesson" | "quiz" | "homework" | "test" 
     : null;
 }
 
-function parseTitleTemplate(value: unknown): { customTitle: string | null; date: string | null } | undefined {
-  if (value === undefined) return undefined;
-  if (!value || typeof value !== "object") return { customTitle: null, date: null };
+type TitleTemplate = { customTitle: string | null; date: string | null };
+
+function parseTitleTemplate(value: unknown): TitleTemplate | null {
+  if (!value || typeof value !== "object") return null;
   const data = value as { customTitle?: unknown; date?: unknown };
   const customTitle =
     typeof data.customTitle === "string" && data.customTitle.trim().length > 0
@@ -38,6 +39,25 @@ function parseTitleTemplate(value: unknown): { customTitle: string | null; date:
   return { customTitle, date };
 }
 
+function mergeTitleTemplate(existing: TitleTemplate, value: unknown): TitleTemplate {
+  if (value === undefined) return existing;
+  if (value === null) return { customTitle: null, date: null };
+  if (typeof value !== "object") return existing;
+  const data = value as { customTitle?: unknown; date?: unknown };
+  const hasCustomTitle = Object.prototype.hasOwnProperty.call(data, "customTitle");
+  const hasDate = Object.prototype.hasOwnProperty.call(data, "date");
+  return {
+    customTitle: hasCustomTitle
+      ? (typeof data.customTitle === "string" && data.customTitle.trim().length > 0
+          ? data.customTitle.trim().slice(0, 80)
+          : null)
+      : existing.customTitle,
+    date: hasDate
+      ? (typeof data.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.date) ? data.date : null)
+      : existing.date,
+  };
+}
+
 export async function PATCH(request: Request, { params }: RouteProps) {
   try {
     const { id } = await params;
@@ -45,6 +65,7 @@ export async function PATCH(request: Request, { params }: RouteProps) {
     const { userId } = await getOrCreateVisitorUser(cookieStore);
 
     const body = (await request.json()) as {
+      locale?: unknown;
       workType?: unknown;
       titleTemplate?: unknown;
       printProfile?: {
@@ -53,6 +74,10 @@ export async function PATCH(request: Request, { params }: RouteProps) {
         forceTwoUp?: unknown;
       };
     };
+    const locale =
+      body.locale === "ru" || body.locale === "en" || body.locale === "de"
+        ? body.locale
+        : "ru";
 
     const existing = await getWorkDetailForOwner(id, userId);
     if (!existing) {
@@ -60,28 +85,49 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       return NextResponse.json(body, { status });
     }
 
-    const nextWorkType = parseWorkType(body.workType);
-    if (!nextWorkType) {
+    const existingWorkType = parseWorkType(existing.workType) ?? "quiz";
+    const parsedWorkType = body.workType === undefined ? existingWorkType : parseWorkType(body.workType);
+    if (!parsedWorkType) {
       const { status, body } = badRequest("Invalid workType");
       return NextResponse.json(body, { status });
     }
 
-    const layoutRaw = body.printProfile?.layout;
-    if (typeof layoutRaw !== "string") {
-      const { status, body } = badRequest("Invalid printProfile.layout");
-      return NextResponse.json(body, { status });
-    }
-    const nextLayout = parsePrintLayout(layoutRaw);
-    const nextOrientation = parsePrintOrientation(
-      typeof body.printProfile?.orientation === "string" ? body.printProfile.orientation : null,
-      defaultOrientationForLayout(nextLayout),
-    );
-    const forceTwoUp = body.printProfile?.forceTwoUp === true;
     const stored = normalizePrintProfile(existing.printProfileJson);
     const existingRaw =
       existing.printProfileJson && typeof existing.printProfileJson === "object"
         ? (existing.printProfileJson as Record<string, unknown>)
         : {};
+    const printProfileInput = body.printProfile;
+    if (
+      printProfileInput !== undefined &&
+      (typeof printProfileInput !== "object" || printProfileInput === null)
+    ) {
+      const { status, body } = badRequest("Invalid printProfile");
+      return NextResponse.json(body, { status });
+    }
+    const layoutRaw = printProfileInput && "layout" in printProfileInput
+      ? (printProfileInput as { layout?: unknown }).layout
+      : undefined;
+    if (layoutRaw !== undefined && typeof layoutRaw !== "string") {
+      const { status, body } = badRequest("Invalid printProfile.layout");
+      return NextResponse.json(body, { status });
+    }
+    const nextLayout = typeof layoutRaw === "string" ? parsePrintLayout(layoutRaw) : stored.layout;
+    const orientationRaw = printProfileInput && "orientation" in printProfileInput
+      ? (printProfileInput as { orientation?: unknown }).orientation
+      : undefined;
+    if (orientationRaw !== undefined && typeof orientationRaw !== "string") {
+      const { status, body } = badRequest("Invalid printProfile.orientation");
+      return NextResponse.json(body, { status });
+    }
+    const nextOrientation = parsePrintOrientation(
+      typeof orientationRaw === "string" ? orientationRaw : null,
+      typeof layoutRaw === "string" ? defaultOrientationForLayout(nextLayout) : stored.orientation,
+    );
+    const forceTwoUp =
+      printProfileInput && "forceTwoUp" in printProfileInput
+        ? (printProfileInput as { forceTwoUp?: unknown }).forceTwoUp === true
+        : existingRaw.forceTwoUp === true;
     const existingGeneration =
       existingRaw.generation && typeof existingRaw.generation === "object"
         ? (existingRaw.generation as Record<string, unknown>)
@@ -90,14 +136,14 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       customTitle: null,
       date: null,
     };
-    const titleTemplate = parseTitleTemplate(body.titleTemplate) ?? existingTitleTemplate;
+    const titleTemplate = mergeTitleTemplate(existingTitleTemplate, body.titleTemplate);
 
     const nextProfileJson = {
       ...existingRaw,
       version: 1,
       layout: nextLayout,
       orientation: nextOrientation,
-      workType: nextWorkType,
+      workType: parsedWorkType,
       forceTwoUp,
       // Preserve existing fit analysis; it still applies to this work's task set.
       fit: existingRaw.fit ?? (stored as unknown as { fit?: unknown }).fit,
@@ -107,14 +153,15 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       },
     };
     const nextTitle = buildWorkDisplayTitle({
-      workType: nextWorkType,
+      locale,
+      workType: parsedWorkType,
       titleTemplate,
     });
 
     const updated = await updateWorkProfileForOwner({
       workId: id,
       ownerUserId: userId,
-      workType: nextWorkType,
+      workType: parsedWorkType,
       title: nextTitle,
       printProfileJson: nextProfileJson,
     });

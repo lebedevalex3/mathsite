@@ -123,22 +123,42 @@ function makeSeed(index: number) {
 }
 
 export function buildWorkDisplayTitle(params: {
-  locale?: string;
+  locale?: "ru" | "en" | "de";
   workType: WorkType;
   titleTemplate?: WorkTitleTemplate;
 }) {
-  const labels: Record<WorkType, string> = {
-    lesson: "Работа на уроке",
-    quiz: "Самостоятельная",
-    homework: "Домашняя работа",
-    test: "Контрольная",
+  const locale = params.locale ?? "ru";
+  const labels: Record<"ru" | "en" | "de", Record<WorkType, string>> = {
+    ru: {
+      lesson: "Работа на уроке",
+      quiz: "Самостоятельная",
+      homework: "Домашняя работа",
+      test: "Контрольная",
+    },
+    en: {
+      lesson: "Lesson work",
+      quiz: "Quiz",
+      homework: "Homework",
+      test: "Test",
+    },
+    de: {
+      lesson: "Unterricht",
+      quiz: "Kurztest",
+      homework: "Hausaufgabe",
+      test: "Klassenarbeit",
+    },
   };
-  const baseTitle = labels[params.workType] ?? labels.quiz;
+  const dateLocales: Record<"ru" | "en" | "de", string> = {
+    ru: "ru-RU",
+    en: "en-US",
+    de: "de-DE",
+  };
+  const baseTitle = labels[locale][params.workType] ?? labels[locale].quiz;
   const customTitle = params.titleTemplate?.customTitle?.trim();
   const date = params.titleTemplate?.date?.trim();
   const normalizedDate =
     date && /^\d{4}-\d{2}-\d{2}$/.test(date)
-      ? new Intl.DateTimeFormat(params.locale ?? "ru-RU", {
+      ? new Intl.DateTimeFormat(dateLocales[locale], {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
@@ -226,6 +246,7 @@ export async function generateDemoWorkWithVariants(params: {
   ownerUserId: string;
   topicId: string;
   topicIds?: string[];
+  locale?: "ru" | "en" | "de";
   template: VariantTemplate;
   variantsCount: number;
   seed?: number;
@@ -259,6 +280,7 @@ export async function generateDemoWorkWithVariants(params: {
   const now = new Date();
   const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
   const title = buildWorkDisplayTitle({
+    locale: params.locale,
     workType,
     titleTemplate: params.titleTemplate,
   });
