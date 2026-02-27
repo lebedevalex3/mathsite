@@ -74,10 +74,11 @@ const copy = {
     selectedTopics: "Выбрано тем",
     composition: "Состав варианта",
     quantity: "Количество задач",
-    tasksPerVariant: "Задач в варианте",
     available: "Доступно задач",
     example: "Пример",
     skillCard: "Карточка навыка",
+    clearAll: "Очистить всё",
+    keepCurrentTopic: "Оставить только текущую тему",
     variantsCount: "Сколько вариантов",
     workTypeHint: "Используется для названия и истории. На состав задач не влияет.",
     shuffle: "Перемешать порядок задач",
@@ -137,10 +138,11 @@ const copy = {
     selectedTopics: "Selected topics",
     composition: "Variant composition",
     quantity: "Task count",
-    tasksPerVariant: "Tasks per variant",
     available: "Available tasks",
     example: "Example",
     skillCard: "Skill card",
+    clearAll: "Clear all",
+    keepCurrentTopic: "Keep current topic only",
     variantsCount: "Number of variants",
     workTypeHint: "Used for naming and history. Does not affect task composition.",
     shuffle: "Shuffle task order",
@@ -200,10 +202,11 @@ const copy = {
     selectedTopics: "Ausgewählte Themen",
     composition: "Zusammensetzung",
     quantity: "Anzahl Aufgaben",
-    tasksPerVariant: "Aufgaben pro Variante",
     available: "Verfügbare Aufgaben",
     example: "Beispiel",
     skillCard: "Skill-Karte",
+    clearAll: "Alles löschen",
+    keepCurrentTopic: "Nur aktuelles Thema behalten",
     variantsCount: "Anzahl Varianten",
     workTypeHint: "Nur für Titel und Verlauf. Beeinflusst die Aufgabenzusammensetzung nicht.",
     shuffle: "Reihenfolge mischen",
@@ -254,7 +257,6 @@ const copy = {
     loginHint: "Anmelden, um Varianten und Verlauf zu speichern",
   },
 } as const;
-const TASK_TARGET_OPTIONS = [10, 20, 30] as const;
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
@@ -287,7 +289,7 @@ function parseCountsFromQuery(values: string[]) {
 function buildTeacherToolsStateQuery(params: {
   topicId: string;
   selectedTopicIds: string[];
-  tasksPerVariant: number;
+  totalTasks: number;
   variantsCount: number;
   workType: WorkType;
   shuffleOrder: boolean;
@@ -300,7 +302,7 @@ function buildTeacherToolsStateQuery(params: {
   if (params.selectedTopicIds.length > 0) {
     query.set("topics", params.selectedTopicIds.join(","));
   }
-  query.set("tasks", String(params.tasksPerVariant));
+  query.set("tasks", String(params.totalTasks));
   query.set("variants", String(params.variantsCount));
   query.set("workType", params.workType);
   query.set("shuffle", params.shuffleOrder ? "1" : "0");
@@ -340,18 +342,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
         .filter((item) => item.length > 0),
     ),
   );
-  const initialMode = params.get("mode");
   const initialCountsFromQuery = parseCountsFromQuery(params.getAll("c"));
   const hasInitialCountsFromQuery = Object.keys(initialCountsFromQuery).length > 0;
   const initialTopicMeta = allTopics.find((item) => item.topicId === initialTopicId)?.meta;
-  const initialTasksPerVariant =
-    params.get("tasks") != null
-      ? clamp(Number(params.get("tasks")), 1, 60)
-      : initialMode === "training10"
-        ? 10
-        : initialMode === "control30"
-          ? 30
-          : 20;
 
   const [topicId, setTopicId] = useState(initialTopicId);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>(
@@ -361,7 +354,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const [selectedDomain, setSelectedDomain] = useState<TopicDomain>(
     initialTopicMeta?.domain ?? allTopics[0]?.meta?.domain ?? "arithmetic",
   );
-  const [tasksPerVariant, setTasksPerVariant] = useState(initialTasksPerVariant);
   const [variantsCount, setVariantsCount] = useState(1);
   const [workType, setWorkType] = useState<WorkType>("quiz");
   const [shuffleOrder, setShuffleOrder] = useState(true);
@@ -425,6 +417,13 @@ export function TeacherToolsPageClient({ locale }: Props) {
     [allTopics, selectedGrade],
   );
 
+  const orderedSelectedTopicIds = useMemo(() => {
+    if (selectedTopicIds.length === 0) return [topicId];
+    const unique = Array.from(new Set(selectedTopicIds));
+    if (!unique.includes(topicId)) return [topicId, ...unique];
+    return [topicId, ...unique.filter((id) => id !== topicId)];
+  }, [selectedTopicIds, topicId]);
+
   useEffect(() => {
     if (domainOptions.length === 0) return;
     if (!domainOptions.includes(selectedDomain)) {
@@ -481,7 +480,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
       setError(null);
       try {
         const responses = await Promise.all(
-          selectedTopicIds.map(async (selectedTopicId) => {
+          orderedSelectedTopicIds.map(async (selectedTopicId) => {
             const response = await fetch(`/api/teacher/demo/topic?topicId=${encodeURIComponent(selectedTopicId)}`);
             const payload = (await response.json()) as { ok?: boolean; topic?: TopicPayload };
             return { response, payload };
@@ -505,7 +504,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
           setLoadedTopics(fetchedTopics);
           const allSkills = fetchedTopics.flatMap((item) => item.skills);
           setTopic({
-            topicId: selectedTopicIds[0] ?? topicId,
+            topicId: orderedSelectedTopicIds[0] ?? topicId,
             title:
               fetchedTopics.length === 1
                 ? fetchedTopics[0]!.title
@@ -516,19 +515,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
                   } as Record<Locale, string>),
             skills: allSkills,
           });
-          const readySkills = allSkills.filter((skill) => skill.status !== "soon");
-          const target = tasksPerVariant;
-          const base = readySkills.length > 0 ? Math.floor(target / readySkills.length) : 0;
-          let remainder = readySkills.length > 0 ? target % readySkills.length : 0;
-          const nextCounts: Record<string, number> = {};
-          for (const skill of allSkills) {
-            const fill =
-              skill.status === "soon"
-                ? 0
-                : base + (remainder > 0 ? 1 : 0);
-            if (skill.status !== "soon" && remainder > 0) remainder -= 1;
-            nextCounts[skill.id] = fill;
-          }
           if (initialCountsRef.current) {
             const restoredCounts: Record<string, number> = {};
             for (const skill of allSkills) {
@@ -537,7 +523,15 @@ export function TeacherToolsPageClient({ locale }: Props) {
             setCounts(restoredCounts);
             initialCountsRef.current = null;
           } else {
-            setCounts(nextCounts);
+            setCounts((prev) => {
+              const next: Record<string, number> = { ...prev };
+              for (const skill of allSkills) {
+                if (!Number.isFinite(next[skill.id])) {
+                  next[skill.id] = 0;
+                }
+              }
+              return next;
+            });
           }
         }
       } catch {
@@ -550,7 +544,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [topicId, selectedTopicIds, tasksPerVariant]);
+  }, [topicId, orderedSelectedTopicIds]);
 
   const summary = useMemo(() => {
     const skills = topic?.skills ?? [];
@@ -652,11 +646,13 @@ export function TeacherToolsPageClient({ locale }: Props) {
           workType,
           printLayout,
           shuffleOrder,
-          plan: Object.entries(counts).map(([skillId, count]) => ({
-            topicId: skillTopicById.get(skillId)?.topicId,
-            skillId,
-            count,
-          })),
+          plan: Object.entries(counts)
+            .filter(([skillId, count]) => count > 0 && skillTopicById.has(skillId))
+            .map(([skillId, count]) => ({
+              topicId: skillTopicById.get(skillId)?.topicId,
+              skillId,
+              count,
+            })),
         }),
       });
       const payload = (await response.json()) as GenerateResponse;
@@ -679,7 +675,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
     const query = buildTeacherToolsStateQuery({
       topicId,
       selectedTopicIds,
-      tasksPerVariant,
+      totalTasks: summary.total,
       variantsCount,
       workType,
       shuffleOrder,
@@ -694,7 +690,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
     const query = buildTeacherToolsStateQuery({
       topicId,
       selectedTopicIds,
-      tasksPerVariant,
+      totalTasks: summary.total,
       variantsCount,
       workType,
       shuffleOrder,
@@ -703,7 +699,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
       counts,
     });
     router.replace(`/${locale}/teacher-tools?${query.toString()}`, { scroll: false });
-  }, [router, locale, topicId, selectedTopicIds, tasksPerVariant, variantsCount, workType, shuffleOrder, selectedGrade, selectedDomain, counts]);
+  }, [router, locale, topicId, selectedTopicIds, summary.total, variantsCount, workType, shuffleOrder, selectedGrade, selectedDomain, counts]);
 
   return (
     <main className="space-y-6">
@@ -763,7 +759,11 @@ export function TeacherToolsPageClient({ locale }: Props) {
               <div className="space-y-2">
                 <select
                   value={topicId}
-                  onChange={(e) => setTopicId(e.target.value)}
+                  onChange={(e) => {
+                    const nextTopicId = e.target.value;
+                    setTopicId(nextTopicId);
+                    setSelectedTopicIds([nextTopicId]);
+                  }}
                   className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
                 >
                   {topics.map((item) => (
@@ -832,28 +832,35 @@ export function TeacherToolsPageClient({ locale }: Props) {
               </div>
             </label>
 
-            <label className="space-y-1">
+            <div className="space-y-1">
               <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                {t.tasksPerVariant}
+                {t.composition}
               </span>
               <div className="flex flex-wrap gap-2">
-                {TASK_TARGET_OPTIONS.map((value) => (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setTasksPerVariant(value)}
-                    className={[
-                      "rounded-lg border px-3 py-2 text-sm font-medium",
-                      tasksPerVariant === value
-                        ? "border-slate-900 bg-slate-900 text-white"
-                        : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100",
-                    ].join(" ")}
-                  >
-                    {formatNumber(locale, value)}
-                  </button>
-                ))}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCounts((prev) => {
+                      const next: Record<string, number> = {};
+                      for (const key of Object.keys(prev)) {
+                        next[key] = 0;
+                      }
+                      return next;
+                    })
+                  }
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+                >
+                  {t.clearAll}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedTopicIds([topicId])}
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+                >
+                  {t.keepCurrentTopic}
+                </button>
               </div>
-            </label>
+            </div>
           </div>
 
           <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
