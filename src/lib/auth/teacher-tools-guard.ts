@@ -6,10 +6,14 @@ import { getAuthenticatedUserFromCookie, type AuthUser } from "@/src/lib/auth/pr
 
 type Locale = "ru" | "en" | "de" | string;
 
-function redirectToCabinet(locale: Locale, reason: "auth" | "role"): never {
+export function buildTeacherCabinetRedirectHref(locale: Locale, reason: "auth" | "role") {
   const query = new URLSearchParams();
   query.set("reason", reason);
-  redirect(`/${locale}/teacher/cabinet?${query.toString()}`);
+  return `/${locale}/teacher/cabinet?${query.toString()}`;
+}
+
+function redirectToCabinet(locale: Locale, reason: "auth" | "role"): never {
+  redirect(buildTeacherCabinetRedirectHref(locale, reason));
 }
 
 export async function requireTeacherToolsAccess(locale: Locale): Promise<AuthUser> {
