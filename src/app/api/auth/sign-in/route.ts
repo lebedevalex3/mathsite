@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { badRequest, toApiError, unauthorized } from "@/src/lib/api/errors";
+import { badRequest, toApiError, tooManyRequests, unauthorized } from "@/src/lib/api/errors";
+import { consumeAuthRateLimit } from "@/src/lib/auth/rate-limit";
 import {
   createAuthSession,
   findUserByEmail,
@@ -25,6 +26,23 @@ export async function POST(request: Request) {
     if (!email || !password) {
       const { status, body } = badRequest("email and password are required");
       return NextResponse.json(body, { status });
+    }
+
+    const rateLimit = consumeAuthRateLimit({
+      scope: "sign-in",
+      headers: request.headers,
+      email,
+    });
+    if (rateLimit.limited) {
+      const { status, body } = tooManyRequests(
+        "Too many sign-in attempts. Please try again later.",
+      );
+      return NextResponse.json(body, {
+        status,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds),
+        },
+      });
     }
 
     const user = await findUserByEmail(email);

@@ -13,8 +13,8 @@
 
 - IDs are stable:
   - topic_id: g5.proporcii
-  - skill_id: g5.proporcii.find_unknown_term
-  - task_id: g5.proporcii.find_unknown_term.000123
+  - skill_id: g5.proporcii.naiti_neizvestnyi_krainei (или другой из docs/TAXONOMY*.md для topic_id)
+  - task_id: g5.proporcii.naiti_neizvestnyi_krainei.000123
 - Math is written as Markdown with LaTeX ($...$, $$...$$).
 - Any change to task bank must pass validation script.
 - No Moodle integration in MVP.

@@ -127,6 +127,13 @@ export function conflict(message: string, code = "CONFLICT"): ApiErrorResult {
   return apiError(409, code, message);
 }
 
+export function tooManyRequests(
+  message: string,
+  code = "TOO_MANY_REQUESTS",
+): ApiErrorResult {
+  return apiError(429, code, message);
+}
+
 export function notFound(message: string, code = "NOT_FOUND"): ApiErrorResult {
   return apiError(404, code, message);
 }

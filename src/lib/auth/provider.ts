@@ -95,13 +95,7 @@ export async function createAuthSession(params: {
   const tokenHash = sha256Hex(rawToken);
   const expiresAt = new Date(Date.now() + AUTH_SESSION_TTL_SECONDS * 1000);
 
-  const db = prisma as unknown as {
-    authSession: {
-      create(args: unknown): Promise<void>;
-    };
-  };
-
-  await db.authSession.create({
+  await prisma.authSession.create({
     data: {
       userId: params.userId,
       tokenHash,
@@ -117,13 +111,7 @@ export async function destroyAuthSession(cookieStore: CookieStoreLike) {
   clearSessionCookie(cookieStore);
   if (!token) return;
 
-  const db = prisma as unknown as {
-    authSession: {
-      deleteMany(args: unknown): Promise<{ count: number }>;
-    };
-  };
-
-  await db.authSession.deleteMany({
+  await prisma.authSession.deleteMany({
     where: {
       tokenHash: sha256Hex(token),
     },
@@ -136,20 +124,7 @@ export async function getAuthenticatedUserFromCookie(
   const token = cookieStore.get(AUTH_SESSION_COOKIE)?.value;
   if (!token) return null;
 
-  const db = prisma as unknown as {
-    authSession: {
-      findFirst(args: unknown): Promise<
-        | {
-            expiresAt: Date;
-            user: { id: string; role: AuthRole; email: string | null };
-          }
-        | null
-      >;
-      deleteMany(args: unknown): Promise<{ count: number }>;
-    };
-  };
-
-  const session = await db.authSession.findFirst({
+  const session = await prisma.authSession.findFirst({
     where: {
       tokenHash: sha256Hex(token),
     },
@@ -167,7 +142,7 @@ export async function getAuthenticatedUserFromCookie(
 
   if (!session) return null;
   if (session.expiresAt.getTime() <= Date.now()) {
-    await db.authSession.deleteMany({
+    await prisma.authSession.deleteMany({
       where: { tokenHash: sha256Hex(token) },
     });
     return null;
@@ -177,12 +152,7 @@ export async function getAuthenticatedUserFromCookie(
 }
 
 export async function findUserByEmail(email: string): Promise<AuthUser & { passwordHash: string | null } | null> {
-  const db = prisma as unknown as {
-    user: {
-      findUnique(args: unknown): Promise<{ id: string; role: AuthRole; email: string | null; passwordHash: string | null } | null>;
-    };
-  };
-  return db.user.findUnique({
+  return prisma.user.findUnique({
     where: { email: normalizeEmail(email) },
     select: {
       id: true,
@@ -198,12 +168,7 @@ export async function bindCredentialsToUser(params: {
   email: string;
   passwordHash: string;
 }): Promise<AuthUser> {
-  const db = prisma as unknown as {
-    user: {
-      update(args: unknown): Promise<{ id: string; role: AuthRole; email: string | null }>;
-    };
-  };
-  return db.user.update({
+  return prisma.user.update({
     where: { id: params.userId },
     data: {
       email: normalizeEmail(params.email),

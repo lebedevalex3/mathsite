@@ -99,6 +99,23 @@ async function main() {
     }
   }
 
+  for (const { filePath, bank } of banks) {
+    const taxonomy = taxonomies.byTopicId.get(bank.topic_id);
+    if (!taxonomy) {
+      validationErrors.push(
+        `${rel(filePath)} | bank.topic_id "${bank.topic_id}" has no matching taxonomy file`,
+      );
+    }
+
+    for (const task of bank.tasks) {
+      if (task.topic_id !== bank.topic_id) {
+        validationErrors.push(
+          `${rel(filePath)} | ${task.id} | task.topic_id "${task.topic_id}" must match bank.topic_id "${bank.topic_id}"`,
+        );
+      }
+    }
+  }
+
   const totalErrors = [
     ...errors.map((e) => `${rel(e.filePath)}: ${e.message}`),
     ...validationErrors,

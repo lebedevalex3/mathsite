@@ -9,10 +9,10 @@ function hasLocale(pathname: string) {
   );
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // не трогаем next assets, api и файлы с расширением
+  // do not rewrite next assets, api routes, and explicit file paths
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
