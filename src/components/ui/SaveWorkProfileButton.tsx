@@ -53,6 +53,7 @@ export function SaveWorkProfileButton(props: Props) {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                  locale,
                   workType,
                   printProfile: {
                     layout,

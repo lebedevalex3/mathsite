@@ -40,6 +40,7 @@ type Props = {
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 export function WorkPlacementAutosaveControls({
+  locale,
   workId,
   workType,
   layout,
@@ -70,6 +71,7 @@ export function WorkPlacementAutosaveControls({
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
+          locale,
           workType,
           printProfile: {
             layout: nextLayout,

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { publishWorkEditorStatus } from "@/src/lib/teacher-tools/work-editor-status";
 
@@ -78,7 +77,6 @@ export function WorkTypeAutosaveField({
   options,
 }: Props) {
   const t = copy[locale];
-  const router = useRouter();
   const [workType, setWorkType] = useState<WorkType>(initialWorkType);
   const [customTitle, setCustomTitle] = useState(initialCustomTitle);
   const [workDate, setWorkDate] = useState(initialWorkDate);
@@ -118,6 +116,7 @@ export function WorkTypeAutosaveField({
           headers: { "Content-Type": "application/json" },
           signal: controller.signal,
           body: JSON.stringify({
+            locale,
             workType: currentSnapshot.workType,
             titleTemplate: {
               customTitle: currentSnapshot.customTitle || null,
@@ -137,7 +136,6 @@ export function WorkTypeAutosaveField({
         }
         lastSavedRef.current = currentSnapshot;
         setSaveState("saved");
-        router.refresh();
       } catch (error) {
         if ((error as { name?: string })?.name === "AbortError") return;
         setSaveState("error");
@@ -148,7 +146,7 @@ export function WorkTypeAutosaveField({
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [currentSnapshot, retryTick, workId, layout, orientation, forceTwoUp, router]);
+  }, [currentSnapshot, retryTick, workId, locale, layout, orientation, forceTwoUp]);
 
   useEffect(() => {
     const dirty = !equalsSnapshot(currentSnapshot, lastSavedRef.current);

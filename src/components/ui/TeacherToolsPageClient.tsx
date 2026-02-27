@@ -722,6 +722,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
         body: JSON.stringify({
+          locale,
           topicId: selectedTopicIds[0] ?? topicId,
           topics: selectedTopicIds,
           variantsCount,
@@ -777,6 +778,8 @@ export function TeacherToolsPageClient({ locale }: Props) {
       const response = await fetch(`/api/teacher/demo/works/${workId}/duplicate`, {
         method: "POST",
         credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ locale }),
       });
       const payload = (await response.json()) as { ok?: boolean; workId?: string };
       if (!response.ok || !payload.ok || typeof payload.workId !== "string") return;

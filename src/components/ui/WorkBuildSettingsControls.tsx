@@ -52,6 +52,7 @@ export function WorkBuildSettingsControls({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          locale,
           variantsCount: clamp(Math.trunc(variantsCount), 1, 6),
           shuffleOrder,
         }),
