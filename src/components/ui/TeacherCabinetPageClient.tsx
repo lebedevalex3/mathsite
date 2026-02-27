@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 import { formatDateTime, formatNumber } from "@/src/lib/i18n/format";
 import type { WorkType } from "@/src/lib/variants/print-recommendation";
 
@@ -66,6 +67,7 @@ const copy = {
     historyOpen: "Открыть",
     historyDuplicate: "Создать копию",
     historyEmpty: "Пока нет сохранённых работ.",
+    historyCreateFirst: "Собрать первую работу",
     historyVariantsUnit: "вариантов",
     historyTasksUnit: "задач",
     authError: "Не удалось выполнить действие. Попробуйте ещё раз.",
@@ -107,6 +109,7 @@ const copy = {
     historyOpen: "Open",
     historyDuplicate: "Duplicate",
     historyEmpty: "No saved works yet.",
+    historyCreateFirst: "Create first work",
     historyVariantsUnit: "variants",
     historyTasksUnit: "tasks",
     authError: "Action failed. Please try again.",
@@ -148,6 +151,7 @@ const copy = {
     historyOpen: "Öffnen",
     historyDuplicate: "Kopie erstellen",
     historyEmpty: "Noch keine Arbeiten gespeichert.",
+    historyCreateFirst: "Erste Arbeit erstellen",
     historyVariantsUnit: "Varianten",
     historyTasksUnit: "Aufgaben",
     authError: "Aktion fehlgeschlagen. Bitte erneut versuchen.",
@@ -212,6 +216,7 @@ function buildHistoryTitle(params: {
 
 export function TeacherCabinetPageClient({ locale, initialReason = null }: Props) {
   const t = copy[locale];
+  const topicConfigs = useMemo(() => listContentTopicConfigs(), []);
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -232,6 +237,15 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
       : sessionUser?.role === "teacher"
         ? t.roleTeacher
         : t.roleStudent;
+  const topicTitleById = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const cfg of topicConfigs) {
+      const topicId = cfg.topicSlug.includes(".") ? cfg.topicSlug : `g5.${cfg.topicSlug}`;
+      const title = cfg.titles?.[locale] ?? cfg.titles?.ru ?? topicId;
+      map.set(topicId, title);
+    }
+    return map;
+  }, [locale, topicConfigs]);
 
   useEffect(() => {
     void (async () => {
@@ -544,7 +558,13 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
 
           {filteredWorks.length === 0 ? (
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-              {t.historyEmpty}
+              <p>{t.historyEmpty}</p>
+              <Link
+                href={`/${locale}/teacher-tools`}
+                className="mt-3 inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700"
+              >
+                {t.historyCreateFirst}
+              </Link>
             </div>
           ) : (
             <div className="space-y-2">
@@ -574,7 +594,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
                             {t.workTypes[work.workType]}
                           </span>
                           <span className="rounded-full border border-slate-300 bg-white px-2 py-0.5 text-xs font-medium text-slate-700">
-                            {work.topicId}
+                            {topicTitleById.get(work.topicId) ?? work.topicId}
                           </span>
                         </div>
                       </div>
