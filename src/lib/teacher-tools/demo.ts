@@ -93,6 +93,7 @@ export function buildDemoTemplate({
   const topicLabels: Record<string, string> = {
     "g5.proporcii": "Пропорции",
     "g5.uravneniya": "Уравнения",
+    "g6.otricatelnye_chisla": "Отрицательные числа",
   };
 
   return {
@@ -282,6 +283,17 @@ export async function generateDemoWorkWithVariants(params: {
           layout: printLayout,
           orientation: defaultOrientationForLayout(printLayout),
           workType,
+          generation: {
+            variantsCount,
+            shuffleOrder: params.shuffleOrder === true,
+            topicIds: sourceTopicIds,
+            plan: template.sections.flatMap((section) =>
+              section.skillIds.map((skillId) => ({
+                skillId,
+                count: section.count,
+              })),
+            ),
+          },
           fit,
         },
         isDemo: true,

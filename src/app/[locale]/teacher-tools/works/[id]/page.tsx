@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { WorkBuildSettingsControls } from "@/src/components/ui/WorkBuildSettingsControls";
 import { WorkTypeAutosaveField } from "@/src/components/ui/WorkTypeAutosaveField";
 import { WorkPlacementAutosaveControls } from "@/src/components/ui/WorkPlacementAutosaveControls";
 import { WorkStatusBadge } from "@/src/components/ui/WorkStatusBadge";
@@ -22,26 +23,27 @@ type PageProps = {
   searchParams: Promise<{ layout?: string; orientation?: string; force?: string; doc?: string }>;
 };
 
-type StoredPrintFit = {
-  recommendedLayout?: "single" | "two";
-  allowTwoUp?: boolean;
-  reasons?: string[];
-};
-
-function parseStoredFit(value: unknown): StoredPrintFit {
-  if (!value || typeof value !== "object") return {};
-  const fit = (value as { fit?: unknown }).fit;
-  if (!fit || typeof fit !== "object") return {};
-  const obj = fit as { recommendedLayout?: unknown; allowTwoUp?: unknown; reasons?: unknown };
-  return {
-    recommendedLayout: obj.recommendedLayout === "two" ? "two" : "single",
-    allowTwoUp: typeof obj.allowTwoUp === "boolean" ? obj.allowTwoUp : undefined,
-    reasons: Array.isArray(obj.reasons) ? obj.reasons.filter((r): r is string => typeof r === "string") : undefined,
-  };
-}
-
 function parseWorkType(value: string) {
   return value as "lesson" | "quiz" | "homework" | "test";
+}
+
+function parseGenerationSettings(value: unknown) {
+  if (!value || typeof value !== "object") {
+    return { variantsCount: null as number | null, shuffleOrder: null as boolean | null };
+  }
+  const raw = (value as { generation?: unknown }).generation;
+  if (!raw || typeof raw !== "object") {
+    return { variantsCount: null as number | null, shuffleOrder: null as boolean | null };
+  }
+  const generation = raw as { variantsCount?: unknown; shuffleOrder?: unknown };
+  return {
+    variantsCount:
+      typeof generation.variantsCount === "number" && Number.isFinite(generation.variantsCount)
+        ? Math.max(1, Math.trunc(generation.variantsCount))
+        : null,
+    shuffleOrder:
+      typeof generation.shuffleOrder === "boolean" ? generation.shuffleOrder : null,
+  };
 }
 
 const copy = {
@@ -54,6 +56,11 @@ const copy = {
     variantLabel: "Вариант",
     variantTasksUnit: "задач",
     workType: "Тип работы",
+    buildSettings: "Параметры сборки",
+    buildVariants: "Количество вариантов",
+    buildShuffle: "Перемешать порядок задач",
+    yes: "Да",
+    no: "Нет",
     layout: "Оформление",
     placement: "Размещение",
     printMode: "Что печатать",
@@ -68,12 +75,6 @@ const copy = {
     autosaveError: "Ошибка сохранения",
     autosaveRetry: "Повторить",
     forceTwo: "Всё равно попробовать (force)",
-    duplexHint: "Для двусторонней печати выберите переворот по короткой стороне.",
-    modeHint: "Подсказка по режиму",
-    hintSingle: "Портретная печать: варианты идут стопкой по страницам.",
-    hintTwo: "Альбомная печать: два разных варианта по колонкам, экономия бумаги.",
-    hintTwoDup: "Альбомная печать: один и тот же вариант в двух колонках (две копии на листе).",
-    hintTwoCut: "Двусторонняя печать с разрезанием: чётные страницы зеркалятся, продолжения идут дальше.",
     variants: "Варианты",
     open: "Открыть",
     print: "Печать",
@@ -103,6 +104,11 @@ const copy = {
     variantLabel: "Variant",
     variantTasksUnit: "tasks",
     workType: "Work type",
+    buildSettings: "Build settings",
+    buildVariants: "Variants count",
+    buildShuffle: "Shuffle task order",
+    yes: "Yes",
+    no: "No",
     layout: "Layout",
     placement: "Placement",
     printMode: "Print mode",
@@ -117,12 +123,6 @@ const copy = {
     autosaveError: "Save error",
     autosaveRetry: "Retry",
     forceTwo: "Try anyway (force)",
-    duplexHint: "For duplex printing use short-edge flip.",
-    modeHint: "Mode hint",
-    hintSingle: "Portrait printing: variants go in a regular page stack.",
-    hintTwo: "Landscape printing: two different variants in columns (paper-saving).",
-    hintTwoDup: "Landscape printing: the same variant duplicated in both columns (two copies per sheet).",
-    hintTwoCut: "Duplex cut-safe mode: even pages are mirrored, continuations go to next pages.",
     variants: "Variants",
     open: "Open",
     print: "Print",
@@ -152,6 +152,11 @@ const copy = {
     variantLabel: "Variante",
     variantTasksUnit: "Aufgaben",
     workType: "Art der Arbeit",
+    buildSettings: "Erzeugungsparameter",
+    buildVariants: "Anzahl Varianten",
+    buildShuffle: "Aufgaben mischen",
+    yes: "Ja",
+    no: "Nein",
     layout: "Layout",
     placement: "Anordnung",
     printMode: "Druckmodus",
@@ -166,12 +171,6 @@ const copy = {
     autosaveError: "Speicherfehler",
     autosaveRetry: "Erneut",
     forceTwo: "Trotzdem versuchen (force)",
-    duplexHint: "Für Duplexdruck: Wendung an der kurzen Kante.",
-    modeHint: "Hinweis zum Modus",
-    hintSingle: "Hochformatdruck: Varianten laufen als normaler Seitenstapel.",
-    hintTwo: "Querformatdruck: zwei verschiedene Varianten in Spalten (Papiersparen).",
-    hintTwoDup: "Querformatdruck: dieselbe Variante in beiden Spalten (zwei Kopien pro Blatt).",
-    hintTwoCut: "Duplex-Schneidemodus: gerade Seiten werden gespiegelt, Fortsetzungen laufen weiter.",
     variants: "Varianten",
     open: "Öffnen",
     print: "Drucken",
@@ -208,7 +207,7 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
   const workDetail = work;
 
   const storedProfile = normalizePrintProfile(workDetail.printProfileJson);
-  const fit = parseStoredFit(workDetail.printProfileJson);
+  const generationSettings = parseGenerationSettings(workDetail.printProfileJson);
   const workType = parseWorkType(workDetail.workType);
   const forceTwoUp = false;
   const canUseTwoCut = workDetail.variants.length % 2 === 0;
@@ -228,16 +227,6 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
     requestedEngine: null,
     layout: storedProfile.layout,
   });
-  const modeHintText =
-    effectiveLayout === "two_cut"
-      ? t.hintTwoCut
-      : effectiveLayout === "two" || effectiveLayout === "two_dup"
-          ? t.hintTwo
-          : t.hintSingle;
-  const recommendationLayoutLabel =
-    fit.recommendedLayout === "two" ? t.two : t.single;
-  const recommendationReasons =
-    fit.reasons && fit.reasons.length > 0 ? fit.reasons.slice(0, 4) : [modeHintText];
   const subtitleTasksCount = workDetail.variants[0]?.tasksCount ?? 0;
 
   const engineNameLabel = (engine: "chromium" | "latex") =>
@@ -323,6 +312,8 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
             </Link>
             <a
               href={preferredBatchPdfHref}
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700"
             >
               {t.pdf}
@@ -387,6 +378,34 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
             </div>
           </div>
         </div>
+        <div className="mt-3">
+          <WorkBuildSettingsControls
+            locale={locale}
+            workId={workDetail.id}
+            initialVariantsCount={generationSettings.variantsCount ?? workDetail.variants.length}
+            initialShuffleOrder={generationSettings.shuffleOrder ?? false}
+            labels={{
+              title: t.buildSettings,
+              variants: t.buildVariants,
+              shuffle: t.buildShuffle,
+              rebuild:
+                locale === "ru"
+                  ? "Пересобрать варианты"
+                  : locale === "en"
+                    ? "Rebuild variants"
+                    : "Varianten neu aufbauen",
+              saving: t.autosaveSaving,
+              error:
+                locale === "ru"
+                  ? "Не удалось пересобрать варианты."
+                  : locale === "en"
+                    ? "Failed to rebuild variants."
+                    : "Varianten konnten nicht neu aufgebaut werden.",
+              yes: t.yes,
+              no: t.no,
+            }}
+          />
+        </div>
 
         <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
           <div className="space-y-3">
@@ -403,27 +422,69 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
                   onePerPage: t.single,
                   twoPerPage:
                     locale === "ru"
-                      ? "2 на страницу"
+                      ? "2 варианта/стр"
                       : locale === "en"
-                        ? "2 per page"
-                        : "2 pro Seite",
-                  landscape:
+                        ? "2 variants/page"
+                        : "2 Varianten/Seite",
+                  printMethod:
                     locale === "ru"
-                      ? "Альбом"
+                      ? "Способ печати"
                       : locale === "en"
-                        ? "Landscape"
-                        : "Querformat",
-                  cut:
+                        ? "Print method"
+                        : "Druckmodus",
+                  oneSided:
                     locale === "ru"
-                      ? "Разрезать"
+                      ? "Односторонняя (альбом)"
                       : locale === "en"
-                        ? "Cut"
-                        : "Zum Schneiden",
+                        ? "Single-sided (landscape)"
+                        : "Einseitig (Querformat)",
+                  duplexCut:
+                    locale === "ru"
+                      ? "Двусторонняя (под разрезание)"
+                      : locale === "en"
+                        ? "Double-sided (cut)"
+                        : "Beidseitig (zum Schneiden)",
+                  singleHint:
+                    locale === "ru"
+                      ? "Один вариант на листе — крупнее и удобнее для решения."
+                      : locale === "en"
+                        ? "One variant per sheet: larger and easier to solve."
+                        : "Eine Variante pro Blatt: größer und leichter zu bearbeiten.",
+                  twoOneSidedHint:
+                    locale === "ru"
+                      ? "Два варианта рядом на одной стороне листа."
+                      : locale === "en"
+                        ? "Two variants side by side on one side of the sheet."
+                        : "Zwei Varianten nebeneinander auf einer Blattseite.",
+                  twoDuplexHint:
+                    locale === "ru"
+                      ? "В принтере: двусторонняя печать → переворот по короткому краю. На обороте колонки переставляются автоматически, чтобы варианты не перепутались после разрезания."
+                      : locale === "en"
+                        ? "In printer settings: duplex printing with short-edge flip. Back-side columns are swapped automatically for safe cutting."
+                        : "Im Drucker: Duplexdruck mit Wendung an der kurzen Kante. Auf der Rückseite werden die Spalten automatisch getauscht.",
+                  previewFront:
+                    locale === "ru"
+                      ? "Лицевая"
+                      : locale === "en"
+                        ? "Front"
+                        : "Vorderseite",
+                  previewBack:
+                    locale === "ru"
+                      ? "Оборот"
+                      : locale === "en"
+                        ? "Back"
+                        : "Rückseite",
+                  autoSwapNote:
+                    locale === "ru"
+                      ? "автоматически"
+                      : locale === "en"
+                        ? "automatic"
+                        : "automatisch",
                   saving: t.autosaveSaving,
                   saved: t.autosaveSaved,
                   error: t.autosaveError,
                   retry: t.autosaveRetry,
-                  cutUnavailableTitle:
+                  cutUnavailableHint:
                     locale === "ru"
                       ? "Для режима разрезания нужно чётное количество вариантов."
                       : locale === "en"
@@ -431,37 +492,6 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
                         : "Der Zuschnittmodus ist nur bei einer geraden Anzahl von Varianten verfügbar.",
                 }}
               />
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-              <div className="text-sm font-semibold text-slate-900">
-                {locale === "ru"
-                  ? `Рекомендация: ${recommendationLayoutLabel}`
-                  : locale === "en"
-                    ? `Recommendation: ${recommendationLayoutLabel}`
-                    : `Empfehlung: ${recommendationLayoutLabel}`}
-              </div>
-              <ul className="mt-2 space-y-1 text-sm text-slate-700">
-                {recommendationReasons.map((reason) => (
-                  <li key={reason} className="flex items-start gap-2">
-                    <span aria-hidden="true" className="mt-[2px] text-slate-400">
-                      •
-                    </span>
-                    <span>{reason}</span>
-                  </li>
-                ))}
-              </ul>
-              {effectiveLayout === "two_cut" ? (
-                <div className="mt-2 text-sm text-slate-700">{t.duplexHint}</div>
-              ) : null}
-              {!canUseTwoCut ? (
-                <div className="mt-2 text-sm text-slate-700">
-                  {locale === "ru"
-                    ? "Режим для разрезания доступен только при чётном количестве вариантов."
-                    : locale === "en"
-                      ? "Cut mode is available only for an even number of variants."
-                      : "Der Zuschnittmodus ist nur bei einer geraden Anzahl von Varianten verfügbar."}
-                </div>
-              ) : null}
             </div>
           </div>
         </div>
@@ -492,10 +522,10 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
                   <Link href={`/${locale}/teacher-tools/variants/${variant.id}/answers/print`} className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100">
                     {t.answers}
                   </Link>
-                  <a href={`/api/teacher/demo/variants/${variant.id}/pdf?${new URLSearchParams({ locale, layout: effectiveLayout, orientation: effectiveOrientation }).toString()}`} className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700">
+                  <a href={`/api/teacher/demo/variants/${variant.id}/pdf?${new URLSearchParams({ locale, layout: effectiveLayout, orientation: effectiveOrientation }).toString()}`} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700">
                     {t.pdf}
                   </a>
-                  <a href={`/api/teacher/demo/variants/${variant.id}/answers-pdf?locale=${encodeURIComponent(locale)}`} className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700">
+                  <a href={`/api/teacher/demo/variants/${variant.id}/answers-pdf?locale=${encodeURIComponent(locale)}`} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700">
                     {t.answersPdf}
                   </a>
                 </div>

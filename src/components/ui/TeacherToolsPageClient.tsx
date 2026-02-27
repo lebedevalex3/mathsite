@@ -8,14 +8,9 @@ import { useRouter } from "next/navigation";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { TeacherErrorState, type TeacherApiError } from "@/src/components/ui/TeacherErrorState";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
-import { formatDateTime, formatNumber } from "@/src/lib/i18n/format";
+import { formatNumber } from "@/src/lib/i18n/format";
 import { getTopicDomains, topicCatalogEntries, type TopicDomain } from "@/src/lib/topicMeta";
-import type { PrintLayoutMode } from "@/src/lib/variants/print-layout";
-import {
-  recommendPrintLayout,
-  type PrintRecommendationReasonCode,
-  type WorkType,
-} from "@/src/lib/variants/print-recommendation";
+import { type WorkType } from "@/src/lib/variants/print-recommendation";
 
 type Locale = "ru" | "en" | "de";
 
@@ -35,27 +30,9 @@ type TopicPayload = {
   skills: TopicSkill[];
 };
 
-type GeneratedVariant = {
-  id: string;
-  title: string;
-  createdAt: string;
-  tasksCount: number;
-};
-
-type RecentWork = {
-  id: string;
-  topicId: string;
-  title: string;
-  workType: WorkType | string;
-  createdAt: string;
-  variantsCount: number;
-  printProfileJson?: unknown;
-};
-
 type GenerateResponse = {
   ok?: boolean;
   workId?: string;
-  variants?: GeneratedVariant[];
   code?: string;
   message?: string;
   details?: unknown;
@@ -77,7 +54,7 @@ const copy = {
     topicsNotFound: "Темы не найдены",
     grade: "Класс",
     section: "Раздел",
-    allSections: "Все разделы",
+    allSections: "Все",
     selectedTopics: "Выбрано тем",
     selectedShort: "выбрано",
     skillsShort: "навыков",
@@ -97,25 +74,7 @@ const copy = {
     total: "Всего задач в варианте",
     bySkills: "Распределение по навыкам",
     note: "Можно попробовать без регистрации. Войти нужно только для сохранения истории в teacher-кабинете.",
-    resultTitle: "Собранные варианты",
-    resultNextStep: "Следующий шаг: откройте страницу работы, чтобы выбрать оформление, печать и PDF.",
-    recentWorksTitle: "Последние работы",
-    noRecentWorks: "Пока нет сохранённых работ.",
-    openWork: "Открыть работу",
     workType: "Тип работы",
-    printLayout: "Оформление",
-    printLayoutSingle: "1 вариант/стр",
-    printLayoutTwo: "2 варианта/стр (альбомная)",
-    recommendation: "Рекомендация",
-    recommendationPrefix: "Рекомендуем",
-    recommendationNone: "Соберите варианты, чтобы получить рекомендацию по оформлению.",
-    recommendationReasons: {
-      LONG_VARIANT: "есть длинные варианты",
-      HEAVY_VARIANT: "много задач в варианте",
-      TEST_DEFAULT: "для контрольной обычно удобнее 1 вариант на страницу",
-      HOMEWORK_DEFAULT: "для ДЗ обычно удобнее 1 вариант на страницу",
-      LIGHT_VARIANTS: "варианты короткие и обычно хорошо помещаются",
-    } satisfies Record<PrintRecommendationReasonCode, string>,
     workTypes: {
       lesson: "Работа на уроке",
       quiz: "Самостоятельная",
@@ -128,13 +87,6 @@ const copy = {
       geometry: "Геометрия",
       data: "Данные",
     } satisfies Record<TopicDomain, string>,
-    printAll: "Печать всех",
-    pdfAll: "PDF всех",
-    open: "Открыть",
-    print: "Печать",
-    answers: "Ответы",
-    pdf: "PDF",
-    answersPdf: "Ответы PDF",
     noSkills: "Для выбранной темы пока нет настроенных навыков конструктора.",
     loadingSkills: "Загружаем навыки темы...",
     loginHint: "Войти, чтобы сохранять варианты и историю",
@@ -150,7 +102,7 @@ const copy = {
     topicsNotFound: "No topics found",
     grade: "Grade",
     section: "Section",
-    allSections: "All sections",
+    allSections: "All",
     selectedTopics: "Selected topics",
     selectedShort: "selected",
     skillsShort: "skills",
@@ -170,25 +122,7 @@ const copy = {
     total: "Total tasks per variant",
     bySkills: "Distribution by skills",
     note: "You can try it without registration. Sign-in is only needed to save history in the teacher workspace.",
-    resultTitle: "Generated variants",
-    resultNextStep: "Next step: open the work page to choose layout, print and PDF.",
-    recentWorksTitle: "Recent works",
-    noRecentWorks: "No saved works yet.",
-    openWork: "Open work",
     workType: "Work type",
-    printLayout: "Print layout",
-    printLayoutSingle: "1 variant/page",
-    printLayoutTwo: "2 variants/page (landscape)",
-    recommendation: "Recommendation",
-    recommendationPrefix: "Recommended",
-    recommendationNone: "Generate variants to get a layout recommendation.",
-    recommendationReasons: {
-      LONG_VARIANT: "variants are long",
-      HEAVY_VARIANT: "many tasks per variant",
-      TEST_DEFAULT: "tests are usually easier to print as 1 variant per page",
-      HOMEWORK_DEFAULT: "homework is usually easier to print as 1 variant per page",
-      LIGHT_VARIANTS: "variants are short and usually fit well",
-    } satisfies Record<PrintRecommendationReasonCode, string>,
     workTypes: {
       lesson: "Lesson work",
       quiz: "Quiz",
@@ -201,13 +135,6 @@ const copy = {
       geometry: "Geometry",
       data: "Data",
     } satisfies Record<TopicDomain, string>,
-    printAll: "Print all",
-    pdfAll: "PDF all",
-    open: "Open",
-    print: "Print",
-    answers: "Answers",
-    pdf: "PDF",
-    answersPdf: "Answers PDF",
     noSkills: "No constructor skills configured for this topic yet.",
     loadingSkills: "Loading topic skills...",
     loginHint: "Sign in to save variants and history",
@@ -223,7 +150,7 @@ const copy = {
     topicsNotFound: "Keine Themen gefunden",
     grade: "Klasse",
     section: "Bereich",
-    allSections: "Alle Bereiche",
+    allSections: "Alle",
     selectedTopics: "Ausgewählte Themen",
     selectedShort: "ausgewählt",
     skillsShort: "Skills",
@@ -243,25 +170,7 @@ const copy = {
     total: "Gesamtaufgaben pro Variante",
     bySkills: "Verteilung nach Fähigkeiten",
     note: "Ohne Registrierung testbar. Anmeldung ist nur zum Speichern im Lehrkräfte-Bereich nötig.",
-    resultTitle: "Erstellte Varianten",
-    resultNextStep: "Nächster Schritt: Öffnen Sie die Arbeitsseite für Layout, Druck und PDF.",
-    recentWorksTitle: "Letzte Arbeiten",
-    noRecentWorks: "Noch keine gespeicherten Arbeiten.",
-    openWork: "Arbeit öffnen",
     workType: "Art der Arbeit",
-    printLayout: "Layout",
-    printLayoutSingle: "1 Variante/Seite",
-    printLayoutTwo: "2 Varianten/Seite (Querformat)",
-    recommendation: "Empfehlung",
-    recommendationPrefix: "Empfohlen",
-    recommendationNone: "Erstellen Sie Varianten, um eine Layout-Empfehlung zu erhalten.",
-    recommendationReasons: {
-      LONG_VARIANT: "Varianten sind lang",
-      HEAVY_VARIANT: "viele Aufgaben pro Variante",
-      TEST_DEFAULT: "Für Klassenarbeiten ist meist 1 Variante pro Seite besser",
-      HOMEWORK_DEFAULT: "Für Hausaufgaben ist meist 1 Variante pro Seite besser",
-      LIGHT_VARIANTS: "Varianten sind kurz und passen meist gut",
-    } satisfies Record<PrintRecommendationReasonCode, string>,
     workTypes: {
       lesson: "Unterricht",
       quiz: "Kurztest",
@@ -274,13 +183,6 @@ const copy = {
       geometry: "Geometrie",
       data: "Daten",
     } satisfies Record<TopicDomain, string>,
-    printAll: "Alle drucken",
-    pdfAll: "Alle als PDF",
-    open: "Öffnen",
-    print: "Drucken",
-    answers: "Lösungen",
-    pdf: "PDF",
-    answersPdf: "Lösungen PDF",
     noSkills: "Für dieses Thema sind noch keine Baukasten-Fähigkeiten konfiguriert.",
     loadingSkills: "Themenfähigkeiten werden geladen...",
     loginHint: "Anmelden, um Varianten und Verlauf zu speichern",
@@ -373,6 +275,11 @@ export function TeacherToolsPageClient({ locale }: Props) {
   );
   const initialCountsFromQuery = parseCountsFromQuery(params.getAll("c"));
   const hasInitialCountsFromQuery = Object.keys(initialCountsFromQuery).length > 0;
+  const initialVariantsRaw = Number(params.get("variants"));
+  const initialVariantsCount = Number.isFinite(initialVariantsRaw)
+    ? clamp(Math.trunc(initialVariantsRaw), 1, 6)
+    : 2;
+  const initialShuffleOrder = params.get("shuffle") === "0" ? false : true;
   const initialTopicMeta = allTopics.find((item) => item.topicId === initialTopicId)?.meta;
   const initialGradeParam = params.get("grade");
   const initialSelectedGrade: GradeFilter =
@@ -399,10 +306,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const [isTopicsPickerOpen, setIsTopicsPickerOpen] = useState(false);
   const [selectedGrade, setSelectedGrade] = useState<GradeFilter>(initialSelectedGrade);
   const [selectedDomain, setSelectedDomain] = useState<SelectedDomainFilter>(initialSelectedDomain);
-  const [variantsCount, setVariantsCount] = useState(1);
+  const [variantsCount] = useState(initialVariantsCount);
   const [workType, setWorkType] = useState<WorkType>("quiz");
-  const [shuffleOrder, setShuffleOrder] = useState(true);
-  const [printLayout, setPrintLayout] = useState<PrintLayoutMode>("single");
+  const [shuffleOrder] = useState(initialShuffleOrder);
   const [topic, setTopic] = useState<TopicPayload | null>(null);
   const [loadedTopics, setLoadedTopics] = useState<TopicPayload[]>([]);
   const [expandedByTopicId, setExpandedByTopicId] = useState<Record<string, boolean>>({});
@@ -413,13 +319,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const [loadingTopic, setLoadingTopic] = useState(false);
   const [building, setBuilding] = useState(false);
   const [error, setError] = useState<TeacherApiError | null>(null);
-  const [results, setResults] = useState<GeneratedVariant[]>([]);
-  const [workId, setWorkId] = useState<string | null>(null);
-  const [recentWorks, setRecentWorks] = useState<RecentWork[]>([]);
-  const [loadingRecentWorks, setLoadingRecentWorks] = useState(false);
-  const [highlightResultsPanel, setHighlightResultsPanel] = useState(false);
-  const [resultsFocusTick, setResultsFocusTick] = useState(0);
-  const resultsActionCardRef = useRef<HTMLDivElement | null>(null);
   const themesPickerRef = useRef<HTMLDivElement | null>(null);
 
   const gradeOptions = useMemo(
@@ -511,29 +410,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isTopicsPickerOpen]);
-
-  async function loadRecentWorks() {
-    setLoadingRecentWorks(true);
-    try {
-      const response = await fetch("/api/teacher/demo/works", {
-        credentials: "same-origin",
-        cache: "no-store",
-      });
-      const payload = (await response.json()) as { ok?: boolean; works?: RecentWork[] };
-      if (!response.ok || !payload.ok || !Array.isArray(payload.works)) {
-        return;
-      }
-      setRecentWorks(payload.works);
-    } catch {
-      // Non-blocking. Constructor should still work if recent works list fails.
-    } finally {
-      setLoadingRecentWorks(false);
-    }
-  }
-
-  useEffect(() => {
-    void loadRecentWorks();
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -683,52 +559,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
     return map;
   }, [loadedTopics, locale]);
 
-  const layoutRecommendation = useMemo(() => {
-    const variantTaskCounts =
-      results.length > 0
-        ? results.map((variant) => variant.tasksCount)
-        : summary.total > 0 && variantsCount > 0
-          ? Array.from({ length: variantsCount }, () => summary.total)
-          : [];
-    if (variantTaskCounts.length === 0) return null;
-    // Work type is now configured on the Work page; use a stable default here.
-    return recommendPrintLayout({ workType: "quiz", variantTaskCounts });
-  }, [results, summary.total, variantsCount]);
-
-  useEffect(() => {
-    if (!layoutRecommendation) return;
-    setPrintLayout((prev) => (prev === layoutRecommendation.recommendedLayout ? prev : layoutRecommendation.recommendedLayout));
-  }, [layoutRecommendation]);
-
-  useEffect(() => {
-    if (resultsFocusTick === 0) return;
-
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-
-    const scrollTimer = window.setTimeout(() => {
-      const node = resultsActionCardRef.current;
-      if (!node) return;
-      const topOffset = 180;
-      const targetTop = Math.max(0, window.scrollY + node.getBoundingClientRect().top - topOffset);
-      window.scrollTo({
-        top: targetTop,
-        behavior: reduceMotion ? "auto" : "smooth",
-      });
-      setHighlightResultsPanel(true);
-    }, 0);
-
-    const clearHighlightTimer = window.setTimeout(() => {
-      setHighlightResultsPanel(false);
-    }, reduceMotion ? 800 : 1600);
-
-    return () => {
-      window.clearTimeout(scrollTimer);
-      window.clearTimeout(clearHighlightTimer);
-    };
-  }, [resultsFocusTick]);
-
   async function handleBuild() {
     setBuilding(true);
     setError(null);
@@ -742,7 +572,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
           topics: selectedTopicIds,
           variantsCount,
           workType,
-          printLayout,
+          printLayout: "single",
           shuffleOrder,
           plan: Object.entries(counts)
             .filter(([skillId, count]) => count > 0 && skillTopicById.has(skillId))
@@ -754,14 +584,16 @@ export function TeacherToolsPageClient({ locale }: Props) {
         }),
       });
       const payload = (await response.json()) as GenerateResponse;
-      if (!response.ok || !payload.ok || !payload.variants) {
+      if (!response.ok || !payload.ok) {
         setError(parseTeacherError(payload, "Не удалось собрать варианты."));
         return;
       }
-      setWorkId(typeof payload.workId === "string" ? payload.workId : null);
-      setResults(payload.variants);
-      setResultsFocusTick((v) => v + 1);
-      void loadRecentWorks();
+      const nextWorkId = typeof payload.workId === "string" ? payload.workId : null;
+      if (nextWorkId) {
+        router.push(`/${locale}/teacher-tools/works/${nextWorkId}`);
+        return;
+      }
+      setError({ message: "Работа собрана, но не удалось открыть страницу работы." });
     } catch {
       setError({ message: "Ошибка сети при сборке вариантов." });
     } finally {
@@ -1176,19 +1008,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
           </div>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
-            <label className="space-y-1">
-              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                {t.variantsCount}
-              </span>
-              <input
-                type="number"
-                min={1}
-                max={6}
-                value={variantsCount}
-                onChange={(e) => setVariantsCount(clamp(Number(e.target.value || 1), 1, 6))}
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 sm:w-32"
-              />
-            </label>
+            <div />
             <button
               type="button"
               onClick={handleBuild}
@@ -1198,16 +1018,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
               {building ? `${t.build}...` : t.build}
             </button>
           </div>
-
-          <label className="mt-4 inline-flex items-center gap-2 text-sm text-slate-700">
-            <input
-              type="checkbox"
-              checked={shuffleOrder}
-              onChange={(e) => setShuffleOrder(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-300"
-            />
-            {t.shuffle}
-          </label>
 
           <p className="mt-4 text-xs leading-5 text-slate-500">{t.note}</p>
         </SurfaceCard>
@@ -1244,152 +1054,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
           </ul>
           <p className="mt-5 text-xs text-slate-500">{t.loginHint}</p>
         </SurfaceCard>
-      </section>
-
-      <section className="space-y-3">
-        <div className="space-y-3">
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-950">{t.resultTitle}</h2>
-          <SurfaceCard
-            ref={resultsActionCardRef}
-            className={[
-              "p-4 transition-colors duration-700",
-              highlightResultsPanel ? "bg-blue-50/70 ring-2 ring-blue-200" : "",
-            ].join(" ")}
-          >
-            <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
-              <div className="space-y-1">
-                <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {t.printLayout}
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setPrintLayout("single")}
-                    className={[
-                      "rounded-lg border px-3 py-2 text-sm font-medium",
-                      printLayout === "single"
-                        ? "border-slate-900 bg-slate-900 text-white"
-                        : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100",
-                    ].join(" ")}
-                  >
-                    {t.printLayoutSingle}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPrintLayout("two")}
-                    className={[
-                      "rounded-lg border px-3 py-2 text-sm font-medium",
-                      printLayout === "two"
-                        ? "border-slate-900 bg-slate-900 text-white"
-                        : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100",
-                    ].join(" ")}
-                  >
-                    {t.printLayoutTwo}
-                  </button>
-                </div>
-              </div>
-
-              <div className="lg:justify-self-end">
-                {workId ? (
-                  <div className="rounded-xl border border-blue-200 bg-blue-50/80 p-2 shadow-sm">
-                    <p className="px-1 text-xs font-semibold uppercase tracking-wide text-blue-700">
-                      {locale === "de" ? "Nächster Schritt" : locale === "en" ? "Next step" : "Следующий шаг"}
-                    </p>
-                    <Link
-                      href={`/${locale}/teacher-tools/works/${workId}`}
-                      className="mt-1 inline-flex items-center rounded-lg border border-slate-900 bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    >
-                      {t.openWork}
-                    </Link>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-
-            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                {t.recommendation}
-              </p>
-              {layoutRecommendation ? (
-                <p className="mt-1 text-sm text-slate-700">
-                  <span className="font-medium text-slate-900">
-                    {t.recommendationPrefix}:{" "}
-                    {layoutRecommendation.recommendedLayout === "two"
-                      ? t.printLayoutTwo
-                      : t.printLayoutSingle}
-                    .
-                  </span>
-                  {layoutRecommendation.reasonCodes.length > 0 ? " " : null}
-                  {layoutRecommendation.reasonCodes.length > 0
-                    ? layoutRecommendation.reasonCodes.map((code) => t.recommendationReasons[code]).join("; ")
-                    : null}
-                </p>
-              ) : (
-                <p className="mt-1 text-sm text-slate-600">{t.recommendationNone}</p>
-              )}
-            </div>
-            <p className="mt-3 text-sm font-medium text-slate-700">{t.resultNextStep}</p>
-          </SurfaceCard>
-        </div>
-
-        <SurfaceCard className="p-4">
-          <div className="flex items-center justify-between gap-2">
-            <h3 className="text-base font-semibold text-slate-950">{t.recentWorksTitle}</h3>
-            {loadingRecentWorks ? <span className="text-xs text-slate-500">{t.loadingSkills}</span> : null}
-          </div>
-          {recentWorks.length === 0 ? (
-            <p className="mt-2 text-sm text-slate-600">{t.noRecentWorks}</p>
-          ) : (
-            <ul className="mt-3 space-y-2">
-              {recentWorks.map((work) => (
-                <li
-                  key={work.id}
-                  className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-slate-900">{work.title}</p>
-                    <p className="mt-0.5 text-xs text-slate-600">
-                      {formatDateTime(locale, work.createdAt)} • {formatNumber(locale, work.variantsCount)}{" "}
-                      {locale === "de" ? "Varianten" : locale === "en" ? "variants" : "вариантов"}
-                    </p>
-                  </div>
-                  <Link
-                    href={`/${locale}/teacher-tools/works/${work.id}`}
-                    className="shrink-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
-                  >
-                    {t.openWork}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </SurfaceCard>
-
-        {results.length === 0 ? (
-          <SurfaceCard className="p-4">
-            <p className="text-sm text-slate-600">—</p>
-          </SurfaceCard>
-        ) : (
-          <div className="space-y-3">
-            {results.map((variant) => (
-              <SurfaceCard key={variant.id} className="p-4">
-                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-slate-950">{variant.title}</h3>
-                    <p className="mt-1 text-sm text-slate-600">
-                      {formatDateTime(locale, variant.createdAt)} • {formatNumber(locale, variant.tasksCount)} задач
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Link href={`/${locale}/teacher-tools/variants/${variant.id}`} className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100">
-                      {t.open}
-                    </Link>
-                  </div>
-                </div>
-              </SurfaceCard>
-            ))}
-          </div>
-        )}
       </section>
     </main>
   );
