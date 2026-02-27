@@ -72,6 +72,10 @@ const copy = {
     grade: "Класс",
     section: "Раздел",
     selectedTopics: "Выбрано тем",
+    selectedShort: "выбрано",
+    skillsShort: "навыков",
+    expandTopic: "Развернуть тему",
+    collapseTopic: "Свернуть тему",
     composition: "Состав варианта",
     quantity: "Количество задач",
     available: "Доступно задач",
@@ -136,6 +140,10 @@ const copy = {
     grade: "Grade",
     section: "Section",
     selectedTopics: "Selected topics",
+    selectedShort: "selected",
+    skillsShort: "skills",
+    expandTopic: "Expand topic",
+    collapseTopic: "Collapse topic",
     composition: "Variant composition",
     quantity: "Task count",
     available: "Available tasks",
@@ -200,6 +208,10 @@ const copy = {
     grade: "Klasse",
     section: "Bereich",
     selectedTopics: "Ausgewählte Themen",
+    selectedShort: "ausgewählt",
+    skillsShort: "Skills",
+    expandTopic: "Thema aufklappen",
+    collapseTopic: "Thema einklappen",
     composition: "Zusammensetzung",
     quantity: "Anzahl Aufgaben",
     available: "Verfügbare Aufgaben",
@@ -360,6 +372,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const [printLayout, setPrintLayout] = useState<PrintLayoutMode>("single");
   const [topic, setTopic] = useState<TopicPayload | null>(null);
   const [loadedTopics, setLoadedTopics] = useState<TopicPayload[]>([]);
+  const [expandedByTopicId, setExpandedByTopicId] = useState<Record<string, boolean>>({});
   const [counts, setCounts] = useState<Record<string, number>>({});
   const initialCountsRef = useRef<Record<string, number> | null>(
     hasInitialCountsFromQuery ? initialCountsFromQuery : null,
@@ -554,6 +567,50 @@ export function TeacherToolsPageClient({ locale }: Props) {
     const total = selected.reduce((sum, item) => sum + item.count, 0);
     return { selected, total };
   }, [topic, counts]);
+
+  const topicStats = useMemo(() => {
+    const map = new Map<string, { selectedCount: number; skillsCount: number }>();
+    for (const loadedTopic of loadedTopics) {
+      const selectedCount = loadedTopic.skills.reduce((sum, skill) => sum + (counts[skill.id] ?? 0), 0);
+      map.set(loadedTopic.topicId, {
+        selectedCount,
+        skillsCount: loadedTopic.skills.length,
+      });
+    }
+    return map;
+  }, [loadedTopics, counts]);
+
+  useEffect(() => {
+    if (loadedTopics.length === 0) return;
+    setExpandedByTopicId((prev) => {
+      const knownIds = new Set(loadedTopics.map((topic) => topic.topicId));
+      const next: Record<string, boolean> = {};
+      let changed = false;
+
+      for (const [id, value] of Object.entries(prev)) {
+        if (knownIds.has(id)) {
+          next[id] = value;
+        } else {
+          changed = true;
+        }
+      }
+
+      for (const loadedTopic of loadedTopics) {
+        if (!(loadedTopic.topicId in next)) {
+          next[loadedTopic.topicId] = loadedTopic.topicId === topicId;
+          changed = true;
+        }
+      }
+
+      if (next[topicId] !== true) {
+        next[topicId] = true;
+        changed = true;
+      }
+
+      if (!changed) return prev;
+      return next;
+    });
+  }, [loadedTopics, topicId]);
 
   const skillTopicById = useMemo(() => {
     const map = new Map<string, { topicId: string; topicTitle: string }>();
@@ -890,14 +947,39 @@ export function TeacherToolsPageClient({ locale }: Props) {
             </div>
             {loadedTopics.length > 0 ? (
               <div className="space-y-3">
-                {loadedTopics.map((loadedTopic) => (
+                {loadedTopics.map((loadedTopic) => {
+                  const stats = topicStats.get(loadedTopic.topicId) ?? { selectedCount: 0, skillsCount: loadedTopic.skills.length };
+                  const isCurrentTopic = loadedTopic.topicId === topicId;
+                  const isExpanded = isCurrentTopic || expandedByTopicId[loadedTopic.topicId] === true;
+                  return (
                   <div key={loadedTopic.topicId} className="space-y-3">
-                    {selectedTopicIds.length > 1 ? (
-                      <p className="text-sm font-semibold text-slate-900">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isCurrentTopic) return;
+                        setExpandedByTopicId((prev) => ({
+                          ...prev,
+                          [loadedTopic.topicId]: !isExpanded,
+                        }));
+                      }}
+                      aria-label={isExpanded ? t.collapseTopic : t.expandTopic}
+                      className={[
+                        "flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left",
+                        isCurrentTopic
+                          ? "border-slate-300 bg-slate-100"
+                          : "border-slate-200 bg-slate-50 hover:bg-slate-100",
+                      ].join(" ")}
+                    >
+                      <span className="text-sm font-semibold text-slate-900">
                         {loadedTopic.title[locale] ?? loadedTopic.title.ru ?? loadedTopic.topicId}
-                      </p>
-                    ) : null}
-                    {loadedTopic.skills.map((skill) => {
+                      </span>
+                      <span className="inline-flex items-center gap-2 text-xs text-slate-600">
+                        <span>{t.selectedShort}: {formatNumber(locale, stats.selectedCount)}</span>
+                        <span>{t.skillsShort}: {formatNumber(locale, stats.skillsCount)}</span>
+                        <span className="text-slate-500">{isExpanded ? "▾" : "▸"}</span>
+                      </span>
+                    </button>
+                    {isExpanded ? loadedTopic.skills.map((skill) => {
                       const value = counts[skill.id] ?? 0;
                       const disabled = skill.status === "soon";
                       return (
@@ -980,9 +1062,10 @@ export function TeacherToolsPageClient({ locale }: Props) {
                           </div>
                         </div>
                       );
-                    })}
+                    }) : null}
                   </div>
-                ))}
+                );
+                })}
               </div>
             ) : (
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
