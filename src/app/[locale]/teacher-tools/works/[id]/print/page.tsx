@@ -1,7 +1,6 @@
-import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
-import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
+import { requireTeacherToolsAccess } from "@/src/lib/auth/teacher-tools-guard";
 import { isTwoUpLayout, parsePrintLayout } from "@/src/lib/variants/print-layout";
 import {
   defaultOrientationForLayout,
@@ -18,8 +17,8 @@ type PageProps = {
 export default async function TeacherToolsWorkPrintPage({ params, searchParams }: PageProps) {
   const { locale, id } = await params;
   const query = await searchParams;
-  const cookieStore = await cookies();
-  const { userId } = await getOrCreateVisitorUser(cookieStore);
+  const user = await requireTeacherToolsAccess(locale);
+  const userId = user.id;
 
   const work = await getWorkVariantIdsForOwner(id, userId);
   if (!work || work.variantIds.length === 0) notFound();

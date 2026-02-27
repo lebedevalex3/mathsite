@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
-import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
+import { requireTeacherToolsAccess } from "@/src/lib/auth/teacher-tools-guard";
 import { getVariantDetailForOwner } from "@/src/lib/variants/repository";
 import { MarkdownMath } from "@/lib/ui/MarkdownMath";
 
@@ -13,8 +12,8 @@ type PageProps = {
 
 export default async function TeacherToolsVariantDetailPage({ params }: PageProps) {
   const { locale, id } = await params;
-  const cookieStore = await cookies();
-  const { userId } = await getOrCreateVisitorUser(cookieStore);
+  const user = await requireTeacherToolsAccess(locale);
+  const userId = user.id;
   const detail = await getVariantDetailForOwner(id, userId);
   if (!detail) notFound();
 

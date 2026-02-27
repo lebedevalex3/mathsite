@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
@@ -7,9 +6,9 @@ import { WorkBuildSettingsControls } from "@/src/components/ui/WorkBuildSettings
 import { WorkTypeAutosaveField } from "@/src/components/ui/WorkTypeAutosaveField";
 import { WorkPlacementAutosaveControls } from "@/src/components/ui/WorkPlacementAutosaveControls";
 import { WorkStatusBadge } from "@/src/components/ui/WorkStatusBadge";
+import { requireTeacherToolsAccess } from "@/src/lib/auth/teacher-tools-guard";
 import { selectWorkPdfEngine } from "@/src/lib/pdf-engines/select-engine";
 import { formatDateTime, formatNumber } from "@/src/lib/i18n/format";
-import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 import { isTwoUpLayout, parsePrintLayout } from "@/src/lib/variants/print-layout";
 import {
   defaultOrientationForLayout,
@@ -229,8 +228,8 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
   const showLatexBetaPdfButton =
     process.env.NODE_ENV !== "production" && process.env.LATEX_PDF_ENABLED === "1";
 
-  const cookieStore = await cookies();
-  const { userId } = await getOrCreateVisitorUser(cookieStore);
+  const user = await requireTeacherToolsAccess(locale);
+  const userId = user.id;
   const work = await getWorkDetailForOwner(id, userId);
   if (!work) notFound();
   const workDetail = work;

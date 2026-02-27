@@ -11,6 +11,7 @@ type Locale = "ru" | "en" | "de";
 
 type Props = {
   locale: Locale;
+  initialReason?: "auth" | "role" | null;
 };
 
 type SessionUser = {
@@ -53,6 +54,8 @@ const copy = {
     teacherOnlyTitle: "Кабинет учителя доступен только для роли teacher/admin",
     teacherOnlyBody:
       "Сейчас ваш аккаунт имеет роль student. Подайте заявку или включите teacher-доступ в dev-режиме.",
+    redirectedAuth: "Чтобы открыть этот раздел, сначала войдите в личный кабинет.",
+    redirectedRole: "Для доступа к этому разделу нужна роль teacher или admin.",
     becomeTeacher: "Стать учителем (dev)",
     teachersPage: "Страница для учителей",
     goTools: "Открыть конструктор",
@@ -92,6 +95,8 @@ const copy = {
     teacherOnlyTitle: "Teacher workspace is available only for teacher/admin role",
     teacherOnlyBody:
       "Your account currently has student role. Apply for teacher access or enable teacher role in dev mode.",
+    redirectedAuth: "Sign in first to open that section.",
+    redirectedRole: "Teacher or admin role is required to access that section.",
     becomeTeacher: "Become teacher (dev)",
     teachersPage: "Teachers page",
     goTools: "Open constructor",
@@ -131,6 +136,8 @@ const copy = {
     teacherOnlyTitle: "Der Lehrkräfte-Bereich ist nur für teacher/admin verfügbar",
     teacherOnlyBody:
       "Ihr Konto hat aktuell die Rolle student. Beantragen Sie Lehrkräfte-Zugang oder aktivieren Sie teacher im Dev-Modus.",
+    redirectedAuth: "Melden Sie sich zuerst an, um diesen Bereich zu öffnen.",
+    redirectedRole: "Für diesen Bereich ist die Rolle teacher oder admin erforderlich.",
     becomeTeacher: "Teacher werden (dev)",
     teachersPage: "Lehrkräfte-Seite",
     goTools: "Konstruktor öffnen",
@@ -203,7 +210,7 @@ function buildHistoryTitle(params: {
   return [base, custom, date].filter((item): item is string => Boolean(item && item.length > 0)).join(" · ");
 }
 
-export function TeacherCabinetPageClient({ locale }: Props) {
+export function TeacherCabinetPageClient({ locale, initialReason = null }: Props) {
   const t = copy[locale];
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
@@ -379,6 +386,11 @@ export function TeacherCabinetPageClient({ locale }: Props) {
         <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">{t.eyebrow}</p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">{t.title}</h1>
         <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">{t.subtitle}</p>
+        {initialReason ? (
+          <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+            {initialReason === "auth" ? t.redirectedAuth : t.redirectedRole}
+          </div>
+        ) : null}
       </section>
 
       <SurfaceCard className="p-6">

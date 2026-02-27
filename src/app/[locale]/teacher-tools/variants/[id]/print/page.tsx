@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
-import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
+import { requireTeacherToolsAccess } from "@/src/lib/auth/teacher-tools-guard";
 import { getVariantDetailForOwner } from "@/src/lib/variants/repository";
 import {
   chunkIntoPages,
@@ -115,8 +114,8 @@ function PrintStyles({ orientation }: { orientation: "portrait" | "landscape" })
 export default async function TeacherToolsVariantPrintPage({ params, searchParams }: PageProps) {
   const { locale, id } = await params;
   const query = await searchParams;
-  const cookieStore = await cookies();
-  const { userId } = await getOrCreateVisitorUser(cookieStore);
+  const user = await requireTeacherToolsAccess(locale);
+  const userId = user.id;
   const layout = parsePrintLayout(query.layout);
   const orientation = parsePrintOrientation(query.orientation, defaultOrientationForLayout(layout));
   const ids = [id, ...parseVariantIdsParam(query.ids).filter((x) => x !== id)];

@@ -302,6 +302,9 @@ curl -X POST http://localhost:3000/api/teacher/become
 - Полный доступ к разделу “Мои работы” в кабинете — только для ролей `teacher`/`admin`.
 - Для локальной проверки роли в dev можно использовать `POST /api/teacher/become` (если `ALLOW_DEV_BECOME_TEACHER=1`).
 - Для роли `student` API истории (`/api/teacher/demo/works`, `/api/teacher/demo/works/:id/duplicate`) возвращают `403`.
+- Страницы `/{locale}/teacher-tools/works/*` и `/{locale}/teacher-tools/variants/*` защищены server-side:
+  - без сессии редирект в `/{locale}/teacher/cabinet?reason=auth`
+  - при роли `student` редирект в `/{locale}/teacher/cabinet?reason=role`
 
 ### Где работать с вариантами
 

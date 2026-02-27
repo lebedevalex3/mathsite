@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { isTeacherRole } from "@/src/lib/auth/access";
 import { forbidden, toApiError, unauthorized } from "@/src/lib/api/errors";
 import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 import { listRecentWorksForOwner } from "@/src/lib/variants/repository";
@@ -15,7 +16,7 @@ export async function GET() {
       const { status, body } = unauthorized("Sign-in required to view work history.");
       return NextResponse.json(body, { status });
     }
-    if (user.role !== "teacher" && user.role !== "admin") {
+    if (!isTeacherRole(user.role)) {
       const { status, body } = forbidden("Teacher role required to view work history.");
       return NextResponse.json(body, { status });
     }

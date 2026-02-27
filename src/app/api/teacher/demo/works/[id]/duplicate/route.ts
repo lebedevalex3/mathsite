@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { getTasksForTopic } from "@/lib/tasks/query";
+import { isTeacherRole } from "@/src/lib/auth/access";
 import { prisma } from "@/src/lib/db/prisma";
 import { badRequest, forbidden, notFound, toApiError, unauthorized } from "@/src/lib/api/errors";
 import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
@@ -56,7 +57,7 @@ export async function POST(request: Request, { params }: RouteProps) {
       const { status, body } = unauthorized("Sign-in required to duplicate work.");
       return NextResponse.json(body, { status });
     }
-    if (user.role !== "teacher" && user.role !== "admin") {
+    if (!isTeacherRole(user.role)) {
       const { status, body } = forbidden("Teacher role required to duplicate work.");
       return NextResponse.json(body, { status });
     }
