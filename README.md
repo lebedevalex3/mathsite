@@ -1,38 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MathSite
 
-Project local setup guide: see [`LOCAL_DEV.md`](./LOCAL_DEV.md).
+MathSite is a school math platform built with Next.js, MDX, KaTeX, and Postgres.
 
-## Getting Started
+Current MVP focus:
+- SEO textbook for grade 5 (`Пропорции`)
+- task bank in JSON (`statement_md` as Markdown + LaTeX)
+- student progress via attempts/progress APIs
+- teacher tools for worksheet variants and print/PDF
+- locales: `ru`, `en`, `de` (routes under `/{locale}`)
 
-First, run the development server:
+## Tech Stack
 
+- Next.js App Router + TypeScript
+- Prisma + Postgres
+- MDX + KaTeX
+- Node test runner (`node --test`)
+
+## Quick Start
+
+1. Start Postgres:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+docker compose up -d
+```
+2. Install dependencies:
+```bash
+pnpm install
+```
+3. Prepare environment:
+```bash
+cp .env.example .env.local
+cp .env.local .env
+```
+4. Apply migrations and generate Prisma client:
+```bash
+pnpm prisma migrate dev
+pnpm prisma generate
+```
+5. Start dev server:
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Detailed local setup and troubleshooting: [LOCAL_DEV.md](./LOCAL_DEV.md).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Main Paths
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Student home: `http://localhost:3000/ru`
+- Topic: `http://localhost:3000/ru/5-klass/proporcii`
+- Progress: `http://localhost:3000/ru/progress`
+- Teacher variants: `http://localhost:3000/ru/teacher/variants`
 
-## Learn More
+## Content And Task Contracts
 
-To learn more about Next.js, take a look at the following resources:
+- Taxonomy docs: `docs/TAXONOMY*.md`
+- Task format: `docs/TASK_FORMAT.md`
+- Task bank location: `data/tasks/**/*.json`
+- Content location: `content/**`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Hard constraints:
+- stable IDs (`topic_id`, `skill_id`, `task_id`) must not be rewritten after publication
+- formulas are Markdown + LaTeX (`$...$`, `$$...$$`)
+- any task bank change must pass validation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contributing Flow
 
-## Deploy on Vercel
+1. Implement a small vertical slice.
+2. Update docs if taxonomy/format contracts changed.
+3. Run required checks before commit:
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm dev
+```
+4. If tasks were changed, also run:
+```bash
+pnpm validate:tasks
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `pnpm dev` - run local app
+- `pnpm lint` - eslint
+- `pnpm typecheck` - TypeScript checks
+- `pnpm test` - test suite
+- `pnpm validate:tasks` - task bank validation
+- `pnpm validate:content` - content validation
