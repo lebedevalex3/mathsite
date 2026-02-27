@@ -9,7 +9,7 @@ import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { TeacherErrorState, type TeacherApiError } from "@/src/components/ui/TeacherErrorState";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 import { formatDateTime, formatNumber } from "@/src/lib/i18n/format";
-import { topicCatalogEntries, type TopicDomain } from "@/src/lib/topicMeta";
+import { getTopicDomains, topicCatalogEntries, type TopicDomain } from "@/src/lib/topicMeta";
 import type { PrintLayoutMode } from "@/src/lib/variants/print-layout";
 import {
   recommendPrintLayout,
@@ -62,27 +62,34 @@ type GenerateResponse = {
 };
 
 type Props = { locale: Locale };
+type GradeFilter = number | "all";
+type SelectedDomainFilter = TopicDomain | "all";
 
 const copy = {
   ru: {
     title: "Конструктор вариантов по навыкам",
     subtitle:
       "Выберите тему, задайте состав по навыкам, соберите несколько вариантов. Печать и ответы доступны сразу.",
-    topic: "Тема",
+    topics: "Темы",
+    topicsPlaceholder: "Выберите темы...",
+    topicsHelper: "Темы определяют, какие навыки доступны ниже.",
+    topicsSearch: "Поиск тем...",
+    topicsNotFound: "Темы не найдены",
     grade: "Класс",
     section: "Раздел",
+    allSections: "Все разделы",
     selectedTopics: "Выбрано тем",
     selectedShort: "выбрано",
     skillsShort: "навыков",
     expandTopic: "Развернуть тему",
     collapseTopic: "Свернуть тему",
+    allGrades: "Все классы",
     composition: "Состав варианта",
     quantity: "Количество задач",
     available: "Доступно задач",
     example: "Пример",
     skillCard: "Карточка навыка",
     clearAll: "Очистить всё",
-    keepCurrentTopic: "Оставить только текущую тему",
     variantsCount: "Сколько вариантов",
     workTypeHint: "Используется для названия и истории. На состав задач не влияет.",
     shuffle: "Перемешать порядок задач",
@@ -136,21 +143,26 @@ const copy = {
     title: "Skill-based Variant Builder",
     subtitle:
       "Choose a topic, set the composition by skills, and assemble multiple variants. Print and answers are available immediately.",
-    topic: "Topic",
+    topics: "Topics",
+    topicsPlaceholder: "Choose topics...",
+    topicsHelper: "Topics define which skills are available below.",
+    topicsSearch: "Search topics...",
+    topicsNotFound: "No topics found",
     grade: "Grade",
     section: "Section",
+    allSections: "All sections",
     selectedTopics: "Selected topics",
     selectedShort: "selected",
     skillsShort: "skills",
     expandTopic: "Expand topic",
     collapseTopic: "Collapse topic",
+    allGrades: "All grades",
     composition: "Variant composition",
     quantity: "Task count",
     available: "Available tasks",
     example: "Example",
     skillCard: "Skill card",
     clearAll: "Clear all",
-    keepCurrentTopic: "Keep current topic only",
     variantsCount: "Number of variants",
     workTypeHint: "Used for naming and history. Does not affect task composition.",
     shuffle: "Shuffle task order",
@@ -204,21 +216,26 @@ const copy = {
     title: "Varianten-Baukasten nach Fähigkeiten",
     subtitle:
       "Thema wählen, Zusammensetzung nach Fähigkeiten festlegen und mehrere Varianten zusammenstellen. Druck und Lösungen sind sofort verfügbar.",
-    topic: "Thema",
+    topics: "Themen",
+    topicsPlaceholder: "Themen auswählen...",
+    topicsHelper: "Themen bestimmen, welche Skills unten verfügbar sind.",
+    topicsSearch: "Themen suchen...",
+    topicsNotFound: "Keine Themen gefunden",
     grade: "Klasse",
     section: "Bereich",
+    allSections: "Alle Bereiche",
     selectedTopics: "Ausgewählte Themen",
     selectedShort: "ausgewählt",
     skillsShort: "Skills",
     expandTopic: "Thema aufklappen",
     collapseTopic: "Thema einklappen",
+    allGrades: "Alle Klassen",
     composition: "Zusammensetzung",
     quantity: "Anzahl Aufgaben",
     available: "Verfügbare Aufgaben",
     example: "Beispiel",
     skillCard: "Skill-Karte",
     clearAll: "Alles löschen",
-    keepCurrentTopic: "Nur aktuelles Thema behalten",
     variantsCount: "Anzahl Varianten",
     workTypeHint: "Nur für Titel und Verlauf. Beeinflusst die Aufgabenzusammensetzung nicht.",
     shuffle: "Reihenfolge mischen",
@@ -305,8 +322,8 @@ function buildTeacherToolsStateQuery(params: {
   variantsCount: number;
   workType: WorkType;
   shuffleOrder: boolean;
-  selectedGrade: number;
-  selectedDomain: TopicDomain;
+  selectedGrade: GradeFilter;
+  selectedDomain: SelectedDomainFilter;
   counts: Record<string, number>;
 }) {
   const query = new URLSearchParams();
@@ -318,7 +335,7 @@ function buildTeacherToolsStateQuery(params: {
   query.set("variants", String(params.variantsCount));
   query.set("workType", params.workType);
   query.set("shuffle", params.shuffleOrder ? "1" : "0");
-  query.set("grade", String(params.selectedGrade));
+  query.set("grade", params.selectedGrade === "all" ? "all" : String(params.selectedGrade));
   query.set("domain", params.selectedDomain);
   for (const [skillId, count] of Object.entries(params.counts)) {
     if (!Number.isFinite(count) || count <= 0) continue;
@@ -357,15 +374,31 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const initialCountsFromQuery = parseCountsFromQuery(params.getAll("c"));
   const hasInitialCountsFromQuery = Object.keys(initialCountsFromQuery).length > 0;
   const initialTopicMeta = allTopics.find((item) => item.topicId === initialTopicId)?.meta;
+  const initialGradeParam = params.get("grade");
+  const initialSelectedGrade: GradeFilter =
+    initialGradeParam === "all"
+      ? "all"
+      : initialGradeParam != null && Number.isFinite(Number(initialGradeParam))
+        ? Number(initialGradeParam)
+        : (initialTopicMeta?.levels?.[0] ?? 5);
+  const initialDomainParam = params.get("domain");
+  const inferredInitialDomain =
+    (initialTopicMeta ? getTopicDomains(initialTopicMeta)[0] : null) ??
+    (allTopics[0]?.meta ? getTopicDomains(allTopics[0].meta)[0] : null) ??
+    "arithmetic";
+  const initialSelectedDomain: SelectedDomainFilter =
+    initialDomainParam === "all"
+      ? "all"
+      : (initialDomainParam as TopicDomain | null) ?? inferredInitialDomain;
 
   const [topicId, setTopicId] = useState(initialTopicId);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>(
     initialSelectedTopicIds.length > 0 ? initialSelectedTopicIds : [initialTopicId],
   );
-  const [selectedGrade, setSelectedGrade] = useState<number>(initialTopicMeta?.levels?.[0] ?? 5);
-  const [selectedDomain, setSelectedDomain] = useState<TopicDomain>(
-    initialTopicMeta?.domain ?? allTopics[0]?.meta?.domain ?? "arithmetic",
-  );
+  const [topicSearchQuery, setTopicSearchQuery] = useState("");
+  const [isTopicsPickerOpen, setIsTopicsPickerOpen] = useState(false);
+  const [selectedGrade, setSelectedGrade] = useState<GradeFilter>(initialSelectedGrade);
+  const [selectedDomain, setSelectedDomain] = useState<SelectedDomainFilter>(initialSelectedDomain);
   const [variantsCount, setVariantsCount] = useState(1);
   const [workType, setWorkType] = useState<WorkType>("quiz");
   const [shuffleOrder, setShuffleOrder] = useState(true);
@@ -387,6 +420,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const [highlightResultsPanel, setHighlightResultsPanel] = useState(false);
   const [resultsFocusTick, setResultsFocusTick] = useState(0);
   const resultsActionCardRef = useRef<HTMLDivElement | null>(null);
+  const themesPickerRef = useRef<HTMLDivElement | null>(null);
 
   const gradeOptions = useMemo(
     () =>
@@ -403,41 +437,46 @@ export function TeacherToolsPageClient({ locale }: Props) {
       Array.from(
         new Set(
           allTopics
-            .filter((topic) => (topic.meta?.levels ?? []).includes(selectedGrade))
-            .map((topic) => topic.meta?.domain)
+            .filter((topic) =>
+              selectedGrade === "all" ? true : (topic.meta?.levels ?? []).includes(selectedGrade),
+            )
+            .flatMap((topic) => (topic.meta ? getTopicDomains(topic.meta) : []))
             .filter((domain): domain is TopicDomain => Boolean(domain)),
         ),
       ),
     [allTopics, selectedGrade],
   );
 
+  const domainFilterOptions = useMemo(
+    () => (domainOptions.length > 0 ? (["all", ...domainOptions] as const) : (["all"] as const)),
+    [domainOptions],
+  );
+
   const topics = useMemo(
     () =>
       allTopics.filter((topic) => {
         const levels = topic.meta?.levels ?? [];
-        const domain = topic.meta?.domain;
-        return levels.includes(selectedGrade) && domain === selectedDomain;
+        const domains = topic.meta ? getTopicDomains(topic.meta) : [];
+        const gradeMatches = selectedGrade === "all" ? true : levels.includes(selectedGrade);
+        const domainMatches = selectedDomain === "all" ? true : domains.includes(selectedDomain);
+        return gradeMatches && domainMatches;
       }),
     [allTopics, selectedDomain, selectedGrade],
   );
 
-  const topicsForGrade = useMemo(
-    () =>
-      allTopics.filter((topic) => {
-        const levels = topic.meta?.levels ?? [];
-        return levels.includes(selectedGrade);
-      }),
-    [allTopics, selectedGrade],
+  const orderedSelectedTopicIds = useMemo(
+    () => Array.from(new Set(selectedTopicIds)),
+    [selectedTopicIds],
   );
 
-  const orderedSelectedTopicIds = useMemo(() => {
-    if (selectedTopicIds.length === 0) return [topicId];
-    const unique = Array.from(new Set(selectedTopicIds));
-    if (!unique.includes(topicId)) return [topicId, ...unique];
-    return [topicId, ...unique.filter((id) => id !== topicId)];
-  }, [selectedTopicIds, topicId]);
+  const filteredTopicOptions = useMemo(() => {
+    const query = topicSearchQuery.trim().toLowerCase();
+    if (!query) return topics;
+    return topics.filter((item) => item.title.toLowerCase().includes(query));
+  }, [topicSearchQuery, topics]);
 
   useEffect(() => {
+    if (selectedDomain === "all") return;
     if (domainOptions.length === 0) return;
     if (!domainOptions.includes(selectedDomain)) {
       setSelectedDomain(domainOptions[0]!);
@@ -445,23 +484,33 @@ export function TeacherToolsPageClient({ locale }: Props) {
   }, [domainOptions, selectedDomain]);
 
   useEffect(() => {
-    if (topics.length === 0) return;
-    if (!topics.some((item) => item.topicId === topicId)) {
-      setTopicId(topics[0]!.topicId);
-    }
     setSelectedTopicIds((prev) => {
-      const allowedIds = new Set(topicsForGrade.map((item) => item.topicId));
+      const allowedIds = new Set(allTopics.map((item) => item.topicId));
       const next = prev.filter((item) => allowedIds.has(item));
-      const fallback = next.length > 0 ? next : [topicsForGrade[0]?.topicId ?? topics[0]!.topicId];
-      if (
-        fallback.length === prev.length &&
-        fallback.every((item, index) => item === prev[index])
-      ) {
+      if (next.length === prev.length && next.every((item, index) => item === prev[index])) {
         return prev;
       }
-      return fallback;
+      return next;
     });
-  }, [topicId, topics, topicsForGrade]);
+  }, [allTopics]);
+
+  useEffect(() => {
+    if (selectedTopicIds.length === 0) return;
+    if (selectedTopicIds.includes(topicId)) return;
+    setTopicId(selectedTopicIds[0]!);
+  }, [selectedTopicIds, topicId]);
+
+  useEffect(() => {
+    if (!isTopicsPickerOpen) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (!themesPickerRef.current) return;
+      if (!themesPickerRef.current.contains(event.target as Node)) {
+        setIsTopicsPickerOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isTopicsPickerOpen]);
 
   async function loadRecentWorks() {
     setLoadingRecentWorks(true);
@@ -489,6 +538,22 @@ export function TeacherToolsPageClient({ locale }: Props) {
   useEffect(() => {
     let cancelled = false;
     async function loadTopic() {
+      if (orderedSelectedTopicIds.length === 0) {
+        setTopic(null);
+        setLoadedTopics([]);
+        setCounts((prev) => {
+          const next: Record<string, number> = {};
+          let changed = false;
+          for (const [skillId, count] of Object.entries(prev)) {
+            const value = clamp(count, 0, 30);
+            next[skillId] = value;
+            if (value !== count) changed = true;
+          }
+          return changed ? next : prev;
+        });
+        return;
+      }
+
       setLoadingTopic(true);
       setError(null);
       try {
@@ -602,11 +667,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
         }
       }
 
-      if (next[topicId] !== true) {
-        next[topicId] = true;
-        changed = true;
-      }
-
       if (!changed) return prev;
       return next;
     });
@@ -622,25 +682,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
     }
     return map;
   }, [loadedTopics, locale]);
-
-  const topicContext = useMemo(() => {
-    const primaryTopicId = selectedTopicIds[0] ?? topicId;
-    const meta = topicCatalogEntries.find((entry) => entry.id === primaryTopicId);
-    const level = meta?.levels?.[0] ?? (topicId.startsWith("g5.") ? 5 : null);
-    const domain = meta?.domain ?? null;
-    const title =
-      selectedTopicIds.length > 1
-        ? locale === "de"
-          ? "Mehrere Themen"
-          : locale === "en"
-            ? "Multiple topics"
-            : "Несколько тем"
-        : topic?.title?.[locale] ??
-          topic?.title?.ru ??
-          allTopics.find((item) => item.topicId === primaryTopicId)?.title ??
-          primaryTopicId;
-    return { level, domain, title };
-  }, [allTopics, locale, selectedTopicIds, topic, topicId]);
 
   const layoutRecommendation = useMemo(() => {
     const variantTaskCounts =
@@ -773,22 +814,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
       <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
         <SurfaceCard className="p-6">
           <div className="mb-4 flex flex-wrap gap-2">
-            {gradeOptions.map((grade) => (
-              <button
-                key={grade}
-                type="button"
-                onClick={() => setSelectedGrade(grade)}
-                className={[
-                  "inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold",
-                  selectedGrade === grade
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
-                ].join(" ")}
-              >
-                {t.grade}: {formatNumber(locale, grade)}
-              </button>
-            ))}
-            {domainOptions.map((domain) => (
+            {domainFilterOptions.map((domain) => (
               <button
                 key={domain}
                 type="button"
@@ -800,94 +826,177 @@ export function TeacherToolsPageClient({ locale }: Props) {
                     : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
                 ].join(" ")}
               >
-                {t.section}: {t.domains[domain]}
+                {t.section}: {domain === "all" ? t.allSections : t.domains[domain]}
               </button>
             ))}
-            <span className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-              {t.topic}: {topicContext.title}
-            </span>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="space-y-1">
-              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                {t.topic}
-              </span>
-              <div className="space-y-2">
+            <div className="space-y-4">
+              <label className="space-y-1">
+                <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  {t.grade}
+                </span>
                 <select
-                  value={topicId}
-                  onChange={(e) => {
-                    const nextTopicId = e.target.value;
-                    setTopicId(nextTopicId);
-                    setSelectedTopicIds([nextTopicId]);
-                  }}
+                    value={selectedGrade === "all" ? "all" : String(selectedGrade)}
+                    onChange={(e) => {
+                      setSelectedGrade(e.target.value === "all" ? "all" : Number(e.target.value));
+                      setSelectedTopicIds([]);
+                      setTopicSearchQuery("");
+                      setCounts((prev) => {
+                        const next: Record<string, number> = {};
+                        for (const key of Object.keys(prev)) {
+                          next[key] = 0;
+                        }
+                        return next;
+                      });
+                    }}
                   className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
                 >
-                  {topics.map((item) => (
-                    <option key={item.topicId} value={item.topicId}>
-                      {item.title}
+                  <option value="all">{t.allGrades}</option>
+                  {gradeOptions.map((grade) => (
+                    <option key={grade} value={String(grade)}>
+                      {formatNumber(locale, grade)}
                     </option>
                   ))}
                 </select>
-                <div className="flex flex-wrap gap-2">
-                  {topics.map((item) => {
-                    const selected = selectedTopicIds.includes(item.topicId);
-                    return (
-                      <button
-                        key={item.topicId}
-                        type="button"
-                        onClick={() =>
-                          setSelectedTopicIds((prev) => {
-                            const exists = prev.includes(item.topicId);
-                            if (exists) {
-                              if (prev.length <= 1) return prev;
-                              return prev.filter((id) => id !== item.topicId);
-                            }
-                            return [...prev, item.topicId];
+              </label>
+
+              <label className="space-y-1">
+                <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  {t.topics}
+                </span>
+                <div className="space-y-2">
+                  <div ref={themesPickerRef} className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsTopicsPickerOpen((prev) => !prev)}
+                      className="relative flex min-h-11 w-full items-center rounded-xl border border-slate-300 bg-white px-3 py-2 pr-16 text-left text-sm text-slate-900"
+                      aria-expanded={isTopicsPickerOpen}
+                    >
+                      <span className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
+                        {selectedTopicIds.length === 0 ? (
+                          <span className="text-slate-500">{t.topicsPlaceholder}</span>
+                        ) : (
+                          selectedTopicIds.map((selectedId) => {
+                            const selectedTopic = allTopics.find((item) => item.topicId === selectedId);
+                            const label = selectedTopic?.title ?? selectedId;
+                            return (
+                              <span
+                                key={selectedId}
+                                className="inline-flex max-w-full items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700"
+                                title={label}
+                              >
+                                <span className="truncate">{label}</span>
+                                <span
+                                  role="button"
+                                  aria-label={label}
+                                  tabIndex={-1}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    setSelectedTopicIds((prev) => prev.filter((item) => item !== selectedId));
+                                    const removedTopic = loadedTopics.find((item) => item.topicId === selectedId);
+                                    if (removedTopic) {
+                                      setCounts((prev) => {
+                                        const next = { ...prev };
+                                        for (const skill of removedTopic.skills) {
+                                          next[skill.id] = 0;
+                                        }
+                                        return next;
+                                      });
+                                    }
+                                  }}
+                                  className="rounded-full px-1 leading-none text-blue-700 hover:bg-blue-100"
+                                >
+                                  ×
+                                </span>
+                              </span>
+                            );
                           })
-                        }
-                        className={[
-                          "rounded-full border px-3 py-1 text-xs font-semibold",
-                          selected
-                            ? "border-slate-900 bg-slate-900 text-white"
-                            : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
-                        ].join(" ")}
+                        )}
+                      </span>
+                      <span className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true">
+                        ▾
+                      </span>
+                    </button>
+                    {selectedTopicIds.length > 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedTopicIds([]);
+                          setCounts((prev) => {
+                            const next = { ...prev };
+                            for (const value of loadedTopics) {
+                              for (const skill of value.skills) {
+                                next[skill.id] = 0;
+                              }
+                            }
+                            return next;
+                          });
+                        }}
+                        className="absolute right-7 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                        aria-label={t.clearAll}
                       >
-                        {item.title}
+                        ×
                       </button>
-                    );
-                  })}
-                </div>
-                {selectedTopicIds.length > 0 ? (
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      {t.selectedTopics}:
-                    </span>
-                    {selectedTopicIds.map((selectedId) => {
-                      const selectedTopic = allTopics.find((item) => item.topicId === selectedId);
-                      const label = selectedTopic?.title ?? selectedId;
-                      return (
-                        <button
-                          key={selectedId}
-                          type="button"
-                          onClick={() =>
-                            setSelectedTopicIds((prev) => {
-                              if (prev.length <= 1) return prev;
-                              return prev.filter((item) => item !== selectedId);
+                    ) : null}
+
+                    {isTopicsPickerOpen ? (
+                      <div className="absolute z-20 mt-2 w-full rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
+                        <input
+                          type="text"
+                          value={topicSearchQuery}
+                          onChange={(event) => setTopicSearchQuery(event.target.value)}
+                          placeholder={t.topicsSearch}
+                          className="mb-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                        />
+                        <ul className="max-h-64 space-y-1 overflow-auto">
+                          {filteredTopicOptions.length === 0 ? (
+                            <li className="px-2 py-1 text-sm text-slate-500">{t.topicsNotFound}</li>
+                          ) : (
+                            filteredTopicOptions.map((item) => {
+                              const checked = selectedTopicIds.includes(item.topicId);
+                              return (
+                                <li key={item.topicId}>
+                                  <label className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-slate-800 hover:bg-slate-50">
+                                    <input
+                                      type="checkbox"
+                                      checked={checked}
+                                      onChange={() =>
+                                        setSelectedTopicIds((prev) => {
+                                          if (checked) {
+                                            const removedTopic = loadedTopics.find((value) => value.topicId === item.topicId);
+                                            if (removedTopic) {
+                                              setCounts((prevCounts) => {
+                                                const next = { ...prevCounts };
+                                                for (const skill of removedTopic.skills) {
+                                                  next[skill.id] = 0;
+                                                }
+                                                return next;
+                                              });
+                                            }
+                                            return prev.filter((id) => id !== item.topicId);
+                                          }
+                                          setTopicId(item.topicId);
+                                          return [...prev, item.topicId];
+                                        })
+                                      }
+                                      className="h-4 w-4 rounded border-slate-300"
+                                    />
+                                    <span className="truncate">{item.title}</span>
+                                  </label>
+                                </li>
+                              );
                             })
-                          }
-                          className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700"
-                          title={label}
-                        >
-                          {label}
-                          <span aria-hidden="true">×</span>
-                        </button>
-                      );
-                    })}
+                          )}
+                        </ul>
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-            </label>
+                  <p className="text-xs text-slate-500">{t.topicsHelper}</p>
+                </div>
+              </label>
+            </div>
 
             <div className="space-y-1">
               <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -896,25 +1005,19 @@ export function TeacherToolsPageClient({ locale }: Props) {
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
-                  onClick={() =>
+                  onClick={() => {
                     setCounts((prev) => {
                       const next: Record<string, number> = {};
                       for (const key of Object.keys(prev)) {
                         next[key] = 0;
                       }
                       return next;
-                    })
-                  }
+                    });
+                    setSelectedTopicIds([]);
+                  }}
                   className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
                 >
                   {t.clearAll}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedTopicIds([topicId])}
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
-                >
-                  {t.keepCurrentTopic}
                 </button>
               </div>
             </div>
@@ -949,23 +1052,21 @@ export function TeacherToolsPageClient({ locale }: Props) {
               <div className="space-y-3">
                 {loadedTopics.map((loadedTopic) => {
                   const stats = topicStats.get(loadedTopic.topicId) ?? { selectedCount: 0, skillsCount: loadedTopic.skills.length };
-                  const isCurrentTopic = loadedTopic.topicId === topicId;
-                  const isExpanded = isCurrentTopic || expandedByTopicId[loadedTopic.topicId] === true;
+                  const isExpanded = expandedByTopicId[loadedTopic.topicId] === true;
                   return (
                   <div key={loadedTopic.topicId} className="space-y-3">
                     <button
                       type="button"
-                      onClick={() => {
-                        if (isCurrentTopic) return;
+                      onClick={() =>
                         setExpandedByTopicId((prev) => ({
                           ...prev,
                           [loadedTopic.topicId]: !isExpanded,
-                        }));
-                      }}
+                        }))
+                      }
                       aria-label={isExpanded ? t.collapseTopic : t.expandTopic}
                       className={[
                         "flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left",
-                        isCurrentTopic
+                        loadedTopic.topicId === topicId
                           ? "border-slate-300 bg-slate-100"
                           : "border-slate-200 bg-slate-50 hover:bg-slate-100",
                       ].join(" ")}
@@ -1092,7 +1193,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
               type="button"
               onClick={handleBuild}
               disabled={building || loadingTopic || summary.total < 1}
-              className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60 lg:hidden"
             >
               {building ? `${t.build}...` : t.build}
             </button>
@@ -1114,6 +1215,14 @@ export function TeacherToolsPageClient({ locale }: Props) {
         <SurfaceCard className="p-6">
           <h2 className="text-lg font-semibold text-slate-950">{t.total}</h2>
           <p className="mt-2 text-2xl font-bold text-slate-950">{formatNumber(locale, summary.total)}</p>
+          <button
+            type="button"
+            onClick={handleBuild}
+            disabled={building || loadingTopic || summary.total < 1}
+            className="mt-4 hidden w-full items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60 lg:inline-flex"
+          >
+            {building ? `${t.build}...` : t.build}
+          </button>
           <h3 className="mt-5 text-sm font-semibold uppercase tracking-wide text-slate-500">
             {t.bySkills}
           </h3>
