@@ -77,7 +77,7 @@ export default async function TeacherLandingPage({ params }: PageProps) {
         <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">{t.subtitle}</p>
         <div className="mt-5 flex flex-wrap gap-2">
           <Link
-            href={`/${locale}/teacher/variants`}
+            href={`/${locale}/teacher/cabinet`}
             className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700"
           >
             {t.openCabinet}
@@ -110,10 +110,10 @@ export default async function TeacherLandingPage({ params }: PageProps) {
           <p className="mt-2 text-sm leading-6 text-slate-600">{t.note}</p>
           <div className="mt-4">
             <Link
-              href={`/${locale}/teacher/variants`}
+              href={`/${locale}/teacher/cabinet`}
               className="text-sm font-medium text-blue-700 hover:text-blue-900"
             >
-              /{locale}/teacher/variants
+              /{locale}/teacher/cabinet
             </Link>
           </div>
         </SurfaceCard>
@@ -121,4 +121,3 @@ export default async function TeacherLandingPage({ params }: PageProps) {
     </main>
   );
 }
-

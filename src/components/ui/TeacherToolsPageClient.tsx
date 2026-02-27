@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { TeacherErrorState, type TeacherApiError } from "@/src/components/ui/TeacherErrorState";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
-import { formatDateTime, formatNumber } from "@/src/lib/i18n/format";
+import { formatNumber } from "@/src/lib/i18n/format";
 import { getTopicDomains, topicCatalogEntries, type TopicDomain } from "@/src/lib/topicMeta";
 import { type WorkType } from "@/src/lib/variants/print-recommendation";
 
@@ -36,16 +36,6 @@ type GenerateResponse = {
   code?: string;
   message?: string;
   details?: unknown;
-};
-
-type HistoryWork = {
-  id: string;
-  topicId: string;
-  title: string;
-  workType: WorkType;
-  printProfileJson: unknown;
-  createdAt: string;
-  variantsCount: number;
 };
 
 type Props = { locale: Locale };
@@ -98,6 +88,9 @@ const copy = {
     historyOlder: "Ранее",
     historyVariantsUnit: "вариантов",
     historyTasksUnit: "задач",
+    historyLockedTitle: "История доступна после входа",
+    historyLockedBody: "Войдите в личный кабинет, чтобы видеть сохранённые работы и продолжать с того же места.",
+    historyLockedCta: "Войти в кабинет",
     workTypes: {
       lesson: "Работа на уроке",
       quiz: "Самостоятельная",
@@ -159,6 +152,9 @@ const copy = {
     historyOlder: "Earlier",
     historyVariantsUnit: "variants",
     historyTasksUnit: "tasks",
+    historyLockedTitle: "History is available after sign-in",
+    historyLockedBody: "Sign in to your workspace to view saved works and continue from where you left off.",
+    historyLockedCta: "Go to workspace",
     workTypes: {
       lesson: "Lesson work",
       quiz: "Quiz",
@@ -220,6 +216,9 @@ const copy = {
     historyOlder: "Früher",
     historyVariantsUnit: "Varianten",
     historyTasksUnit: "Aufgaben",
+    historyLockedTitle: "Verlauf erst nach Anmeldung verfügbar",
+    historyLockedBody: "Melden Sie sich im persönlichen Bereich an, um gespeicherte Arbeiten zu sehen und fortzusetzen.",
+    historyLockedCta: "Zum Bereich",
     workTypes: {
       lesson: "Unterricht",
       quiz: "Kurztest",
@@ -264,63 +263,6 @@ function parseCountsFromQuery(values: string[]) {
     parsed[skillId] = clamp(Math.trunc(count), 0, 30);
   }
   return parsed;
-}
-
-function parseGeneration(value: unknown) {
-  if (!value || typeof value !== "object") return null;
-  const generation = (value as { generation?: unknown }).generation;
-  if (!generation || typeof generation !== "object") return null;
-  return generation as {
-    plan?: Array<{ skillId?: string; count?: number }>;
-    titleTemplate?: { customTitle?: string | null; date?: string | null } | null;
-  };
-}
-
-function buildHistoryTitle(params: {
-  locale: Locale;
-  workType: WorkType;
-  customTitle?: string | null;
-  date?: string | null;
-}) {
-  const typeLabels: Record<Locale, Record<WorkType, string>> = {
-    ru: {
-      lesson: "Работа на уроке",
-      quiz: "Самостоятельная",
-      homework: "Домашняя работа",
-      test: "Контрольная",
-    },
-    en: {
-      lesson: "Lesson work",
-      quiz: "Quiz",
-      homework: "Homework",
-      test: "Test",
-    },
-    de: {
-      lesson: "Unterricht",
-      quiz: "Kurztest",
-      homework: "Hausaufgabe",
-      test: "Klassenarbeit",
-    },
-  };
-  const base = typeLabels[params.locale][params.workType];
-  const custom = params.customTitle?.trim();
-  const date =
-    params.date && /^\d{4}-\d{2}-\d{2}$/.test(params.date)
-      ? new Intl.DateTimeFormat(params.locale === "ru" ? "ru-RU" : params.locale === "de" ? "de-DE" : "en-US", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        }).format(new Date(`${params.date}T00:00:00`))
-      : null;
-  return [base, custom, date].filter((item): item is string => Boolean(item && item.length > 0)).join(" · ");
-}
-
-function isSameDay(a: Date, b: Date) {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
 }
 
 function buildTeacherToolsStateQuery(params: {
@@ -424,12 +366,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
   );
   const [loadingTopic, setLoadingTopic] = useState(false);
   const [building, setBuilding] = useState(false);
-  const [loadingWorks, setLoadingWorks] = useState(false);
-  const [works, setWorks] = useState<HistoryWork[]>([]);
-  const [historyQuery, setHistoryQuery] = useState("");
-  const [historyFilter, setHistoryFilter] = useState<"all" | WorkType>("all");
-  const [duplicateWorkId, setDuplicateWorkId] = useState<string | null>(null);
-  const [pinnedWorkIds, setPinnedWorkIds] = useState<string[]>([]);
   const [error, setError] = useState<TeacherApiError | null>(null);
   const themesPickerRef = useRef<HTMLDivElement | null>(null);
 
@@ -660,48 +596,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
     });
   }, [loadedTopics, topicId]);
 
-  useEffect(() => {
-    const storageKey = `teacher-tools:pinned-works:${locale}`;
-    try {
-      const raw = window.localStorage.getItem(storageKey);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as unknown;
-      if (Array.isArray(parsed)) {
-        setPinnedWorkIds(parsed.filter((item): item is string => typeof item === "string"));
-      }
-    } catch {
-      // ignore malformed local storage payload
-    }
-  }, [locale]);
-
-  useEffect(() => {
-    const storageKey = `teacher-tools:pinned-works:${locale}`;
-    window.localStorage.setItem(storageKey, JSON.stringify(pinnedWorkIds));
-  }, [locale, pinnedWorkIds]);
-
-  async function loadWorks() {
-    setLoadingWorks(true);
-    try {
-      const response = await fetch("/api/teacher/demo/works", {
-        credentials: "same-origin",
-      });
-      const payload = (await response.json()) as {
-        ok?: boolean;
-        works?: HistoryWork[];
-      };
-      if (!response.ok || !payload.ok) return;
-      setWorks(Array.isArray(payload.works) ? payload.works : []);
-    } catch {
-      // history is optional on this screen; keep silent if unavailable
-    } finally {
-      setLoadingWorks(false);
-    }
-  }
-
-  useEffect(() => {
-    void loadWorks();
-  }, []);
-
   const skillTopicById = useMemo(() => {
     const map = new Map<string, { topicId: string; topicTitle: string }>();
     for (const loadedTopic of loadedTopics) {
@@ -745,7 +639,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
       }
       const nextWorkId = typeof payload.workId === "string" ? payload.workId : null;
       if (nextWorkId) {
-        void loadWorks();
         router.push(`/${locale}/teacher-tools/works/${nextWorkId}`);
         return;
       }
@@ -772,26 +665,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
     return `/${locale}${cardHref}?${query.toString()}`;
   }
 
-  async function handleDuplicateWork(workId: string) {
-    setDuplicateWorkId(workId);
-    try {
-      const response = await fetch(`/api/teacher/demo/works/${workId}/duplicate`, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale }),
-      });
-      const payload = (await response.json()) as { ok?: boolean; workId?: string };
-      if (!response.ok || !payload.ok || typeof payload.workId !== "string") return;
-      await loadWorks();
-      router.push(`/${locale}/teacher-tools/works/${payload.workId}`);
-    } catch {
-      // keep silent; duplication is secondary action in history
-    } finally {
-      setDuplicateWorkId(null);
-    }
-  }
-
   useEffect(() => {
     const query = buildTeacherToolsStateQuery({
       topicId,
@@ -806,59 +679,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
     });
     router.replace(`/${locale}/teacher-tools?${query.toString()}`, { scroll: false });
   }, [router, locale, topicId, selectedTopicIds, summary.total, variantsCount, workType, shuffleOrder, selectedGrade, selectedDomain, counts]);
-
-  const filteredWorks = useMemo(() => {
-    const query = historyQuery.trim().toLowerCase();
-    return works.filter((work) => {
-      if (historyFilter !== "all" && work.workType !== historyFilter) return false;
-      const generation = parseGeneration(work.printProfileJson);
-      const title = buildHistoryTitle({
-        locale,
-        workType: work.workType,
-        customTitle: generation?.titleTemplate?.customTitle ?? null,
-        date: generation?.titleTemplate?.date ?? null,
-      });
-      if (!query) return true;
-      return title.toLowerCase().includes(query);
-    });
-  }, [historyFilter, historyQuery, locale, works]);
-
-  const groupedWorks = useMemo(() => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-    const weekStart = new Date(today);
-    weekStart.setDate(today.getDate() - 6);
-
-    const groups: Record<"today" | "yesterday" | "week" | "older", HistoryWork[]> = {
-      today: [],
-      yesterday: [],
-      week: [],
-      older: [],
-    };
-
-    const sorted = [...filteredWorks].sort((a, b) => {
-      const pinDiff = Number(pinnedWorkIds.includes(b.id)) - Number(pinnedWorkIds.includes(a.id));
-      if (pinDiff !== 0) return pinDiff;
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
-
-    for (const work of sorted) {
-      const createdAt = new Date(work.createdAt);
-      if (isSameDay(createdAt, today)) {
-        groups.today.push(work);
-      } else if (isSameDay(createdAt, yesterday)) {
-        groups.yesterday.push(work);
-      } else if (createdAt >= weekStart) {
-        groups.week.push(work);
-      } else {
-        groups.older.push(work);
-      }
-    }
-
-    return groups;
-  }, [filteredWorks, pinnedWorkIds]);
 
   return (
     <main className="space-y-6">
@@ -1265,151 +1085,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
         </SurfaceCard>
       </section>
 
-      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.historyTitle}</h2>
-            <p className="mt-1 text-sm text-slate-600">{t.historySubtitle}</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => void loadWorks()}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
-          >
-            {loadingWorks ? "..." : "↻"}
-          </button>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-          <input
-            type="text"
-            value={historyQuery}
-            onChange={(event) => setHistoryQuery(event.target.value)}
-            placeholder={t.historySearch}
-            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
-          />
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setHistoryFilter("all")}
-              className={[
-                "rounded-full border px-3 py-1 text-xs font-semibold",
-                historyFilter === "all"
-                  ? "border-slate-900 bg-slate-900 text-white"
-                  : "border-slate-300 bg-white text-slate-700",
-              ].join(" ")}
-            >
-              {t.historyAll}
-            </button>
-            {(Object.keys(t.workTypes) as WorkType[]).map((type) => (
-              <button
-                key={type}
-                type="button"
-                onClick={() => setHistoryFilter(type)}
-                className={[
-                  "rounded-full border px-3 py-1 text-xs font-semibold",
-                  historyFilter === type
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-300 bg-white text-slate-700",
-                ].join(" ")}
-              >
-                {t.workTypes[type]}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {(["today", "yesterday", "week", "older"] as const).map((bucket) => {
-          const items = groupedWorks[bucket];
-          if (items.length === 0) return null;
-          const heading =
-            bucket === "today"
-              ? t.historyToday
-              : bucket === "yesterday"
-                ? t.historyYesterday
-                : bucket === "week"
-                  ? t.historyWeek
-                  : t.historyOlder;
-          return (
-            <div key={bucket} className="space-y-2">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">{heading}</h3>
-              <div className="space-y-2">
-                {items.map((work) => {
-                  const generation = parseGeneration(work.printProfileJson);
-                  const tasksCount =
-                    generation?.plan?.reduce((sum, item) => sum + (typeof item.count === "number" ? item.count : 0), 0) ?? 0;
-                  const displayTitle = buildHistoryTitle({
-                    locale,
-                    workType: work.workType,
-                    customTitle: generation?.titleTemplate?.customTitle ?? null,
-                    date: generation?.titleTemplate?.date ?? null,
-                  });
-                  const isPinned = pinnedWorkIds.includes(work.id);
-                  const topicTitle = allTopics.find((item) => item.topicId === work.topicId)?.title ?? work.topicId;
-                  return (
-                    <div key={work.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                          <p className="text-base font-semibold text-slate-950">{displayTitle || work.title}</p>
-                          <p className="mt-1 text-sm text-slate-600">
-                            {formatDateTime(locale, work.createdAt)} • {formatNumber(locale, work.variantsCount)} {t.historyVariantsUnit} • {formatNumber(locale, tasksCount)} {t.historyTasksUnit}
-                          </p>
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            <span className="rounded-full border border-slate-300 bg-white px-2 py-0.5 text-xs font-medium text-slate-700">
-                              {t.workTypes[work.workType]}
-                            </span>
-                            <span className="rounded-full border border-slate-300 bg-white px-2 py-0.5 text-xs font-medium text-slate-700">
-                              {topicTitle}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Link
-                            href={`/${locale}/teacher-tools/works/${work.id}`}
-                            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
-                          >
-                            {t.historyOpen}
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => void handleDuplicateWork(work.id)}
-                            disabled={duplicateWorkId === work.id}
-                            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
-                          >
-                            {duplicateWorkId === work.id ? "..." : t.historyDuplicate}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setPinnedWorkIds((prev) =>
-                                isPinned ? prev.filter((id) => id !== work.id) : [work.id, ...prev],
-                              )
-                            }
-                            className={[
-                              "rounded-lg border px-3 py-2 text-sm font-medium",
-                              isPinned
-                                ? "border-slate-900 bg-slate-900 text-white"
-                                : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100",
-                            ].join(" ")}
-                          >
-                            {isPinned ? t.historyUnpin : t.historyPin}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-
-        {Object.values(groupedWorks).every((items) => items.length === 0) ? (
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            {t.historyEmpty}
-          </div>
-        ) : null}
-      </section>
     </main>
   );
 }
