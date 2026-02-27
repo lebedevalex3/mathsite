@@ -237,8 +237,8 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
 
   const storedProfile = normalizePrintProfile(workDetail.printProfileJson);
   const generationSettings = parseGenerationSettings(workDetail.printProfileJson);
-  const titleTemplate = parseTitleTemplate(workDetail.printProfileJson);
   const workType = parseWorkType(workDetail.workType);
+  const titleTemplate = parseTitleTemplate(workDetail.printProfileJson);
   const forceTwoUp = false;
   const canUseTwoCut = workDetail.variants.length % 2 === 0;
   const docMode = query.doc === "answers" ? "answers" : "student";
@@ -379,9 +379,9 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
           {t.workSubtitleVariantsUnit} • {formatNumber(locale, subtitleTasksCount)}{" "}
           {t.workSubtitleTasksUnit}
         </p>
-        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div className="mt-3 grid items-start gap-3 sm:grid-cols-[1.2fr_0.8fr]">
           <WorkTypeAutosaveField
-            key={`${workDetail.id}:${workType}:${titleTemplate.customTitle}:${titleTemplate.date}:${effectiveLayout}:${effectiveOrientation}`}
+            key={workDetail.id}
             locale={locale}
             workId={workDetail.id}
             initialWorkType={workType}
@@ -397,21 +397,25 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
             options={t.workTypes}
           />
           <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.layout}</div>
-            <div className="mt-1 text-sm font-medium text-slate-900">
-              {effectiveLayout === "two"
-                ? t.two
-                : effectiveLayout === "two_cut"
-                  ? t.twoCut
-                  : effectiveLayout === "two_dup"
+            <div className="grid gap-3">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.layout}</div>
+                <div className="mt-1 text-sm font-medium text-slate-900">
+                  {effectiveLayout === "two"
                     ? t.two
-                    : t.single}
-            </div>
-          </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.variants}</div>
-            <div className="mt-1 text-sm font-medium text-slate-900">
-              {formatNumber(locale, workDetail.variants.length)}
+                    : effectiveLayout === "two_cut"
+                      ? t.twoCut
+                      : effectiveLayout === "two_dup"
+                        ? t.two
+                        : t.single}
+                </div>
+              </div>
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.variants}</div>
+                <div className="mt-1 text-sm font-medium text-slate-900">
+                  {formatNumber(locale, workDetail.variants.length)}
+                </div>
+              </div>
             </div>
           </div>
         </div>

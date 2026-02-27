@@ -134,4 +134,3 @@ export async function loadPrintableWorkDocumentForOwner(params: {
     variantDetailsById: new Map(details.map((detail) => [detail.id, detail])),
   });
 }
-

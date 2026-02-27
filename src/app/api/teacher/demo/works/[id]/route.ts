@@ -25,7 +25,8 @@ function parseWorkType(value: unknown): "lesson" | "quiz" | "homework" | "test" 
     : null;
 }
 
-function parseTitleTemplate(value: unknown): { customTitle: string | null; date: string | null } {
+function parseTitleTemplate(value: unknown): { customTitle: string | null; date: string | null } | undefined {
+  if (value === undefined) return undefined;
   if (!value || typeof value !== "object") return { customTitle: null, date: null };
   const data = value as { customTitle?: unknown; date?: unknown };
   const customTitle =
@@ -76,13 +77,20 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       defaultOrientationForLayout(nextLayout),
     );
     const forceTwoUp = body.printProfile?.forceTwoUp === true;
-    const titleTemplate = parseTitleTemplate(body.titleTemplate);
-
     const stored = normalizePrintProfile(existing.printProfileJson);
     const existingRaw =
       existing.printProfileJson && typeof existing.printProfileJson === "object"
         ? (existing.printProfileJson as Record<string, unknown>)
         : {};
+    const existingGeneration =
+      existingRaw.generation && typeof existingRaw.generation === "object"
+        ? (existingRaw.generation as Record<string, unknown>)
+        : {};
+    const existingTitleTemplate = parseTitleTemplate(existingGeneration.titleTemplate) ?? {
+      customTitle: null,
+      date: null,
+    };
+    const titleTemplate = parseTitleTemplate(body.titleTemplate) ?? existingTitleTemplate;
 
     const nextProfileJson = {
       ...existingRaw,
@@ -94,9 +102,7 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       // Preserve existing fit analysis; it still applies to this work's task set.
       fit: existingRaw.fit ?? (stored as unknown as { fit?: unknown }).fit,
       generation: {
-        ...(existingRaw.generation && typeof existingRaw.generation === "object"
-          ? (existingRaw.generation as Record<string, unknown>)
-          : {}),
+        ...existingGeneration,
         titleTemplate,
       },
     };
