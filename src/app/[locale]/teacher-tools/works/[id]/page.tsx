@@ -3,7 +3,9 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
-import { SaveWorkProfileButton } from "@/src/components/ui/SaveWorkProfileButton";
+import { WorkTypeAutosaveField } from "@/src/components/ui/WorkTypeAutosaveField";
+import { WorkPlacementAutosaveControls } from "@/src/components/ui/WorkPlacementAutosaveControls";
+import { WorkStatusBadge } from "@/src/components/ui/WorkStatusBadge";
 import { selectWorkPdfEngine } from "@/src/lib/pdf-engines/select-engine";
 import { formatDateTime, formatNumber } from "@/src/lib/i18n/format";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
@@ -47,6 +49,10 @@ const copy = {
     eyebrow: "Работа",
     back: "← К конструктору",
     titleSuffix: "Собранная работа",
+    workSubtitleVariantsUnit: "вариантов",
+    workSubtitleTasksUnit: "задач",
+    variantLabel: "Вариант",
+    variantTasksUnit: "задач",
     workType: "Тип работы",
     layout: "Оформление",
     placement: "Размещение",
@@ -57,6 +63,10 @@ const copy = {
     two: "2 варианта/стр (альбомная)",
     twoDup: "Вариант 1 | Вариант 1",
     twoCut: "2 варианта/стр (для разрезания)",
+    autosaveSaving: "Сохраняю...",
+    autosaveSaved: "Сохранено",
+    autosaveError: "Ошибка сохранения",
+    autosaveRetry: "Повторить",
     forceTwo: "Всё равно попробовать (force)",
     duplexHint: "Для двусторонней печати выберите переворот по короткой стороне.",
     modeHint: "Подсказка по режиму",
@@ -88,6 +98,10 @@ const copy = {
     eyebrow: "Work",
     back: "← Back to builder",
     titleSuffix: "Generated work",
+    workSubtitleVariantsUnit: "variants",
+    workSubtitleTasksUnit: "tasks",
+    variantLabel: "Variant",
+    variantTasksUnit: "tasks",
     workType: "Work type",
     layout: "Layout",
     placement: "Placement",
@@ -98,6 +112,10 @@ const copy = {
     two: "2 variants/page (landscape)",
     twoDup: "Variant 1 | Variant 1",
     twoCut: "2 variants/page (cut-safe)",
+    autosaveSaving: "Saving...",
+    autosaveSaved: "Saved",
+    autosaveError: "Save error",
+    autosaveRetry: "Retry",
     forceTwo: "Try anyway (force)",
     duplexHint: "For duplex printing use short-edge flip.",
     modeHint: "Mode hint",
@@ -129,6 +147,10 @@ const copy = {
     eyebrow: "Arbeit",
     back: "← Zurück zum Baukasten",
     titleSuffix: "Erstellte Arbeit",
+    workSubtitleVariantsUnit: "Varianten",
+    workSubtitleTasksUnit: "Aufgaben",
+    variantLabel: "Variante",
+    variantTasksUnit: "Aufgaben",
     workType: "Art der Arbeit",
     layout: "Layout",
     placement: "Anordnung",
@@ -139,6 +161,10 @@ const copy = {
     two: "2 Varianten/Seite (Querformat)",
     twoDup: "Variante 1 | Variante 1",
     twoCut: "2 Varianten/Seite (zum Schneiden)",
+    autosaveSaving: "Speichere...",
+    autosaveSaved: "Gespeichert",
+    autosaveError: "Speicherfehler",
+    autosaveRetry: "Erneut",
     forceTwo: "Trotzdem versuchen (force)",
     duplexHint: "Für Duplexdruck: Wendung an der kurzen Kante.",
     modeHint: "Hinweis zum Modus",
@@ -205,24 +231,17 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
   const modeHintText =
     effectiveLayout === "two_cut"
       ? t.hintTwoCut
-      : effectiveLayout === "two_dup"
-        ? t.hintTwoDup
-        : effectiveLayout === "two"
+      : effectiveLayout === "two" || effectiveLayout === "two_dup"
           ? t.hintTwo
           : t.hintSingle;
+  const recommendationLayoutLabel =
+    fit.recommendedLayout === "two" ? t.two : t.single;
+  const recommendationReasons =
+    fit.reasons && fit.reasons.length > 0 ? fit.reasons.slice(0, 4) : [modeHintText];
+  const subtitleTasksCount = workDetail.variants[0]?.tasksCount ?? 0;
 
   const engineNameLabel = (engine: "chromium" | "latex") =>
     engine === "latex" ? t.engineLatex : t.engineChromium;
-
-  function workPageHref(nextLayout: "single" | "two" | "two_cut" | "two_dup") {
-    const params = new URLSearchParams();
-    params.set("layout", nextLayout);
-    params.set("orientation", defaultOrientationForLayout(nextLayout));
-    if (docMode === "answers") {
-      params.set("doc", "answers");
-    }
-    return `/${locale}/teacher-tools/works/${workDetail.id}?${params.toString()}`;
-  }
 
   function workDocModeHref(nextDocMode: "student" | "answers") {
     const params = new URLSearchParams();
@@ -322,14 +341,33 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
           </div>
         ) : null}
 
-        <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
-          {workDetail.title} • {t.titleSuffix}
-        </h1>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-950">
+            {t.workTypes[workType]}
+          </h1>
+          <WorkStatusBadge
+            locale={locale}
+            workId={workDetail.id}
+            variantsCount={workDetail.variants.length}
+          />
+        </div>
+        <p className="mt-2 text-sm text-slate-600">
+          {formatDateTime(locale, workDetail.createdAt)} • {formatNumber(locale, workDetail.variants.length)}{" "}
+          {t.workSubtitleVariantsUnit} • {formatNumber(locale, subtitleTasksCount)}{" "}
+          {t.workSubtitleTasksUnit}
+        </p>
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.workType}</div>
-            <div className="mt-1 text-sm font-medium text-slate-900">{t.workTypes[workType]}</div>
-          </div>
+          <WorkTypeAutosaveField
+            key={`${workDetail.id}:${workType}:${effectiveLayout}:${effectiveOrientation}`}
+            locale={locale}
+            workId={workDetail.id}
+            initialWorkType={workType}
+            layout={effectiveLayout}
+            orientation={effectiveOrientation}
+            forceTwoUp={forceTwoUp}
+            label={t.workType}
+            options={t.workTypes}
+          />
           <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
             <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.layout}</div>
             <div className="mt-1 text-sm font-medium text-slate-900">
@@ -338,7 +376,7 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
                 : effectiveLayout === "two_cut"
                   ? t.twoCut
                   : effectiveLayout === "two_dup"
-                    ? t.twoDup
+                    ? t.two
                     : t.single}
             </div>
           </div>
@@ -353,91 +391,76 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
         <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
           <div className="space-y-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.placement}</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                <Link
-                  href={workPageHref("single")}
-                  className={[
-                    "rounded-lg border px-3 py-2 text-sm font-medium",
-                    effectiveLayout === "single"
-                      ? "border-slate-900 bg-slate-900 text-white"
-                      : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100",
-                  ].join(" ")}
-                >
-                  {t.single}
-                </Link>
-                <Link
-                  href={workPageHref("two")}
-                  className={[
-                    "rounded-lg border px-3 py-2 text-sm font-medium",
-                    effectiveLayout === "two"
-                      ? "border-slate-900 bg-slate-900 text-white"
-                      : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100",
-                  ].join(" ")}
-                >
-                  {t.two}
-                </Link>
-                <Link
-                  href={workPageHref("two_dup")}
-                  className={[
-                    "rounded-lg border px-3 py-2 text-sm font-medium",
-                    effectiveLayout === "two_dup"
-                      ? "border-slate-900 bg-slate-900 text-white"
-                      : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100",
-                  ].join(" ")}
-                >
-                  {t.twoDup}
-                </Link>
-                {canUseTwoCut ? (
-                  <Link
-                    href={workPageHref("two_cut")}
-                    className={[
-                      "rounded-lg border px-3 py-2 text-sm font-medium",
-                      effectiveLayout === "two_cut"
-                        ? "border-slate-900 bg-slate-900 text-white"
-                        : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100",
-                    ].join(" ")}
-                  >
-                    {t.twoCut}
-                  </Link>
-                ) : (
-                  <span
-                    aria-disabled="true"
-                    title={locale === "ru" ? "Для режима разрезания нужно чётное количество вариантов." : undefined}
-                    className="cursor-not-allowed rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-400"
-                  >
-                    {t.twoCut}
-                  </span>
-                )}
-              </div>
-              <div className="mt-3">
-                <SaveWorkProfileButton
-                  locale={locale}
-                  workId={workDetail.id}
-                  workType={workType}
-                  layout={effectiveLayout}
-                  orientation={effectiveOrientation}
-                  forceTwoUp={forceTwoUp}
-                />
-              </div>
+              <WorkPlacementAutosaveControls
+                locale={locale}
+                workId={workDetail.id}
+                workType={workType}
+                layout={effectiveLayout}
+                forceTwoUp={forceTwoUp}
+                canUseTwoCut={canUseTwoCut}
+                labels={{
+                  placement: t.placement,
+                  onePerPage: t.single,
+                  twoPerPage:
+                    locale === "ru"
+                      ? "2 на страницу"
+                      : locale === "en"
+                        ? "2 per page"
+                        : "2 pro Seite",
+                  landscape:
+                    locale === "ru"
+                      ? "Альбом"
+                      : locale === "en"
+                        ? "Landscape"
+                        : "Querformat",
+                  cut:
+                    locale === "ru"
+                      ? "Разрезать"
+                      : locale === "en"
+                        ? "Cut"
+                        : "Zum Schneiden",
+                  saving: t.autosaveSaving,
+                  saved: t.autosaveSaved,
+                  error: t.autosaveError,
+                  retry: t.autosaveRetry,
+                  cutUnavailableTitle:
+                    locale === "ru"
+                      ? "Для режима разрезания нужно чётное количество вариантов."
+                      : locale === "en"
+                        ? "Cut mode is available only for an even number of variants."
+                        : "Der Zuschnittmodus ist nur bei einer geraden Anzahl von Varianten verfügbar.",
+                }}
+              />
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.modeHint}</div>
-              <div className="mt-1 text-sm text-slate-700">{modeHintText}</div>
+              <div className="text-sm font-semibold text-slate-900">
+                {locale === "ru"
+                  ? `Рекомендация: ${recommendationLayoutLabel}`
+                  : locale === "en"
+                    ? `Recommendation: ${recommendationLayoutLabel}`
+                    : `Empfehlung: ${recommendationLayoutLabel}`}
+              </div>
+              <ul className="mt-2 space-y-1 text-sm text-slate-700">
+                {recommendationReasons.map((reason) => (
+                  <li key={reason} className="flex items-start gap-2">
+                    <span aria-hidden="true" className="mt-[2px] text-slate-400">
+                      •
+                    </span>
+                    <span>{reason}</span>
+                  </li>
+                ))}
+              </ul>
               {effectiveLayout === "two_cut" ? (
-                <div className="mt-2 text-xs text-slate-600">{t.duplexHint}</div>
+                <div className="mt-2 text-sm text-slate-700">{t.duplexHint}</div>
               ) : null}
               {!canUseTwoCut ? (
-                <div className="mt-2 text-xs text-slate-600">
+                <div className="mt-2 text-sm text-slate-700">
                   {locale === "ru"
                     ? "Режим для разрезания доступен только при чётном количестве вариантов."
                     : locale === "en"
                       ? "Cut mode is available only for an even number of variants."
                       : "Der Zuschnittmodus ist nur bei einer geraden Anzahl von Varianten verfügbar."}
                 </div>
-              ) : null}
-              {fit.reasons && fit.reasons.length > 0 ? (
-                <div className="mt-2 text-xs text-slate-500">{fit.reasons.join("; ")}</div>
               ) : null}
             </div>
           </div>
@@ -452,10 +475,11 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div className="min-w-0">
                   <h3 className="font-semibold text-slate-950">
-                    #{variant.orderIndex + 1} • {variant.title}
+                    {t.variantLabel} {variant.orderIndex + 1}
                   </h3>
                   <p className="mt-1 text-sm text-slate-600">
-                    {formatDateTime(locale, variant.createdAt)} • {formatNumber(locale, variant.tasksCount)} задач
+                    {formatDateTime(locale, variant.createdAt)} • {formatNumber(locale, variant.tasksCount)}{" "}
+                    {t.variantTasksUnit}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">

@@ -66,7 +66,11 @@ export function validateDemoPlan(plan: DemoPlanItem[], variantsCount: number) {
 
   const normalized = plan
     .filter((item) => Number.isFinite(item.count) && item.count > 0)
-    .map((item) => ({ skillId: item.skillId, count: Math.trunc(item.count) }));
+    .map((item) => ({
+      ...(typeof item.topicId === "string" && item.topicId.length > 0 ? { topicId: item.topicId } : {}),
+      skillId: item.skillId,
+      count: Math.trunc(item.count),
+    }));
 
   if (normalized.length === 0) {
     throw new Error("Select at least one skill with count > 0");
@@ -186,6 +190,7 @@ function buildDemoVariantDrafts(params: {
 export async function generateDemoWorkWithVariants(params: {
   ownerUserId: string;
   topicId: string;
+  topicIds?: string[];
   template: VariantTemplate;
   variantsCount: number;
   seed?: number;
@@ -195,9 +200,14 @@ export async function generateDemoWorkWithVariants(params: {
   printLayout: PrintLayoutMode;
 }): Promise<{ work: { id: string }; variants: CreatedDemoVariantSummary[] }> {
   const { ownerUserId, topicId, template, variantsCount, mode, workType, printLayout } = params;
-  const { tasks, errors } = await getTasksForTopic(topicId);
-  if (errors.length > 0) {
-    throw new Error(`Task bank errors: ${errors[0]}`);
+  const sourceTopicIds = Array.from(new Set([topicId, ...(params.topicIds ?? [])]));
+  const tasks: Awaited<ReturnType<typeof getTasksForTopic>>["tasks"] = [];
+  for (const currentTopicId of sourceTopicIds) {
+    const result = await getTasksForTopic(currentTopicId);
+    if (result.errors.length > 0) {
+      throw new Error(`Task bank errors: ${result.errors[0]}`);
+    }
+    tasks.push(...result.tasks);
   }
 
   const drafts = buildDemoVariantDrafts({

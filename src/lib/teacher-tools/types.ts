@@ -2,6 +2,10 @@ export type TeacherToolsSkill = {
   id: string;
   title: string;
   summary?: string;
+  example?: string;
+  cardHref?: string;
+  algorithm?: string[];
+  trainerHref?: string;
   availableCount?: number;
   status?: "ready" | "soon";
 };
@@ -13,6 +17,7 @@ export type TeacherToolsTopicConfig = {
 };
 
 export type DemoPlanItem = {
+  topicId?: string;
   skillId: string;
   count: number;
 };

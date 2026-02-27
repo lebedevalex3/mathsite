@@ -71,3 +71,45 @@ test("g5.uravneniya skills have task counts and generator builds variants", asyn
   });
   assert.equal(selected10.length, 10);
 });
+
+test("teacher demo template supports mixed skills from multiple topics", async () => {
+  const [proporcii, uravneniya] = await Promise.all([
+    getTeacherToolsTopicSkills("g5.proporcii"),
+    getTeacherToolsTopicSkills("g5.uravneniya"),
+  ]);
+  assert.ok(proporcii && uravneniya, "Expected both topics in teacher tools catalog");
+
+  const proporciiSkill = proporcii.skills.find((skill) => (skill.availableCount ?? 0) >= 2);
+  const uravneniyaSkill = uravneniya.skills.find((skill) => (skill.availableCount ?? 0) >= 2);
+  assert.ok(proporciiSkill && uravneniyaSkill, "Expected at least one populated skill in each topic");
+
+  const [proporciiTasks, uravneniyaTasks] = await Promise.all([
+    getTasksForTopic("g5.proporcii"),
+    getTasksForTopic("g5.uravneniya"),
+  ]);
+  assert.deepEqual(proporciiTasks.errors, []);
+  assert.deepEqual(uravneniyaTasks.errors, []);
+
+  const template = buildDemoTemplate({
+    topicId: "g5.proporcii",
+    plan: [
+      { topicId: "g5.proporcii", skillId: proporciiSkill.id, count: 2 },
+      { topicId: "g5.uravneniya", skillId: uravneniyaSkill.id, count: 2 },
+    ],
+    skillsById: new Map([
+      [proporciiSkill.id, { title: proporciiSkill.title }],
+      [uravneniyaSkill.id, { title: uravneniyaSkill.title }],
+    ]),
+    mode: "mixed20",
+  });
+
+  const selected = buildVariantPlan({
+    tasks: [...proporciiTasks.tasks, ...uravneniyaTasks.tasks],
+    template,
+    seed: "mixed-topics-seed",
+  });
+  assert.equal(selected.length, 4);
+  const selectedSkillIds = new Set(selected.map((item) => item.task.skill_id));
+  assert.ok(selectedSkillIds.has(proporciiSkill.id));
+  assert.ok(selectedSkillIds.has(uravneniyaSkill.id));
+});

@@ -20,6 +20,12 @@ function byTaskId(tasks: Task[]) {
   return new Map(tasks.map((task) => [task.id, task]));
 }
 
+function inferTopicIdFromTaskId(taskId: string): string | null {
+  const parts = taskId.split(".");
+  if (parts.length < 3) return null;
+  return `${parts[0]}.${parts[1]}`;
+}
+
 export async function generateAndSaveVariant({
   ownerUserId,
   topicId,
@@ -74,15 +80,27 @@ export async function generateAndSaveVariant({
 }
 
 export async function loadVariantContentByTaskIds(topicId: string, taskIds: string[]) {
-  const { tasks, errors } = await getTasksForTopic(topicId);
-  if (errors.length > 0) {
-    throw new Error(`Task bank errors: ${errors[0]}`);
+  const inferredTopicIds = new Set<string>();
+  for (const taskId of taskIds) {
+    const inferred = inferTopicIdFromTaskId(taskId);
+    if (inferred) inferredTopicIds.add(inferred);
   }
-  const taskMap = byTaskId(tasks);
+  inferredTopicIds.add(topicId);
+
+  const allTasks: Task[] = [];
+  for (const currentTopicId of inferredTopicIds) {
+    const { tasks, errors } = await getTasksForTopic(currentTopicId);
+    if (errors.length > 0) {
+      throw new Error(`Task bank errors: ${errors[0]}`);
+    }
+    allTasks.push(...tasks);
+  }
+
+  const taskMap = byTaskId(allTasks);
   return taskIds.map((taskId) => {
     const task = taskMap.get(taskId);
     if (!task) {
-      throw new Error(`Task ${taskId} not found in topic ${topicId}`);
+      throw new Error(`Task ${taskId} not found in task banks`);
     }
     return task;
   });

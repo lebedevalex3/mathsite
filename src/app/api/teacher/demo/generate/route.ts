@@ -19,6 +19,7 @@ export const runtime = "nodejs";
 
 type GeneratePayload = {
   topicId?: unknown;
+  topics?: unknown;
   variantsCount?: unknown;
   plan?: unknown;
   mode?: unknown;
@@ -40,6 +41,14 @@ export async function POST(request: Request) {
     const { status, body: err } = badRequest("topicId is required");
     return NextResponse.json(err, { status });
   }
+  const topicIds = Array.from(
+    new Set(
+      [
+        body.topicId,
+        ...(Array.isArray(body.topics) ? body.topics.filter((item): item is string => typeof item === "string") : []),
+      ].filter((item): item is string => typeof item === "string" && item.length > 0),
+    ),
+  );
 
   const variantsCount = typeof body.variantsCount === "number" ? body.variantsCount : 1;
   const rawPlan = Array.isArray(body.plan) ? (body.plan as DemoPlanItem[]) : [];
@@ -60,14 +69,17 @@ export async function POST(request: Request) {
     const { userId } = await getOrCreateVisitorUser(cookieStore);
     await enforceDemoRateLimit(userId);
 
-    const topic = await getTeacherToolsTopicSkills(body.topicId);
-    if (!topic) {
+    const topics = await Promise.all(topicIds.map((topicId) => getTeacherToolsTopicSkills(topicId)));
+    if (topics.some((topic) => !topic)) {
       const { status, body: err } = badRequest("Unsupported topicId");
       return NextResponse.json(err, { status });
     }
+    const resolvedTopics = topics.filter((topic): topic is NonNullable<typeof topic> => Boolean(topic));
 
     const { normalized, totalPerVariant } = validateDemoPlan(rawPlan, variantsCount);
-    const skillsById = new Map(topic.skills.map((skill) => [skill.id, { title: skill.title }]));
+    const skillsById = new Map(
+      resolvedTopics.flatMap((topic) => topic.skills.map((skill) => [skill.id, { title: skill.title }] as const)),
+    );
 
     for (const item of normalized) {
       if (!skillsById.has(item.skillId)) {
@@ -86,6 +98,7 @@ export async function POST(request: Request) {
     const result = await generateDemoWorkWithVariants({
       ownerUserId: userId,
       topicId: body.topicId,
+      topicIds,
       template,
       variantsCount,
       seed: typeof body.seed === "number" ? body.seed : undefined,

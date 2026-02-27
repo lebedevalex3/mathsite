@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { TeacherErrorState, type TeacherApiError } from "@/src/components/ui/TeacherErrorState";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 import { formatDateTime, formatNumber } from "@/src/lib/i18n/format";
+import { topicCatalogEntries, type TopicDomain } from "@/src/lib/topicMeta";
 import type { PrintLayoutMode } from "@/src/lib/variants/print-layout";
 import {
   recommendPrintLayout,
@@ -16,12 +18,13 @@ import {
 } from "@/src/lib/variants/print-recommendation";
 
 type Locale = "ru" | "en" | "de";
-type Preset = "training10" | "control20" | "control30";
 
 type TopicSkill = {
   id: string;
   title: string;
   summary?: string;
+  example?: string;
+  cardHref?: string;
   availableCount?: number;
   status?: "ready" | "soon";
 };
@@ -66,11 +69,16 @@ const copy = {
     subtitle:
       "Выберите тему, задайте состав по навыкам, соберите несколько вариантов. Печать и ответы доступны сразу.",
     topic: "Тема",
+    grade: "Класс",
+    section: "Раздел",
     composition: "Состав варианта",
     quantity: "Количество задач",
+    tasksPerVariant: "Задач в варианте",
     available: "Доступно задач",
+    example: "Пример",
+    skillCard: "Карточка навыка",
     variantsCount: "Сколько вариантов",
-    mode: "Режим",
+    workTypeHint: "Используется для названия и истории. На состав задач не влияет.",
     shuffle: "Перемешать порядок задач",
     build: "Собрать варианты",
     total: "Всего задач в варианте",
@@ -101,6 +109,12 @@ const copy = {
       homework: "Домашняя работа",
       test: "Контрольная",
     } satisfies Record<WorkType, string>,
+    domains: {
+      arithmetic: "Арифметика",
+      algebra: "Алгебра",
+      geometry: "Геометрия",
+      data: "Данные",
+    } satisfies Record<TopicDomain, string>,
     printAll: "Печать всех",
     pdfAll: "PDF всех",
     open: "Открыть",
@@ -111,22 +125,22 @@ const copy = {
     noSkills: "Для выбранной темы пока нет настроенных навыков конструктора.",
     loadingSkills: "Загружаем навыки темы...",
     loginHint: "Войти, чтобы сохранять варианты и историю",
-    modes: {
-      training10: "Тренировочный",
-      control20: "Контрольная (20)",
-      control30: "Контрольная (30)",
-    },
   },
   en: {
     title: "Skill-based Variant Builder",
     subtitle:
       "Choose a topic, set the composition by skills, and assemble multiple variants. Print and answers are available immediately.",
     topic: "Topic",
+    grade: "Grade",
+    section: "Section",
     composition: "Variant composition",
     quantity: "Task count",
+    tasksPerVariant: "Tasks per variant",
     available: "Available tasks",
+    example: "Example",
+    skillCard: "Skill card",
     variantsCount: "Number of variants",
-    mode: "Mode",
+    workTypeHint: "Used for naming and history. Does not affect task composition.",
     shuffle: "Shuffle task order",
     build: "Assemble variants",
     total: "Total tasks per variant",
@@ -157,6 +171,12 @@ const copy = {
       homework: "Homework",
       test: "Test",
     } satisfies Record<WorkType, string>,
+    domains: {
+      arithmetic: "Arithmetic",
+      algebra: "Algebra",
+      geometry: "Geometry",
+      data: "Data",
+    } satisfies Record<TopicDomain, string>,
     printAll: "Print all",
     pdfAll: "PDF all",
     open: "Open",
@@ -167,22 +187,22 @@ const copy = {
     noSkills: "No constructor skills configured for this topic yet.",
     loadingSkills: "Loading topic skills...",
     loginHint: "Sign in to save variants and history",
-    modes: {
-      training10: "Training",
-      control20: "Control (20)",
-      control30: "Control (30)",
-    },
   },
   de: {
     title: "Varianten-Baukasten nach Fähigkeiten",
     subtitle:
       "Thema wählen, Zusammensetzung nach Fähigkeiten festlegen und mehrere Varianten zusammenstellen. Druck und Lösungen sind sofort verfügbar.",
     topic: "Thema",
+    grade: "Klasse",
+    section: "Bereich",
     composition: "Zusammensetzung",
     quantity: "Anzahl Aufgaben",
+    tasksPerVariant: "Aufgaben pro Variante",
     available: "Verfügbare Aufgaben",
+    example: "Beispiel",
+    skillCard: "Skill-Karte",
     variantsCount: "Anzahl Varianten",
-    mode: "Modus",
+    workTypeHint: "Nur für Titel und Verlauf. Beeinflusst die Aufgabenzusammensetzung nicht.",
     shuffle: "Reihenfolge mischen",
     build: "Varianten zusammenstellen",
     total: "Gesamtaufgaben pro Variante",
@@ -213,6 +233,12 @@ const copy = {
       homework: "Hausaufgabe",
       test: "Klassenarbeit",
     } satisfies Record<WorkType, string>,
+    domains: {
+      arithmetic: "Arithmetik",
+      algebra: "Algebra",
+      geometry: "Geometrie",
+      data: "Daten",
+    } satisfies Record<TopicDomain, string>,
     printAll: "Alle drucken",
     pdfAll: "Alle als PDF",
     open: "Öffnen",
@@ -223,19 +249,9 @@ const copy = {
     noSkills: "Für dieses Thema sind noch keine Baukasten-Fähigkeiten konfiguriert.",
     loadingSkills: "Themenfähigkeiten werden geladen...",
     loginHint: "Anmelden, um Varianten und Verlauf zu speichern",
-    modes: {
-      training10: "Training",
-      control20: "Kontrolle (20)",
-      control30: "Kontrolle (30)",
-    },
   },
 } as const;
-
-const presetTargets: Record<Preset, number> = {
-  training10: 10,
-  control20: 20,
-  control30: 30,
-};
+const TASK_TARGET_OPTIONS = [10, 20, 30] as const;
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
@@ -251,31 +267,108 @@ function parseTeacherError(payload: unknown, fallback: string): TeacherApiError 
   };
 }
 
+function parseCountsFromQuery(values: string[]) {
+  const parsed: Record<string, number> = {};
+  for (const item of values) {
+    const sepIndex = item.lastIndexOf(":");
+    if (sepIndex <= 0) continue;
+    const skillId = item.slice(0, sepIndex);
+    const rawCount = item.slice(sepIndex + 1);
+    const count = Number(rawCount);
+    if (!Number.isFinite(count)) continue;
+    parsed[skillId] = clamp(Math.trunc(count), 0, 30);
+  }
+  return parsed;
+}
+
+function buildTeacherToolsStateQuery(params: {
+  topicId: string;
+  selectedTopicIds: string[];
+  tasksPerVariant: number;
+  variantsCount: number;
+  workType: WorkType;
+  shuffleOrder: boolean;
+  selectedGrade: number;
+  selectedDomain: TopicDomain;
+  counts: Record<string, number>;
+}) {
+  const query = new URLSearchParams();
+  query.set("topicId", params.topicId);
+  if (params.selectedTopicIds.length > 0) {
+    query.set("topics", params.selectedTopicIds.join(","));
+  }
+  query.set("tasks", String(params.tasksPerVariant));
+  query.set("variants", String(params.variantsCount));
+  query.set("workType", params.workType);
+  query.set("shuffle", params.shuffleOrder ? "1" : "0");
+  query.set("grade", String(params.selectedGrade));
+  query.set("domain", params.selectedDomain);
+  for (const [skillId, count] of Object.entries(params.counts)) {
+    if (!Number.isFinite(count) || count <= 0) continue;
+    query.append("c", `${skillId}:${Math.trunc(count)}`);
+  }
+  return query;
+}
+
 export function TeacherToolsPageClient({ locale }: Props) {
   const t = copy[locale];
   const params = useSearchParams();
-  const topicConfigs = listContentTopicConfigs();
+  const router = useRouter();
+  const topicConfigs = useMemo(() => listContentTopicConfigs(), []);
 
-  const topics = useMemo(
+  const allTopics = useMemo(
     () =>
       topicConfigs.map((cfg) => ({
         topicId: cfg.topicSlug.includes(".") ? cfg.topicSlug : `g5.${cfg.topicSlug}`,
         title: cfg.titles?.[locale] ?? cfg.titles?.ru ?? cfg.topicSlug,
+        meta: topicCatalogEntries.find((entry) =>
+          entry.id === (cfg.topicSlug.includes(".") ? cfg.topicSlug : `g5.${cfg.topicSlug}`),
+        ) ?? null,
       })),
     [locale, topicConfigs],
   );
 
-  const initialTopicId = params.get("topicId") ?? topics[0]?.topicId ?? "g5.proporcii";
-  const initialMode = (params.get("mode") as Preset | null) ?? "control20";
+  const initialTopicId = params.get("topicId") ?? allTopics[0]?.topicId ?? "g5.proporcii";
+  const initialTopicsParam = params.get("topics");
+  const initialSelectedTopicIds = Array.from(
+    new Set(
+      (initialTopicsParam ? initialTopicsParam.split(",") : [initialTopicId])
+        .map((item) => item.trim())
+        .filter((item) => item.length > 0),
+    ),
+  );
+  const initialMode = params.get("mode");
+  const initialCountsFromQuery = parseCountsFromQuery(params.getAll("c"));
+  const hasInitialCountsFromQuery = Object.keys(initialCountsFromQuery).length > 0;
+  const initialTopicMeta = allTopics.find((item) => item.topicId === initialTopicId)?.meta;
+  const initialTasksPerVariant =
+    params.get("tasks") != null
+      ? clamp(Number(params.get("tasks")), 1, 60)
+      : initialMode === "training10"
+        ? 10
+        : initialMode === "control30"
+          ? 30
+          : 20;
 
   const [topicId, setTopicId] = useState(initialTopicId);
-  const [mode, setMode] = useState<Preset>(initialMode in presetTargets ? initialMode : "control20");
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>(
+    initialSelectedTopicIds.length > 0 ? initialSelectedTopicIds : [initialTopicId],
+  );
+  const [selectedGrade, setSelectedGrade] = useState<number>(initialTopicMeta?.levels?.[0] ?? 5);
+  const [selectedDomain, setSelectedDomain] = useState<TopicDomain>(
+    initialTopicMeta?.domain ?? allTopics[0]?.meta?.domain ?? "arithmetic",
+  );
+  const [tasksPerVariant, setTasksPerVariant] = useState(initialTasksPerVariant);
   const [variantsCount, setVariantsCount] = useState(1);
-  const [shuffleOrder, setShuffleOrder] = useState(true);
   const [workType, setWorkType] = useState<WorkType>("quiz");
+  const [shuffleOrder, setShuffleOrder] = useState(true);
   const [printLayout, setPrintLayout] = useState<PrintLayoutMode>("single");
   const [topic, setTopic] = useState<TopicPayload | null>(null);
+  const [loadedTopics, setLoadedTopics] = useState<TopicPayload[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
+  const initialCountsRef = useRef<Record<string, number> | null>(
+    hasInitialCountsFromQuery ? initialCountsFromQuery : null,
+  );
   const [loadingTopic, setLoadingTopic] = useState(false);
   const [building, setBuilding] = useState(false);
   const [error, setError] = useState<TeacherApiError | null>(null);
@@ -283,6 +376,68 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const [workId, setWorkId] = useState<string | null>(null);
   const [recentWorks, setRecentWorks] = useState<RecentWork[]>([]);
   const [loadingRecentWorks, setLoadingRecentWorks] = useState(false);
+  const [highlightResultsPanel, setHighlightResultsPanel] = useState(false);
+  const [resultsFocusTick, setResultsFocusTick] = useState(0);
+  const resultsActionCardRef = useRef<HTMLDivElement | null>(null);
+
+  const gradeOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          allTopics.flatMap((topic) => topic.meta?.levels ?? []),
+        ),
+      ).sort((a, b) => a - b),
+    [allTopics],
+  );
+
+  const domainOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          allTopics
+            .filter((topic) => (topic.meta?.levels ?? []).includes(selectedGrade))
+            .map((topic) => topic.meta?.domain)
+            .filter((domain): domain is TopicDomain => Boolean(domain)),
+        ),
+      ),
+    [allTopics, selectedGrade],
+  );
+
+  const topics = useMemo(
+    () =>
+      allTopics.filter((topic) => {
+        const levels = topic.meta?.levels ?? [];
+        const domain = topic.meta?.domain;
+        return levels.includes(selectedGrade) && domain === selectedDomain;
+      }),
+    [allTopics, selectedDomain, selectedGrade],
+  );
+
+  useEffect(() => {
+    if (domainOptions.length === 0) return;
+    if (!domainOptions.includes(selectedDomain)) {
+      setSelectedDomain(domainOptions[0]!);
+    }
+  }, [domainOptions, selectedDomain]);
+
+  useEffect(() => {
+    if (topics.length === 0) return;
+    if (!topics.some((item) => item.topicId === topicId)) {
+      setTopicId(topics[0]!.topicId);
+    }
+    setSelectedTopicIds((prev) => {
+      const allowedIds = new Set(topics.map((item) => item.topicId));
+      const next = prev.filter((item) => allowedIds.has(item));
+      const fallback = next.length > 0 ? next : [topics[0]!.topicId];
+      if (
+        fallback.length === prev.length &&
+        fallback.every((item, index) => item === prev[index])
+      ) {
+        return prev;
+      }
+      return fallback;
+    });
+  }, [topicId, topics]);
 
   async function loadRecentWorks() {
     setLoadingRecentWorks(true);
@@ -313,23 +468,48 @@ export function TeacherToolsPageClient({ locale }: Props) {
       setLoadingTopic(true);
       setError(null);
       try {
-        const response = await fetch(`/api/teacher/demo/topic?topicId=${encodeURIComponent(topicId)}`);
-        const payload = (await response.json()) as { ok?: boolean; topic?: TopicPayload };
-        if (!response.ok || !payload.ok || !payload.topic) {
+        const responses = await Promise.all(
+          selectedTopicIds.map(async (selectedTopicId) => {
+            const response = await fetch(`/api/teacher/demo/topic?topicId=${encodeURIComponent(selectedTopicId)}`);
+            const payload = (await response.json()) as { ok?: boolean; topic?: TopicPayload };
+            return { response, payload };
+          }),
+        );
+
+        const hasError = responses.some(({ response, payload }) => !response.ok || !payload.ok || !payload.topic);
+        if (hasError) {
           if (!cancelled) {
+            const firstError = responses.find(({ response, payload }) => !response.ok || !payload.ok || !payload.topic);
             setTopic(null);
-            setError(parseTeacherError(payload, "Не удалось загрузить навыки темы."));
+            setLoadedTopics([]);
+            setError(parseTeacherError(firstError?.payload, "Не удалось загрузить навыки темы."));
           }
           return;
         }
         if (!cancelled) {
-          setTopic(payload.topic);
-          const readySkills = payload.topic.skills.filter((skill) => skill.status !== "soon");
-          const target = presetTargets[mode];
+          const fetchedTopics = responses
+            .map(({ payload }) => payload.topic)
+            .filter((item): item is TopicPayload => Boolean(item));
+          setLoadedTopics(fetchedTopics);
+          const allSkills = fetchedTopics.flatMap((item) => item.skills);
+          setTopic({
+            topicId: selectedTopicIds[0] ?? topicId,
+            title:
+              fetchedTopics.length === 1
+                ? fetchedTopics[0]!.title
+                : ({
+                    ru: "Несколько тем",
+                    en: "Multiple topics",
+                    de: "Mehrere Themen",
+                  } as Record<Locale, string>),
+            skills: allSkills,
+          });
+          const readySkills = allSkills.filter((skill) => skill.status !== "soon");
+          const target = tasksPerVariant;
           const base = readySkills.length > 0 ? Math.floor(target / readySkills.length) : 0;
           let remainder = readySkills.length > 0 ? target % readySkills.length : 0;
           const nextCounts: Record<string, number> = {};
-          for (const skill of payload.topic.skills) {
+          for (const skill of allSkills) {
             const fill =
               skill.status === "soon"
                 ? 0
@@ -337,7 +517,16 @@ export function TeacherToolsPageClient({ locale }: Props) {
             if (skill.status !== "soon" && remainder > 0) remainder -= 1;
             nextCounts[skill.id] = fill;
           }
-          setCounts(nextCounts);
+          if (initialCountsRef.current) {
+            const restoredCounts: Record<string, number> = {};
+            for (const skill of allSkills) {
+              restoredCounts[skill.id] = clamp(initialCountsRef.current[skill.id] ?? 0, 0, 30);
+            }
+            setCounts(restoredCounts);
+            initialCountsRef.current = null;
+          } else {
+            setCounts(nextCounts);
+          }
         }
       } catch {
         if (!cancelled) setError({ message: "Ошибка сети при загрузке навыков темы." });
@@ -349,7 +538,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [topicId, mode]);
+  }, [topicId, selectedTopicIds, tasksPerVariant]);
 
   const summary = useMemo(() => {
     const skills = topic?.skills ?? [];
@@ -360,6 +549,36 @@ export function TeacherToolsPageClient({ locale }: Props) {
     return { selected, total };
   }, [topic, counts]);
 
+  const skillTopicById = useMemo(() => {
+    const map = new Map<string, { topicId: string; topicTitle: string }>();
+    for (const loadedTopic of loadedTopics) {
+      const title = loadedTopic.title[locale] ?? loadedTopic.title.ru ?? loadedTopic.topicId;
+      for (const skill of loadedTopic.skills) {
+        map.set(skill.id, { topicId: loadedTopic.topicId, topicTitle: title });
+      }
+    }
+    return map;
+  }, [loadedTopics, locale]);
+
+  const topicContext = useMemo(() => {
+    const primaryTopicId = selectedTopicIds[0] ?? topicId;
+    const meta = topicCatalogEntries.find((entry) => entry.id === primaryTopicId);
+    const level = meta?.levels?.[0] ?? (topicId.startsWith("g5.") ? 5 : null);
+    const domain = meta?.domain ?? null;
+    const title =
+      selectedTopicIds.length > 1
+        ? locale === "de"
+          ? "Mehrere Themen"
+          : locale === "en"
+            ? "Multiple topics"
+            : "Несколько тем"
+        : topic?.title?.[locale] ??
+          topic?.title?.ru ??
+          allTopics.find((item) => item.topicId === primaryTopicId)?.title ??
+          primaryTopicId;
+    return { level, domain, title };
+  }, [allTopics, locale, selectedTopicIds, topic, topicId]);
+
   const layoutRecommendation = useMemo(() => {
     const variantTaskCounts =
       results.length > 0
@@ -368,13 +587,43 @@ export function TeacherToolsPageClient({ locale }: Props) {
           ? Array.from({ length: variantsCount }, () => summary.total)
           : [];
     if (variantTaskCounts.length === 0) return null;
-    return recommendPrintLayout({ workType, variantTaskCounts });
-  }, [results, summary.total, variantsCount, workType]);
+    // Work type is now configured on the Work page; use a stable default here.
+    return recommendPrintLayout({ workType: "quiz", variantTaskCounts });
+  }, [results, summary.total, variantsCount]);
 
   useEffect(() => {
     if (!layoutRecommendation) return;
     setPrintLayout((prev) => (prev === layoutRecommendation.recommendedLayout ? prev : layoutRecommendation.recommendedLayout));
   }, [layoutRecommendation]);
+
+  useEffect(() => {
+    if (resultsFocusTick === 0) return;
+
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+    const scrollTimer = window.setTimeout(() => {
+      const node = resultsActionCardRef.current;
+      if (!node) return;
+      const topOffset = 180;
+      const targetTop = Math.max(0, window.scrollY + node.getBoundingClientRect().top - topOffset);
+      window.scrollTo({
+        top: targetTop,
+        behavior: reduceMotion ? "auto" : "smooth",
+      });
+      setHighlightResultsPanel(true);
+    }, 0);
+
+    const clearHighlightTimer = window.setTimeout(() => {
+      setHighlightResultsPanel(false);
+    }, reduceMotion ? 800 : 1600);
+
+    return () => {
+      window.clearTimeout(scrollTimer);
+      window.clearTimeout(clearHighlightTimer);
+    };
+  }, [resultsFocusTick]);
 
   async function handleBuild() {
     setBuilding(true);
@@ -385,13 +634,17 @@ export function TeacherToolsPageClient({ locale }: Props) {
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
         body: JSON.stringify({
-          topicId,
+          topicId: selectedTopicIds[0] ?? topicId,
+          topics: selectedTopicIds,
           variantsCount,
-          mode,
           workType,
           printLayout,
           shuffleOrder,
-          plan: Object.entries(counts).map(([skillId, count]) => ({ skillId, count })),
+          plan: Object.entries(counts).map(([skillId, count]) => ({
+            topicId: skillTopicById.get(skillId)?.topicId,
+            skillId,
+            count,
+          })),
         }),
       });
       const payload = (await response.json()) as GenerateResponse;
@@ -401,6 +654,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
       }
       setWorkId(typeof payload.workId === "string" ? payload.workId : null);
       setResults(payload.variants);
+      setResultsFocusTick((v) => v + 1);
       void loadRecentWorks();
     } catch {
       setError({ message: "Ошибка сети при сборке вариантов." });
@@ -408,6 +662,36 @@ export function TeacherToolsPageClient({ locale }: Props) {
       setBuilding(false);
     }
   }
+
+  function buildSkillCardHref(cardHref: string) {
+    const query = buildTeacherToolsStateQuery({
+      topicId,
+      selectedTopicIds,
+      tasksPerVariant,
+      variantsCount,
+      workType,
+      shuffleOrder,
+      selectedGrade,
+      selectedDomain,
+      counts,
+    });
+    return `/${locale}${cardHref}?${query.toString()}`;
+  }
+
+  useEffect(() => {
+    const query = buildTeacherToolsStateQuery({
+      topicId,
+      selectedTopicIds,
+      tasksPerVariant,
+      variantsCount,
+      workType,
+      shuffleOrder,
+      selectedGrade,
+      selectedDomain,
+      counts,
+    });
+    router.replace(`/${locale}/teacher-tools?${query.toString()}`, { scroll: false });
+  }, [router, locale, topicId, selectedTopicIds, tasksPerVariant, variantsCount, workType, shuffleOrder, selectedGrade, selectedDomain, counts]);
 
   return (
     <main className="space-y-6">
@@ -423,39 +707,132 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
       <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
         <SurfaceCard className="p-6">
+          <div className="mb-4 flex flex-wrap gap-2">
+            {gradeOptions.map((grade) => (
+              <button
+                key={grade}
+                type="button"
+                onClick={() => setSelectedGrade(grade)}
+                className={[
+                  "inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold",
+                  selectedGrade === grade
+                    ? "border-slate-900 bg-slate-900 text-white"
+                    : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+                ].join(" ")}
+              >
+                {t.grade}: {formatNumber(locale, grade)}
+              </button>
+            ))}
+            {domainOptions.map((domain) => (
+              <button
+                key={domain}
+                type="button"
+                onClick={() => setSelectedDomain(domain)}
+                className={[
+                  "inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold",
+                  selectedDomain === domain
+                    ? "border-slate-900 bg-slate-900 text-white"
+                    : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+                ].join(" ")}
+              >
+                {t.section}: {t.domains[domain]}
+              </button>
+            ))}
+            <span className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+              {t.topic}: {topicContext.title}
+            </span>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="space-y-1">
               <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                 {t.topic}
               </span>
-              <select
-                value={topicId}
-                onChange={(e) => setTopicId(e.target.value)}
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
-              >
-                {topics.map((item) => (
-                  <option key={item.topicId} value={item.topicId}>
-                    {item.title}
-                  </option>
-                ))}
-              </select>
+              <div className="space-y-2">
+                <select
+                  value={topicId}
+                  onChange={(e) => setTopicId(e.target.value)}
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                >
+                  {topics.map((item) => (
+                    <option key={item.topicId} value={item.topicId}>
+                      {item.title}
+                    </option>
+                  ))}
+                </select>
+                <div className="flex flex-wrap gap-2">
+                  {topics.map((item) => {
+                    const selected = selectedTopicIds.includes(item.topicId);
+                    return (
+                      <button
+                        key={item.topicId}
+                        type="button"
+                        onClick={() =>
+                          setSelectedTopicIds((prev) => {
+                            const exists = prev.includes(item.topicId);
+                            if (exists) {
+                              if (prev.length <= 1) return prev;
+                              return prev.filter((id) => id !== item.topicId);
+                            }
+                            return [...prev, item.topicId];
+                          })
+                        }
+                        className={[
+                          "rounded-full border px-3 py-1 text-xs font-semibold",
+                          selected
+                            ? "border-slate-900 bg-slate-900 text-white"
+                            : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+                        ].join(" ")}
+                      >
+                        {item.title}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </label>
 
             <label className="space-y-1">
               <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                {t.mode}
+                {t.tasksPerVariant}
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {TASK_TARGET_OPTIONS.map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setTasksPerVariant(value)}
+                    className={[
+                      "rounded-lg border px-3 py-2 text-sm font-medium",
+                      tasksPerVariant === value
+                        ? "border-slate-900 bg-slate-900 text-white"
+                        : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100",
+                    ].join(" ")}
+                  >
+                    {formatNumber(locale, value)}
+                  </button>
+                ))}
+              </div>
+            </label>
+          </div>
+
+          <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+            <label className="space-y-1">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                {t.workType}
               </span>
               <select
-                value={mode}
-                onChange={(e) => setMode(e.target.value as Preset)}
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                value={workType}
+                onChange={(e) => setWorkType(e.target.value as WorkType)}
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 sm:max-w-xs"
               >
-                {(Object.keys(presetTargets) as Preset[]).map((m) => (
-                  <option key={m} value={m}>
-                    {t.modes[m]}
+                {(Object.keys(t.workTypes) as WorkType[]).map((type) => (
+                  <option key={type} value={type}>
+                    {t.workTypes[type]}
                   </option>
                 ))}
               </select>
+              <p className="text-xs text-slate-500">{t.workTypeHint}</p>
             </label>
           </div>
 
@@ -464,76 +841,101 @@ export function TeacherToolsPageClient({ locale }: Props) {
               <h2 className="text-lg font-semibold text-slate-950">{t.composition}</h2>
               {loadingTopic ? <span className="text-xs text-slate-500">{t.loadingSkills}</span> : null}
             </div>
-            {topic && topic.skills.length > 0 ? (
+            {loadedTopics.length > 0 ? (
               <div className="space-y-3">
-                {topic.skills.map((skill) => {
-                  const value = counts[skill.id] ?? 0;
-                  const disabled = skill.status === "soon";
-                  return (
-                    <div
-                      key={skill.id}
-                      className={[
-                        "rounded-xl border p-3",
-                        disabled ? "border-slate-200 bg-slate-50 opacity-70" : "border-slate-200 bg-white",
-                      ].join(" ")}
-                    >
-                      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                        <div className="min-w-0">
-                          <p className="font-medium text-slate-950">{skill.title}</p>
-                          {skill.summary ? (
-                            <p className="mt-1 text-sm leading-5 text-slate-600">{skill.summary}</p>
-                          ) : null}
-                          <p className="mt-1 text-xs text-slate-500">
-                            {t.available}: {formatNumber(locale, skill.availableCount ?? 0)}
-                          </p>
+                {loadedTopics.map((loadedTopic) => (
+                  <div key={loadedTopic.topicId} className="space-y-3">
+                    {selectedTopicIds.length > 1 ? (
+                      <p className="text-sm font-semibold text-slate-900">
+                        {loadedTopic.title[locale] ?? loadedTopic.title.ru ?? loadedTopic.topicId}
+                      </p>
+                    ) : null}
+                    {loadedTopic.skills.map((skill) => {
+                      const value = counts[skill.id] ?? 0;
+                      const disabled = skill.status === "soon";
+                      return (
+                        <div
+                          key={skill.id}
+                          className={[
+                            "rounded-xl border p-3",
+                            disabled ? "border-slate-200 bg-slate-50 opacity-70" : "border-slate-200 bg-white",
+                          ].join(" ")}
+                        >
+                          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                            <div className="min-w-0">
+                              <p className="font-medium text-slate-950">{skill.title}</p>
+                              {skill.summary ? (
+                                <p className="mt-1 text-sm leading-5 text-slate-600">{skill.summary}</p>
+                              ) : null}
+                              {skill.example ? (
+                                <p className="mt-1 text-sm leading-5 text-slate-700">
+                                  <span className="font-medium text-slate-900">{t.example}:</span>{" "}
+                                  {skill.example}
+                                </p>
+                              ) : null}
+                              {skill.cardHref ? (
+                                <div className="mt-2">
+                                  <Link
+                                    href={buildSkillCardHref(skill.cardHref)}
+                                    className="text-sm font-medium text-blue-700 hover:text-blue-900"
+                                  >
+                                    {t.skillCard}
+                                  </Link>
+                                </div>
+                              ) : null}
+                              <p className="mt-1 text-xs text-slate-500">
+                                {t.available}: {formatNumber(locale, skill.availableCount ?? 0)}
+                              </p>
+                            </div>
+                            <div className="flex shrink-0 items-center gap-2">
+                              <button
+                                type="button"
+                                disabled={disabled}
+                                onClick={() =>
+                                  setCounts((prev) => ({
+                                    ...prev,
+                                    [skill.id]: clamp((prev[skill.id] ?? 0) - 1, 0, 30),
+                                  }))
+                                }
+                                className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
+                              >
+                                -
+                              </button>
+                              <input
+                                aria-label={`${t.quantity}: ${skill.title}`}
+                                type="number"
+                                min={0}
+                                max={30}
+                                disabled={disabled}
+                                value={value}
+                                onChange={(e) =>
+                                  setCounts((prev) => ({
+                                    ...prev,
+                                    [skill.id]: clamp(Number(e.target.value || 0), 0, 30),
+                                  }))
+                                }
+                                className="w-16 rounded-lg border border-slate-300 px-2 py-1 text-center text-sm"
+                              />
+                              <button
+                                type="button"
+                                disabled={disabled}
+                                onClick={() =>
+                                  setCounts((prev) => ({
+                                    ...prev,
+                                    [skill.id]: clamp((prev[skill.id] ?? 0) + 1, 0, 30),
+                                  }))
+                                }
+                                className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex shrink-0 items-center gap-2">
-                          <button
-                            type="button"
-                            disabled={disabled}
-                            onClick={() =>
-                              setCounts((prev) => ({
-                                ...prev,
-                                [skill.id]: clamp((prev[skill.id] ?? 0) - 1, 0, 30),
-                              }))
-                            }
-                            className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
-                          >
-                            -
-                          </button>
-                          <input
-                            aria-label={`${t.quantity}: ${skill.title}`}
-                            type="number"
-                            min={0}
-                            max={30}
-                            disabled={disabled}
-                            value={value}
-                            onChange={(e) =>
-                              setCounts((prev) => ({
-                                ...prev,
-                                [skill.id]: clamp(Number(e.target.value || 0), 0, 30),
-                              }))
-                            }
-                            className="w-16 rounded-lg border border-slate-300 px-2 py-1 text-center text-sm"
-                          />
-                          <button
-                            type="button"
-                            disabled={disabled}
-                            onClick={() =>
-                              setCounts((prev) => ({
-                                ...prev,
-                                [skill.id]: clamp((prev[skill.id] ?? 0) + 1, 0, 30),
-                              }))
-                            }
-                            className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
@@ -589,7 +991,11 @@ export function TeacherToolsPageClient({ locale }: Props) {
             {summary.selected.length > 0 ? (
               summary.selected.map(({ skill, count }) => (
                 <li key={skill.id} className="flex items-start justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-                  <span className="min-w-0 text-sm text-slate-700">{skill.title}</span>
+                  <span className="min-w-0 text-sm text-slate-700">
+                    {selectedTopicIds.length > 1
+                      ? `${skillTopicById.get(skill.id)?.topicTitle ?? ""}: ${skill.title}`
+                      : skill.title}
+                  </span>
                   <span className="shrink-0 text-sm font-medium text-slate-900">{count}</span>
                 </li>
               ))
@@ -604,25 +1010,14 @@ export function TeacherToolsPageClient({ locale }: Props) {
       <section className="space-y-3">
         <div className="space-y-3">
           <h2 className="text-2xl font-semibold tracking-tight text-slate-950">{t.resultTitle}</h2>
-          <SurfaceCard className="p-4">
-            <div className="grid gap-4 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
-              <label className="space-y-1">
-                <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {t.workType}
-                </span>
-                <select
-                  value={workType}
-                  onChange={(e) => setWorkType(e.target.value as WorkType)}
-                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
-                >
-                  {(Object.keys(t.workTypes) as WorkType[]).map((type) => (
-                    <option key={type} value={type}>
-                      {t.workTypes[type]}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
+          <SurfaceCard
+            ref={resultsActionCardRef}
+            className={[
+              "p-4 transition-colors duration-700",
+              highlightResultsPanel ? "bg-blue-50/70 ring-2 ring-blue-200" : "",
+            ].join(" ")}
+          >
+            <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
               <div className="space-y-1">
                 <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                   {t.printLayout}
