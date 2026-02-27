@@ -15,7 +15,7 @@ import { MarkdownMath } from "@/lib/ui/MarkdownMath";
 
 type PageProps = {
   params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<{ layout?: string; ids?: string; orientation?: string }>;
+  searchParams: Promise<{ layout?: string; ids?: string; orientation?: string; fromWork?: string }>;
 };
 
 function PrintStyles({ orientation }: { orientation: "portrait" | "landscape" }) {
@@ -125,69 +125,19 @@ export default async function TeacherToolsVariantPrintPage({ params, searchParam
   ).filter((detail): detail is NonNullable<typeof detail> => detail !== null);
   if (details.length === 0) notFound();
   const pages = chunkIntoPages(details, layout);
-  const idsParam = details.map((v) => v.id).join(",");
-  const basePrintPath = `/${locale}/teacher-tools/variants/${details[0].id}/print`;
-  const singleHref = `${basePrintPath}?layout=single&orientation=portrait${details.length > 1 ? `&ids=${encodeURIComponent(idsParam)}` : ""}`;
-  const twoHref = `${basePrintPath}?layout=two&orientation=landscape${details.length > 1 ? `&ids=${encodeURIComponent(idsParam)}` : ""}`;
-  const twoDupHref = `${basePrintPath}?layout=two_dup&orientation=landscape${details.length > 1 ? `&ids=${encodeURIComponent(idsParam)}` : ""}`;
-  const twoCutHref = `${basePrintPath}?layout=two_cut&orientation=landscape${details.length > 1 ? `&ids=${encodeURIComponent(idsParam)}` : ""}`;
-
+  const backHref = query.fromWork
+    ? `/${locale}/teacher-tools/works/${query.fromWork}?${new URLSearchParams({
+        layout,
+        orientation,
+      }).toString()}`
+    : `/${locale}/teacher-tools/variants/${details[0].id}`;
   return (
     <main className="print-root mx-auto max-w-5xl space-y-4 p-4 sm:p-8">
       <PrintStyles orientation={orientation} />
       <div className="no-print flex flex-wrap gap-2">
-        <Link href={`/${locale}/teacher-tools/variants/${details[0].id}`} className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900">
+        <Link href={backHref} className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900">
           Назад
         </Link>
-        <Link
-          href={singleHref}
-          className={[
-            "rounded-lg border px-3 py-2 text-sm font-medium",
-            layout === "single"
-              ? "border-slate-900 bg-slate-900 text-white"
-              : "border-slate-300 bg-white text-slate-900",
-          ].join(" ")}
-        >
-          1 вариант/стр
-        </Link>
-        <Link
-          href={twoHref}
-          className={[
-            "rounded-lg border px-3 py-2 text-sm font-medium",
-              layout === "two"
-              ? "border-slate-900 bg-slate-900 text-white"
-              : "border-slate-300 bg-white text-slate-900",
-          ].join(" ")}
-        >
-          2 варианта/стр (альбомная)
-        </Link>
-        <Link
-          href={twoDupHref}
-          className={[
-            "rounded-lg border px-3 py-2 text-sm font-medium",
-            layout === "two_dup"
-              ? "border-slate-900 bg-slate-900 text-white"
-              : "border-slate-300 bg-white text-slate-900",
-          ].join(" ")}
-        >
-          Вариант 1 | Вариант 1
-        </Link>
-        <Link
-          href={twoCutHref}
-          className={[
-            "rounded-lg border px-3 py-2 text-sm font-medium",
-            layout === "two_cut"
-              ? "border-slate-900 bg-slate-900 text-white"
-              : "border-slate-300 bg-white text-slate-900",
-          ].join(" ")}
-        >
-          2 варианта/стр (для разрезания)
-        </Link>
-        {layout === "two_cut" ? (
-          <span className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900">
-            Двусторонняя печать: переворот по короткой стороне
-          </span>
-        ) : null}
         <span className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white">
           Ctrl/Cmd+P
         </span>

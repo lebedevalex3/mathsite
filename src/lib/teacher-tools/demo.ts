@@ -34,6 +34,11 @@ type BuildDemoTemplateParams = {
   mode?: string;
 };
 
+export type WorkTitleTemplate = {
+  customTitle?: string | null;
+  date?: string | null;
+};
+
 export async function enforceDemoRateLimit(ownerUserId: string) {
   const db = prisma as unknown as {
     work: {
@@ -115,6 +120,35 @@ export function buildDemoTemplate({
 
 function makeSeed(index: number) {
   return `${Date.now()}-${index}-${crypto.randomUUID().slice(0, 8)}`;
+}
+
+export function buildWorkDisplayTitle(params: {
+  locale?: string;
+  workType: WorkType;
+  titleTemplate?: WorkTitleTemplate;
+}) {
+  const labels: Record<WorkType, string> = {
+    lesson: "Работа на уроке",
+    quiz: "Самостоятельная",
+    homework: "Домашняя работа",
+    test: "Контрольная",
+  };
+  const baseTitle = labels[params.workType] ?? labels.quiz;
+  const customTitle = params.titleTemplate?.customTitle?.trim();
+  const date = params.titleTemplate?.date?.trim();
+  const normalizedDate =
+    date && /^\d{4}-\d{2}-\d{2}$/.test(date)
+      ? new Intl.DateTimeFormat(params.locale ?? "ru-RU", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        }).format(new Date(`${date}T00:00:00`))
+      : null;
+
+  const parts = [baseTitle];
+  if (customTitle) parts.push(customTitle);
+  if (normalizedDate) parts.push(normalizedDate);
+  return parts.join(" · ");
 }
 
 export function shuffleItemsWithSeed<T>(items: T[], seed: string): T[] {
@@ -199,8 +233,9 @@ export async function generateDemoWorkWithVariants(params: {
   mode?: string;
   workType: WorkType;
   printLayout: PrintLayoutMode;
+  titleTemplate?: WorkTitleTemplate;
 }): Promise<{ work: { id: string }; variants: CreatedDemoVariantSummary[] }> {
-  const { ownerUserId, topicId, template, variantsCount, mode, workType, printLayout } = params;
+  const { ownerUserId, topicId, template, variantsCount, workType, printLayout } = params;
   const sourceTopicIds = Array.from(new Set([topicId, ...(params.topicIds ?? [])]));
   const tasks: Awaited<ReturnType<typeof getTasksForTopic>>["tasks"] = [];
   for (const currentTopicId of sourceTopicIds) {
@@ -223,7 +258,10 @@ export async function generateDemoWorkWithVariants(params: {
   const variantFits = drafts.map((draft) => draft.fit);
   const now = new Date();
   const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-  const title = mode ? `Работа • ${mode}` : "Работа";
+  const title = buildWorkDisplayTitle({
+    workType,
+    titleTemplate: params.titleTemplate,
+  });
   const fit = analyzeWorkPrintFit({
     workType,
     variants: variantFits,
@@ -287,6 +325,7 @@ export async function generateDemoWorkWithVariants(params: {
             variantsCount,
             shuffleOrder: params.shuffleOrder === true,
             topicIds: sourceTopicIds,
+            titleTemplate: params.titleTemplate ?? null,
             plan: template.sections.flatMap((section) =>
               section.skillIds.map((skillId) => ({
                 skillId,

@@ -46,6 +46,26 @@ function parseGenerationSettings(value: unknown) {
   };
 }
 
+function parseTitleTemplate(value: unknown) {
+  if (!value || typeof value !== "object") {
+    return { customTitle: "", date: "" };
+  }
+  const raw = (value as { generation?: unknown }).generation;
+  if (!raw || typeof raw !== "object") {
+    return { customTitle: "", date: "" };
+  }
+  const generation = raw as { titleTemplate?: unknown };
+  if (!generation.titleTemplate || typeof generation.titleTemplate !== "object") {
+    return { customTitle: "", date: "" };
+  }
+  const template = generation.titleTemplate as { customTitle?: unknown; date?: unknown };
+  return {
+    customTitle:
+      typeof template.customTitle === "string" ? template.customTitle.slice(0, 80) : "",
+    date: typeof template.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(template.date) ? template.date : "",
+  };
+}
+
 const copy = {
   ru: {
     eyebrow: "Работа",
@@ -56,6 +76,9 @@ const copy = {
     variantLabel: "Вариант",
     variantTasksUnit: "задач",
     workType: "Тип работы",
+    titleTemplateCustom: "Уточнение (необязательно)",
+    titleTemplateDate: "Дата (необязательно)",
+    titleTemplatePlaceholder: "например, Дроби",
     buildSettings: "Параметры сборки",
     buildVariants: "Количество вариантов",
     buildShuffle: "Перемешать порядок задач",
@@ -77,10 +100,10 @@ const copy = {
     forceTwo: "Всё равно попробовать (force)",
     variants: "Варианты",
     open: "Открыть",
-    print: "Печать",
-    answers: "Ответы",
-    pdf: "PDF",
-    answersPdf: "Ответы PDF",
+    print: "Предпросмотр",
+    answers: "Ответы (лист)",
+    pdf: "Скачать PDF",
+    answersPdf: "Ответы: PDF",
     pdfEngine: "PDF движок",
     pdfAllLabel: "Варианты",
     pdfAnswersLabel: "Ответы",
@@ -104,6 +127,9 @@ const copy = {
     variantLabel: "Variant",
     variantTasksUnit: "tasks",
     workType: "Work type",
+    titleTemplateCustom: "Custom text (optional)",
+    titleTemplateDate: "Date (optional)",
+    titleTemplatePlaceholder: "e.g. Fractions",
     buildSettings: "Build settings",
     buildVariants: "Variants count",
     buildShuffle: "Shuffle task order",
@@ -125,9 +151,9 @@ const copy = {
     forceTwo: "Try anyway (force)",
     variants: "Variants",
     open: "Open",
-    print: "Print",
-    answers: "Answers",
-    pdf: "PDF",
+    print: "Preview",
+    answers: "Answers sheet",
+    pdf: "Download PDF",
     answersPdf: "Answers PDF",
     pdfEngine: "PDF engine",
     pdfAllLabel: "Variants",
@@ -152,6 +178,9 @@ const copy = {
     variantLabel: "Variante",
     variantTasksUnit: "Aufgaben",
     workType: "Art der Arbeit",
+    titleTemplateCustom: "Zusatz (optional)",
+    titleTemplateDate: "Datum (optional)",
+    titleTemplatePlaceholder: "z. B. Brüche",
     buildSettings: "Erzeugungsparameter",
     buildVariants: "Anzahl Varianten",
     buildShuffle: "Aufgaben mischen",
@@ -173,10 +202,10 @@ const copy = {
     forceTwo: "Trotzdem versuchen (force)",
     variants: "Varianten",
     open: "Öffnen",
-    print: "Drucken",
-    answers: "Lösungen",
-    pdf: "PDF",
-    answersPdf: "Lösungen PDF",
+    print: "Vorschau",
+    answers: "Lösungen (Ansicht)",
+    pdf: "PDF herunterladen",
+    answersPdf: "Lösungen: PDF",
     pdfEngine: "PDF-Engine",
     pdfAllLabel: "Varianten",
     pdfAnswersLabel: "Lösungen",
@@ -208,6 +237,7 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
 
   const storedProfile = normalizePrintProfile(workDetail.printProfileJson);
   const generationSettings = parseGenerationSettings(workDetail.printProfileJson);
+  const titleTemplate = parseTitleTemplate(workDetail.printProfileJson);
   const workType = parseWorkType(workDetail.workType);
   const forceTwoUp = false;
   const canUseTwoCut = workDetail.variants.length % 2 === 0;
@@ -334,7 +364,9 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <h1 className="text-2xl font-bold tracking-tight text-slate-950">
-            {t.workTypes[workType]}
+            {typeof workDetail.title === "string" && workDetail.title.trim().length > 0
+              ? workDetail.title
+              : t.workTypes[workType]}
           </h1>
           <WorkStatusBadge
             locale={locale}
@@ -349,14 +381,19 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
         </p>
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
           <WorkTypeAutosaveField
-            key={`${workDetail.id}:${workType}:${effectiveLayout}:${effectiveOrientation}`}
+            key={`${workDetail.id}:${workType}:${titleTemplate.customTitle}:${titleTemplate.date}:${effectiveLayout}:${effectiveOrientation}`}
             locale={locale}
             workId={workDetail.id}
             initialWorkType={workType}
+            initialCustomTitle={titleTemplate.customTitle}
+            initialWorkDate={titleTemplate.date}
             layout={effectiveLayout}
             orientation={effectiveOrientation}
             forceTwoUp={forceTwoUp}
             label={t.workType}
+            customTitleLabel={t.titleTemplateCustom}
+            customTitlePlaceholder={t.titleTemplatePlaceholder}
+            dateLabel={t.titleTemplateDate}
             options={t.workTypes}
           />
           <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
@@ -394,6 +431,18 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
                   : locale === "en"
                     ? "Rebuild variants"
                     : "Varianten neu aufbauen",
+              applyRebuild:
+                locale === "ru"
+                  ? "Применить и пересобрать"
+                  : locale === "en"
+                    ? "Apply and rebuild"
+                    : "Anwenden und neu aufbauen",
+              changedHint:
+                locale === "ru"
+                  ? "Изменили параметры. Нажмите «Применить и пересобрать», чтобы обновить варианты."
+                  : locale === "en"
+                    ? "Settings changed. Click “Apply and rebuild” to update variants."
+                    : "Parameter geändert. Klicken Sie auf „Anwenden und neu aufbauen“.",
               saving: t.autosaveSaving,
               error:
                 locale === "ru"
@@ -516,7 +565,7 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
                   <Link href={`/${locale}/teacher-tools/variants/${variant.id}`} className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100">
                     {t.open}
                   </Link>
-                  <Link href={`/${locale}/teacher-tools/variants/${variant.id}/print?${new URLSearchParams({ layout: effectiveLayout, orientation: effectiveOrientation }).toString()}`} className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100">
+                  <Link href={`/${locale}/teacher-tools/variants/${variant.id}/print?${new URLSearchParams({ layout: effectiveLayout, orientation: effectiveOrientation, fromWork: workDetail.id }).toString()}`} className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100">
                     {t.print}
                   </Link>
                   <Link href={`/${locale}/teacher-tools/variants/${variant.id}/answers/print`} className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100">

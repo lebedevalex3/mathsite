@@ -303,6 +303,7 @@ export async function updateWorkProfileForOwner(params: {
   workId: string;
   ownerUserId: string;
   workType: "lesson" | "quiz" | "homework" | "test";
+  title: string;
   printProfileJson: unknown;
 }): Promise<{ id: string; workType: string; printProfileJson: unknown } | null> {
   const db = prisma as unknown as {
@@ -315,6 +316,7 @@ export async function updateWorkProfileForOwner(params: {
   const updated = await db.work.updateMany({
     where: { id: params.workId, ownerUserId: params.ownerUserId },
     data: {
+      title: params.title,
       workType: params.workType,
       printProfileJson: params.printProfileJson,
     },

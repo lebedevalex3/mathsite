@@ -15,6 +15,8 @@ type Props = {
     variants: string;
     shuffle: string;
     rebuild: string;
+    applyRebuild: string;
+    changedHint: string;
     saving: string;
     error: string;
     yes: string;
@@ -38,6 +40,9 @@ export function WorkBuildSettingsControls({
   const [shuffleOrder, setShuffleOrder] = useState(initialShuffleOrder);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const dirty =
+    variantsCount !== clamp(initialVariantsCount, 1, 6) ||
+    shuffleOrder !== initialShuffleOrder;
 
   async function handleRebuild() {
     setSaving(true);
@@ -86,10 +91,15 @@ export function WorkBuildSettingsControls({
         <button
           type="button"
           onClick={() => void handleRebuild()}
-          disabled={saving}
-          className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={saving || !dirty}
+          className={[
+            "inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-60",
+            dirty
+              ? "border-slate-900 bg-slate-900 text-white hover:bg-slate-700"
+              : "border-slate-300 bg-white text-slate-500",
+          ].join(" ")}
         >
-          {saving ? labels.saving : labels.rebuild}
+          {saving ? labels.saving : dirty ? labels.applyRebuild : labels.rebuild}
         </button>
       </div>
 
@@ -102,6 +112,7 @@ export function WorkBuildSettingsControls({
         />
         {labels.shuffle}: <span className="font-medium">{shuffleOrder ? labels.yes : labels.no}</span>
       </label>
+      {dirty ? <p className="mt-2 text-xs text-amber-700">{labels.changedHint}</p> : null}
       {error ? <p className="mt-2 text-xs text-rose-700">{error}</p> : null}
     </div>
   );

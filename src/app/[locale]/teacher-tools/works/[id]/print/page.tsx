@@ -48,6 +48,7 @@ export default async function TeacherToolsWorkPrintPage({ params, searchParams }
   }
   next.set("layout", layout);
   next.set("orientation", orientation);
+  next.set("fromWork", id);
   next.delete("force");
   if (restIds.length > 0) {
     next.set("ids", [firstId, ...restIds].join(","));

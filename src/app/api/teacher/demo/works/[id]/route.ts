@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { badRequest, notFound, toApiError } from "@/src/lib/api/errors";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
+import { buildWorkDisplayTitle } from "@/src/lib/teacher-tools/demo";
 import {
   defaultOrientationForLayout,
   normalizePrintProfile,
@@ -24,6 +25,18 @@ function parseWorkType(value: unknown): "lesson" | "quiz" | "homework" | "test" 
     : null;
 }
 
+function parseTitleTemplate(value: unknown): { customTitle: string | null; date: string | null } {
+  if (!value || typeof value !== "object") return { customTitle: null, date: null };
+  const data = value as { customTitle?: unknown; date?: unknown };
+  const customTitle =
+    typeof data.customTitle === "string" && data.customTitle.trim().length > 0
+      ? data.customTitle.trim().slice(0, 80)
+      : null;
+  const date =
+    typeof data.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.date) ? data.date : null;
+  return { customTitle, date };
+}
+
 export async function PATCH(request: Request, { params }: RouteProps) {
   try {
     const { id } = await params;
@@ -32,6 +45,7 @@ export async function PATCH(request: Request, { params }: RouteProps) {
 
     const body = (await request.json()) as {
       workType?: unknown;
+      titleTemplate?: unknown;
       printProfile?: {
         layout?: unknown;
         orientation?: unknown;
@@ -62,6 +76,7 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       defaultOrientationForLayout(nextLayout),
     );
     const forceTwoUp = body.printProfile?.forceTwoUp === true;
+    const titleTemplate = parseTitleTemplate(body.titleTemplate);
 
     const stored = normalizePrintProfile(existing.printProfileJson);
     const existingRaw =
@@ -78,12 +93,23 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       forceTwoUp,
       // Preserve existing fit analysis; it still applies to this work's task set.
       fit: existingRaw.fit ?? (stored as unknown as { fit?: unknown }).fit,
+      generation: {
+        ...(existingRaw.generation && typeof existingRaw.generation === "object"
+          ? (existingRaw.generation as Record<string, unknown>)
+          : {}),
+        titleTemplate,
+      },
     };
+    const nextTitle = buildWorkDisplayTitle({
+      workType: nextWorkType,
+      titleTemplate,
+    });
 
     const updated = await updateWorkProfileForOwner({
       workId: id,
       ownerUserId: userId,
       workType: nextWorkType,
+      title: nextTitle,
       printProfileJson: nextProfileJson,
     });
 
@@ -108,4 +134,3 @@ export async function PATCH(request: Request, { params }: RouteProps) {
     return NextResponse.json(body, { status });
   }
 }
-

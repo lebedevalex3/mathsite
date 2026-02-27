@@ -26,7 +26,20 @@ type GeneratePayload = {
   seed?: unknown;
   workType?: unknown;
   printLayout?: unknown;
+  titleTemplate?: unknown;
 };
+
+function parseTitleTemplate(value: unknown) {
+  if (!value || typeof value !== "object") return undefined;
+  const data = value as { customTitle?: unknown; date?: unknown };
+  const customTitle =
+    typeof data.customTitle === "string" ? data.customTitle.trim().slice(0, 80) : "";
+  const date = typeof data.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.date) ? data.date : "";
+  return {
+    customTitle: customTitle.length > 0 ? customTitle : null,
+    date: date.length > 0 ? date : null,
+  };
+}
 
 export async function POST(request: Request) {
   let body: GeneratePayload;
@@ -63,6 +76,7 @@ export async function POST(request: Request) {
   const printLayout = parsePrintLayout(
     typeof body.printLayout === "string" ? body.printLayout : undefined,
   );
+  const titleTemplate = parseTitleTemplate(body.titleTemplate);
 
   try {
     const cookieStore = await cookies();
@@ -108,6 +122,7 @@ export async function POST(request: Request) {
       mode,
       workType,
       printLayout,
+      titleTemplate,
     });
 
     return NextResponse.json({

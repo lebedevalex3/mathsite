@@ -10,17 +10,13 @@ import {
   buildDemoTemplate,
   generateDemoWorkWithVariants,
   type WorkTitleTemplate,
-  validateDemoPlan,
 } from "@/src/lib/teacher-tools/demo";
 import { normalizePrintProfile } from "@/src/lib/variants/print-profile";
+import type { WorkType } from "@/src/lib/variants/print-recommendation";
 
 export const runtime = "nodejs";
 
 type RouteProps = { params: Promise<{ id: string }> };
-
-function clamp(n: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, n));
-}
 
 function inferTopicIdFromTaskId(taskId: string): string | null {
   const parts = taskId.split(".");
@@ -28,7 +24,7 @@ function inferTopicIdFromTaskId(taskId: string): string | null {
   return `${parts[0]}.${parts[1]}`;
 }
 
-function parseWorkType(value: unknown): "lesson" | "quiz" | "homework" | "test" {
+function parseWorkType(value: unknown): WorkType {
   return value === "lesson" || value === "quiz" || value === "homework" || value === "test"
     ? value
     : "quiz";
@@ -46,15 +42,11 @@ function parseTitleTemplate(value: unknown): WorkTitleTemplate | undefined {
   return { customTitle, date };
 }
 
-export async function POST(request: Request, { params }: RouteProps) {
+export async function POST(_: Request, { params }: RouteProps) {
   try {
     const { id } = await params;
     const cookieStore = await cookies();
     const { userId } = await getOrCreateVisitorUser(cookieStore);
-    const body = (await request.json().catch(() => ({}))) as {
-      variantsCount?: unknown;
-      shuffleOrder?: unknown;
-    };
 
     const db = prisma as unknown as {
       work: {
@@ -66,7 +58,7 @@ export async function POST(request: Request, { params }: RouteProps) {
               printProfileJson: unknown;
               variants: Array<{
                 variant: {
-                  tasks: Array<{ taskId: string; orderIndex: number }>;
+                  tasks: Array<{ taskId: string }>;
                 };
               }>;
             }
@@ -90,7 +82,7 @@ export async function POST(request: Request, { params }: RouteProps) {
               select: {
                 tasks: {
                   orderBy: { orderIndex: "asc" },
-                  select: { taskId: true, orderIndex: true },
+                  select: { taskId: true },
                 },
               },
             },
@@ -106,7 +98,7 @@ export async function POST(request: Request, { params }: RouteProps) {
 
     const firstVariantTasks = work.variants[0]?.variant.tasks ?? [];
     if (firstVariantTasks.length === 0) {
-      const { status, body } = badRequest("Work has no tasks to rebuild.");
+      const { status, body } = badRequest("Work has no tasks to duplicate.");
       return NextResponse.json(body, { status });
     }
 
@@ -120,66 +112,75 @@ export async function POST(request: Request, { params }: RouteProps) {
         ? (rawProfile.generation as Record<string, unknown>)
         : {};
 
-    const variantsCount = clamp(
-      Math.trunc(
-        typeof body.variantsCount === "number"
-          ? body.variantsCount
-          : typeof generation.variantsCount === "number"
-            ? generation.variantsCount
-            : 2,
-      ),
-      1,
-      6,
-    );
-    const shuffleOrder =
-      typeof body.shuffleOrder === "boolean"
-        ? body.shuffleOrder
-        : typeof generation.shuffleOrder === "boolean"
-          ? generation.shuffleOrder
-          : false;
-    const titleTemplate = parseTitleTemplate(generation.titleTemplate);
+    const storedPlan = Array.isArray(generation.plan)
+      ? generation.plan
+          .map((item) => (item && typeof item === "object" ? (item as Record<string, unknown>) : null))
+          .filter((item): item is Record<string, unknown> => Boolean(item))
+          .map((item) => ({
+            skillId: typeof item.skillId === "string" ? item.skillId : "",
+            count: typeof item.count === "number" ? Math.max(0, Math.trunc(item.count)) : 0,
+          }))
+          .filter((item) => item.skillId.length > 0 && item.count > 0)
+      : [];
 
     const taskIds = firstVariantTasks.map((task) => task.taskId);
-    const topicIdFromTasks = Array.from(
+    const topicIdsFromTasks = Array.from(
       new Set(taskIds.map(inferTopicIdFromTaskId).filter((value): value is string => Boolean(value))),
     );
     const storedTopicIds = Array.isArray(generation.topicIds)
       ? generation.topicIds.filter((item): item is string => typeof item === "string" && item.length > 0)
       : [];
     const topicIds = Array.from(
-      new Set(storedTopicIds.length > 0 ? storedTopicIds : [work.topicId, ...topicIdFromTasks]),
+      new Set(storedTopicIds.length > 0 ? storedTopicIds : [work.topicId, ...topicIdsFromTasks]),
     );
+    const variantsCount =
+      typeof generation.variantsCount === "number"
+        ? Math.max(1, Math.min(6, Math.trunc(generation.variantsCount)))
+        : 1;
+    const shuffleOrder = generation.shuffleOrder === true;
+    const titleTemplate = parseTitleTemplate(generation.titleTemplate);
 
-    const allTasks = [];
-    for (const topicId of topicIds) {
-      const result = await getTasksForTopic(topicId);
-      if (result.errors.length > 0) {
-        throw new Error(`Task bank errors: ${result.errors[0]}`);
-      }
-      allTasks.push(...result.tasks);
+    const plan =
+      storedPlan.length > 0
+        ? storedPlan
+        : (() => {
+            const counters = new Map<string, number>();
+            const allTasksById = new Map<string, Awaited<ReturnType<typeof getTasksForTopic>>["tasks"][number]>();
+            return {
+              async load() {
+                for (const topicId of topicIds) {
+                  const result = await getTasksForTopic(topicId);
+                  if (result.errors.length > 0) {
+                    throw new Error(`Task bank errors: ${result.errors[0]}`);
+                  }
+                  for (const task of result.tasks) allTasksById.set(task.id, task);
+                }
+                for (const taskId of taskIds) {
+                  const task = allTasksById.get(taskId);
+                  if (!task) continue;
+                  counters.set(task.skill_id, (counters.get(task.skill_id) ?? 0) + 1);
+                }
+                return Array.from(counters.entries()).map(([skillId, count]) => ({ skillId, count }));
+              },
+            };
+          })();
+
+    const resolvedPlan = Array.isArray(plan) ? plan : await plan.load();
+    if (resolvedPlan.length === 0) {
+      const { status, body } = badRequest("Work has no valid generation plan.");
+      return NextResponse.json(body, { status });
     }
-    const taskById = new Map(allTasks.map((task) => [task.id, task]));
 
-    const countsBySkillId = new Map<string, number>();
-    for (const taskId of taskIds) {
-      const task = taskById.get(taskId);
-      if (!task) continue;
-      const skillId = task.skill_id;
-      countsBySkillId.set(skillId, (countsBySkillId.get(skillId) ?? 0) + 1);
-    }
-    const plan = Array.from(countsBySkillId.entries()).map(([skillId, count]) => ({ skillId, count }));
-    const { normalized } = validateDemoPlan(plan, variantsCount);
-
-    const topicConfigs = await Promise.all(topicIds.map((topicId) => getTeacherToolsTopicSkills(topicId)));
+    const topics = await Promise.all(topicIds.map((topicId) => getTeacherToolsTopicSkills(topicId)));
     const skillsById = new Map(
-      topicConfigs
+      topics
         .filter((topic): topic is NonNullable<typeof topic> => Boolean(topic))
         .flatMap((topic) => topic.skills.map((skill) => [skill.id, { title: skill.title }] as const)),
     );
 
     const template = buildDemoTemplate({
       topicId: topicIds[0] ?? work.topicId,
-      plan: normalized,
+      plan: resolvedPlan,
       skillsById,
       mode: "custom",
     });
@@ -200,13 +201,11 @@ export async function POST(request: Request, { params }: RouteProps) {
     return NextResponse.json({
       ok: true,
       workId: result.work.id,
-      variantsCount,
-      shuffleOrder,
     });
   } catch (error) {
     const { status, body } = toApiError(error, {
-      defaultCode: "WORK_REBUILD_ERROR",
-      defaultMessage: "Failed to rebuild work variants.",
+      defaultCode: "WORK_DUPLICATE_ERROR",
+      defaultMessage: "Failed to duplicate work.",
     });
     return NextResponse.json(body, { status });
   }

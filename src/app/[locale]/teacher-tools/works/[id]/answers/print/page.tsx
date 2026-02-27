@@ -27,6 +27,7 @@ export default async function TeacherToolsWorkAnswersPrintPage({ params, searchP
       for (const entry of value) next.append(key, entry);
     }
   }
+  next.set("fromWork", id);
   if (restIds.length > 0) {
     next.set("ids", [firstId, ...restIds].join(","));
   }
