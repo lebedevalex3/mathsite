@@ -94,7 +94,15 @@ async function readSubtopicMdxFile(filePath: string): Promise<ContentSubtopicDoc
 
 async function listTopicMdxFilesFromAppRoutes(topicSlug: string) {
   const topicDir = path.join(process.cwd(), "src", "app", "[locale]", "5-klass", topicSlug);
-  const entries = await fs.readdir(topicDir, { withFileTypes: true });
+  let entries;
+  try {
+    entries = await fs.readdir(topicDir, { withFileTypes: true });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return [];
+    }
+    throw error;
+  }
   const mdxFiles = entries
     .filter((entry) => entry.isDirectory())
     .map((entry) => path.join(topicDir, entry.name, "page.mdx"));
@@ -123,4 +131,3 @@ export async function loadTopicSubtopicIndexFromAppRoutes(topicSlug: string): Pr
     tocBySlug,
   };
 }
-

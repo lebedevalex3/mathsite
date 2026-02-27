@@ -54,6 +54,7 @@ Detailed local setup and troubleshooting: [LOCAL_DEV.md](./LOCAL_DEV.md).
 
 - Taxonomy docs: `docs/TAXONOMY*.md`
 - Task format: `docs/TASK_FORMAT.md`
+- Topic onboarding checklist: `docs/TOPIC_ONBOARDING_CHECKLIST.md`
 - Task bank location: `data/tasks/**/*.json`
 - Content location: `content/**`
 

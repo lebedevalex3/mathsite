@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: mathsite
+          POSTGRES_PASSWORD: mathsite
+          POSTGRES_DB: mathsite
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U mathsite -d mathsite"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      DATABASE_URL: postgresql://mathsite:mathsite@localhost:5433/mathsite?schema=public
+      NODE_ENV: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prisma generate
+        run: pnpm prisma generate
+
+      - name: Prisma migrate deploy
+        run: pnpm prisma migrate deploy
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Tests
+        run: pnpm test
+
+      - name: Validate task bank
+        run: pnpm validate:tasks
+
+      - name: Validate content
+        run: pnpm validate:content
+
+      - name: Build
+        run: pnpm build
+
+      - name: Start app for smoke checks
+        run: |
+          pnpm start -p 3000 > /tmp/mathsite-start.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://localhost:3000/ru > /dev/null; then
+              break
+            fi
+            sleep 2
+          done
+          curl -fsS -L http://localhost:3000/ru > /dev/null
+          curl -fsS -L http://localhost:3000/ru/progress > /dev/null
+          curl -fsS -L http://localhost:3000/ru/teacher/variants > /dev/null
+          curl -fsS "http://localhost:3000/api/progress?topicId=g5.proporcii" > /dev/null
