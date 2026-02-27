@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/src/lib/db/prisma";
+import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 
 export const runtime = "nodejs";
@@ -36,15 +37,21 @@ function isValidAttemptPayload(value: unknown): value is AttemptPayload {
 }
 
 export async function POST(request: Request) {
+  const span = startApiSpan(request, "/api/attempts");
   let body: unknown;
 
   try {
     body = await request.json();
   } catch {
+    logApiResult(span, 400, { code: "BAD_REQUEST", message: "Invalid JSON" });
     return NextResponse.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
   }
 
   if (!isValidAttemptPayload(body)) {
+    logApiResult(span, 400, {
+      code: "BAD_REQUEST",
+      message: "Missing or invalid attempt fields",
+    });
     return NextResponse.json(
       { ok: false, error: "Missing or invalid attempt fields" },
       { status: 400 },
@@ -66,5 +73,6 @@ export async function POST(request: Request) {
     },
   });
 
+  logApiResult(span, 200, { code: "OK" });
   return NextResponse.json({ ok: true });
 }

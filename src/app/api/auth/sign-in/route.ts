@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { badRequest, toApiError, tooManyRequests, unauthorized } from "@/src/lib/api/errors";
 import { consumeAuthRateLimit } from "@/src/lib/auth/rate-limit";
+import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import {
   createAuthSession,
   findUserByEmail,
@@ -18,6 +19,7 @@ type Payload = {
 };
 
 export async function POST(request: Request) {
+  const span = startApiSpan(request, "/api/auth/sign-in");
   try {
     const body = (await request.json().catch(() => ({}))) as Payload;
     const email = sanitizeEmail(body.email);
@@ -25,6 +27,7 @@ export async function POST(request: Request) {
 
     if (!email || !password) {
       const { status, body } = badRequest("email and password are required");
+      logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
     }
 
@@ -37,6 +40,7 @@ export async function POST(request: Request) {
       const { status, body } = tooManyRequests(
         "Too many sign-in attempts. Please try again later.",
       );
+      logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, {
         status,
         headers: {
@@ -48,12 +52,14 @@ export async function POST(request: Request) {
     const user = await findUserByEmail(email);
     if (!user || !user.passwordHash) {
       const { status, body } = unauthorized("Invalid credentials");
+      logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
     }
 
     const valid = await verifyPassword(password, user.passwordHash);
     if (!valid) {
       const { status, body } = unauthorized("Invalid credentials");
+      logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
     }
 
@@ -63,6 +69,7 @@ export async function POST(request: Request) {
       cookieStore,
     });
 
+    logApiResult(span, 200, { code: "OK" });
     return NextResponse.json({
       ok: true,
       user: {
@@ -76,6 +83,7 @@ export async function POST(request: Request) {
       defaultCode: "AUTH_SIGN_IN_ERROR",
       defaultMessage: "Failed to sign in.",
     });
+    logApiResult(span, status, { code: body.code, message: body.message });
     return NextResponse.json(body, { status });
   }
 }

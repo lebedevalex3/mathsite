@@ -10,6 +10,7 @@ import {
   sanitizeEmail,
 } from "@/src/lib/auth/provider";
 import { consumeAuthRateLimit } from "@/src/lib/auth/rate-limit";
+import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 
 export const runtime = "nodejs";
@@ -20,6 +21,7 @@ type Payload = {
 };
 
 export async function POST(request: Request) {
+  const span = startApiSpan(request, "/api/auth/sign-up");
   try {
     const body = (await request.json().catch(() => ({}))) as Payload;
     const email = sanitizeEmail(body.email);
@@ -27,6 +29,7 @@ export async function POST(request: Request) {
 
     if (!email || !password) {
       const { status, body } = badRequest("email and password are required");
+      logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
     }
 
@@ -39,6 +42,7 @@ export async function POST(request: Request) {
       const { status, body } = tooManyRequests(
         "Too many sign-up attempts. Please try again later.",
       );
+      logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, {
         status,
         headers: {
@@ -50,6 +54,7 @@ export async function POST(request: Request) {
     const existing = await findUserByEmail(email);
     if (existing) {
       const { status, body } = conflict("Email already exists");
+      logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
     }
 
@@ -67,6 +72,7 @@ export async function POST(request: Request) {
       cookieStore,
     });
 
+    logApiResult(span, 200, { code: "OK" });
     return NextResponse.json({
       ok: true,
       user: {
@@ -88,6 +94,7 @@ export async function POST(request: Request) {
       defaultCode: code ?? "AUTH_SIGN_UP_ERROR",
       defaultMessage: message ?? "Failed to sign up.",
     });
+    logApiResult(span, status, { code: body.code, message: body.message });
     return NextResponse.json(body, { status });
   }
 }

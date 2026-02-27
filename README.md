@@ -49,6 +49,8 @@ Detailed local setup and troubleshooting: [LOCAL_DEV.md](./LOCAL_DEV.md).
 - Topic: `http://localhost:3000/ru/5-klass/proporcii`
 - Progress: `http://localhost:3000/ru/progress`
 - Teacher variants: `http://localhost:3000/ru/teacher/variants`
+- Health check: `http://localhost:3000/api/health`
+- API error metrics: `http://localhost:3000/api/metrics/errors`
 
 ## Content And Task Contracts
 
