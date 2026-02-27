@@ -119,6 +119,10 @@ export function unauthorized(message: string, code = "UNAUTHORIZED"): ApiErrorRe
   return apiError(401, code, message);
 }
 
+export function forbidden(message: string, code = "FORBIDDEN"): ApiErrorResult {
+  return apiError(403, code, message);
+}
+
 export function conflict(message: string, code = "CONFLICT"): ApiErrorResult {
   return apiError(409, code, message);
 }

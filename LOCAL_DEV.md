@@ -30,6 +30,7 @@ pnpm dev
 - `http://localhost:3000/ru/5-klass/proporcii`
 - `http://localhost:3000/ru/progress`
 - `http://localhost:3000/ru/teacher/variants`
+- `http://localhost:3000/ru/teacher/cabinet`
 
 ## A. Overview
 
@@ -297,6 +298,10 @@ curl -X POST http://localhost:3000/api/teacher/become
 
 - Если есть активная auth-сессия, `getOrCreateVisitorUser` возвращает `userId` авторизованного пользователя.
 - Если auth-сессии нет, работает текущая visitor-модель через `visitor_id`.
+- История работ находится в `/{locale}/teacher/cabinet` и доступна только для авторизованной сессии.
+- Полный доступ к разделу “Мои работы” в кабинете — только для ролей `teacher`/`admin`.
+- Для локальной проверки роли в dev можно использовать `POST /api/teacher/become` (если `ALLOW_DEV_BECOME_TEACHER=1`).
+- Для роли `student` API истории (`/api/teacher/demo/works`, `/api/teacher/demo/works/:id/duplicate`) возвращают `403`.
 
 ### Где работать с вариантами
 

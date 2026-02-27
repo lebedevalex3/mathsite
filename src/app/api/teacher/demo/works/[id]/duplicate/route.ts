@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 
 import { getTasksForTopic } from "@/lib/tasks/query";
 import { prisma } from "@/src/lib/db/prisma";
-import { badRequest, notFound, toApiError } from "@/src/lib/api/errors";
-import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
+import { badRequest, forbidden, notFound, toApiError, unauthorized } from "@/src/lib/api/errors";
+import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 import { getTeacherToolsTopicSkills } from "@/src/lib/teacher-tools/catalog";
 import {
   buildDemoTemplate,
@@ -51,7 +51,16 @@ export async function POST(request: Request, { params }: RouteProps) {
         ? body.locale
         : "ru";
     const cookieStore = await cookies();
-    const { userId } = await getOrCreateVisitorUser(cookieStore);
+    const user = await getAuthenticatedUserFromCookie(cookieStore);
+    if (!user) {
+      const { status, body } = unauthorized("Sign-in required to duplicate work.");
+      return NextResponse.json(body, { status });
+    }
+    if (user.role !== "teacher" && user.role !== "admin") {
+      const { status, body } = forbidden("Teacher role required to duplicate work.");
+      return NextResponse.json(body, { status });
+    }
+    const userId = user.id;
 
     const db = prisma as unknown as {
       work: {

@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { toApiError } from "@/src/lib/api/errors";
-import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
+import { forbidden, toApiError, unauthorized } from "@/src/lib/api/errors";
+import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 import { listRecentWorksForOwner } from "@/src/lib/variants/repository";
 
 export const runtime = "nodejs";
@@ -10,9 +10,17 @@ export const runtime = "nodejs";
 export async function GET() {
   try {
     const cookieStore = await cookies();
-    const { userId } = await getOrCreateVisitorUser(cookieStore);
+    const user = await getAuthenticatedUserFromCookie(cookieStore);
+    if (!user) {
+      const { status, body } = unauthorized("Sign-in required to view work history.");
+      return NextResponse.json(body, { status });
+    }
+    if (user.role !== "teacher" && user.role !== "admin") {
+      const { status, body } = forbidden("Teacher role required to view work history.");
+      return NextResponse.json(body, { status });
+    }
 
-    const works = await listRecentWorksForOwner(userId, { limit: 10, demoOnly: true });
+    const works = await listRecentWorksForOwner(user.id, { limit: 10, demoOnly: true });
 
     return NextResponse.json({
       ok: true,
@@ -35,4 +43,3 @@ export async function GET() {
     return NextResponse.json(body, { status });
   }
 }
-
