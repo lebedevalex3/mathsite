@@ -70,9 +70,8 @@ export function TeacherQuickStartWidget({ locale }: Props) {
   const topics = useMemo(() => {
     return listContentTopicConfigs()
       .map((cfg) => {
-        const catalog = topicCatalogEntries.find((entry) =>
-          entry.slug.endsWith(`/${cfg.topicSlug}`),
-        );
+        const topicId = cfg.topicSlug.includes(".") ? cfg.topicSlug : `g5.${cfg.topicSlug}`;
+        const catalog = topicCatalogEntries.find((entry) => entry.id === topicId);
         if (!catalog) return null;
         return {
           topicId: catalog.id,

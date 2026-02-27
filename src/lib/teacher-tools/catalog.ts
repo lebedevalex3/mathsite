@@ -203,6 +203,37 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
   },
 ];
 
+const otricatelnyeChislaSkills: TeacherToolsSkill[] = [
+  {
+    id: "g6.otricatelnye_chisla.sravnit_celye_chisla",
+    title: "Сравнивать целые числа",
+    summary: "Сравнивать положительные и отрицательные числа по координатной прямой.",
+    example: "Какое число больше: -3 или -8?",
+    status: "ready",
+  },
+  {
+    id: "g6.otricatelnye_chisla.naiti_modul_chisla",
+    title: "Находить модуль числа",
+    summary: "Определять модуль положительных и отрицательных чисел.",
+    example: "Найди модуль числа -12.",
+    status: "ready",
+  },
+  {
+    id: "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh",
+    title: "Складывать и вычитать целые числа",
+    summary: "Выполнять действия с числами разных знаков без скобок.",
+    example: "Вычисли: -7 + 10.",
+    status: "ready",
+  },
+  {
+    id: "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh",
+    title: "Умножать и делить целые числа",
+    summary: "Применять правила знаков при умножении и делении.",
+    example: "Вычисли: -6 · 4.",
+    status: "ready",
+  },
+];
+
 export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
   const topics: TeacherToolsTopicConfig[] = [];
   for (const cfg of listContentTopicConfigs()) {
@@ -237,6 +268,18 @@ export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
           de: cfg.titles?.de ?? "Gleichungen",
         },
         skills: uravneniyaSkills,
+      });
+    }
+
+    if (cfg.topicSlug === "g6.otricatelnye_chisla") {
+      topics.push({
+        topicId: "g6.otricatelnye_chisla",
+        title: {
+          ru: cfg.titles?.ru ?? "Отрицательные числа",
+          en: cfg.titles?.en ?? "Negative Numbers",
+          de: cfg.titles?.de ?? "Negative Zahlen",
+        },
+        skills: otricatelnyeChislaSkills,
       });
     }
   }

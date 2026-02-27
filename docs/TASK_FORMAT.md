@@ -27,8 +27,8 @@
 ## Поля задачи
 
 - `id`: стабильный `task_id`, уникальный во всех JSON-файлах
-- `topic_id`: для MVP только `g5.proporcii`
-- `skill_id`: один из `skill_id` из `docs/TAXONOMY.md`
+- `topic_id`: `g<класс>.<topic_slug>` (например, `g5.proporcii`, `g6.otricatelnye_chisla`)
+- `skill_id`: один из `skill_id` из соответствующего файла `docs/TAXONOMY*.md`
 - `difficulty`: целое число от `1` до `5`
 - `statement_md`: непустой Markdown-текст (можно использовать LaTeX)
 - `answer`: пока только число

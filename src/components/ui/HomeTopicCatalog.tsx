@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import {
+  getTopicDomains,
   type AppLocale,
   type TopicCatalogEntry,
   type TopicDomain,
@@ -133,7 +134,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
   const filtered = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return topicCatalogEntries.filter((entry) => {
-      if (entry.domain !== domain) return false;
+      if (!getTopicDomains(entry).includes(domain)) return false;
       if (!entry.levels.includes(level)) return false;
       if (entry.status !== status) return false;
 

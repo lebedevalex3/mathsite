@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "topic_id": "g6.otricatelnye_chisla",
+  "title": "Отрицательные числа (6 класс): тестовый банк",
+  "tasks": [
+    {
+      "id": "g6.otricatelnye_chisla.sravnit_celye_chisla.000001",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.sravnit_celye_chisla",
+      "difficulty": 1,
+      "statement_md": "Какое число больше: -3 или -8? Запиши большее число.",
+      "answer": { "type": "number", "value": -3 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.sravnit_celye_chisla.000002",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.sravnit_celye_chisla",
+      "difficulty": 1,
+      "statement_md": "Какое число меньше: 4 или -2? Запиши меньшее число.",
+      "answer": { "type": "number", "value": -2 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.sravnit_celye_chisla.000003",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.sravnit_celye_chisla",
+      "difficulty": 2,
+      "statement_md": "Какое число больше: -11 или -9? Запиши большее число.",
+      "answer": { "type": "number", "value": -9 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.sravnit_celye_chisla.000004",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.sravnit_celye_chisla",
+      "difficulty": 3,
+      "statement_md": "Какое число меньше: -15 или -6? Запиши меньшее число.",
+      "answer": { "type": "number", "value": -15 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.sravnit_celye_chisla.000005",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.sravnit_celye_chisla",
+      "difficulty": 4,
+      "statement_md": "Какое число расположено правее на координатной прямой: -1 или -7? Запиши число.",
+      "answer": { "type": "number", "value": -1 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.sravnit_celye_chisla.000006",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.sravnit_celye_chisla",
+      "difficulty": 5,
+      "statement_md": "Какое число больше: -20 или 0? Запиши большее число.",
+      "answer": { "type": "number", "value": 0 }
+    },
+
+    {
+      "id": "g6.otricatelnye_chisla.naiti_modul_chisla.000001",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.naiti_modul_chisla",
+      "difficulty": 1,
+      "statement_md": "Найди модуль числа -7.",
+      "answer": { "type": "number", "value": 7 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.naiti_modul_chisla.000002",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.naiti_modul_chisla",
+      "difficulty": 1,
+      "statement_md": "Найди модуль числа 9.",
+      "answer": { "type": "number", "value": 9 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.naiti_modul_chisla.000003",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.naiti_modul_chisla",
+      "difficulty": 2,
+      "statement_md": "Найди модуль числа -13.",
+      "answer": { "type": "number", "value": 13 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.naiti_modul_chisla.000004",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.naiti_modul_chisla",
+      "difficulty": 3,
+      "statement_md": "Найди модуль числа 0.",
+      "answer": { "type": "number", "value": 0 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.naiti_modul_chisla.000005",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.naiti_modul_chisla",
+      "difficulty": 4,
+      "statement_md": "Чему равен модуль числа -25?",
+      "answer": { "type": "number", "value": 25 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.naiti_modul_chisla.000006",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.naiti_modul_chisla",
+      "difficulty": 5,
+      "statement_md": "Найди | -4 | + | 3 |.",
+      "answer": { "type": "number", "value": 7 }
+    },
+
+    {
+      "id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh.000001",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh",
+      "difficulty": 1,
+      "statement_md": "Вычисли: -5 + 9.",
+      "answer": { "type": "number", "value": 4 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh.000002",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh",
+      "difficulty": 1,
+      "statement_md": "Вычисли: 7 + (-10).",
+      "answer": { "type": "number", "value": -3 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh.000003",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh",
+      "difficulty": 2,
+      "statement_md": "Вычисли: -12 - 5.",
+      "answer": { "type": "number", "value": -17 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh.000004",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh",
+      "difficulty": 3,
+      "statement_md": "Вычисли: 14 - 20.",
+      "answer": { "type": "number", "value": -6 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh.000005",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh",
+      "difficulty": 4,
+      "statement_md": "Вычисли: -18 + 7 - 3.",
+      "answer": { "type": "number", "value": -14 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh.000006",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh",
+      "difficulty": 5,
+      "statement_md": "Вычисли: -30 - (-12).",
+      "answer": { "type": "number", "value": -18 }
+    },
+
+    {
+      "id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh.000001",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh",
+      "difficulty": 1,
+      "statement_md": "Вычисли: -6 · 4.",
+      "answer": { "type": "number", "value": -24 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh.000002",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh",
+      "difficulty": 1,
+      "statement_md": "Вычисли: -21 : 7.",
+      "answer": { "type": "number", "value": -3 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh.000003",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh",
+      "difficulty": 2,
+      "statement_md": "Вычисли: (-8) · (-5).",
+      "answer": { "type": "number", "value": 40 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh.000004",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh",
+      "difficulty": 3,
+      "statement_md": "Вычисли: 54 : (-6).",
+      "answer": { "type": "number", "value": -9 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh.000005",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh",
+      "difficulty": 4,
+      "statement_md": "Вычисли: (-72) : (-9).",
+      "answer": { "type": "number", "value": 8 }
+    },
+    {
+      "id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh.000006",
+      "topic_id": "g6.otricatelnye_chisla",
+      "skill_id": "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh",
+      "difficulty": 5,
+      "statement_md": "Вычисли: -3 · (-4) · 2.",
+      "answer": { "type": "number", "value": 24 }
+    }
+  ]
+}

@@ -31,6 +31,17 @@ const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {
       de: "Gleichungen",
     },
   },
+  "g6.otricatelnye_chisla": {
+    topicSlug: "g6.otricatelnye_chisla",
+    domain: "algebra",
+    routePathSegments: ["6-klass", "otricatelnye-chisla"],
+    defaultLocale: "ru",
+    titles: {
+      ru: "Отрицательные числа",
+      en: "Negative Numbers",
+      de: "Negative Zahlen",
+    },
+  },
 };
 
 export function getContentTopicConfig(topicSlug: string): ContentTopicRegistryItem | null {

@@ -6,6 +6,7 @@ export type TopicCatalogEntry = {
   id: string;
   slug: string;
   domain: TopicDomain;
+  domains?: TopicDomain[];
   levels: number[];
   status: TopicStatus;
   title: Record<AppLocale, string>;
@@ -68,6 +69,7 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     id: "g5.uravneniya",
     slug: "5-klass/uravneniya",
     domain: "algebra",
+    domains: ["arithmetic", "algebra"],
     levels: [5],
     status: "ready",
     title: {
@@ -136,4 +138,34 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canRead: false,
     canTrain: false,
   },
+  {
+    id: "g6.otricatelnye_chisla",
+    slug: "6-klass/otricatelnye-chisla",
+    domain: "algebra",
+    domains: ["algebra"],
+    levels: [6],
+    status: "ready",
+    title: {
+      ru: "Отрицательные числа",
+      en: "Negative Numbers",
+      de: "Negative Zahlen",
+    },
+    description: {
+      ru: "Сравнение, модуль и действия с целыми числами со знаком.",
+      en: "Comparison, absolute value, and signed integer operations.",
+      de: "Vergleich, Betrag und Rechnen mit ganzen Zahlen mit Vorzeichen.",
+    },
+    searchTerms: {
+      ru: ["отрицательные числа", "модуль", "целые числа", "координатная прямая"],
+      en: ["negative numbers", "absolute value", "integers"],
+      de: ["negative zahlen", "betrag", "ganze zahlen"],
+    },
+    canRead: false,
+    canTrain: false,
+  },
 ];
+
+export function getTopicDomains(entry: TopicCatalogEntry): TopicDomain[] {
+  if (entry.domains && entry.domains.length > 0) return entry.domains;
+  return [entry.domain];
+}
