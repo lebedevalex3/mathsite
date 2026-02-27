@@ -71,6 +71,7 @@ const copy = {
     topic: "Тема",
     grade: "Класс",
     section: "Раздел",
+    selectedTopics: "Выбрано тем",
     composition: "Состав варианта",
     quantity: "Количество задач",
     tasksPerVariant: "Задач в варианте",
@@ -133,6 +134,7 @@ const copy = {
     topic: "Topic",
     grade: "Grade",
     section: "Section",
+    selectedTopics: "Selected topics",
     composition: "Variant composition",
     quantity: "Task count",
     tasksPerVariant: "Tasks per variant",
@@ -195,6 +197,7 @@ const copy = {
     topic: "Thema",
     grade: "Klasse",
     section: "Bereich",
+    selectedTopics: "Ausgewählte Themen",
     composition: "Zusammensetzung",
     quantity: "Anzahl Aufgaben",
     tasksPerVariant: "Aufgaben pro Variante",
@@ -413,6 +416,15 @@ export function TeacherToolsPageClient({ locale }: Props) {
     [allTopics, selectedDomain, selectedGrade],
   );
 
+  const topicsForGrade = useMemo(
+    () =>
+      allTopics.filter((topic) => {
+        const levels = topic.meta?.levels ?? [];
+        return levels.includes(selectedGrade);
+      }),
+    [allTopics, selectedGrade],
+  );
+
   useEffect(() => {
     if (domainOptions.length === 0) return;
     if (!domainOptions.includes(selectedDomain)) {
@@ -426,9 +438,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
       setTopicId(topics[0]!.topicId);
     }
     setSelectedTopicIds((prev) => {
-      const allowedIds = new Set(topics.map((item) => item.topicId));
+      const allowedIds = new Set(topicsForGrade.map((item) => item.topicId));
       const next = prev.filter((item) => allowedIds.has(item));
-      const fallback = next.length > 0 ? next : [topics[0]!.topicId];
+      const fallback = next.length > 0 ? next : [topicsForGrade[0]?.topicId ?? topics[0]!.topicId];
       if (
         fallback.length === prev.length &&
         fallback.every((item, index) => item === prev[index])
@@ -437,7 +449,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
       }
       return fallback;
     });
-  }, [topicId, topics]);
+  }, [topicId, topics, topicsForGrade]);
 
   async function loadRecentWorks() {
     setLoadingRecentWorks(true);
@@ -789,6 +801,34 @@ export function TeacherToolsPageClient({ locale }: Props) {
                     );
                   })}
                 </div>
+                {selectedTopicIds.length > 0 ? (
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      {t.selectedTopics}:
+                    </span>
+                    {selectedTopicIds.map((selectedId) => {
+                      const selectedTopic = allTopics.find((item) => item.topicId === selectedId);
+                      const label = selectedTopic?.title ?? selectedId;
+                      return (
+                        <button
+                          key={selectedId}
+                          type="button"
+                          onClick={() =>
+                            setSelectedTopicIds((prev) => {
+                              if (prev.length <= 1) return prev;
+                              return prev.filter((item) => item !== selectedId);
+                            })
+                          }
+                          className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700"
+                          title={label}
+                        >
+                          {label}
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
               </div>
             </label>
 
