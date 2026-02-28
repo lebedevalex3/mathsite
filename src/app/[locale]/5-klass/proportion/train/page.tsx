@@ -15,6 +15,61 @@ type PageProps = {
   searchParams: Promise<{ skill?: string | string[]; count?: string | string[] }>;
 };
 
+type Locale = "ru" | "en" | "de";
+
+const copy = {
+  ru: {
+    loadFailedTitle: "Не удалось загрузить задания",
+    loadFailedBody: "Есть ошибки в JSON банка задач.",
+    trainTitle: "Тренировка по теме «Пропорции»",
+    passSkillParam: "Передайте параметр",
+    examples: "Примеры доступных навыков:",
+    notEnoughTitle: "Пока недостаточно задач для тренировки",
+    foundForSkill: "Для навыка",
+    foundTasks: "найдено задач",
+    needAtLeast: "нужно минимум",
+    backToTopic: "Вернуться к теме",
+    skillLabels: {
+      "math.proportion.understand_ratio_as_quotient": "Понимать отношение как частное",
+    },
+  },
+  en: {
+    loadFailedTitle: "Failed to load tasks",
+    loadFailedBody: "There are errors in the JSON task bank.",
+    trainTitle: "Training: Proportions",
+    passSkillParam: "Provide the",
+    examples: "Available skill examples:",
+    notEnoughTitle: "Not enough tasks for training yet",
+    foundForSkill: "For skill",
+    foundTasks: "tasks found",
+    needAtLeast: "minimum required",
+    backToTopic: "Back to topic",
+    skillLabels: {
+      "math.proportion.understand_ratio_as_quotient": "Understand ratio as quotient",
+    },
+  },
+  de: {
+    loadFailedTitle: "Aufgaben konnten nicht geladen werden",
+    loadFailedBody: "Im JSON-Aufgabenpool wurden Fehler gefunden.",
+    trainTitle: "Training: Proportionen",
+    passSkillParam: "Übergeben Sie den Parameter",
+    examples: "Beispiele verfügbarer Fähigkeiten:",
+    notEnoughTitle: "Noch nicht genug Aufgaben für das Training",
+    foundForSkill: "Für die Fähigkeit",
+    foundTasks: "Aufgaben gefunden",
+    needAtLeast: "mindestens erforderlich",
+    backToTopic: "Zurück zum Thema",
+    skillLabels: {
+      "math.proportion.understand_ratio_as_quotient": "Verhältnis als Quotient verstehen",
+    },
+  },
+} as const;
+
+function toLocale(value: string): Locale {
+  if (value === "en" || value === "de") return value;
+  return "ru";
+}
+
 function shuffle<T>(items: T[]): T[] {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i -= 1) {
@@ -110,6 +165,8 @@ export default async function ProportionTrainPage({
   searchParams,
 }: PageProps) {
   const { locale } = await params;
+  const typedLocale = toLocale(locale);
+  const t = copy[typedLocale];
   const { skill, count } = await searchParams;
   const skillId = Array.isArray(skill) ? skill[0] : skill;
   const countFromQuery = parseTaskCount(count);
@@ -119,8 +176,8 @@ export default async function ProportionTrainPage({
   if (errors.length > 0) {
     return (
       <main>
-        <h1>Не удалось загрузить задания</h1>
-        <p>Есть ошибки в JSON банка задач.</p>
+        <h1>{t.loadFailedTitle}</h1>
+        <p>{t.loadFailedBody}</p>
         <pre>{errors.join("\n")}</pre>
       </main>
     );
@@ -132,11 +189,11 @@ export default async function ProportionTrainPage({
     const fallbackCount = Number.isFinite(countFromQuery) ? countFromQuery : DEFAULT_TASK_COUNT;
     return (
       <main>
-        <h1>Тренировка по теме «Пропорции»</h1>
+        <h1>{t.trainTitle}</h1>
         <p>
-          Передайте параметр <code>skill</code> в query string.
+          {t.passSkillParam} <code>skill</code> in query string.
         </p>
-        <p>Примеры доступных навыков:</p>
+        <p>{t.examples}</p>
         <ul>
           {allSkillCounts.map(([id, count]) => (
             <li key={id}>
@@ -159,22 +216,21 @@ export default async function ProportionTrainPage({
   const taskCount = Number.isFinite(countFromQuery)
     ? countFromQuery
     : selectedSkill?.defaultTrainingCount ?? DEFAULT_TASK_COUNT;
-  const skillTitle = selectedSkill?.title ?? skillId;
+  const skillTitle = t.skillLabels[skillId as keyof typeof t.skillLabels] ?? selectedSkill?.title ?? skillId;
   const skillOrder = proportionSkills.map((skill) => ({
     id: skill.id,
-    title: skill.title,
+    title: t.skillLabels[skill.id as keyof typeof t.skillLabels] ?? skill.title,
   }));
 
   if (skillTasks.length < taskCount) {
     return (
       <main>
-        <h1>Пока недостаточно задач для тренировки</h1>
+        <h1>{t.notEnoughTitle}</h1>
         <p>
-          Для навыка <code>{skillId}</code> найдено {skillTasks.length} задач(и),
-          нужно минимум {taskCount}.
+          {t.foundForSkill} <code>{skillId}</code>: {skillTasks.length} {t.foundTasks}, {t.needAtLeast} {taskCount}.
         </p>
         <p>
-          <a href={`/${locale}/topics/proportion`}>Вернуться к теме</a>
+          <a href={`/${locale}/topics/proportion`}>{t.backToTopic}</a>
         </p>
       </main>
     );

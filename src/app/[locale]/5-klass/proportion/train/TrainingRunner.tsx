@@ -34,6 +34,160 @@ type TrainingRunnerProps = {
   tasks: TrainingTask[];
 };
 
+type Locale = "ru" | "en" | "de";
+
+const copy = {
+  ru: {
+    doneKicker: "Тренировка • завершено",
+    doneTitle: (count: number) => `Серия из ${count} задач выполнена`,
+    result: "Результат",
+    accuracy: "Точность",
+    mistakes: "Ошибок",
+    nextStep: "Следующий шаг",
+    nextStepRetry: "Повторите этот навык, чтобы закрепить базу.",
+    nextStepAdvance: (title: string) => `Перейдите к навыку: ${title}.`,
+    nextStepDone: "Отлично! Можно вернуться к карте темы.",
+    seriesTime: "Время серии",
+    average: "В среднем",
+    sec: "сек",
+    secPerTask: "сек/задача",
+    retrySkill: "Повторить этот навык",
+    backToTopic: "Вернуться к теме",
+    nextSkill: "Перейти к следующему навыку",
+    debugInfo: "Служебная информация",
+    skill: "Навык",
+    trainingKicker: (count: number) => `Тренировка: ${count} задач подряд`,
+    taskProgress: (index: number, total: number) => `Задача ${index} / ${total}`,
+    toSkillPicker: "К выбору навыков",
+    correct: "Верно",
+    timer: "Таймер",
+    on: "Вкл",
+    off: "Выкл",
+    taskOf: (index: number, total: number) => `Задача ${index} из ${total}`,
+    numberHint: "Введите ответ числом и проверьте результат.",
+    fractionHint: "Введите дробь: числитель и знаменатель.",
+    ratioHint: "Введите отношение: левую и правую часть.",
+    condition: "Условие",
+    numberAnswer: "Ответ (число)",
+    sampleNumber: "Например, 12",
+    checkAnswer: "Проверить ответ",
+    fractionAnswer: "Ответ (дробь)",
+    ratioAnswer: "Ответ (отношение)",
+    numerator: "Числитель",
+    denominator: "Знаменатель",
+    leftPart: "Левая часть",
+    rightPart: "Правая часть",
+    pressEnter: "Нажмите Enter, чтобы проверить ответ",
+    currentTask: "Текущая задача",
+    wrong: "Неверно",
+    expected: "Правильный ответ",
+    time: "Время",
+    nextTask: "К следующей задаче",
+    checkTime: "Служебное время проверки",
+  },
+  en: {
+    doneKicker: "Training • completed",
+    doneTitle: (count: number) => `${count}-task series completed`,
+    result: "Result",
+    accuracy: "Accuracy",
+    mistakes: "Mistakes",
+    nextStep: "Next step",
+    nextStepRetry: "Repeat this skill to reinforce the basics.",
+    nextStepAdvance: (title: string) => `Move to the next skill: ${title}.`,
+    nextStepDone: "Great job! You can return to the topic map.",
+    seriesTime: "Series time",
+    average: "Average",
+    sec: "sec",
+    secPerTask: "sec/task",
+    retrySkill: "Retry this skill",
+    backToTopic: "Back to topic",
+    nextSkill: "Go to next skill",
+    debugInfo: "Debug info",
+    skill: "Skill",
+    trainingKicker: (count: number) => `Training: ${count} tasks in a row`,
+    taskProgress: (index: number, total: number) => `Task ${index} / ${total}`,
+    toSkillPicker: "Back to skill picker",
+    correct: "Correct",
+    timer: "Timer",
+    on: "On",
+    off: "Off",
+    taskOf: (index: number, total: number) => `Task ${index} of ${total}`,
+    numberHint: "Enter a numeric answer and check the result.",
+    fractionHint: "Enter a fraction: numerator and denominator.",
+    ratioHint: "Enter a ratio: left and right part.",
+    condition: "Task",
+    numberAnswer: "Answer (number)",
+    sampleNumber: "For example, 12",
+    checkAnswer: "Check answer",
+    fractionAnswer: "Answer (fraction)",
+    ratioAnswer: "Answer (ratio)",
+    numerator: "Numerator",
+    denominator: "Denominator",
+    leftPart: "Left part",
+    rightPart: "Right part",
+    pressEnter: "Press Enter to check the answer",
+    currentTask: "Current task",
+    wrong: "Incorrect",
+    expected: "Correct answer",
+    time: "Time",
+    nextTask: "Next task",
+    checkTime: "Debug check time",
+  },
+  de: {
+    doneKicker: "Training • abgeschlossen",
+    doneTitle: (count: number) => `Serie mit ${count} Aufgaben abgeschlossen`,
+    result: "Ergebnis",
+    accuracy: "Genauigkeit",
+    mistakes: "Fehler",
+    nextStep: "Nächster Schritt",
+    nextStepRetry: "Wiederholen Sie diese Fähigkeit, um die Grundlagen zu festigen.",
+    nextStepAdvance: (title: string) => `Zur nächsten Fähigkeit wechseln: ${title}.`,
+    nextStepDone: "Sehr gut! Sie können zur Themenkarte zurückkehren.",
+    seriesTime: "Serienzeit",
+    average: "Durchschnitt",
+    sec: "Sek",
+    secPerTask: "Sek/Aufgabe",
+    retrySkill: "Diese Fähigkeit wiederholen",
+    backToTopic: "Zurück zum Thema",
+    nextSkill: "Zur nächsten Fähigkeit",
+    debugInfo: "Technische Informationen",
+    skill: "Fähigkeit",
+    trainingKicker: (count: number) => `Training: ${count} Aufgaben am Stück`,
+    taskProgress: (index: number, total: number) => `Aufgabe ${index} / ${total}`,
+    toSkillPicker: "Zur Fähigkeitsauswahl",
+    correct: "Richtig",
+    timer: "Timer",
+    on: "Ein",
+    off: "Aus",
+    taskOf: (index: number, total: number) => `Aufgabe ${index} von ${total}`,
+    numberHint: "Geben Sie die Antwort als Zahl ein und prüfen Sie das Ergebnis.",
+    fractionHint: "Bruch eingeben: Zähler und Nenner.",
+    ratioHint: "Verhältnis eingeben: linker und rechter Teil.",
+    condition: "Aufgabe",
+    numberAnswer: "Antwort (Zahl)",
+    sampleNumber: "Zum Beispiel 12",
+    checkAnswer: "Antwort prüfen",
+    fractionAnswer: "Antwort (Bruch)",
+    ratioAnswer: "Antwort (Verhältnis)",
+    numerator: "Zähler",
+    denominator: "Nenner",
+    leftPart: "Linker Teil",
+    rightPart: "Rechter Teil",
+    pressEnter: "Drücken Sie Enter, um die Antwort zu prüfen",
+    currentTask: "Aktuelle Aufgabe",
+    wrong: "Falsch",
+    expected: "Richtige Antwort",
+    time: "Zeit",
+    nextTask: "Nächste Aufgabe",
+    checkTime: "Technische Prüfzeit",
+  },
+} as const;
+
+function toLocale(value: string): Locale {
+  if (value === "en" || value === "de") return value;
+  return "ru";
+}
+
 function formatSecondsFromMs(ms: number) {
   return Math.max(0, Math.round(ms / 1000));
 }
@@ -199,6 +353,7 @@ export default function TrainingRunner({
   trainingCount,
   tasks,
 }: TrainingRunnerProps) {
+  const t = copy[toLocale(locale)];
   const showDebug = process.env.NODE_ENV !== "production";
   const [sessionId] = useState(
     () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -263,10 +418,10 @@ export default function TrainingRunner({
       <section className="mx-auto max-w-4xl space-y-6">
         <SurfaceCard className="p-6 sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-            Тренировка • завершено
+            {t.doneKicker}
           </p>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
-            Серия из {tasks.length} задач выполнена
+            {t.doneTitle(tasks.length)}
           </h1>
           <p className="mt-2 text-sm text-slate-600">
             {skillTitle}
@@ -275,7 +430,7 @@ export default function TrainingRunner({
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Результат
+                {t.result}
               </p>
               <p className="mt-1 text-2xl font-semibold text-slate-950">
                 {correctCount} / {tasks.length}
@@ -283,7 +438,7 @@ export default function TrainingRunner({
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Точность
+                {t.accuracy}
               </p>
               <p className="mt-1 text-2xl font-semibold text-slate-950">
                 {accuracyPercent}%
@@ -291,7 +446,7 @@ export default function TrainingRunner({
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Ошибок
+                {t.mistakes}
               </p>
               <p className="mt-1 text-2xl font-semibold text-slate-950">
                 {wrongCount}
@@ -301,18 +456,18 @@ export default function TrainingRunner({
 
           <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Следующий шаг
+              {t.nextStep}
             </p>
             <p className="mt-1 text-sm text-slate-700">
               {accuracyPercent < 70
-                ? "Повторите этот навык, чтобы закрепить базу."
+                ? t.nextStepRetry
                 : recommendedNextSkill
-                  ? `Перейдите к навыку: ${recommendedNextSkill.title}.`
-                  : "Отлично! Можно вернуться к карте темы."}
+                  ? t.nextStepAdvance(recommendedNextSkill.title)
+                  : t.nextStepDone}
             </p>
             <p className="mt-1 text-xs text-slate-500">
-              Время серии: {formatSecondsFromMs(totalElapsedMs)} сек
-              {averageTaskSeconds !== null ? ` • В среднем: ${averageTaskSeconds} сек/задача` : ""}
+              {t.seriesTime}: {formatSecondsFromMs(totalElapsedMs)} {t.sec}
+              {averageTaskSeconds !== null ? ` • ${t.average}: ${averageTaskSeconds} ${t.secPerTask}` : ""}
             </p>
           </div>
 
@@ -321,17 +476,17 @@ export default function TrainingRunner({
               href={`/${locale}/topics/proportion/train?skill=${encodeURIComponent(skillId)}&count=${trainingCount}`}
               variant="primary"
             >
-              Повторить этот навык
+              {t.retrySkill}
             </ButtonLink>
             <ButtonLink href={`/${locale}/topics/proportion`} variant="secondary">
-              Вернуться к теме
+              {t.backToTopic}
             </ButtonLink>
             {recommendedNextSkill && recommendedNextSkill.id !== skillId ? (
               <ButtonLink
                 href={`/${locale}/topics/proportion/train?skill=${encodeURIComponent(recommendedNextSkill.id)}&count=${trainingCount}`}
                 variant="secondary"
               >
-                Перейти к следующему навыку
+                {t.nextSkill}
               </ButtonLink>
             ) : null}
           </div>
@@ -339,11 +494,11 @@ export default function TrainingRunner({
           {showDebug ? (
             <details className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-3">
               <summary className="cursor-pointer text-sm font-medium text-slate-800">
-                Служебная информация
+                {t.debugInfo}
               </summary>
               <div className="mt-2 text-xs text-slate-600">
                 <p>
-                  Навык: <code>{skillId}</code>
+                  {t.skill}: <code>{skillId}</code>
                 </p>
                 <p>Session: <code>{sessionId}</code></p>
               </div>
@@ -442,10 +597,10 @@ export default function TrainingRunner({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-              Тренировка: {trainingCount} задач подряд
+              {t.trainingKicker(trainingCount)}
             </p>
             <p className="mt-1 text-sm font-medium text-slate-900">
-              Задача {currentIndex + 1} / {tasks.length}
+              {t.taskProgress(currentIndex + 1, tasks.length)}
             </p>
             <p className="mt-1 text-xs text-slate-600">{skillTitle}</p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -454,21 +609,21 @@ export default function TrainingRunner({
                 variant="secondary"
                 className="px-2.5 py-1.5 text-xs"
               >
-                К выбору навыков
+                {t.toSkillPicker}
               </ButtonLink>
               <ButtonLink
                 href={`/${locale}/topics/proportion`}
                 variant="secondary"
                 className="px-2.5 py-1.5 text-xs"
               >
-                К теме
+                {t.backToTopic}
               </ButtonLink>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <p className="text-sm text-slate-600">
-              Верно: <span className="font-semibold text-slate-900">{correctCount}</span>
+              {t.correct}: <span className="font-semibold text-slate-900">{correctCount}</span>
             </p>
             <button
               type="button"
@@ -488,8 +643,8 @@ export default function TrainingRunner({
               ].join(" ")}
               aria-pressed={timerEnabled}
             >
-              <span>Таймер</span>
-              <span>{timerEnabled ? "Вкл" : "Выкл"}</span>
+              <span>{t.timer}</span>
+              <span>{timerEnabled ? t.on : t.off}</span>
             </button>
           </div>
         </div>
@@ -502,23 +657,23 @@ export default function TrainingRunner({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-950">
-              Задача {currentIndex + 1} из {tasks.length}
+              {t.taskOf(currentIndex + 1, tasks.length)}
             </h1>
             <p className="mt-1 text-sm text-slate-600">
               {currentAnswerType === "number"
-                ? "Введите ответ числом и проверьте результат."
+                ? t.numberHint
                 : currentAnswerType === "fraction"
-                  ? "Введите дробь: числитель и знаменатель."
-                  : "Введите отношение: левую и правую часть."}
+                  ? t.fractionHint
+                  : t.ratioHint}
             </p>
           </div>
           <div className="text-right">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Таймер
+              {t.timer}
             </p>
             <p className="mt-1 text-lg font-semibold text-slate-900">
               {!timerEnabled
-                ? "Выкл"
+                ? t.off
                 : taskTimer.isRunning || taskTimer.secondsElapsed > 0
                   ? formatTimerSeconds(taskTimer.secondsElapsed)
                   : "—"}
@@ -527,7 +682,7 @@ export default function TrainingRunner({
         </div>
 
         <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Условие</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.condition}</p>
           <div className="mt-3 rounded-xl border border-white bg-white p-4">
             <MarkdownMath className="prose prose-slate max-w-none text-sm sm:text-base">
               {currentTask.statement_md}
@@ -542,7 +697,7 @@ export default function TrainingRunner({
                 htmlFor="number-answer"
                 className="mb-2 block text-sm font-medium text-slate-800"
               >
-                Ответ (число)
+                {t.numberAnswer}
               </label>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <input
@@ -564,7 +719,7 @@ export default function TrainingRunner({
                     }
                   }}
                   className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500 disabled:bg-slate-100 disabled:text-slate-500"
-                  placeholder="Например, 12"
+                  placeholder={t.sampleNumber}
                   autoComplete="off"
                 />
                 <button
@@ -573,14 +728,14 @@ export default function TrainingRunner({
                   disabled={checked}
                   className="inline-flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Проверить ответ
+                  {t.checkAnswer}
                 </button>
               </div>
             </>
           ) : (
             <>
               <label className="mb-2 block text-sm font-medium text-slate-800">
-                {currentAnswerType === "fraction" ? "Ответ (дробь)" : "Ответ (отношение)"}
+                {currentAnswerType === "fraction" ? t.fractionAnswer : t.ratioAnswer}
               </label>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <input
@@ -601,7 +756,7 @@ export default function TrainingRunner({
                     }
                   }}
                   className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500 disabled:bg-slate-100 disabled:text-slate-500 sm:w-40"
-                  placeholder={currentAnswerType === "fraction" ? "Числитель" : "Левая часть"}
+                  placeholder={currentAnswerType === "fraction" ? t.numerator : t.leftPart}
                   autoComplete="off"
                 />
                 <span className="text-center text-lg font-semibold text-slate-700 sm:w-6">
@@ -625,7 +780,7 @@ export default function TrainingRunner({
                     }
                   }}
                   className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500 disabled:bg-slate-100 disabled:text-slate-500 sm:w-40"
-                  placeholder={currentAnswerType === "fraction" ? "Знаменатель" : "Правая часть"}
+                  placeholder={currentAnswerType === "fraction" ? t.denominator : t.rightPart}
                   autoComplete="off"
                 />
                 <button
@@ -634,27 +789,27 @@ export default function TrainingRunner({
                   disabled={checked}
                   className="inline-flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Проверить ответ
+                  {t.checkAnswer}
                 </button>
               </div>
             </>
           )}
           <p className="mt-2 text-xs text-slate-500">
-            Нажмите Enter, чтобы проверить ответ
+            {t.pressEnter}
           </p>
         </div>
 
         {showDebug ? (
           <details className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <summary className="cursor-pointer text-sm font-medium text-slate-800">
-              Служебная информация
+              {t.debugInfo}
             </summary>
             <div className="mt-2 space-y-1 text-xs text-slate-600">
               <p>
-                Навык: <code>{skillId}</code>
+                {t.skill}: <code>{skillId}</code>
               </p>
               <p>
-                Текущая задача: <code>{currentTask.id}</code>
+                {t.currentTask}: <code>{currentTask.id}</code>
               </p>
             </div>
           </details>
@@ -677,20 +832,20 @@ export default function TrainingRunner({
                 isCorrect ? "text-[var(--success)]" : "text-rose-800",
               ].join(" ")}
             >
-              {isCorrect ? "Верно" : "Неверно"}
+              {isCorrect ? t.correct : t.wrong}
             </p>
             {!isCorrect ? (
               <p className="mt-2 text-sm text-slate-700">
-                Правильный ответ:{" "}
+                {t.expected}:{" "}
                 <strong className="text-slate-950">{formatExpectedAnswer(currentTask.answer)}</strong>
               </p>
             ) : null}
             {timerEnabled ? (
               <p className="mt-2 text-sm text-slate-700">
-                Время:{" "}
+                {t.time}:{" "}
                 <strong className="text-slate-950">
                   {lastVisibleTaskSeconds !== null
-                    ? `${lastVisibleTaskSeconds} сек`
+                    ? `${lastVisibleTaskSeconds} ${t.sec}`
                     : "—"}
                 </strong>
               </p>
@@ -704,13 +859,13 @@ export default function TrainingRunner({
               onClick={handleNext}
               className="inline-flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700"
             >
-              К следующей задаче
+              {t.nextTask}
             </button>
           </div>
 
           {showDebug && lastTaskElapsedMs !== null ? (
             <p className="mt-3 text-xs text-slate-500">
-              Служебное время проверки: {formatSecondsFromMs(lastTaskElapsedMs)} сек
+              {t.checkTime}: {formatSecondsFromMs(lastTaskElapsedMs)} {t.sec}
             </p>
           ) : null}
         </SurfaceCard>
