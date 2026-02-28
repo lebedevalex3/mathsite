@@ -15,6 +15,7 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const trainerLabel = locale === "ru" ? "Тренажёр" : locale === "de" ? "Trainer" : "Trainer";
   const teacherLabel =
     locale === "ru"
       ? "Учительский кабинет (ранний доступ)"
@@ -108,7 +109,7 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
             variant="secondary"
             className="hidden sm:inline-flex"
           >
-            Тренажёр
+            {trainerLabel}
           </ButtonLink>
           <ButtonLink href={`/${locale}/teacher`} variant="primary">
             <span className="hidden lg:inline">{teacherLabel}</span>
