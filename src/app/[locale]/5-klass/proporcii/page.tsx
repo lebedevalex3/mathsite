@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { TopicSkillMap } from "@/src/components/topic/TopicSkillMap";
+import { TopicMotivationPanel } from "@/src/components/topic/TopicMotivationPanel";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { topicMastery } from "@/src/lib/topicMastery";
@@ -85,6 +86,12 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
           </div>
         </div>
       </section>
+
+      <TopicMotivationPanel
+        locale={locale as "ru" | "en" | "de"}
+        topicId="g5.proporcii"
+        progressHref={`/${locale}/progress`}
+      />
 
       <TopicSkillMap locale={locale as "ru" | "en" | "de"} topicId="g5.proporcii" levels={masteryLevels} />
 
