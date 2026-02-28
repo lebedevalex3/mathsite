@@ -7,6 +7,7 @@ import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { aggregateSkillProgress } from "@/src/lib/progress/aggregate";
 import {
   aggregateCompare,
+  compareWindowCutoff,
   DEFAULT_COMPARE_COHORT_MIN_ATTEMPTS,
   DEFAULT_COMPARE_WINDOW_DAYS,
 } from "@/src/lib/progress/compare";
@@ -32,36 +33,32 @@ export async function GET(request: Request) {
 
   const cookieStore = await cookies();
   const { userId } = await getOrCreateVisitorUser(cookieStore);
+  const cutoff = compareWindowCutoff(new Date(), DEFAULT_COMPARE_WINDOW_DAYS);
+  const [userAttempts, compareAttempts] = await Promise.all([
+    prisma.attempt.findMany({
+      where: { topicId, userId },
+      select: {
+        skillId: true,
+        isCorrect: true,
+      },
+    }),
+    prisma.attempt.findMany({
+      where: { topicId, createdAt: { gte: cutoff } },
+      select: {
+        userId: true,
+        topicId: true,
+        isCorrect: true,
+        createdAt: true,
+      },
+    }),
+  ]);
 
-  const attempts = await prisma.attempt.findMany({
-    where: { topicId },
-    select: {
-      userId: true,
-      topicId: true,
-      skillId: true,
-      isCorrect: true,
-      createdAt: true,
-    },
-  });
-
-  const userProgress = aggregateSkillProgress(
-    attempts
-      .filter((attempt) => attempt.userId === userId)
-      .map((attempt) => ({
-        skillId: attempt.skillId,
-        isCorrect: attempt.isCorrect,
-      })),
-  );
+  const userProgress = aggregateSkillProgress(userAttempts);
 
   const compare = aggregateCompare({
     topicId,
     currentUserId: userId,
-    attempts: attempts.map((attempt) => ({
-      userId: attempt.userId,
-      topicId: attempt.topicId,
-      isCorrect: attempt.isCorrect,
-      createdAt: attempt.createdAt,
-    })),
+    attempts: compareAttempts,
     cohortMinAttempts: DEFAULT_COMPARE_COHORT_MIN_ATTEMPTS,
     windowDays: DEFAULT_COMPARE_WINDOW_DAYS,
   });

@@ -39,6 +39,10 @@ export type AggregateCompareResult = {
   percentile: number | null;
 };
 
+export function compareWindowCutoff(now: Date, windowDays: number) {
+  return new Date(now.getTime() - windowDays * 24 * 60 * 60 * 1000);
+}
+
 export function toUserTotals(total: number, correct: number): CompareUserTotals {
   return {
     total,
@@ -73,7 +77,7 @@ export function aggregateCompare({
   windowDays = DEFAULT_COMPARE_WINDOW_DAYS,
 }: AggregateCompareInput): AggregateCompareResult {
   const topicAttempts = attempts.filter((row) => row.topicId === topicId);
-  const cutoff = new Date(now.getTime() - windowDays * 24 * 60 * 60 * 1000);
+  const cutoff = compareWindowCutoff(now, windowDays);
   const windowAttempts = topicAttempts.filter((row) => row.createdAt >= cutoff);
   const currentUserAttempts = windowAttempts.filter((row) => row.userId === currentUserId);
   const currentUser = toUserTotals(

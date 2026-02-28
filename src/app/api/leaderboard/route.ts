@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/src/lib/db/prisma";
 import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { aggregateLeaderboard } from "@/src/lib/progress/leaderboard";
+import { compareWindowCutoff, DEFAULT_COMPARE_WINDOW_DAYS } from "@/src/lib/progress/compare";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 
 export const runtime = "nodejs";
@@ -27,9 +28,10 @@ export async function GET(request: Request) {
 
   const cookieStore = await cookies();
   const { userId } = await getOrCreateVisitorUser(cookieStore);
+  const cutoff = compareWindowCutoff(new Date(), DEFAULT_COMPARE_WINDOW_DAYS);
 
   const attempts = await prisma.attempt.findMany({
-    where: { topicId },
+    where: { topicId, createdAt: { gte: cutoff } },
     select: {
       userId: true,
       topicId: true,

@@ -47,6 +47,8 @@ model Attempt {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, skillId, createdAt])
+  @@index([topicId, createdAt])
+  @@index([topicId, userId, createdAt])
 }
 
 model Variant {
