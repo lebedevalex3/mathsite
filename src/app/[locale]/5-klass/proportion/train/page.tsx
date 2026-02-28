@@ -43,6 +43,68 @@ function parseTaskCount(raw: string | string[] | undefined): number {
   return Number.NaN;
 }
 
+function pickClosestAvailableDifficulty(
+  preferredDifficulty: number,
+  buckets: Map<number, Task[]>,
+  levels: number[],
+) {
+  const available = levels.filter((level) => (buckets.get(level)?.length ?? 0) > 0);
+  if (available.length === 0) return null;
+  const sorted = [...available].sort((a, b) => {
+    const byDistance = Math.abs(a - preferredDifficulty) - Math.abs(b - preferredDifficulty);
+    if (byDistance !== 0) return byDistance;
+    return a - b;
+  });
+  return sorted[0] ?? null;
+}
+
+function selectTasksWithDifficultyLadder(skillTasks: Task[], taskCount: number) {
+  const buckets = new Map<number, Task[]>();
+  for (const task of skillTasks) {
+    const key = task.difficulty;
+    const next = buckets.get(key) ?? [];
+    next.push(task);
+    buckets.set(key, next);
+  }
+
+  const levels = [...buckets.keys()].sort((a, b) => a - b);
+  for (const level of levels) {
+    buckets.set(level, shuffle(buckets.get(level) ?? []));
+  }
+
+  if (levels.length <= 1) {
+    return shuffle(skillTasks).slice(0, taskCount);
+  }
+
+  const selected: Task[] = [];
+
+  for (let index = 0; index < taskCount; index += 1) {
+    const ladderIndex = Math.floor((index * levels.length) / taskCount);
+    const preferredDifficulty = levels[Math.min(ladderIndex, levels.length - 1)] ?? levels[0];
+    const difficultyToUse = pickClosestAvailableDifficulty(preferredDifficulty, buckets, levels);
+    if (difficultyToUse === null) break;
+
+    const pool = buckets.get(difficultyToUse);
+    const picked = pool?.shift();
+    if (picked) {
+      selected.push(picked);
+    }
+  }
+
+  if (selected.length >= taskCount) return selected;
+
+  for (const level of levels) {
+    const pool = buckets.get(level) ?? [];
+    while (pool.length > 0 && selected.length < taskCount) {
+      const picked = pool.shift();
+      if (picked) selected.push(picked);
+    }
+    if (selected.length >= taskCount) break;
+  }
+
+  return selected.slice(0, taskCount);
+}
+
 export default async function ProportionTrainPage({
   params,
   searchParams,
@@ -118,7 +180,7 @@ export default async function ProportionTrainPage({
     );
   }
 
-  const selectedTasks = shuffle(skillTasks).slice(0, taskCount);
+  const selectedTasks = selectTasksWithDifficultyLadder(skillTasks, taskCount);
 
   return (
     <main>
