@@ -141,11 +141,11 @@ export function Grade5Sidebar({
           </Link>
         </div>
         <p className="mt-1 text-xs leading-5 text-slate-500">
-          Оглавление раздела и быстрый переход к доступным темам.
+          {labelCopy.catalogHint}
         </p>
       </div>
 
-      <nav aria-label="Темы 5 класса" className="rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+      <nav aria-label={labelCopy.topicsAriaLabel} className="rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
         <ul className="space-y-1">
           {topics.map((topic) => {
             const active = isTopicActive(pathname, topic.href);
@@ -180,7 +180,7 @@ export function Grade5Sidebar({
                             : "border border-[var(--success)]/30 bg-[var(--success-soft)] text-[var(--success)]",
                         ].join(" ")}
                       >
-                        Готово
+                        {labelCopy.ready}
                       </span>
                     </div>
                     <p
@@ -197,7 +197,7 @@ export function Grade5Sidebar({
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-sm font-semibold text-slate-700">{topic.title}</span>
                       <span className="rounded-full border border-slate-300 bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-                        Скоро
+                        {labelCopy.soon}
                       </span>
                     </div>
                     <p className="mt-1 text-xs leading-5 text-slate-500">{topic.description}</p>
@@ -308,13 +308,13 @@ export function Grade5Sidebar({
           aria-expanded={mobileOpen}
           aria-controls="grade5-topics-panel"
         >
-          ☰ Темы
+          {labelCopy.mobileOpenTopics}
         </button>
         {mobileOpen ? (
           <div className="fixed inset-0 z-40 lg:hidden">
             <button
               type="button"
-              aria-label="Закрыть меню тем"
+              aria-label={labelCopy.closeTopicsMenu}
               className="absolute inset-0 bg-slate-950/40"
               onClick={onMobileClose}
             />
@@ -322,7 +322,7 @@ export function Grade5Sidebar({
               id="grade5-topics-panel"
               role="dialog"
               aria-modal="true"
-              aria-label="Темы 5 класса"
+              aria-label={labelCopy.topicsAriaLabel}
               className="absolute inset-y-0 left-0 w-[min(92vw,340px)] overflow-y-auto border-r border-slate-200 bg-slate-50 p-4 shadow-xl"
             >
               <div className="mb-3 flex items-center justify-between gap-2">
@@ -331,7 +331,7 @@ export function Grade5Sidebar({
                   type="button"
                   onClick={onMobileClose}
                   className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
-                  aria-label="Закрыть меню тем"
+                  aria-label={labelCopy.closeTopicsMenu}
                 >
                   ✕
                 </button>
@@ -349,7 +349,7 @@ export function Grade5Sidebar({
               type="button"
               onClick={onDesktopToggle}
               className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
-              aria-label="Развернуть боковую панель"
+              aria-label={labelCopy.expandSidebar}
               aria-expanded={!desktopCollapsed}
             >
               »
@@ -361,7 +361,7 @@ export function Grade5Sidebar({
               type="button"
               onClick={onDesktopToggle}
               className="absolute -right-3 top-6 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-100"
-              aria-label="Свернуть боковую панель"
+              aria-label={labelCopy.collapseSidebar}
               aria-expanded={!desktopCollapsed}
             >
               «
