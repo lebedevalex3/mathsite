@@ -7,6 +7,11 @@ export type TeacherToolsSkill = {
   algorithm?: string[];
   trainerHref?: string;
   availableCount?: number;
+  availableByDifficulty?: {
+    1: number;
+    2: number;
+    3: number;
+  };
   defaultTrainingCount?: number;
   status?: "ready" | "soon";
 };
@@ -21,4 +26,5 @@ export type DemoPlanItem = {
   topicId?: string;
   skillId: string;
   count: number;
+  difficulty?: 1 | 2 | 3;
 };

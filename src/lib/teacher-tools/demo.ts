@@ -71,11 +71,18 @@ export function validateDemoPlan(plan: DemoPlanItem[], variantsCount: number) {
 
   const normalized = plan
     .filter((item) => Number.isFinite(item.count) && item.count > 0)
-    .map((item) => ({
-      ...(typeof item.topicId === "string" && item.topicId.length > 0 ? { topicId: item.topicId } : {}),
-      skillId: item.skillId,
-      count: Math.trunc(item.count),
-    }));
+    .map((item) => {
+      const parsedDifficulty =
+        Number.isInteger(item.difficulty) && item.difficulty != null && item.difficulty >= 1 && item.difficulty <= 3
+          ? (item.difficulty as 1 | 2 | 3)
+          : undefined;
+      return {
+        ...(typeof item.topicId === "string" && item.topicId.length > 0 ? { topicId: item.topicId } : {}),
+        skillId: item.skillId,
+        count: Math.trunc(item.count),
+        ...(parsedDifficulty ? { difficulty: parsedDifficulty } : {}),
+      };
+    });
 
   if (normalized.length === 0) {
     throw new Error("Select at least one skill with count > 0");
@@ -117,7 +124,9 @@ export function buildDemoTemplate({
       label: skillsById.get(item.skillId)?.title ?? item.skillId,
       skillIds: [item.skillId],
       count: item.count,
-      difficulty: [1, 5] as [number, number],
+      difficulty: item.difficulty
+        ? ([item.difficulty, item.difficulty] as [number, number])
+        : ([1, 5] as [number, number]),
     })),
   };
 }

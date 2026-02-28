@@ -303,8 +303,21 @@ export async function getTeacherToolsTopicSkills(topicId: string) {
   }
 
   const counts = new Map<string, number>();
+  const countsByDifficulty = new Map<
+    string,
+    {
+      1: number;
+      2: number;
+      3: number;
+    }
+  >();
   for (const task of tasks) {
     counts.set(task.skill_id, (counts.get(task.skill_id) ?? 0) + 1);
+    if (task.difficulty >= 1 && task.difficulty <= 3) {
+      const next = countsByDifficulty.get(task.skill_id) ?? { 1: 0, 2: 0, 3: 0 };
+      next[task.difficulty as 1 | 2 | 3] += 1;
+      countsByDifficulty.set(task.skill_id, next);
+    }
   }
 
   return {
@@ -312,6 +325,7 @@ export async function getTeacherToolsTopicSkills(topicId: string) {
     skills: topic.skills.map((skill): TeacherToolsSkill => ({
       ...skill,
       availableCount: counts.get(skill.id) ?? 0,
+      availableByDifficulty: countsByDifficulty.get(skill.id) ?? { 1: 0, 2: 0, 3: 0 },
     })),
   };
 }

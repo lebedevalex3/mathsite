@@ -13,13 +13,15 @@ test('validateDemoPlan normalizes positive counts', () => {
     { skillId: 'a', count: 2 },
     { skillId: 'b', count: 0 },
     { skillId: 'c', count: 3.8 },
+    { skillId: 'd', count: 2, difficulty: 2 },
   ], 2);
 
   assert.deepEqual(result.normalized, [
     { skillId: 'a', count: 2 },
     { skillId: 'c', count: 3 },
+    { skillId: 'd', count: 2, difficulty: 2 },
   ]);
-  assert.equal(result.totalPerVariant, 5);
+  assert.equal(result.totalPerVariant, 7);
 });
 
 test('validateDemoPlan rejects too many tasks', () => {
@@ -97,4 +99,17 @@ test('buildDemoTemplate maps plan items into sections and labels', () => {
       },
     ],
   );
+});
+
+test('buildDemoTemplate supports fixed per-skill difficulty', () => {
+  const template = buildDemoTemplate({
+    topicId: 'math.proportion',
+    plan: [{ skillId: 'math.proportion.solve_scale_word_problem', count: 2, difficulty: 3 }],
+    skillsById: new Map([
+      ['math.proportion.solve_scale_word_problem', { title: 'Масштаб' }],
+    ]),
+    mode: 'custom',
+  });
+
+  assert.deepEqual(template.sections[0]?.difficulty, [3, 3]);
 });

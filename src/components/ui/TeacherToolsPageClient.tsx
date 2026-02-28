@@ -21,8 +21,11 @@ type TopicSkill = {
   example?: string;
   cardHref?: string;
   availableCount?: number;
+  availableByDifficulty?: { 1: number; 2: number; 3: number };
   status?: "ready" | "soon";
 };
+
+type SkillDifficulty = "any" | 1 | 2 | 3;
 
 type TopicPayload = {
   topicId: string;
@@ -63,6 +66,9 @@ const copy = {
     allGrades: "Все классы",
     composition: "Состав варианта",
     quantity: "Количество задач",
+    difficulty: "Сложность",
+    anyDifficulty: "Любая",
+    levelsAvailability: "По уровням",
     available: "Доступно задач",
     example: "Пример",
     skillCard: "Карточка навыка",
@@ -127,6 +133,9 @@ const copy = {
     allGrades: "All grades",
     composition: "Variant composition",
     quantity: "Task count",
+    difficulty: "Difficulty",
+    anyDifficulty: "Any",
+    levelsAvailability: "By levels",
     available: "Available tasks",
     example: "Example",
     skillCard: "Skill card",
@@ -191,6 +200,9 @@ const copy = {
     allGrades: "Alle Klassen",
     composition: "Zusammensetzung",
     quantity: "Anzahl Aufgaben",
+    difficulty: "Schwierigkeit",
+    anyDifficulty: "Beliebig",
+    levelsAvailability: "Nach Stufen",
     available: "Verfügbare Aufgaben",
     example: "Beispiel",
     skillCard: "Skill-Karte",
@@ -265,6 +277,25 @@ function parseCountsFromQuery(values: string[]) {
   return parsed;
 }
 
+function parseDifficultiesFromQuery(values: string[]) {
+  const parsed: Record<string, SkillDifficulty> = {};
+  for (const item of values) {
+    const sepIndex = item.lastIndexOf(":");
+    if (sepIndex <= 0) continue;
+    const skillId = item.slice(0, sepIndex);
+    const rawDifficulty = item.slice(sepIndex + 1);
+    if (rawDifficulty === "any") {
+      parsed[skillId] = "any";
+      continue;
+    }
+    const difficulty = Number(rawDifficulty);
+    if (difficulty === 1 || difficulty === 2 || difficulty === 3) {
+      parsed[skillId] = difficulty;
+    }
+  }
+  return parsed;
+}
+
 function buildTeacherToolsStateQuery(params: {
   topicId: string;
   selectedTopicIds: string[];
@@ -275,6 +306,7 @@ function buildTeacherToolsStateQuery(params: {
   selectedGrade: GradeFilter;
   selectedDomain: SelectedDomainFilter;
   counts: Record<string, number>;
+  difficultyBySkill: Record<string, SkillDifficulty>;
 }) {
   const query = new URLSearchParams();
   query.set("topicId", params.topicId);
@@ -290,6 +322,10 @@ function buildTeacherToolsStateQuery(params: {
   for (const [skillId, count] of Object.entries(params.counts)) {
     if (!Number.isFinite(count) || count <= 0) continue;
     query.append("c", `${skillId}:${Math.trunc(count)}`);
+  }
+  for (const [skillId, difficulty] of Object.entries(params.difficultyBySkill)) {
+    if (difficulty === "any") continue;
+    query.append("d", `${skillId}:${difficulty}`);
   }
   return query;
 }
@@ -326,6 +362,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
     ),
   );
   const initialCountsFromQuery = parseCountsFromQuery(params.getAll("c"));
+  const initialDifficultiesFromQuery = parseDifficultiesFromQuery(params.getAll("d"));
   const hasInitialCountsFromQuery = Object.keys(initialCountsFromQuery).length > 0;
   const initialVariantsRaw = Number(params.get("variants"));
   const initialVariantsCount = Number.isFinite(initialVariantsRaw)
@@ -365,8 +402,12 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const [loadedTopics, setLoadedTopics] = useState<TopicPayload[]>([]);
   const [expandedByTopicId, setExpandedByTopicId] = useState<Record<string, boolean>>({});
   const [counts, setCounts] = useState<Record<string, number>>({});
+  const [difficultyBySkill, setDifficultyBySkill] = useState<Record<string, SkillDifficulty>>({});
   const initialCountsRef = useRef<Record<string, number> | null>(
     hasInitialCountsFromQuery ? initialCountsFromQuery : null,
+  );
+  const initialDifficultiesRef = useRef<Record<string, SkillDifficulty>>(
+    initialDifficultiesFromQuery,
   );
   const [loadingTopic, setLoadingTopic] = useState(false);
   const [building, setBuilding] = useState(false);
@@ -527,6 +568,11 @@ export function TeacherToolsPageClient({ locale }: Props) {
               restoredCounts[skill.id] = clamp(initialCountsRef.current[skill.id] ?? 0, 0, 30);
             }
             setCounts(restoredCounts);
+            const restoredDifficulties: Record<string, SkillDifficulty> = {};
+            for (const skill of allSkills) {
+              restoredDifficulties[skill.id] = initialDifficultiesRef.current[skill.id] ?? "any";
+            }
+            setDifficultyBySkill(restoredDifficulties);
             initialCountsRef.current = null;
           } else {
             setCounts((prev) => {
@@ -535,6 +581,13 @@ export function TeacherToolsPageClient({ locale }: Props) {
                 if (!Number.isFinite(next[skill.id])) {
                   next[skill.id] = 0;
                 }
+              }
+              return next;
+            });
+            setDifficultyBySkill((prev) => {
+              const next: Record<string, SkillDifficulty> = { ...prev };
+              for (const skill of allSkills) {
+                if (!next[skill.id]) next[skill.id] = "any";
               }
               return next;
             });
@@ -633,6 +686,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
               topicId: skillTopicById.get(skillId)?.topicId,
               skillId,
               count,
+              ...(difficultyBySkill[skillId] && difficultyBySkill[skillId] !== "any"
+                ? { difficulty: difficultyBySkill[skillId] }
+                : {}),
             })),
         }),
       });
@@ -665,6 +721,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
       selectedGrade,
       selectedDomain,
       counts,
+      difficultyBySkill,
     });
     return `/${locale}${cardHref}?${query.toString()}`;
   }
@@ -680,9 +737,23 @@ export function TeacherToolsPageClient({ locale }: Props) {
       selectedGrade,
       selectedDomain,
       counts,
+      difficultyBySkill,
     });
     router.replace(`/${locale}/teacher-tools?${query.toString()}`, { scroll: false });
-  }, [router, locale, topicId, selectedTopicIds, summary.total, variantsCount, workType, shuffleOrder, selectedGrade, selectedDomain, counts]);
+  }, [
+    router,
+    locale,
+    topicId,
+    selectedTopicIds,
+    summary.total,
+    variantsCount,
+    workType,
+    shuffleOrder,
+    selectedGrade,
+    selectedDomain,
+    counts,
+    difficultyBySkill,
+  ]);
 
   return (
     <main className="space-y-6">
@@ -981,8 +1052,33 @@ export function TeacherToolsPageClient({ locale }: Props) {
                               <p className="mt-1 text-xs text-slate-500">
                                 {t.available}: {formatNumber(locale, skill.availableCount ?? 0)}
                               </p>
+                              <p className="mt-1 text-xs text-slate-500">
+                                {t.levelsAvailability}: L1:{" "}
+                                {formatNumber(locale, skill.availableByDifficulty?.[1] ?? 0)}, L2:{" "}
+                                {formatNumber(locale, skill.availableByDifficulty?.[2] ?? 0)}, L3:{" "}
+                                {formatNumber(locale, skill.availableByDifficulty?.[3] ?? 0)}
+                              </p>
                             </div>
                             <div className="flex shrink-0 items-center gap-2">
+                              <select
+                                aria-label={`${t.difficulty}: ${skill.title}`}
+                                value={String(difficultyBySkill[skill.id] ?? "any")}
+                                disabled={disabled}
+                                onChange={(event) => {
+                                  const value = event.target.value;
+                                  setDifficultyBySkill((prev) => ({
+                                    ...prev,
+                                    [skill.id]:
+                                      value === "1" ? 1 : value === "2" ? 2 : value === "3" ? 3 : "any",
+                                  }));
+                                }}
+                                className="h-8 rounded-lg border border-slate-300 bg-white px-2 text-sm text-slate-800"
+                              >
+                                <option value="any">{t.anyDifficulty}</option>
+                                <option value="1">L1</option>
+                                <option value="2">L2</option>
+                                <option value="3">L3</option>
+                              </select>
                               <button
                                 type="button"
                                 disabled={disabled}
@@ -1077,6 +1173,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
                     {selectedTopicIds.length > 1
                       ? `${skillTopicById.get(skill.id)?.topicTitle ?? ""}: ${skill.title}`
                       : skill.title}
+                    {difficultyBySkill[skill.id] && difficultyBySkill[skill.id] !== "any"
+                      ? ` (L${difficultyBySkill[skill.id]})`
+                      : ""}
                   </span>
                   <span className="shrink-0 text-sm font-medium text-slate-900">{count}</span>
                 </li>
