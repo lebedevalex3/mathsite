@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 
 import {
   buildDemoTemplate,
+  buildDemoVariantDrafts,
   validateDemoPlan,
   DEMO_MAX_TOTAL_TASKS,
   shuffleItemsWithSeed,
 } from '@/src/lib/teacher-tools/demo';
+import type { Task } from '@/lib/tasks/schema';
 
 test('validateDemoPlan normalizes positive counts', () => {
   const result = validateDemoPlan([
@@ -112,4 +114,36 @@ test('buildDemoTemplate supports fixed per-skill difficulty', () => {
   });
 
   assert.deepEqual(template.sections[0]?.difficulty, [3, 3]);
+});
+
+test('buildDemoVariantDrafts allows task reuse between variants', () => {
+  const tasks: Task[] = Array.from({ length: 10 }, (_, index) => ({
+    id: `math.proportion.check_proportion.${String(index + 1).padStart(6, '0')}`,
+    topic_id: 'math.proportion',
+    skill_id: 'math.proportion.check_proportion',
+    difficulty: index < 5 ? 1 : 2,
+    statement_md: `Задача #${index + 1}`,
+    answer: { type: 'number', value: index + 1 },
+  }));
+
+  const template = buildDemoTemplate({
+    topicId: 'math.proportion',
+    plan: [{ skillId: 'math.proportion.check_proportion', count: 10 }],
+    skillsById: new Map([
+      ['math.proportion.check_proportion', { title: 'Проверить пропорцию' }],
+    ]),
+    mode: 'custom',
+  });
+
+  const drafts = buildDemoVariantDrafts({
+    tasks,
+    template,
+    variantsCount: 2,
+    seed: 42,
+    topicId: 'math.proportion',
+  });
+
+  assert.equal(drafts.length, 2);
+  assert.equal(drafts[0]?.ordered.length, 10);
+  assert.equal(drafts[1]?.ordered.length, 10);
 });

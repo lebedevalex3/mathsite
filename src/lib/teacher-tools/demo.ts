@@ -218,7 +218,7 @@ type DemoVariantDraft = {
   fit: VariantPrintFitMetrics;
 };
 
-function buildDemoVariantDrafts(params: {
+export function buildDemoVariantDrafts(params: {
   tasks: Awaited<ReturnType<typeof getTasksForTopic>>["tasks"];
   template: VariantTemplate;
   variantsCount: number;
@@ -236,11 +236,10 @@ function buildDemoVariantDrafts(params: {
         task.difficulty >= minDifficulty &&
         task.difficulty <= maxDifficulty,
     ).length;
-    const requiredTotal = section.count * variantsCount;
-    if (availableCount < requiredTotal) {
+    if (availableCount < section.count) {
       throw new InsufficientTasksError({
         sectionLabel: section.label,
-        requiredCount: requiredTotal,
+        requiredCount: section.count,
         availableCount,
         skillIds: [...section.skillIds],
         difficulty: section.difficulty,
@@ -249,13 +248,11 @@ function buildDemoVariantDrafts(params: {
   }
 
   const drafts: DemoVariantDraft[] = [];
-  const usedTaskIds = new Set<string>();
   for (let i = 0; i < variantsCount; i += 1) {
     const seed = params.seed != null ? `${params.seed}-${i}` : makeSeed(i);
-    const availableTasks = tasks.filter((task) => !usedTaskIds.has(task.id));
     let selected;
     try {
-      selected = buildVariantPlan({ tasks: availableTasks, template, seed });
+      selected = buildVariantPlan({ tasks, template, seed });
     } catch (error) {
       if (error instanceof InsufficientTasksError) {
         const wrapped = new Error(error.message) as Error & {
@@ -267,14 +264,11 @@ function buildDemoVariantDrafts(params: {
           ...error.details,
           variantIndex: i + 1,
           variantsCount,
-          remainingUniqueTasks: availableTasks.length,
+          remainingUniqueTasks: tasks.length,
         };
         throw wrapped;
       }
       throw error;
-    }
-    for (const item of selected) {
-      usedTaskIds.add(item.task.id);
     }
     const ordered = params.shuffleOrder
       ? shuffleItemsWithSeed(selected, `${seed}:shuffle`)
