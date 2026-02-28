@@ -29,6 +29,7 @@ type TrainingRunnerProps = {
   locale: string;
   skillId: string;
   skillTitle: string;
+  skillOrder: Array<{ id: string; title: string }>;
   tasks: TrainingTask[];
 };
 
@@ -181,8 +182,10 @@ export default function TrainingRunner({
   locale,
   skillId,
   skillTitle,
+  skillOrder,
   tasks,
 }: TrainingRunnerProps) {
+  const showDebug = process.env.NODE_ENV !== "production";
   const [sessionId] = useState(
     () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
   );
@@ -206,12 +209,25 @@ export default function TrainingRunner({
   const correctCount = results.filter((item) => item.isCorrect).length;
   const finished = currentIndex >= tasks.length;
   const progressValue = Math.min(currentIndex + (checked ? 1 : 0), tasks.length);
+  const wrongCount = tasks.length - correctCount;
+  const accuracyPercent = Math.round((correctCount / tasks.length) * 100);
 
   const averageTaskSeconds = useMemo(() => {
     if (results.length === 0) return null;
     const total = results.reduce((acc, item) => acc + item.taskElapsedMs, 0);
     return Math.round(total / results.length / 1000);
   }, [results]);
+
+  const recommendedNextSkill = useMemo(() => {
+    if (accuracyPercent < 70) {
+      return { id: skillId, title: skillTitle };
+    }
+    const currentIndexInOrder = skillOrder.findIndex((item) => item.id === skillId);
+    if (currentIndexInOrder >= 0 && currentIndexInOrder + 1 < skillOrder.length) {
+      return skillOrder[currentIndexInOrder + 1] ?? null;
+    }
+    return null;
+  }, [accuracyPercent, skillId, skillOrder, skillTitle]);
 
   useEffect(() => {
     if (checked && nextButtonRef.current) {
@@ -249,20 +265,37 @@ export default function TrainingRunner({
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Общее время
+                Точность
               </p>
               <p className="mt-1 text-2xl font-semibold text-slate-950">
-                {formatSecondsFromMs(totalElapsedMs)} сек
+                {accuracyPercent}%
               </p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Среднее на задачу
+                Ошибок
               </p>
               <p className="mt-1 text-2xl font-semibold text-slate-950">
-                {averageTaskSeconds ?? "—"}{averageTaskSeconds !== null ? " сек" : ""}
+                {wrongCount}
               </p>
             </div>
+          </div>
+
+          <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Рекомендация
+            </p>
+            <p className="mt-1 text-sm text-slate-700">
+              {accuracyPercent < 70
+                ? "Повторите этот навык, чтобы закрепить базу."
+                : recommendedNextSkill
+                  ? `Перейдите к навыку: ${recommendedNextSkill.title}.`
+                  : "Отлично! Можно вернуться к карте темы."}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              Общее время: {formatSecondsFromMs(totalElapsedMs)} сек
+              {averageTaskSeconds !== null ? ` • Среднее: ${averageTaskSeconds} сек` : ""}
+            </p>
           </div>
 
           <div className="mt-6 flex flex-wrap gap-2">
@@ -275,19 +308,29 @@ export default function TrainingRunner({
             <ButtonLink href={`/${locale}/5-klass/proporcii`} variant="secondary">
               Вернуться к теме
             </ButtonLink>
+            {recommendedNextSkill && recommendedNextSkill.id !== skillId ? (
+              <ButtonLink
+                href={`/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(recommendedNextSkill.id)}`}
+                variant="secondary"
+              >
+                Следующий рекомендованный навык
+              </ButtonLink>
+            ) : null}
           </div>
 
-          <details className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-3">
-            <summary className="cursor-pointer text-sm font-medium text-slate-800">
-              Служебная информация
-            </summary>
-            <div className="mt-2 text-xs text-slate-600">
-              <p>
-                Навык: <code>{skillId}</code>
-              </p>
-              <p>Session: <code>{sessionId}</code></p>
-            </div>
-          </details>
+          {showDebug ? (
+            <details className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <summary className="cursor-pointer text-sm font-medium text-slate-800">
+                Служебная информация
+              </summary>
+              <div className="mt-2 text-xs text-slate-600">
+                <p>
+                  Навык: <code>{skillId}</code>
+                </p>
+                <p>Session: <code>{sessionId}</code></p>
+              </div>
+            </details>
+          ) : null}
         </SurfaceCard>
       </section>
     );
@@ -473,19 +516,21 @@ export default function TrainingRunner({
           <p className="mt-2 text-xs text-slate-500">Enter — проверить</p>
         </div>
 
-        <details className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <summary className="cursor-pointer text-sm font-medium text-slate-800">
-            Служебная информация
-          </summary>
-          <div className="mt-2 space-y-1 text-xs text-slate-600">
-            <p>
-              Навык: <code>{skillId}</code>
-            </p>
-            <p>
-              Текущая задача: <code>{currentTask.id}</code>
-            </p>
-          </div>
-        </details>
+        {showDebug ? (
+          <details className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <summary className="cursor-pointer text-sm font-medium text-slate-800">
+              Служебная информация
+            </summary>
+            <div className="mt-2 space-y-1 text-xs text-slate-600">
+              <p>
+                Навык: <code>{skillId}</code>
+              </p>
+              <p>
+                Текущая задача: <code>{currentTask.id}</code>
+              </p>
+            </div>
+          </details>
+        ) : null}
       </SurfaceCard>
 
       {checked ? (

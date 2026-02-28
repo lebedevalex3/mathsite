@@ -85,6 +85,10 @@ export default async function ProporciiTrainPage({
   }
   const skillTitle =
     proporciiSkills.find((skill) => skill.id === skillId)?.title ?? skillId;
+  const skillOrder = proporciiSkills.map((skill) => ({
+    id: skill.id,
+    title: skill.title,
+  }));
 
   if (skillTasks.length < REQUIRED_TASK_COUNT) {
     return (
@@ -105,7 +109,13 @@ export default async function ProporciiTrainPage({
 
   return (
     <main>
-      <TrainingRunner locale={locale} skillId={skillId} skillTitle={skillTitle} tasks={selectedTasks} />
+      <TrainingRunner
+        locale={locale}
+        skillId={skillId}
+        skillTitle={skillTitle}
+        skillOrder={skillOrder}
+        tasks={selectedTasks}
+      />
     </main>
   );
 }
