@@ -124,6 +124,27 @@ export async function POST(request: Request, { params }: RouteProps) {
       rawProfile.generation && typeof rawProfile.generation === "object"
         ? (rawProfile.generation as Record<string, unknown>)
         : {};
+    const storedPlan = Array.isArray(generation.plan)
+      ? generation.plan
+          .map((item) => (item && typeof item === "object" ? (item as Record<string, unknown>) : null))
+          .filter((item): item is Record<string, unknown> => Boolean(item))
+          .map((item) => ({
+            skillId: typeof item.skillId === "string" ? item.skillId : "",
+            count: typeof item.count === "number" ? Math.max(0, Math.trunc(item.count)) : 0,
+            ...(Number.isInteger(typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty) &&
+            Number(typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty) >= 1 &&
+            Number(typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty) <= 3
+              ? {
+                  difficulty: Number(
+                    typeof item.difficulty === "string"
+                      ? Number(item.difficulty)
+                      : item.difficulty,
+                  ) as 1 | 2 | 3,
+                }
+              : {}),
+          }))
+          .filter((item) => item.skillId.length > 0 && item.count > 0)
+      : [];
 
     const variantsCount = clamp(
       Math.trunc(
@@ -165,14 +186,25 @@ export async function POST(request: Request, { params }: RouteProps) {
     }
     const taskById = new Map(allTasks.map((task) => [task.id, task]));
 
-    const countsBySkillId = new Map<string, number>();
+    const countsBySkillAndDifficulty = new Map<string, { skillId: string; count: number; difficulty?: 1 | 2 | 3 }>();
     for (const taskId of taskIds) {
       const task = taskById.get(taskId);
       if (!task) continue;
       const skillId = task.skill_id;
-      countsBySkillId.set(skillId, (countsBySkillId.get(skillId) ?? 0) + 1);
+      const difficulty =
+        Number.isInteger(task.difficulty) && task.difficulty >= 1 && task.difficulty <= 3
+          ? (task.difficulty as 1 | 2 | 3)
+          : undefined;
+      const key = `${skillId}@@${difficulty ?? "any"}`;
+      const existing = countsBySkillAndDifficulty.get(key);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        countsBySkillAndDifficulty.set(key, { skillId, count: 1, ...(difficulty ? { difficulty } : {}) });
+      }
     }
-    const plan = Array.from(countsBySkillId.entries()).map(([skillId, count]) => ({ skillId, count }));
+    const inferredPlan = Array.from(countsBySkillAndDifficulty.values());
+    const plan = storedPlan.length > 0 ? storedPlan : inferredPlan;
     const { normalized } = validateDemoPlan(plan, variantsCount);
 
     const topicConfigs = await Promise.all(topicIds.map((topicId) => getTeacherToolsTopicSkills(topicId)));

@@ -155,13 +155,13 @@ export function toApiError(error: unknown, options: ToApiErrorOptions = {}): Api
       return apiError(
         422,
         "INSUFFICIENT_TASKS",
-        "Not enough tasks to satisfy the template.",
+        "Недостаточно задач для выбранного шаблона.",
         error.details,
       );
     }
 
     if (looksLikeInsufficientTasks(error)) {
-      return apiError(422, "INSUFFICIENT_TASKS", "Not enough tasks to satisfy the template.");
+      return apiError(422, "INSUFFICIENT_TASKS", "Недостаточно задач для выбранного шаблона.");
     }
 
     if (looksLikeDbNotReady(error)) {

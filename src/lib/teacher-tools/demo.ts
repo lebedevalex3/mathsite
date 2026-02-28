@@ -8,7 +8,7 @@ import {
 import { defaultOrientationForLayout } from "@/src/lib/variants/print-profile";
 import type { PrintLayoutMode } from "@/src/lib/variants/print-layout";
 import type { VariantTemplate } from "@/src/lib/variants/types";
-import { buildVariantPlan } from "@/src/lib/variants/plan";
+import { buildVariantPlan, InsufficientTasksError } from "@/src/lib/variants/plan";
 import type { WorkType } from "@/src/lib/variants/print-recommendation";
 import { createSeededRng } from "@/src/lib/variants/rng";
 
@@ -72,9 +72,11 @@ export function validateDemoPlan(plan: DemoPlanItem[], variantsCount: number) {
   const normalized = plan
     .filter((item) => Number.isFinite(item.count) && item.count > 0)
     .map((item) => {
+      const difficultyRaw =
+        typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty;
       const parsedDifficulty =
-        Number.isInteger(item.difficulty) && item.difficulty != null && item.difficulty >= 1 && item.difficulty <= 3
-          ? (item.difficulty as 1 | 2 | 3)
+        Number.isInteger(difficultyRaw) && difficultyRaw != null && difficultyRaw >= 1 && difficultyRaw <= 3
+          ? (difficultyRaw as 1 | 2 | 3)
           : undefined;
       return {
         ...(typeof item.topicId === "string" && item.topicId.length > 0 ? { topicId: item.topicId } : {}),
@@ -226,10 +228,54 @@ function buildDemoVariantDrafts(params: {
 }) {
   const { tasks, template, variantsCount } = params;
 
+  for (const section of template.sections) {
+    const [minDifficulty, maxDifficulty] = section.difficulty;
+    const availableCount = tasks.filter(
+      (task) =>
+        section.skillIds.includes(task.skill_id) &&
+        task.difficulty >= minDifficulty &&
+        task.difficulty <= maxDifficulty,
+    ).length;
+    const requiredTotal = section.count * variantsCount;
+    if (availableCount < requiredTotal) {
+      throw new InsufficientTasksError({
+        sectionLabel: section.label,
+        requiredCount: requiredTotal,
+        availableCount,
+        skillIds: [...section.skillIds],
+        difficulty: section.difficulty,
+      });
+    }
+  }
+
   const drafts: DemoVariantDraft[] = [];
+  const usedTaskIds = new Set<string>();
   for (let i = 0; i < variantsCount; i += 1) {
     const seed = params.seed != null ? `${params.seed}-${i}` : makeSeed(i);
-    const selected = buildVariantPlan({ tasks, template, seed });
+    const availableTasks = tasks.filter((task) => !usedTaskIds.has(task.id));
+    let selected;
+    try {
+      selected = buildVariantPlan({ tasks: availableTasks, template, seed });
+    } catch (error) {
+      if (error instanceof InsufficientTasksError) {
+        const wrapped = new Error(error.message) as Error & {
+          code: "INSUFFICIENT_TASKS";
+          details: Record<string, unknown>;
+        };
+        wrapped.code = "INSUFFICIENT_TASKS";
+        wrapped.details = {
+          ...error.details,
+          variantIndex: i + 1,
+          variantsCount,
+          remainingUniqueTasks: availableTasks.length,
+        };
+        throw wrapped;
+      }
+      throw error;
+    }
+    for (const item of selected) {
+      usedTaskIds.add(item.task.id);
+    }
     const ordered = params.shuffleOrder
       ? shuffleItemsWithSeed(selected, `${seed}:shuffle`)
           .map((item) => ({ ...item }))
@@ -365,6 +411,11 @@ export async function generateDemoWorkWithVariants(params: {
               section.skillIds.map((skillId) => ({
                 skillId,
                 count: section.count,
+                ...(section.difficulty[0] === section.difficulty[1] &&
+                section.difficulty[0] >= 1 &&
+                section.difficulty[0] <= 3
+                  ? { difficulty: section.difficulty[0] }
+                  : {}),
               })),
             ),
           },

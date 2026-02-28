@@ -30,7 +30,7 @@ function normalizeError(error: TeacherApiError) {
     return {
       title: "Недостаточно задач для шаблона",
       message:
-        "Не удалось собрать вариант по выбранному шаблону. Уменьшите квоты в шаблоне или расширьте банк задач.",
+        "Не хватает уникальных задач для выбранного количества вариантов. Уменьшите число вариантов, снизьте квоты по навыкам или расширьте банк задач.",
     };
   }
 
@@ -62,6 +62,9 @@ function renderInsufficientDetails(details: unknown) {
     availableCount?: unknown;
     difficulty?: unknown;
     skillIds?: unknown;
+    variantIndex?: unknown;
+    variantsCount?: unknown;
+    remainingUniqueTasks?: unknown;
   };
 
   const sectionLabel = typeof data.sectionLabel === "string" ? data.sectionLabel : null;
@@ -76,18 +79,36 @@ function renderInsufficientDetails(details: unknown) {
   const skillIds = Array.isArray(data.skillIds)
     ? data.skillIds.filter((value): value is string => typeof value === "string")
     : [];
+  const variantIndex = typeof data.variantIndex === "number" ? data.variantIndex : null;
+  const variantsCount = typeof data.variantsCount === "number" ? data.variantsCount : null;
+  const remainingUniqueTasks =
+    typeof data.remainingUniqueTasks === "number" ? data.remainingUniqueTasks : null;
 
-  if (!sectionLabel && requiredCount === null && availableCount === null && !difficulty) {
+  if (
+    !sectionLabel &&
+    requiredCount === null &&
+    availableCount === null &&
+    !difficulty &&
+    variantIndex === null
+  ) {
     return null;
   }
 
   return (
     <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+      {variantIndex !== null && variantsCount !== null ? (
+        <p>
+          Не удалось собрать вариант {variantIndex} из {variantsCount}.
+        </p>
+      ) : null}
       {sectionLabel ? <p>Секция: {sectionLabel}</p> : null}
       {requiredCount !== null && availableCount !== null ? (
         <p>
           Нужно задач: {requiredCount}, доступно: {availableCount}
         </p>
+      ) : null}
+      {remainingUniqueTasks !== null ? (
+        <p>Осталось уникальных задач в пуле: {remainingUniqueTasks}</p>
       ) : null}
       {difficulty ? (
         <p>
@@ -134,4 +155,3 @@ export function TeacherErrorState({
     </SurfaceCard>
   );
 }
-

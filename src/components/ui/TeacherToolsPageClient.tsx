@@ -44,6 +44,7 @@ type GenerateResponse = {
 type Props = { locale: Locale };
 type GradeFilter = number | "all";
 type SelectedDomainFilter = TopicDomain | "all";
+type SkillDifficultyKey = "any" | "1" | "2" | "3";
 
 const copy = {
   ru: {
@@ -69,6 +70,7 @@ const copy = {
     difficulty: "Сложность",
     anyDifficulty: "Любая",
     levelsAvailability: "По уровням",
+    difficultyHint: "L1 — базовые, L2 — средние, L3 — сложные, Любая — без фильтра.",
     available: "Доступно задач",
     example: "Пример",
     skillCard: "Карточка навыка",
@@ -112,6 +114,7 @@ const copy = {
     noSkills: "Для выбранной темы пока нет настроенных навыков конструктора.",
     loadingSkills: "Загружаем навыки темы...",
     loginHint: "Войти, чтобы сохранять варианты и историю",
+    notEnoughForVariants: "Недостаточно задач для выбранного количества вариантов:",
   },
   en: {
     title: "Skill-based Variant Builder",
@@ -136,6 +139,7 @@ const copy = {
     difficulty: "Difficulty",
     anyDifficulty: "Any",
     levelsAvailability: "By levels",
+    difficultyHint: "L1 basic, L2 medium, L3 hard, Any means no difficulty filter.",
     available: "Available tasks",
     example: "Example",
     skillCard: "Skill card",
@@ -179,6 +183,7 @@ const copy = {
     noSkills: "No constructor skills configured for this topic yet.",
     loadingSkills: "Loading topic skills...",
     loginHint: "Sign in to save variants and history",
+    notEnoughForVariants: "Not enough tasks for selected variant count:",
   },
   de: {
     title: "Varianten-Baukasten nach Fähigkeiten",
@@ -203,6 +208,7 @@ const copy = {
     difficulty: "Schwierigkeit",
     anyDifficulty: "Beliebig",
     levelsAvailability: "Nach Stufen",
+    difficultyHint: "L1 einfach, L2 mittel, L3 schwer, Beliebig ohne Filter.",
     available: "Verfügbare Aufgaben",
     example: "Beispiel",
     skillCard: "Skill-Karte",
@@ -246,6 +252,7 @@ const copy = {
     noSkills: "Für dieses Thema sind noch keine Baukasten-Fähigkeiten konfiguriert.",
     loadingSkills: "Themenfähigkeiten werden geladen...",
     loginHint: "Anmelden, um Varianten und Verlauf zu speichern",
+    notEnoughForVariants: "Zu wenige Aufgaben fuer die gewaehlte Anzahl Varianten:",
   },
 } as const;
 
@@ -268,11 +275,16 @@ function parseCountsFromQuery(values: string[]) {
   for (const item of values) {
     const sepIndex = item.lastIndexOf(":");
     if (sepIndex <= 0) continue;
-    const skillId = item.slice(0, sepIndex);
+    const rawSlot = item.slice(0, sepIndex);
     const rawCount = item.slice(sepIndex + 1);
     const count = Number(rawCount);
     if (!Number.isFinite(count)) continue;
-    parsed[skillId] = clamp(Math.trunc(count), 0, 30);
+    if (rawSlot.includes("@@")) {
+      parsed[rawSlot] = clamp(Math.trunc(count), 0, 30);
+      continue;
+    }
+    // Backward compatibility: old format had only skillId.
+    parsed[skillCountKey(rawSlot, "any")] = clamp(Math.trunc(count), 0, 30);
   }
   return parsed;
 }
@@ -294,6 +306,41 @@ function parseDifficultiesFromQuery(values: string[]) {
     }
   }
   return parsed;
+}
+
+function toDifficultyKey(difficulty: SkillDifficulty): SkillDifficultyKey {
+  if (difficulty === 1) return "1";
+  if (difficulty === 2) return "2";
+  if (difficulty === 3) return "3";
+  return "any";
+}
+
+function fromDifficultyKey(key: SkillDifficultyKey): SkillDifficulty {
+  if (key === "1") return 1;
+  if (key === "2") return 2;
+  if (key === "3") return 3;
+  return "any";
+}
+
+const ALL_DIFFICULTY_KEYS: SkillDifficultyKey[] = ["any", "1", "2", "3"];
+
+function skillCountKey(skillId: string, difficultyKey: SkillDifficultyKey) {
+  return `${skillId}@@${difficultyKey}`;
+}
+
+function parseSkillCountKey(rawKey: string): { skillId: string; difficultyKey: SkillDifficultyKey } {
+  const [skillId, difficultyKey] = rawKey.split("@@");
+  if (difficultyKey === "1" || difficultyKey === "2" || difficultyKey === "3") {
+    return { skillId, difficultyKey };
+  }
+  return { skillId, difficultyKey: "any" };
+}
+
+function getSkillCountTotal(counts: Record<string, number>, skillId: string) {
+  return ALL_DIFFICULTY_KEYS.reduce(
+    (sum, difficultyKey) => sum + (counts[skillCountKey(skillId, difficultyKey)] ?? 0),
+    0,
+  );
 }
 
 function buildTeacherToolsStateQuery(params: {
@@ -565,7 +612,10 @@ export function TeacherToolsPageClient({ locale }: Props) {
           if (initialCountsRef.current) {
             const restoredCounts: Record<string, number> = {};
             for (const skill of allSkills) {
-              restoredCounts[skill.id] = clamp(initialCountsRef.current[skill.id] ?? 0, 0, 30);
+              for (const difficultyKey of ALL_DIFFICULTY_KEYS) {
+                const key = skillCountKey(skill.id, difficultyKey);
+                restoredCounts[key] = clamp(initialCountsRef.current[key] ?? 0, 0, 30);
+              }
             }
             setCounts(restoredCounts);
             const restoredDifficulties: Record<string, SkillDifficulty> = {};
@@ -578,8 +628,11 @@ export function TeacherToolsPageClient({ locale }: Props) {
             setCounts((prev) => {
               const next: Record<string, number> = { ...prev };
               for (const skill of allSkills) {
-                if (!Number.isFinite(next[skill.id])) {
-                  next[skill.id] = 0;
+                for (const difficultyKey of ALL_DIFFICULTY_KEYS) {
+                  const key = skillCountKey(skill.id, difficultyKey);
+                  if (!Number.isFinite(next[key])) {
+                    next[key] = 0;
+                  }
                 }
               }
               return next;
@@ -607,9 +660,17 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
   const summary = useMemo(() => {
     const skills = topic?.skills ?? [];
-    const selected = skills
-      .map((skill) => ({ skill, count: counts[skill.id] ?? 0 }))
-      .filter((item) => item.count > 0);
+    const selected = skills.flatMap((skill) =>
+      ALL_DIFFICULTY_KEYS.map((difficultyKey) => {
+        const count = counts[skillCountKey(skill.id, difficultyKey)] ?? 0;
+        if (count <= 0) return null;
+        return {
+          skill,
+          count,
+          difficulty: fromDifficultyKey(difficultyKey),
+        };
+      }).filter((item): item is { skill: TopicSkill; count: number; difficulty: SkillDifficulty } => Boolean(item)),
+    );
     const total = selected.reduce((sum, item) => sum + item.count, 0);
     return { selected, total };
   }, [topic, counts]);
@@ -617,7 +678,10 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const topicStats = useMemo(() => {
     const map = new Map<string, { selectedCount: number; skillsCount: number }>();
     for (const loadedTopic of loadedTopics) {
-      const selectedCount = loadedTopic.skills.reduce((sum, skill) => sum + (counts[skill.id] ?? 0), 0);
+      const selectedCount = loadedTopic.skills.reduce(
+        (sum, skill) => sum + getSkillCountTotal(counts, skill.id),
+        0,
+      );
       map.set(loadedTopic.topicId, {
         selectedCount,
         skillsCount: loadedTopic.skills.length,
@@ -664,6 +728,31 @@ export function TeacherToolsPageClient({ locale }: Props) {
     return map;
   }, [loadedTopics, locale]);
 
+  const insufficientBySelection = useMemo(() => {
+    const skillById = new Map((topic?.skills ?? []).map((skill) => [skill.id, skill] as const));
+    const issues: string[] = [];
+
+    for (const [rawKey, count] of Object.entries(counts)) {
+      if (!Number.isFinite(count) || count <= 0) continue;
+      const { skillId, difficultyKey } = parseSkillCountKey(rawKey);
+      const skill = skillById.get(skillId);
+      if (!skill) continue;
+
+      const requiredTotal = count * variantsCount;
+      const availableTotal =
+        difficultyKey === "1" || difficultyKey === "2" || difficultyKey === "3"
+          ? (skill.availableByDifficulty?.[Number(difficultyKey) as 1 | 2 | 3] ?? 0)
+          : (skill.availableCount ?? 0);
+
+      if (requiredTotal > availableTotal) {
+        const levelLabel = difficultyKey === "any" ? t.anyDifficulty : `L${difficultyKey}`;
+        issues.push(`${skill.title} (${levelLabel}): нужно ${requiredTotal}, доступно ${availableTotal}`);
+      }
+    }
+
+    return issues;
+  }, [counts, topic?.skills, variantsCount, t.anyDifficulty]);
+
   async function handleBuild() {
     setBuilding(true);
     setError(null);
@@ -681,14 +770,16 @@ export function TeacherToolsPageClient({ locale }: Props) {
           printLayout: "single",
           shuffleOrder,
           plan: Object.entries(counts)
-            .filter(([skillId, count]) => count > 0 && skillTopicById.has(skillId))
-            .map(([skillId, count]) => ({
-              topicId: skillTopicById.get(skillId)?.topicId,
-              skillId,
-              count,
-              ...(difficultyBySkill[skillId] && difficultyBySkill[skillId] !== "any"
-                ? { difficulty: difficultyBySkill[skillId] }
-                : {}),
+            .map(([rawKey, count]) => {
+              const { skillId, difficultyKey } = parseSkillCountKey(rawKey);
+              return { skillId, difficultyKey, count };
+            })
+            .filter((item) => item.count > 0 && skillTopicById.has(item.skillId))
+            .map((item) => ({
+              topicId: skillTopicById.get(item.skillId)?.topicId,
+              skillId: item.skillId,
+              count: item.count,
+              ...(item.difficultyKey !== "any" ? { difficulty: Number(item.difficultyKey) as 1 | 2 | 3 } : {}),
             })),
         }),
       });
@@ -856,7 +947,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                       setCounts((prev) => {
                                         const next = { ...prev };
                                         for (const skill of removedTopic.skills) {
-                                          next[skill.id] = 0;
+                                          for (const difficultyKey of ALL_DIFFICULTY_KEYS) {
+                                            next[skillCountKey(skill.id, difficultyKey)] = 0;
+                                          }
                                         }
                                         return next;
                                       });
@@ -884,7 +977,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
                             const next = { ...prev };
                             for (const value of loadedTopics) {
                               for (const skill of value.skills) {
-                                next[skill.id] = 0;
+                                for (const difficultyKey of ALL_DIFFICULTY_KEYS) {
+                                  next[skillCountKey(skill.id, difficultyKey)] = 0;
+                                }
                               }
                             }
                             return next;
@@ -926,7 +1021,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                               setCounts((prevCounts) => {
                                                 const next = { ...prevCounts };
                                                 for (const skill of removedTopic.skills) {
-                                                  next[skill.id] = 0;
+                                                  for (const difficultyKey of ALL_DIFFICULTY_KEYS) {
+                                                    next[skillCountKey(skill.id, difficultyKey)] = 0;
+                                                  }
                                                 }
                                                 return next;
                                               });
@@ -1017,7 +1114,19 @@ export function TeacherToolsPageClient({ locale }: Props) {
                       </span>
                     </button>
                     {isExpanded ? loadedTopic.skills.map((skill) => {
-                      const value = counts[skill.id] ?? 0;
+                      const availableByDifficulty = skill.availableByDifficulty ?? { 1: 0, 2: 0, 3: 0 };
+                      const availableDifficulties = ([1, 2, 3] as const).filter(
+                        (level) => (availableByDifficulty[level] ?? 0) > 0,
+                      );
+                      const selectedDifficultyCandidate = difficultyBySkill[skill.id] ?? "any";
+                      const selectedDifficulty =
+                        selectedDifficultyCandidate !== "any" &&
+                        (availableByDifficulty[selectedDifficultyCandidate] ?? 0) === 0
+                          ? "any"
+                          : selectedDifficultyCandidate;
+                      const activeDifficultyKey = toDifficultyKey(selectedDifficulty);
+                      const activeCountKey = skillCountKey(skill.id, activeDifficultyKey);
+                      const value = counts[activeCountKey] ?? 0;
                       const disabled = skill.status === "soon";
                       return (
                         <div
@@ -1053,13 +1162,25 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                 {t.available}: {formatNumber(locale, skill.availableCount ?? 0)}
                               </p>
                               <p className="mt-1 text-xs text-slate-500">
-                                {t.levelsAvailability}: L1:{" "}
-                                {formatNumber(locale, skill.availableByDifficulty?.[1] ?? 0)}, L2:{" "}
-                                {formatNumber(locale, skill.availableByDifficulty?.[2] ?? 0)}, L3:{" "}
-                                {formatNumber(locale, skill.availableByDifficulty?.[3] ?? 0)}
+                                {t.levelsAvailability}:{" "}
+                                {availableDifficulties.length > 0
+                                  ? availableDifficulties
+                                      .map(
+                                        (level) =>
+                                          `L${level}: ${formatNumber(locale, availableByDifficulty[level] ?? 0)}`,
+                                      )
+                                      .join(", ")
+                                  : "—"}
                               </p>
                             </div>
                             <div className="flex shrink-0 items-center gap-2">
+                              <span
+                                title={t.difficultyHint}
+                                aria-label={t.difficultyHint}
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 bg-white text-xs font-semibold text-slate-600"
+                              >
+                                ?
+                              </span>
                               <select
                                 aria-label={`${t.difficulty}: ${skill.title}`}
                                 value={String(difficultyBySkill[skill.id] ?? "any")}
@@ -1075,9 +1196,11 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                 className="h-8 rounded-lg border border-slate-300 bg-white px-2 text-sm text-slate-800"
                               >
                                 <option value="any">{t.anyDifficulty}</option>
-                                <option value="1">L1</option>
-                                <option value="2">L2</option>
-                                <option value="3">L3</option>
+                                {availableDifficulties.map((level) => (
+                                  <option key={level} value={String(level)}>
+                                    L{level}
+                                  </option>
+                                ))}
                               </select>
                               <button
                                 type="button"
@@ -1085,7 +1208,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                 onClick={() =>
                                   setCounts((prev) => ({
                                     ...prev,
-                                    [skill.id]: clamp((prev[skill.id] ?? 0) - 1, 0, 30),
+                                    [activeCountKey]: clamp((prev[activeCountKey] ?? 0) - 1, 0, 30),
                                   }))
                                 }
                                 className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
@@ -1102,7 +1225,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                 onChange={(e) =>
                                   setCounts((prev) => ({
                                     ...prev,
-                                    [skill.id]: clamp(Number(e.target.value || 0), 0, 30),
+                                    [activeCountKey]: clamp(Number(e.target.value || 0), 0, 30),
                                   }))
                                 }
                                 className="w-16 rounded-lg border border-slate-300 px-2 py-1 text-center text-sm"
@@ -1113,7 +1236,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                 onClick={() =>
                                   setCounts((prev) => ({
                                     ...prev,
-                                    [skill.id]: clamp((prev[skill.id] ?? 0) + 1, 0, 30),
+                                    [activeCountKey]: clamp((prev[activeCountKey] ?? 0) + 1, 0, 30),
                                   }))
                                 }
                                 className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
@@ -1141,7 +1264,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
             <button
               type="button"
               onClick={handleBuild}
-              disabled={building || loadingTopic || summary.total < 1}
+              disabled={building || loadingTopic || summary.total < 1 || insufficientBySelection.length > 0}
               className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60 lg:hidden"
             >
               {building ? `${t.build}...` : t.build}
@@ -1157,7 +1280,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
           <button
             type="button"
             onClick={handleBuild}
-            disabled={building || loadingTopic || summary.total < 1}
+            disabled={building || loadingTopic || summary.total < 1 || insufficientBySelection.length > 0}
             className="mt-4 hidden w-full items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60 lg:inline-flex"
           >
             {building ? `${t.build}...` : t.build}
@@ -1167,15 +1290,13 @@ export function TeacherToolsPageClient({ locale }: Props) {
           </h3>
           <ul className="mt-3 space-y-2">
             {summary.selected.length > 0 ? (
-              summary.selected.map(({ skill, count }) => (
-                <li key={skill.id} className="flex items-start justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+              summary.selected.map(({ skill, count, difficulty }) => (
+                <li key={`${skill.id}:${String(difficulty)}`} className="flex items-start justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
                   <span className="min-w-0 text-sm text-slate-700">
                     {selectedTopicIds.length > 1
                       ? `${skillTopicById.get(skill.id)?.topicTitle ?? ""}: ${skill.title}`
                       : skill.title}
-                    {difficultyBySkill[skill.id] && difficultyBySkill[skill.id] !== "any"
-                      ? ` (L${difficultyBySkill[skill.id]})`
-                      : ""}
+                    {difficulty === "any" ? ` (${t.anyDifficulty})` : ` (L${difficulty})`}
                   </span>
                   <span className="shrink-0 text-sm font-medium text-slate-900">{count}</span>
                 </li>
@@ -1184,6 +1305,16 @@ export function TeacherToolsPageClient({ locale }: Props) {
               <li className="text-sm text-slate-500">—</li>
             )}
           </ul>
+          {insufficientBySelection.length > 0 ? (
+            <div className="mt-4 rounded-lg border border-rose-200 bg-rose-50 p-3 text-xs text-rose-900">
+              <p className="font-semibold">{t.notEnoughForVariants}</p>
+              <ul className="mt-1 space-y-1">
+                {insufficientBySelection.map((issue) => (
+                  <li key={issue}>{issue}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           <p className="mt-5 text-xs text-slate-500">{t.loginHint}</p>
         </SurfaceCard>
       </section>

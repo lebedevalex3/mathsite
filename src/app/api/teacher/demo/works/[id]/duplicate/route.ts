@@ -134,6 +134,17 @@ export async function POST(request: Request, { params }: RouteProps) {
           .map((item) => ({
             skillId: typeof item.skillId === "string" ? item.skillId : "",
             count: typeof item.count === "number" ? Math.max(0, Math.trunc(item.count)) : 0,
+            ...(Number.isInteger(typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty) &&
+            Number(typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty) >= 1 &&
+            Number(typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty) <= 3
+              ? {
+                  difficulty: Number(
+                    typeof item.difficulty === "string"
+                      ? Number(item.difficulty)
+                      : item.difficulty,
+                  ) as 1 | 2 | 3,
+                }
+              : {}),
           }))
           .filter((item) => item.skillId.length > 0 && item.count > 0)
       : [];
@@ -158,8 +169,8 @@ export async function POST(request: Request, { params }: RouteProps) {
     const plan =
       storedPlan.length > 0
         ? storedPlan
-        : (() => {
-            const counters = new Map<string, number>();
+      : (() => {
+            const counters = new Map<string, { skillId: string; count: number; difficulty?: 1 | 2 | 3 }>();
             const allTasksById = new Map<string, Awaited<ReturnType<typeof getTasksForTopic>>["tasks"][number]>();
             return {
               async load() {
@@ -173,9 +184,23 @@ export async function POST(request: Request, { params }: RouteProps) {
                 for (const taskId of taskIds) {
                   const task = allTasksById.get(taskId);
                   if (!task) continue;
-                  counters.set(task.skill_id, (counters.get(task.skill_id) ?? 0) + 1);
+                  const difficulty =
+                    Number.isInteger(task.difficulty) && task.difficulty >= 1 && task.difficulty <= 3
+                      ? (task.difficulty as 1 | 2 | 3)
+                      : undefined;
+                  const key = `${task.skill_id}@@${difficulty ?? "any"}`;
+                  const existing = counters.get(key);
+                  if (existing) {
+                    existing.count += 1;
+                  } else {
+                    counters.set(key, {
+                      skillId: task.skill_id,
+                      count: 1,
+                      ...(difficulty ? { difficulty } : {}),
+                    });
+                  }
                 }
-                return Array.from(counters.entries()).map(([skillId, count]) => ({ skillId, count }));
+                return Array.from(counters.values());
               },
             };
           })();
