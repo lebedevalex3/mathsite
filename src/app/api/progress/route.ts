@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/src/lib/db/prisma";
 import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { aggregateSkillProgress } from "@/src/lib/progress/aggregate";
+import { getMasteryMinAttemptsBySkill } from "@/src/lib/progress/mastery-thresholds";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 
 export const runtime = "nodejs";
@@ -29,7 +30,9 @@ export async function GET(request: Request) {
     select: { skillId: true, isCorrect: true },
   });
 
-  const progress = aggregateSkillProgress(attempts);
+  const progress = aggregateSkillProgress(attempts, {
+    masteryMinAttemptsBySkill: getMasteryMinAttemptsBySkill(topicId),
+  });
 
   logApiResult(span, 200, {
     code: "OK",

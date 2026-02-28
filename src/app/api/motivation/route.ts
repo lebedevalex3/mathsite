@@ -5,6 +5,7 @@ import { prisma } from "@/src/lib/db/prisma";
 import { buildMotivationModel, type MotivationScope } from "@/src/lib/motivation/model";
 import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { aggregateSkillProgress } from "@/src/lib/progress/aggregate";
+import { getMasteryMinAttemptsBySkill } from "@/src/lib/progress/mastery-thresholds";
 import {
   aggregateCompare,
   compareWindowCutoff,
@@ -53,7 +54,9 @@ export async function GET(request: Request) {
     }),
   ]);
 
-  const userProgress = aggregateSkillProgress(userAttempts);
+  const userProgress = aggregateSkillProgress(userAttempts, {
+    masteryMinAttemptsBySkill: getMasteryMinAttemptsBySkill(topicId),
+  });
 
   const compare = aggregateCompare({
     topicId,

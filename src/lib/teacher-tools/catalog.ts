@@ -68,6 +68,16 @@ const proportionSkillCards: Record<
       "Убедись, что отношение стало проще.",
     ],
   },
+  "math.proportion.compare_ratio_multiples": {
+    cardHref: "/teacher-tools/skills/math.proportion.compare_ratio_multiples",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.compare_ratio_multiples",
+    example: "Во сколько раз 24 больше 6?",
+    algorithm: [
+      "Определи, какую величину сравнивают с какой (больше/меньше).",
+      "Раздели большую величину на меньшую.",
+      "Запиши результат с формулировкой «в ... раз».",
+    ],
+  },
   "math.proportion.build_proportion_from_text": {
     cardHref: "/teacher-tools/skills/math.proportion.build_proportion_from_text",
     trainerHref: "/topics/proportion/train?skill=math.proportion.build_proportion_from_text",

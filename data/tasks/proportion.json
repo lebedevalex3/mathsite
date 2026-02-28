@@ -120,6 +120,285 @@
         "numerator": 3,
         "denominator": 2
       }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000011",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 1,
+      "statement_md": "Сократите отношение: 12 : 18.",
+      "answer": {
+        "type": "ratio",
+        "left": 2,
+        "right": 3
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000012",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 1,
+      "statement_md": "Сократите отношение: 20 : 30.",
+      "answer": {
+        "type": "ratio",
+        "left": 2,
+        "right": 3
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000013",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 1,
+      "statement_md": "Сократите отношение: 45 : 60.",
+      "answer": {
+        "type": "ratio",
+        "left": 3,
+        "right": 4
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000014",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 1,
+      "statement_md": "Сократите отношение: 14 : 21.",
+      "answer": {
+        "type": "ratio",
+        "left": 2,
+        "right": 3
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000015",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 2,
+      "statement_md": "Сократите отношение: 84 : 126.",
+      "answer": {
+        "type": "ratio",
+        "left": 2,
+        "right": 3
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000016",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 2,
+      "statement_md": "Сократите отношение: 150 : 225.",
+      "answer": {
+        "type": "ratio",
+        "left": 2,
+        "right": 3
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000017",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 2,
+      "statement_md": "Сократите отношение: 96 : 144.",
+      "answer": {
+        "type": "ratio",
+        "left": 2,
+        "right": 3
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000018",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 2,
+      "statement_md": "Сократите отношение: 210 : 360.",
+      "answer": {
+        "type": "ratio",
+        "left": 7,
+        "right": 12
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000019",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 3,
+      "statement_md": "Сократите отношение: 2,4 : 3,6.",
+      "answer": {
+        "type": "ratio",
+        "left": 2,
+        "right": 3
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000020",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 3,
+      "statement_md": "Сократите отношение: 1,25 : 0,5.",
+      "answer": {
+        "type": "ratio",
+        "left": 5,
+        "right": 2
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000021",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 3,
+      "statement_md": "Сократите отношение: 3/4 : 5/6.",
+      "answer": {
+        "type": "ratio",
+        "left": 9,
+        "right": 10
+      }
+    },
+    {
+      "id": "math.proportion.transform_ratio.000022",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.transform_ratio",
+      "difficulty": 3,
+      "statement_md": "Сократите отношение, предварительно приведя величины к одним единицам: 350 г : 0,7 кг.",
+      "answer": {
+        "type": "ratio",
+        "left": 1,
+        "right": 2
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000001",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 1,
+      "statement_md": "В коробке 24 карандаша и 6 ручек. Во сколько раз карандашей больше, чем ручек?",
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000002",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 1,
+      "statement_md": "В первом мешке 15 кг картофеля, во втором — 5 кг. Во сколько раз в первом мешке больше картофеля, чем во втором?",
+      "answer": {
+        "type": "number",
+        "value": 3
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000003",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 1,
+      "statement_md": "На первой полке 18 книг, на второй — 3 книги. Во сколько раз на первой полке больше книг, чем на второй?",
+      "answer": {
+        "type": "number",
+        "value": 6
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000004",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 1,
+      "statement_md": "В одном классе 28 учеников, в другом — 14. Во сколько раз в первом классе больше учеников, чем во втором?",
+      "answer": {
+        "type": "number",
+        "value": 2
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000005",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 2,
+      "statement_md": "На складе 48 кг муки и 12 кг сахара. Во сколько раз сахара меньше, чем муки?",
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000006",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 2,
+      "statement_md": "В понедельник магазин продал 90 булочек, а во вторник — 30. Во сколько раз во вторник продали меньше булочек, чем в понедельник?",
+      "answer": {
+        "type": "number",
+        "value": 3
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000007",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 2,
+      "statement_md": "У Пети 36 наклеек, у Кати 9 наклеек. Во сколько раз у Кати меньше наклеек, чем у Пети?",
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000008",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 2,
+      "statement_md": "Один спортсмен пробежал 8 км, другой — 32 км. Во сколько раз первый спортсмен пробежал меньше, чем второй?",
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000009",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 3,
+      "statement_md": "Автобус проехал 180 км за 3 часа, а велосипедист — 45 км за 3 часа. Во сколько раз скорость автобуса больше скорости велосипедиста?",
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000010",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 3,
+      "statement_md": "Принтер A за 6 минут печатает 42 страницы, а принтер B за 8 минут — 32 страницы. Во сколько раз скорость печати принтера A больше скорости печати принтера B?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 7,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000011",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 3,
+      "statement_md": "Цена товара была 120 евро, после скидки стала 80 евро. Во сколько раз новая цена меньше старой?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 2
+      }
+    },
+    {
+      "id": "math.proportion.compare_ratio_multiples.000012",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.compare_ratio_multiples",
+      "difficulty": 3,
+      "statement_md": "В январе выпало 24 мм осадков, а в феврале — 36 мм. Во сколько раз в феврале осадков больше, чем в январе?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 2
+      }
     }
   ]
 }

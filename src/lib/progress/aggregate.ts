@@ -5,18 +5,48 @@ type AttemptRow = {
   isCorrect: boolean;
 };
 
-function toEntry(total: number, correct: number): SkillProgressEntry {
+const DEFAULT_MASTERY_MIN_ATTEMPTS = 10;
+const MASTERY_MIN_ACCURACY = 0.8;
+
+type AggregateSkillProgressOptions = {
+  masteryMinAttemptsBySkill?: Record<string, number>;
+};
+
+function resolveMasteryMinAttempts(
+  skillId: string,
+  options: AggregateSkillProgressOptions | undefined,
+) {
+  const raw = options?.masteryMinAttemptsBySkill?.[skillId];
+  if (Number.isFinite(raw) && raw != null && raw > 0) {
+    return Math.trunc(raw);
+  }
+  return DEFAULT_MASTERY_MIN_ATTEMPTS;
+}
+
+function toEntry(
+  skillId: string,
+  total: number,
+  correct: number,
+  options: AggregateSkillProgressOptions | undefined,
+): SkillProgressEntry {
   const accuracy = total > 0 ? correct / total : 0;
+  const masteryMinAttempts = resolveMasteryMinAttempts(skillId, options);
 
   let status: SkillProgressEntry["status"] = "not_started";
   if (total > 0) {
-    status = total >= 10 && accuracy >= 0.8 ? "mastered" : "in_progress";
+    status =
+      total >= masteryMinAttempts && accuracy >= MASTERY_MIN_ACCURACY
+        ? "mastered"
+        : "in_progress";
   }
 
   return { total, correct, accuracy, status };
 }
 
-export function aggregateSkillProgress(rows: AttemptRow[]): SkillProgressMap {
+export function aggregateSkillProgress(
+  rows: AttemptRow[],
+  options?: AggregateSkillProgressOptions,
+): SkillProgressMap {
   const counters = new Map<string, { total: number; correct: number }>();
 
   for (const row of rows) {
@@ -28,7 +58,7 @@ export function aggregateSkillProgress(rows: AttemptRow[]): SkillProgressMap {
 
   const result: SkillProgressMap = {};
   for (const [skillId, counts] of counters) {
-    result[skillId] = toEntry(counts.total, counts.correct);
+    result[skillId] = toEntry(skillId, counts.total, counts.correct, options);
   }
 
   return result;

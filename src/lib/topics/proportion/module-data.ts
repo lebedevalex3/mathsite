@@ -109,6 +109,22 @@ export const proportionSkills: ProportionSkill[] = [
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 5,
   },
+  {
+    id: "math.proportion.transform_ratio",
+    title: "Упрощение отношения",
+    summary: "сократить отношение до несократимого вида",
+    subtopicId: "math.proportion.direct",
+    skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 8,
+  },
+  {
+    id: "math.proportion.compare_ratio_multiples",
+    title: "Во сколько раз больше/меньше",
+    summary: "сравнить величины по кратности",
+    subtopicId: "math.proportion.direct",
+    skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 8,
+  },
 ];
 
 export const proportionBranches: ProportionBranch[] = [
@@ -125,7 +141,11 @@ export const proportionBranches: ProportionBranch[] = [
       en: "Core ratio operations as a foundation for proportions.",
       de: "Grundlagen zu Verhaeltnissen als Basis fuer Proportionen.",
     },
-    skillIds: ["math.proportion.understand_ratio_as_quotient"],
+    skillIds: [
+      "math.proportion.understand_ratio_as_quotient",
+      "math.proportion.transform_ratio",
+      "math.proportion.compare_ratio_multiples",
+    ],
   },
 ];
 

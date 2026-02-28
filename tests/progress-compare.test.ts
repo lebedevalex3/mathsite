@@ -36,6 +36,33 @@ test("aggregateSkillProgress returns empty map for empty input", () => {
   assert.deepEqual(aggregateSkillProgress([]), {});
 });
 
+test("aggregateSkillProgress supports per-skill mastery attempt thresholds", () => {
+  const progress = aggregateSkillProgress(
+    [
+      { skillId: "math.proportion.compare_ratio_multiples", isCorrect: true },
+      { skillId: "math.proportion.compare_ratio_multiples", isCorrect: true },
+      { skillId: "math.proportion.compare_ratio_multiples", isCorrect: true },
+      { skillId: "math.proportion.compare_ratio_multiples", isCorrect: true },
+      { skillId: "math.proportion.compare_ratio_multiples", isCorrect: true },
+      { skillId: "math.proportion.compare_ratio_multiples", isCorrect: true },
+      { skillId: "math.proportion.compare_ratio_multiples", isCorrect: true },
+      { skillId: "math.proportion.compare_ratio_multiples", isCorrect: true },
+    ],
+    {
+      masteryMinAttemptsBySkill: {
+        "math.proportion.compare_ratio_multiples": 8,
+      },
+    },
+  );
+
+  assert.deepEqual(progress["math.proportion.compare_ratio_multiples"], {
+    total: 8,
+    correct: 8,
+    accuracy: 1,
+    status: "mastered",
+  });
+});
+
 test("aggregateCompare computes user/platform metrics and filters by 30-day window", () => {
   const now = new Date("2026-02-24T12:00:00.000Z");
   const result = aggregateCompare({
