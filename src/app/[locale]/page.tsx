@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Container } from "@/src/components/ui/Container";
 import { HomeContinueSkillCard } from "@/src/components/ui/HomeContinueSkillCard";
+import { HomeMotivationPanel } from "@/src/components/ui/HomeMotivationPanel";
 import { HomeTopicCatalog } from "@/src/components/ui/HomeTopicCatalog";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { TeacherQuickStartWidget } from "@/src/components/ui/TeacherQuickStartWidget";
@@ -219,6 +220,8 @@ export default async function LocaleHomePage({ params }: PageProps) {
       </SurfaceCard>
 
       <HomeTopicCatalog locale={locale} />
+
+      <HomeMotivationPanel locale={locale} />
 
       <section>
         <Container className="px-0">
