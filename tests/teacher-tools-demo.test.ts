@@ -5,6 +5,7 @@ import {
   buildDemoTemplate,
   buildDemoVariantDrafts,
   parseDemoDifficulty,
+  shouldEnforceDemoRateLimit,
   validateDemoPlan,
   DEMO_MAX_TOTAL_TASKS,
   shuffleItemsWithSeed,
@@ -45,6 +46,25 @@ test('validateDemoPlan keeps fixed difficulty when payload uses L1/L2/L3', () =>
   assert.deepEqual(result.normalized, [
     { skillId: 'math.proportion.check_proportion', count: 5, difficulty: 1 },
   ]);
+});
+
+test('shouldEnforceDemoRateLimit defaults to prod only and supports override', () => {
+  assert.equal(shouldEnforceDemoRateLimit({ NODE_ENV: 'production' } as NodeJS.ProcessEnv), true);
+  assert.equal(shouldEnforceDemoRateLimit({ NODE_ENV: 'development' } as NodeJS.ProcessEnv), false);
+  assert.equal(
+    shouldEnforceDemoRateLimit({
+      NODE_ENV: 'development',
+      DEMO_ENFORCE_RATE_LIMIT: '1',
+    } as NodeJS.ProcessEnv),
+    true,
+  );
+  assert.equal(
+    shouldEnforceDemoRateLimit({
+      NODE_ENV: 'production',
+      DEMO_ENFORCE_RATE_LIMIT: '0',
+    } as NodeJS.ProcessEnv),
+    false,
+  );
 });
 
 test('validateDemoPlan rejects too many tasks', () => {

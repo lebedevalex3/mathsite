@@ -56,7 +56,25 @@ export type WorkTitleTemplate = {
   date?: string | null;
 };
 
+function parseBooleanEnv(value: string | undefined): boolean | undefined {
+  if (value == null) return undefined;
+  const normalized = value.trim().toLowerCase();
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  return undefined;
+}
+
+export function shouldEnforceDemoRateLimit(env: NodeJS.ProcessEnv = process.env): boolean {
+  const override = parseBooleanEnv(env.DEMO_ENFORCE_RATE_LIMIT);
+  if (override != null) return override;
+  return env.NODE_ENV === "production";
+}
+
 export async function enforceDemoRateLimit(ownerUserId: string) {
+  if (!shouldEnforceDemoRateLimit()) {
+    return;
+  }
+
   const db = prisma as unknown as {
     work: {
       count(args: unknown): Promise<number>;
