@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/src/components/ui/Container";
-import { HomeProgressCta } from "@/src/components/ui/HomeProgressCta";
+import { HomeContinueSkillCard } from "@/src/components/ui/HomeContinueSkillCard";
 import { HomeTopicCatalog } from "@/src/components/ui/HomeTopicCatalog";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { TeacherQuickStartWidget } from "@/src/components/ui/TeacherQuickStartWidget";
@@ -13,11 +13,14 @@ type PageProps = {
 
 const copy = {
   ru: {
-    heroTitle: "Электронный учебник по математике",
-    heroSubtitle:
-      "Понятные объяснения, тренажёр и прогресс — плюс конструктор вариантов для учителя: печать и ответы.",
-    primaryCta: "Собрать вариант",
-    secondaryCta: "Открыть тренажёр",
+    heroTitle: "Учебник, тренажёр и варианты по математике",
+    heroSubtitle: "Выберите сценарий и начните за 1 минуту.",
+    studentLabel: "Ученик",
+    studentCta: "Я ученик",
+    studentHint: "Открой тему и начни практику.",
+    teacherLabel: "Учитель",
+    teacherHeroCta: "Я учитель",
+    teacherHint: "Собери вариант и перейди в кабинет.",
     browseTopics: "Смотреть темы",
     howTitle: "Как это работает",
     howSteps: [
@@ -46,11 +49,14 @@ const copy = {
     practiceLink: "Подробнее о теме и навыках",
   },
   en: {
-    heroTitle: "Electronic Math Textbook",
-    heroSubtitle:
-      "Clear explanations, a trainer, and progress tracking — plus a teacher variant builder with print and answers.",
-    primaryCta: "Assemble variant",
-    secondaryCta: "Open trainer",
+    heroTitle: "Textbook, Trainer, and Worksheets for Math",
+    heroSubtitle: "Choose your path and start in one minute.",
+    studentLabel: "Student",
+    studentCta: "I am a student",
+    studentHint: "Open a topic and start practicing.",
+    teacherLabel: "Teacher",
+    teacherHeroCta: "I am a teacher",
+    teacherHint: "Build a worksheet and open teacher tools.",
     browseTopics: "Browse topics",
     howTitle: "How it works",
     howSteps: [
@@ -79,11 +85,14 @@ const copy = {
     practiceLink: "More about topic and skills",
   },
   de: {
-    heroTitle: "Elektronisches Mathematik-Lehrbuch",
-    heroSubtitle:
-      "Klare Erklärungen, Trainer und Fortschritt — plus Varianten-Baukasten für Lehrkräfte mit Druck und Lösungen.",
-    primaryCta: "Variante zusammenstellen",
-    secondaryCta: "Trainer öffnen",
+    heroTitle: "Lehrbuch, Trainer und Arbeitsblätter für Mathematik",
+    heroSubtitle: "Wählen Sie Ihren Weg und starten Sie in einer Minute.",
+    studentLabel: "Schüler/in",
+    studentCta: "Ich bin Schüler/in",
+    studentHint: "Thema öffnen und direkt üben.",
+    teacherLabel: "Lehrkraft",
+    teacherHeroCta: "Ich bin Lehrkraft",
+    teacherHint: "Arbeitsblatt erstellen und Teacher-Tools öffnen.",
     browseTopics: "Themen ansehen",
     howTitle: "So funktioniert es",
     howSteps: [
@@ -134,22 +143,41 @@ export default async function LocaleHomePage({ params }: PageProps) {
           <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
             {t.heroSubtitle}
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href={`/${locale}/teacher-tools`}
-              className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
-            >
-              {t.primaryCta}
-            </Link>
-            <Link
-              href={`/${locale}/5-klass/proporcii/trainer`}
-              className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100"
-            >
-              {t.secondaryCta}
-            </Link>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-white/90 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                {t.studentLabel}
+              </p>
+              <p className="mt-1 text-sm text-slate-600">{t.studentHint}</p>
+              <div className="mt-3">
+                <Link
+                  href={`/${locale}/5-klass/proporcii`}
+                  className="inline-flex items-center justify-center rounded-lg border border-blue-700 bg-blue-700 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-800"
+                >
+                  {t.studentCta}
+                </Link>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-white/90 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                {t.teacherLabel}
+              </p>
+              <p className="mt-1 text-sm text-slate-600">{t.teacherHint}</p>
+              <div className="mt-3">
+                <Link
+                  href={`/${locale}/teacher/variants`}
+                  className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+                >
+                  {t.teacherHeroCta}
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      <HomeContinueSkillCard locale={locale} />
 
       <TeacherQuickStartWidget locale={locale} />
 
@@ -187,30 +215,6 @@ export default async function LocaleHomePage({ params }: PageProps) {
           >
             {t.teacherCta}
           </Link>
-        </div>
-      </SurfaceCard>
-
-      <SurfaceCard className="p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-lg font-semibold tracking-tight text-slate-950">{t.studentTitle}</h2>
-            <p className="mt-1 text-sm leading-6 text-slate-600">{t.studentBody}</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <HomeProgressCta locale={locale} />
-            <Link
-              href={`/${locale}/progress`}
-              className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100"
-            >
-              {t.studentProgressLink}
-            </Link>
-            <Link
-              href="#topics-catalog"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100"
-            >
-              {t.browseTopics}
-            </Link>
-          </div>
         </div>
       </SurfaceCard>
 
