@@ -62,6 +62,8 @@ test("aggregateCompare computes user/platform metrics and filters by 30-day wind
 
   // Users with accuracy < current user's 0.75: b,c,d => 3 / 6 => 50%
   assert.equal(result.percentile, 50);
+  assert.equal(result.rank.cohortSize, 6);
+  assert.equal(result.rank.position, 2);
 });
 
 test("aggregateCompare handles current user with total < 10 while cohort still exists", () => {
@@ -80,6 +82,8 @@ test("aggregateCompare handles current user with total < 10 while cohort still e
   assert.equal(result.platform.usersCount, 2);
   assert.equal(result.platform.medianTotal, 11);
   assert.equal(result.percentile, 0);
+  assert.equal(result.rank.cohortSize, 2);
+  assert.equal(result.rank.position, null);
 });
 
 test("aggregateCompare returns null percentile/platform values when no cohort users match threshold", () => {
@@ -111,4 +115,6 @@ test("aggregateCompare returns null percentile/platform values when no cohort us
   assert.equal(result.platform.avgAccuracy, null);
   assert.equal(result.platform.medianTotal, null);
   assert.equal(result.percentile, null);
+  assert.equal(result.rank.cohortSize, 0);
+  assert.equal(result.rank.position, null);
 });

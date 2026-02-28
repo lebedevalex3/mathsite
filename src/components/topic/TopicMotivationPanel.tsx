@@ -71,6 +71,12 @@ function percent(value: number) {
   return `${Math.round(value * 100)}%`;
 }
 
+function formatRank(position: number | null, cohortSize: number, percentile: number | null, fallback: string) {
+  if (!position || cohortSize <= 0) return fallback;
+  if (percentile === null) return `#${position}/${cohortSize}`;
+  return `#${position}/${cohortSize} (${Math.round(percentile)}%)`;
+}
+
 export function TopicMotivationPanel({ locale, topicId, progressHref }: Props) {
   const t = copy[locale];
   const [motivation, setMotivation] = useState<MotivationModel | null>(null);
@@ -116,6 +122,8 @@ export function TopicMotivationPanel({ locale, topicId, progressHref }: Props) {
   const level = motivation?.level ?? 1;
   const xp = motivation?.xp ?? 0;
   const rankPercentile = motivation?.rankPercentile ?? null;
+  const rankPosition = motivation?.rankPosition ?? null;
+  const rankCohortSize = motivation?.rankCohortSize ?? 0;
 
   return (
     <SurfaceCard className="p-6">
@@ -141,7 +149,7 @@ export function TopicMotivationPanel({ locale, topicId, progressHref }: Props) {
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.rank}</p>
           <p className="mt-1 text-sm font-medium text-slate-900">
-            {rankPercentile === null ? t.rankFallback : `${rankPercentile}%`}
+            {formatRank(rankPosition, rankCohortSize, rankPercentile, t.rankFallback)}
           </p>
         </div>
       </div>

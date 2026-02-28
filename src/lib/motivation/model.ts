@@ -20,6 +20,8 @@ export type MotivationModel = {
   level: number;
   xp: number;
   rankPercentile: number | null;
+  rankPosition: number | null;
+  rankCohortSize: number;
   summary: MotivationSummary;
   badge: {
     kind: MotivationBadgeKind;
@@ -90,6 +92,8 @@ function resolveBadge(scope: MotivationScope, summary: MotivationSummary) {
 export function buildMotivationModel(params: {
   progressMap: SkillProgressMap;
   rankPercentile: number | null;
+  rankPosition: number | null;
+  rankCohortSize: number;
   scope: MotivationScope;
 }): MotivationModel {
   const summary = summarize(params.progressMap);
@@ -104,6 +108,8 @@ export function buildMotivationModel(params: {
     level,
     xp,
     rankPercentile: params.rankPercentile,
+    rankPosition: params.rankPosition,
+    rankCohortSize: params.rankCohortSize,
     summary,
     badge: resolveBadge(params.scope, summary),
   };

@@ -12,6 +12,8 @@ test("buildMotivationModel returns attempts badge for early progress", () => {
   const model = buildMotivationModel({
     progressMap,
     rankPercentile: null,
+    rankPosition: null,
+    rankCohortSize: 0,
     scope: "home",
   });
 
@@ -30,11 +32,15 @@ test("buildMotivationModel returns mastery badge after attempts and accuracy tar
   const model = buildMotivationModel({
     progressMap,
     rankPercentile: 72.5,
+    rankPosition: 3,
+    rankCohortSize: 12,
     scope: "home",
   });
 
   assert.equal(model.badge.kind, "mastery");
   assert.equal(model.rankPercentile, 72.5);
+  assert.equal(model.rankPosition, 3);
+  assert.equal(model.rankCohortSize, 12);
 });
 
 test("buildMotivationModel supports topic-specific streak stage", () => {
@@ -47,6 +53,8 @@ test("buildMotivationModel supports topic-specific streak stage", () => {
   const model = buildMotivationModel({
     progressMap,
     rankPercentile: 40,
+    rankPosition: 5,
+    rankCohortSize: 9,
     scope: "topic",
   });
 

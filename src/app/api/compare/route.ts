@@ -45,13 +45,14 @@ export async function GET(request: Request) {
 
   logApiResult(span, 200, {
     code: "OK",
-    meta: { topicId, percentile: compare.percentile },
+    meta: { topicId, percentile: compare.percentile, rankPosition: compare.rank.position },
   });
   return NextResponse.json({
     ok: true,
     topicId,
     currentUser: compare.currentUser,
     platform: compare.platform,
+    rank: compare.rank,
     percentile: compare.percentile,
   });
 }

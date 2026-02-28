@@ -32,6 +32,10 @@ export type AggregateCompareResult = {
     cohortMinAttempts: number;
     windowDays: number;
   };
+  rank: {
+    position: number | null;
+    cohortSize: number;
+  };
   percentile: number | null;
 };
 
@@ -105,6 +109,14 @@ export function aggregateCompare({
         100
       : null;
 
+  const rankedCohort = [...cohortUsers].sort((left, right) => {
+    if (left.accuracy !== right.accuracy) return right.accuracy - left.accuracy;
+    if (left.total !== right.total) return right.total - left.total;
+    return left.userId.localeCompare(right.userId);
+  });
+  const rankIndex = rankedCohort.findIndex((row) => row.userId === currentUserId);
+  const rankPosition = rankIndex >= 0 ? rankIndex + 1 : null;
+
   return {
     currentUser,
     platform: {
@@ -113,6 +125,10 @@ export function aggregateCompare({
       usersCount,
       cohortMinAttempts,
       windowDays,
+    },
+    rank: {
+      position: rankPosition,
+      cohortSize: usersCount,
     },
     percentile,
   };

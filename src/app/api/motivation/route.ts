@@ -69,6 +69,8 @@ export async function GET(request: Request) {
   const motivation = buildMotivationModel({
     progressMap: userProgress,
     rankPercentile: compare.percentile,
+    rankPosition: compare.rank.position,
+    rankCohortSize: compare.rank.cohortSize,
     scope,
   });
 
