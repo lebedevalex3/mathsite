@@ -26,6 +26,28 @@ export const numberAnswerSchema = z.object({
   value: z.number().finite(),
 });
 
+export const fractionAnswerSchema = z.object({
+  type: z.literal("fraction"),
+  numerator: z.number().finite(),
+  denominator: z.number().finite().refine((value) => value !== 0, {
+    message: "denominator must not be 0",
+  }),
+});
+
+export const ratioAnswerSchema = z.object({
+  type: z.literal("ratio"),
+  left: z.number().finite(),
+  right: z.number().finite().refine((value) => value !== 0, {
+    message: "right side of ratio must not be 0",
+  }),
+});
+
+export const answerSchema = z.discriminatedUnion("type", [
+  numberAnswerSchema,
+  fractionAnswerSchema,
+  ratioAnswerSchema,
+]);
+
 export const taskSchema = z
   .object({
     id: taskIdSchema,
@@ -33,7 +55,7 @@ export const taskSchema = z
     skill_id: skillIdSchema,
     difficulty: z.number().int().min(1).max(5),
     statement_md: z.string().trim().min(1),
-    answer: numberAnswerSchema,
+    answer: answerSchema,
   })
   .superRefine((task, ctx) => {
     if (!task.skill_id.startsWith(`${task.topic_id}.`)) {
@@ -61,5 +83,8 @@ export const taskBankSchema = z.object({
 });
 
 export type NumberAnswer = z.infer<typeof numberAnswerSchema>;
+export type FractionAnswer = z.infer<typeof fractionAnswerSchema>;
+export type RatioAnswer = z.infer<typeof ratioAnswerSchema>;
+export type TaskAnswer = z.infer<typeof answerSchema>;
 export type Task = z.infer<typeof taskSchema>;
 export type TaskBank = z.infer<typeof taskBankSchema>;

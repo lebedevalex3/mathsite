@@ -7,11 +7,12 @@ import { proportionSkills } from "@/src/lib/topics/proportion/module-data";
 import TrainingRunner from "./TrainingRunner";
 
 const TOPIC_ID = "math.proportion";
-const REQUIRED_TASK_COUNT = 10;
+const DEFAULT_TASK_COUNT = 10;
+const ALLOWED_TASK_COUNTS = [5, 10, 15, 20] as const;
 
 type PageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ skill?: string | string[] }>;
+  searchParams: Promise<{ skill?: string | string[]; count?: string | string[] }>;
 };
 
 function shuffle<T>(items: T[]): T[] {
@@ -24,7 +25,7 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 function isSkillId(value: string): boolean {
-  return /^g5\.proportion\.[a-z][a-z0-9_]*$/.test(value);
+  return /^math\.proportion\.[a-z][a-z0-9_]*$/.test(value);
 }
 
 function groupCounts(tasks: Task[]) {
@@ -35,13 +36,21 @@ function groupCounts(tasks: Task[]) {
   return [...counts.entries()].sort(([a], [b]) => a.localeCompare(b));
 }
 
+function parseTaskCount(raw: string | string[] | undefined): number {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  const parsed = value ? Number(value) : NaN;
+  if (ALLOWED_TASK_COUNTS.includes(parsed as (typeof ALLOWED_TASK_COUNTS)[number])) return parsed;
+  return DEFAULT_TASK_COUNT;
+}
+
 export default async function ProportionTrainPage({
   params,
   searchParams,
 }: PageProps) {
   const { locale } = await params;
-  const { skill } = await searchParams;
+  const { skill, count } = await searchParams;
   const skillId = Array.isArray(skill) ? skill[0] : skill;
+  const taskCount = parseTaskCount(count);
 
   const { tasks, errors } = await getTasksForTopic(TOPIC_ID);
 
@@ -68,7 +77,7 @@ export default async function ProportionTrainPage({
         <ul>
           {allSkillCounts.map(([id, count]) => (
             <li key={id}>
-              <a href={`/${locale}/topics/proportion/train?skill=${encodeURIComponent(id)}`}>
+              <a href={`/${locale}/topics/proportion/train?skill=${encodeURIComponent(id)}&count=${taskCount}`}>
                 {id}
               </a>{" "}
               ({count})
@@ -90,13 +99,13 @@ export default async function ProportionTrainPage({
     title: skill.title,
   }));
 
-  if (skillTasks.length < REQUIRED_TASK_COUNT) {
+  if (skillTasks.length < taskCount) {
     return (
       <main>
         <h1>Пока недостаточно задач для тренировки</h1>
         <p>
           Для навыка <code>{skillId}</code> найдено {skillTasks.length} задач(и),
-          нужно минимум {REQUIRED_TASK_COUNT}.
+          нужно минимум {taskCount}.
         </p>
         <p>
           <a href={`/${locale}/topics/proportion`}>Вернуться к теме</a>
@@ -105,7 +114,7 @@ export default async function ProportionTrainPage({
     );
   }
 
-  const selectedTasks = shuffle(skillTasks).slice(0, REQUIRED_TASK_COUNT);
+  const selectedTasks = shuffle(skillTasks).slice(0, taskCount);
 
   return (
     <main>
@@ -114,6 +123,7 @@ export default async function ProportionTrainPage({
         skillId={skillId}
         skillTitle={skillTitle}
         skillOrder={skillOrder}
+        trainingCount={taskCount}
         tasks={selectedTasks}
       />
     </main>

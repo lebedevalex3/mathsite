@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "validate:tasks": "tsx scripts/validate-tasks.ts",
     "validate:content": "tsx scripts/validate-content.ts",
+    "proportion:add-skill": "tsx scripts/proportion-add-skill.ts",
     "content:new-subtopic": "tsx scripts/content-new-subtopic.ts",
     "content:new-topic": "tsx scripts/content-new-topic.ts",
     "content:migrate-topic-stage2c": "tsx scripts/content-migrate-topic-stage2c.ts",

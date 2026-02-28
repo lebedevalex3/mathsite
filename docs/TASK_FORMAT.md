@@ -27,19 +27,31 @@
 ## Поля задачи
 
 - `id`: стабильный `task_id`, уникальный во всех JSON-файлах
-- `topic_id`: `g<класс>.<topic_slug>` (например, `math.proportion`, `math.negative_numbers`)
+- `topic_id`: `<namespace>.<topic_slug>` (например, `math.proportion`, `math.negative_numbers`)
 - `skill_id`: один из `skill_id` из соответствующего файла `docs/TAXONOMY*.md`
 - `difficulty`: целое число от `1` до `5`
 - `statement_md`: непустой Markdown-текст (можно использовать LaTeX)
-- `answer`: пока только число
+- `answer`: один из поддерживаемых форматов (см. ниже)
 
-## Ответ (MVP)
+## Ответ
 
-Пока поддерживается только этот формат:
+Поддерживаемые форматы:
 
 ```json
 { "type": "number", "value": 12 }
 ```
+
+```json
+{ "type": "fraction", "numerator": 3, "denominator": 4 }
+```
+
+```json
+{ "type": "ratio", "left": 3, "right": 4 }
+```
+
+Примечание:
+- для `fraction.denominator` и `ratio.right` значение `0` запрещено;
+- в тренажёре пропорций `fraction/ratio` проверяются по эквивалентности (например, `3:4` и `6:8` считаются верными).
 
 ## Валидация
 

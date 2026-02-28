@@ -6,5 +6,5 @@ type PageProps = {
 
 export default async function Grade5UravneniyaPage({ params }: PageProps) {
   const { locale } = await params;
-  redirect(`/${locale}/5-klass/equations/train`);
+  redirect(`/${locale}/topics/equations/train`);
 }

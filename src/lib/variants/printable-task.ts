@@ -26,7 +26,10 @@ type VariantTaskLike = Pick<VariantTaskWithContent, "taskId" | "orderIndex"> & {
   task: {
     statement_md: string;
     skill_id?: string;
-    answer?: { type?: string; value?: unknown };
+    answer?:
+      | { type?: "number"; value?: unknown }
+      | { type?: "fraction"; numerator?: unknown; denominator?: unknown }
+      | { type?: "ratio"; left?: unknown; right?: unknown };
     answer_md?: string;
   };
 };
@@ -86,6 +89,20 @@ function normalizeAnswerText(task: VariantTaskLike["task"]): string | undefined 
   if (task.answer?.type === "number" && typeof task.answer.value === "number") {
     return String(task.answer.value);
   }
+  if (
+    task.answer?.type === "fraction" &&
+    typeof task.answer.numerator === "number" &&
+    typeof task.answer.denominator === "number"
+  ) {
+    return `${task.answer.numerator}/${task.answer.denominator}`;
+  }
+  if (
+    task.answer?.type === "ratio" &&
+    typeof task.answer.left === "number" &&
+    typeof task.answer.right === "number"
+  ) {
+    return `${task.answer.left}:${task.answer.right}`;
+  }
 
   return undefined;
 }
@@ -127,4 +144,3 @@ export function toPrintableTasks(items: VariantTaskLike[]): PrintableTask[] {
     .sort((a, b) => a.orderIndex - b.orderIndex)
     .map((item) => toPrintableTask(item));
 }
-

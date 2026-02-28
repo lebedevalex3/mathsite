@@ -23,7 +23,7 @@ const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {
   equations: {
     topicSlug: "equations",
     domain: "algebra",
-    routePathSegments: ["5-klass", "equations"],
+    routePathSegments: ["topics", "equations"],
     defaultLocale: "ru",
     titles: {
       ru: "Уравнения",
@@ -34,7 +34,7 @@ const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {
   "negative-numbers": {
     topicSlug: "negative-numbers",
     domain: "algebra",
-    routePathSegments: ["6-klass", "negative-numbers"],
+    routePathSegments: ["topics", "negative-numbers"],
     defaultLocale: "ru",
     titles: {
       ru: "Отрицательные числа",

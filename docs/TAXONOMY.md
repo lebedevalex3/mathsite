@@ -20,6 +20,7 @@
 - `math.proportion.solve_price_word_problem` — задачи на цену/стоимость
 - `math.proportion.solve_productivity_word_problem` — задачи на одинаковую производительность
 - `math.proportion.apply_proportion_property` — применять свойство `ad = bc` в вычислениях
+- `math.proportion.understand_ratio_as_quotient` — понимать отношение как частное
 
 ## Subtopics (подтемы модуля)
 
@@ -52,6 +53,7 @@
 - `math.proportion.solve_scale_word_problem` -> `math.proportion.problems`
 - `math.proportion.solve_price_word_problem` -> `math.proportion.problems`
 - `math.proportion.solve_productivity_word_problem` -> `math.proportion.inverse`
+- `math.proportion.understand_ratio_as_quotient` -> `math.proportion.direct`
 
 ## Правила стабильности ID
 

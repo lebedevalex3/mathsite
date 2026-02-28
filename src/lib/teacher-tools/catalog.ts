@@ -117,7 +117,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     summary: "Различать уравнение и находить число, которое делает равенство верным.",
     example: "Какое число является корнем уравнения x + 4 = 9?",
     cardHref: "/teacher-tools/skills/math.equations.understand_equation_and_root",
-    trainerHref: "/5-klass/equations/train?skill=math.equations.understand_equation_and_root",
+    trainerHref: "/topics/equations/train?skill=math.equations.understand_equation_and_root",
     algorithm: [
       "Прочитай уравнение и найди, где стоит x.",
       "Подбери число или выполни обратное действие.",
@@ -132,7 +132,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     summary: "Подставлять число и определять, верно ли равенство.",
     example: "Проверь: число 3 является корнем уравнения x + 5 = 8?",
     cardHref: "/teacher-tools/skills/math.equations.check_root",
-    trainerHref: "/5-klass/equations/train?skill=math.equations.check_root",
+    trainerHref: "/topics/equations/train?skill=math.equations.check_root",
     algorithm: [
       "Подставь данное число вместо x.",
       "Вычисли левую часть уравнения.",
@@ -147,7 +147,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     summary: "Находить неизвестное при сложении и вычитании, когда x стоит слева.",
     example: "Реши уравнение: x + 9 = 17",
     cardHref: "/teacher-tools/skills/math.equations.solve_x_plus_minus_a_equals_b",
-    trainerHref: "/5-klass/equations/train?skill=math.equations.solve_x_plus_minus_a_equals_b",
+    trainerHref: "/topics/equations/train?skill=math.equations.solve_x_plus_minus_a_equals_b",
     algorithm: [
       "Определи вид уравнения: x + a = b или x - a = b.",
       "Для x + a = b: вычисли x = b - a.",
@@ -162,7 +162,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     summary: "Решать уравнения, где неизвестное стоит после числа.",
     example: "Реши уравнение: 25 - x = 7",
     cardHref: "/teacher-tools/skills/math.equations.solve_a_plus_minus_x_equals_b",
-    trainerHref: "/5-klass/equations/train?skill=math.equations.solve_a_plus_minus_x_equals_b",
+    trainerHref: "/topics/equations/train?skill=math.equations.solve_a_plus_minus_x_equals_b",
     algorithm: [
       "Определи вид уравнения: a + x = b или a - x = b.",
       "Для a + x = b: вычисли x = b - a.",
@@ -177,7 +177,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     summary: "Решать уравнения на умножение и деление с целыми ответами.",
     example: "Реши уравнение: 6 · x = 42",
     cardHref: "/teacher-tools/skills/math.equations.solve_multiplication_and_division_equations",
-    trainerHref: "/5-klass/equations/train?skill=math.equations.solve_multiplication_and_division_equations",
+    trainerHref: "/topics/equations/train?skill=math.equations.solve_multiplication_and_division_equations",
     algorithm: [
       "Определи вид уравнения: a · x = b или x : a = b.",
       "Для a · x = b: вычисли x = b : a.",
@@ -192,7 +192,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     summary: "Короткие текстовые задачи в 1 шаг на составление уравнения.",
     example: "У Маши было x карандашей. После покупки ещё 6 стало 15. Найди x.",
     cardHref: "/teacher-tools/skills/math.equations.solve_basic_word_equations",
-    trainerHref: "/5-klass/equations/train?skill=math.equations.solve_basic_word_equations",
+    trainerHref: "/topics/equations/train?skill=math.equations.solve_basic_word_equations",
     algorithm: [
       "Выдели неизвестное и обозначь его x.",
       "Переведи условие в уравнение.",

@@ -1081,6 +1081,7 @@
         "value": 200
       }
     },
+
     {
       "id": "math.proportion.solve_price_word_problem.000009",
       "topic_id": "math.proportion",
@@ -1101,6 +1102,124 @@
       "answer": {
         "type": "number",
         "value": 300
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000001",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 1,
+      "statement_md": "В классе 28 учеников: 16 девочек и 12 мальчиков. Запишите отношение числа девочек к числу мальчиков в сокращенном виде.",
+      "answer": {
+        "type": "ratio",
+        "left": 4,
+        "right": 3
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000002",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 2,
+      "statement_md": "На тарелке были яблоки и груши. Яблок оказалось на 6 больше, чем груш, всего фруктов 30. Запишите отношение числа яблок к числу груш в сокращенном виде.",
+      "answer": {
+        "type": "ratio",
+        "left": 3,
+        "right": 2
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000003",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 1,
+      "statement_md": "Для раствора взяли 200 г воды и 50 г соли. Запишите отношение массы соли к массе воды в виде дроби.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000004",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 2,
+      "statement_md": "За контрольную работу получили: 8 оценок «5», 10 оценок «4», остальные — «3». Всего работ 25. Запишите отношение числа «5» к числу «3» в сокращенном виде.",
+      "answer": {
+        "type": "ratio",
+        "left": 8,
+        "right": 7
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000005",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 1,
+      "statement_md": "Машина проехала 180 км за 3 часа. Найдите значение отношения расстояния ко времени. Что означает полученное число в контексте задачи?",
+      "answer": {
+        "type": "number",
+        "value": 60
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000006",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 1,
+      "statement_md": "В классе 30 учеников: 18 девочек и 12 мальчиков. Запишите отношение числа девочек к числу мальчиков в сокращенном виде.",
+      "answer": {
+        "type": "ratio",
+        "left": 3,
+        "right": 2
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000007",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 2,
+      "statement_md": "Для раствора взяли 150 г воды и 60 г соли. Запишите отношение массы соли к массе воды в виде дроби в сокращенном виде.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000008",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 2,
+      "statement_md": "За контрольную работу получили: 9 оценок «5», 7 оценок «4», остальные — «3». Всего работ 22. Запишите отношение числа «5» к числу «3» в сокращенном виде.",
+      "answer": {
+        "type": "ratio",
+        "left": 3,
+        "right": 2
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000009",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 1,
+      "statement_md": "Машина проехала 240 км за 4 часа. Найдите значение отношения расстояния ко времени.",
+      "answer": {
+        "type": "number",
+        "value": 60
+      }
+    },
+    {
+      "id": "math.proportion.understand_ratio_as_quotient.000010",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.understand_ratio_as_quotient",
+      "difficulty": 2,
+      "statement_md": "На складе 45 больших коробок и 30 малых. Запишите отношение больших коробок к малым в виде дроби в сокращенном виде.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 2
       }
     }
   ]

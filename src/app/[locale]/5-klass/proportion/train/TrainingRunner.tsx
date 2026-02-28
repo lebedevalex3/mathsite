@@ -18,7 +18,7 @@ type AttemptRecord = {
   skill_id: string;
   answer_raw: string;
   answer_value: number | null;
-  expected_value: number;
+  expected_value: number | null;
   is_correct: boolean;
   task_elapsed_ms: number;
   total_elapsed_ms: number;
@@ -30,6 +30,7 @@ type TrainingRunnerProps = {
   skillId: string;
   skillTitle: string;
   skillOrder: Array<{ id: string; title: string }>;
+  trainingCount: number;
   tasks: TrainingTask[];
 };
 
@@ -128,6 +129,18 @@ function parseNumberInput(raw: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+function areEquivalentFractions(aNum: number, aDen: number, bNum: number, bDen: number) {
+  if (aDen === 0 || bDen === 0) return false;
+  const diff = aNum * bDen - bNum * aDen;
+  return Math.abs(diff) < 1e-9;
+}
+
+function formatExpectedAnswer(answer: TrainingTask["answer"]) {
+  if (answer.type === "number") return String(answer.value);
+  if (answer.type === "fraction") return `${answer.numerator}/${answer.denominator}`;
+  return `${answer.left}:${answer.right}`;
+}
+
 function readStoredAttempts(): AttemptRecord[] {
   if (typeof window === "undefined") return [];
 
@@ -183,6 +196,7 @@ export default function TrainingRunner({
   skillId,
   skillTitle,
   skillOrder,
+  trainingCount,
   tasks,
 }: TrainingRunnerProps) {
   const showDebug = process.env.NODE_ENV !== "production";
@@ -192,7 +206,9 @@ export default function TrainingRunner({
   const [startedAt] = useState(() => Date.now());
   const [taskStartedAt, setTaskStartedAt] = useState(() => Date.now());
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [inputValue, setInputValue] = useState("");
+  const [numberInputValue, setNumberInputValue] = useState("");
+  const [leftInputValue, setLeftInputValue] = useState("");
+  const [rightInputValue, setRightInputValue] = useState("");
   const [checked, setChecked] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [lastTaskElapsedMs, setLastTaskElapsedMs] = useState<number | null>(null);
@@ -206,6 +222,8 @@ export default function TrainingRunner({
   const taskTimer = useTaskTimer(timerEnabled);
 
   const currentTask = tasks[currentIndex];
+  const currentAnswerType = currentTask?.answer.type ?? "number";
+  const usesPairInput = currentAnswerType === "fraction" || currentAnswerType === "ratio";
   const correctCount = results.filter((item) => item.isCorrect).length;
   const finished = currentIndex >= tasks.length;
   const progressValue = Math.min(currentIndex + (checked ? 1 : 0), tasks.length);
@@ -300,7 +318,7 @@ export default function TrainingRunner({
 
           <div className="mt-6 flex flex-wrap gap-2">
             <ButtonLink
-              href={`/${locale}/topics/proportion/train?skill=${encodeURIComponent(skillId)}`}
+              href={`/${locale}/topics/proportion/train?skill=${encodeURIComponent(skillId)}&count=${trainingCount}`}
               variant="primary"
             >
               Повторить этот навык
@@ -310,7 +328,7 @@ export default function TrainingRunner({
             </ButtonLink>
             {recommendedNextSkill && recommendedNextSkill.id !== skillId ? (
               <ButtonLink
-                href={`/${locale}/topics/proportion/train?skill=${encodeURIComponent(recommendedNextSkill.id)}`}
+                href={`/${locale}/topics/proportion/train?skill=${encodeURIComponent(recommendedNextSkill.id)}&count=${trainingCount}`}
                 variant="secondary"
               >
                 Перейти к следующему навыку
@@ -340,11 +358,31 @@ export default function TrainingRunner({
     if (!currentTask || checked) return;
     taskTimer.stop();
 
-    const parsedAnswer = parseNumberInput(inputValue);
-    const expected = currentTask.answer.value;
+    const parsedNumber = parseNumberInput(numberInputValue);
+    const parsedLeft = parseNumberInput(leftInputValue);
+    const parsedRight = parseNumberInput(rightInputValue);
     const taskElapsedMs = Date.now() - taskStartedAt;
     const totalMs = Date.now() - startedAt;
-    const ok = parsedAnswer !== null && parsedAnswer === expected;
+    let ok = false;
+    let expectedValueForAttempt: number | null = null;
+    let userAnswerRaw = numberInputValue;
+
+    if (currentTask.answer.type === "number") {
+      expectedValueForAttempt = currentTask.answer.value;
+      ok = parsedNumber !== null && parsedNumber === currentTask.answer.value;
+    } else if (currentTask.answer.type === "fraction") {
+      userAnswerRaw = `${leftInputValue}/${rightInputValue}`;
+      ok =
+        parsedLeft !== null &&
+        parsedRight !== null &&
+        areEquivalentFractions(parsedLeft, parsedRight, currentTask.answer.numerator, currentTask.answer.denominator);
+    } else if (currentTask.answer.type === "ratio") {
+      userAnswerRaw = `${leftInputValue}:${rightInputValue}`;
+      ok =
+        parsedLeft !== null &&
+        parsedRight !== null &&
+        areEquivalentFractions(parsedLeft, parsedRight, currentTask.answer.left, currentTask.answer.right);
+    }
 
     setChecked(true);
     setIsCorrect(ok);
@@ -359,9 +397,9 @@ export default function TrainingRunner({
       session_id: sessionId,
       task_id: currentTask.id,
       skill_id: currentTask.skill_id,
-      answer_raw: inputValue,
-      answer_value: parsedAnswer,
-      expected_value: expected,
+      answer_raw: userAnswerRaw,
+      answer_value: parsedNumber,
+      expected_value: expectedValueForAttempt,
       is_correct: ok,
       task_elapsed_ms: taskElapsedMs,
       total_elapsed_ms: totalMs,
@@ -373,7 +411,7 @@ export default function TrainingRunner({
       skillId: currentTask.skill_id,
       taskId: currentTask.id,
       isCorrect: ok,
-      userAnswer: inputValue,
+      userAnswer: userAnswerRaw,
       durationMs: taskElapsedMs,
     });
   }
@@ -387,7 +425,9 @@ export default function TrainingRunner({
       }
       return nextIndex;
     });
-    setInputValue("");
+    setNumberInputValue("");
+    setLeftInputValue("");
+    setRightInputValue("");
     setChecked(false);
     setIsCorrect(null);
     setLastTaskElapsedMs(null);
@@ -402,7 +442,7 @@ export default function TrainingRunner({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-              Тренировка: 10 задач подряд
+              Тренировка: {trainingCount} задач подряд
             </p>
             <p className="mt-1 text-sm font-medium text-slate-900">
               Задача {currentIndex + 1} / {tasks.length}
@@ -465,7 +505,11 @@ export default function TrainingRunner({
               Задача {currentIndex + 1} из {tasks.length}
             </h1>
             <p className="mt-1 text-sm text-slate-600">
-              Введите ответ числом и проверьте результат.
+              {currentAnswerType === "number"
+                ? "Введите ответ числом и проверьте результат."
+                : currentAnswerType === "fraction"
+                  ? "Введите дробь: числитель и знаменатель."
+                  : "Введите отношение: левую и правую часть."}
             </p>
           </div>
           <div className="text-right">
@@ -492,45 +536,112 @@ export default function TrainingRunner({
         </div>
 
         <div className="mt-6">
-          <label
-            htmlFor="number-answer"
-            className="mb-2 block text-sm font-medium text-slate-800"
-          >
-            Ответ (число)
-          </label>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <input
-              id="number-answer"
-              type="text"
-              inputMode="decimal"
-              value={inputValue}
-              disabled={checked}
-              onFocus={handleFirstInputAction}
-              onChange={(event) => {
-                handleFirstInputAction();
-                setInputValue(event.target.value);
-              }}
-              onKeyDown={(event) => {
-                handleFirstInputAction();
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  if (!checked) handleCheck();
-                }
-              }}
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500 disabled:bg-slate-100 disabled:text-slate-500"
-              placeholder="Например, 12"
-              autoComplete="off"
-            />
-            <button
-              type="button"
-              onClick={handleCheck}
-              disabled={checked}
-              className="inline-flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Проверить ответ
-            </button>
-          </div>
-          <p className="mt-2 text-xs text-slate-500">Нажмите Enter, чтобы проверить ответ</p>
+          {!usesPairInput ? (
+            <>
+              <label
+                htmlFor="number-answer"
+                className="mb-2 block text-sm font-medium text-slate-800"
+              >
+                Ответ (число)
+              </label>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <input
+                  id="number-answer"
+                  type="text"
+                  inputMode="decimal"
+                  value={numberInputValue}
+                  disabled={checked}
+                  onFocus={handleFirstInputAction}
+                  onChange={(event) => {
+                    handleFirstInputAction();
+                    setNumberInputValue(event.target.value);
+                  }}
+                  onKeyDown={(event) => {
+                    handleFirstInputAction();
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      if (!checked) handleCheck();
+                    }
+                  }}
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500 disabled:bg-slate-100 disabled:text-slate-500"
+                  placeholder="Например, 12"
+                  autoComplete="off"
+                />
+                <button
+                  type="button"
+                  onClick={handleCheck}
+                  disabled={checked}
+                  className="inline-flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Проверить ответ
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <label className="mb-2 block text-sm font-medium text-slate-800">
+                {currentAnswerType === "fraction" ? "Ответ (дробь)" : "Ответ (отношение)"}
+              </label>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={leftInputValue}
+                  disabled={checked}
+                  onFocus={handleFirstInputAction}
+                  onChange={(event) => {
+                    handleFirstInputAction();
+                    setLeftInputValue(event.target.value);
+                  }}
+                  onKeyDown={(event) => {
+                    handleFirstInputAction();
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      if (!checked) handleCheck();
+                    }
+                  }}
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500 disabled:bg-slate-100 disabled:text-slate-500 sm:w-40"
+                  placeholder={currentAnswerType === "fraction" ? "Числитель" : "Левая часть"}
+                  autoComplete="off"
+                />
+                <span className="text-center text-lg font-semibold text-slate-700 sm:w-6">
+                  {currentAnswerType === "fraction" ? "/" : ":"}
+                </span>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={rightInputValue}
+                  disabled={checked}
+                  onFocus={handleFirstInputAction}
+                  onChange={(event) => {
+                    handleFirstInputAction();
+                    setRightInputValue(event.target.value);
+                  }}
+                  onKeyDown={(event) => {
+                    handleFirstInputAction();
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      if (!checked) handleCheck();
+                    }
+                  }}
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500 disabled:bg-slate-100 disabled:text-slate-500 sm:w-40"
+                  placeholder={currentAnswerType === "fraction" ? "Знаменатель" : "Правая часть"}
+                  autoComplete="off"
+                />
+                <button
+                  type="button"
+                  onClick={handleCheck}
+                  disabled={checked}
+                  className="inline-flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Проверить ответ
+                </button>
+              </div>
+            </>
+          )}
+          <p className="mt-2 text-xs text-slate-500">
+            Нажмите Enter, чтобы проверить ответ
+          </p>
         </div>
 
         {showDebug ? (
@@ -571,7 +682,7 @@ export default function TrainingRunner({
             {!isCorrect ? (
               <p className="mt-2 text-sm text-slate-700">
                 Правильный ответ:{" "}
-                <strong className="text-slate-950">{currentTask.answer.value}</strong>
+                <strong className="text-slate-950">{formatExpectedAnswer(currentTask.answer)}</strong>
               </p>
             ) : null}
             {timerEnabled ? (

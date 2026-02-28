@@ -1,5 +1,9 @@
 export type ProportionSubtopic = {
-  id: "math.proportion.rule" | "math.proportion.direct" | "math.proportion.inverse" | "math.proportion.problems";
+  id:
+    | "math.proportion.rule"
+    | "math.proportion.direct"
+    | "math.proportion.inverse"
+    | "math.proportion.problems";
   slug: "rule" | "direct" | "inverse" | "problems";
   title: string;
   description: string;
@@ -36,7 +40,8 @@ export const proportionSubtopics: ProportionSubtopic[] = [
     id: "math.proportion.rule",
     slug: "rule",
     title: "Основное правило пропорции",
-    description: "Свойство ad = bc, проверка пропорции и поиск неизвестного члена.",
+    description:
+      "Свойство ad = bc, проверка пропорции и поиск неизвестного члена.",
     status: "ready",
   },
   {
@@ -57,12 +62,16 @@ export const proportionSubtopics: ProportionSubtopic[] = [
     id: "math.proportion.problems",
     slug: "problems",
     title: "Задачи на пропорции",
-    description: "Текстовые задачи на масштаб, цену, производительность и модели.",
+    description:
+      "Текстовые задачи на масштаб, цену, производительность и модели.",
     status: "ready",
   },
 ];
 
-export const proportionSubtopicToc: Record<ProportionSubtopic["slug"], SubtopicTocItem[]> = {
+export const proportionSubtopicToc: Record<
+  ProportionSubtopic["slug"],
+  SubtopicTocItem[]
+> = {
   rule: [
     { id: "opredelenie", label: "Определение" },
     { id: "osnovnoe-svoystvo", label: "Основное свойство" },
@@ -108,7 +117,8 @@ export const proportionSkills: ProportionSkill[] = [
   {
     id: "math.proportion.find_unknown_extreme",
     title: "Найти неизвестный крайний член",
-    summary: "Решение пропорций вида $\\frac{x}{b}=\\frac{c}{d}$ или $\\frac{a}{b}=\\frac{c}{x}$.",
+    summary:
+      "Решение пропорций вида $\\frac{x}{b}=\\frac{c}{d}$ или $\\frac{a}{b}=\\frac{c}{x}$.",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
   },
@@ -150,7 +160,8 @@ export const proportionSkills: ProportionSkill[] = [
   {
     id: "math.proportion.solve_scale_word_problem",
     title: "Задачи на масштаб",
-    summary: "Переход между длиной на плане и длиной на местности через отношение.",
+    summary:
+      "Переход между длиной на плане и длиной на местности через отношение.",
     subtopicId: "math.proportion.problems",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
   },
@@ -159,6 +170,13 @@ export const proportionSkills: ProportionSkill[] = [
     title: "Задачи на цену",
     summary: "Одинаковая цена за единицу: стоимость, количество, цена.",
     subtopicId: "math.proportion.problems",
+    skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+  },
+  {
+    id: "math.proportion.understand_ratio_as_quotient",
+    title: "Понимать отношение как частное",
+    summary: "про a:b и a/b",
+    subtopicId: "math.proportion.direct",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
   },
 ];
@@ -179,6 +197,7 @@ export const proportionBranches: ProportionBranch[] = [
     },
     skillIds: [
       "math.proportion.transform_ratio",
+      "math.proportion.understand_ratio_as_quotient",
     ],
   },
   {
@@ -233,9 +252,7 @@ export const proportionBranches: ProportionBranch[] = [
       en: "Build a correct proportion from text conditions.",
       de: "Eine korrekte Proportion aus Textbedingungen aufstellen.",
     },
-    skillIds: [
-      "math.proportion.build_proportion_from_text",
-    ],
+    skillIds: ["math.proportion.build_proportion_from_text"],
     dependsOn: ["P"],
   },
   {

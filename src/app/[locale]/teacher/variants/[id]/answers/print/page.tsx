@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
+import { formatTaskAnswer } from "@/src/lib/tasks/answers";
 import { requireTeacherFromCookies } from "@/src/lib/variants/auth";
 import { getVariantDetailForOwner } from "@/src/lib/variants/repository";
 
@@ -142,7 +143,7 @@ export default async function VariantAnswersPrintPage({ params }: PageProps) {
                 <span className="print-answer-number font-medium text-slate-900">
                   {item.orderIndex + 1}.
                 </span>{" "}
-                <span className="text-slate-700">{item.task.answer.value}</span>
+                <span className="text-slate-700">{formatTaskAnswer(item.task.answer)}</span>
               </li>
             ))}
           </ol>

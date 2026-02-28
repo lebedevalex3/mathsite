@@ -18,7 +18,7 @@ type AttemptRecord = {
   skill_id: string;
   answer_raw: string;
   answer_value: number | null;
-  expected_value: number;
+  expected_value: number | null;
   is_correct: boolean;
   task_elapsed_ms: number;
   total_elapsed_ms: number;
@@ -30,6 +30,7 @@ type TrainingRunnerProps = {
   skillId: string;
   skillTitle: string;
   skillOrder: Array<{ id: string; title: string }>;
+  trainingCount: number;
   tasks: TrainingTask[];
 };
 
@@ -128,6 +129,16 @@ function parseNumberInput(raw: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+function getExpectedNumber(answer: TrainingTask["answer"]): number | null {
+  return answer.type === "number" ? answer.value : null;
+}
+
+function formatExpectedAnswer(answer: TrainingTask["answer"]) {
+  if (answer.type === "number") return String(answer.value);
+  if (answer.type === "fraction") return `${answer.numerator}/${answer.denominator}`;
+  return `${answer.left}:${answer.right}`;
+}
+
 function readStoredAttempts(): AttemptRecord[] {
   if (typeof window === "undefined") return [];
 
@@ -183,6 +194,7 @@ export default function TrainingRunner({
   skillId,
   skillTitle,
   skillOrder,
+  trainingCount,
   tasks,
 }: TrainingRunnerProps) {
   const showDebug = process.env.NODE_ENV !== "production";
@@ -300,7 +312,7 @@ export default function TrainingRunner({
 
           <div className="mt-6 flex flex-wrap gap-2">
             <ButtonLink
-              href={`/${locale}/5-klass/equations/train?skill=${encodeURIComponent(skillId)}`}
+              href={`/${locale}/topics/equations/train?skill=${encodeURIComponent(skillId)}&count=${trainingCount}`}
               variant="primary"
             >
               Повторить этот навык
@@ -310,7 +322,7 @@ export default function TrainingRunner({
             </ButtonLink>
             {recommendedNextSkill && recommendedNextSkill.id !== skillId ? (
               <ButtonLink
-                href={`/${locale}/5-klass/equations/train?skill=${encodeURIComponent(recommendedNextSkill.id)}`}
+                href={`/${locale}/topics/equations/train?skill=${encodeURIComponent(recommendedNextSkill.id)}&count=${trainingCount}`}
                 variant="secondary"
               >
                 Перейти к следующему навыку
@@ -341,10 +353,10 @@ export default function TrainingRunner({
     taskTimer.stop();
 
     const parsedAnswer = parseNumberInput(inputValue);
-    const expected = currentTask.answer.value;
+    const expected = getExpectedNumber(currentTask.answer);
     const taskElapsedMs = Date.now() - taskStartedAt;
     const totalMs = Date.now() - startedAt;
-    const ok = parsedAnswer !== null && parsedAnswer === expected;
+    const ok = parsedAnswer !== null && expected !== null && parsedAnswer === expected;
 
     setChecked(true);
     setIsCorrect(ok);
@@ -402,7 +414,7 @@ export default function TrainingRunner({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-              Тренировка: 10 задач подряд
+              Тренировка: {trainingCount} задач подряд
             </p>
             <p className="mt-1 text-sm font-medium text-slate-900">
               Задача {currentIndex + 1} / {tasks.length}
@@ -410,7 +422,7 @@ export default function TrainingRunner({
             <p className="mt-1 text-xs text-slate-600">{skillTitle}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               <ButtonLink
-                href={`/${locale}/5-klass/equations/train`}
+                href={`/${locale}/topics/equations/train`}
                 variant="secondary"
                 className="px-2.5 py-1.5 text-xs"
               >
@@ -571,7 +583,7 @@ export default function TrainingRunner({
             {!isCorrect ? (
               <p className="mt-2 text-sm text-slate-700">
                 Правильный ответ:{" "}
-                <strong className="text-slate-950">{currentTask.answer.value}</strong>
+                <strong className="text-slate-950">{formatExpectedAnswer(currentTask.answer)}</strong>
               </p>
             ) : null}
             {timerEnabled ? (

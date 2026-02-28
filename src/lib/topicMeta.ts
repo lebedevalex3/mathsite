@@ -67,7 +67,7 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
   },
   {
     id: "math.equations",
-    slug: "5-klass/equations",
+    slug: "topics/equations",
     domain: "algebra",
     domains: ["arithmetic", "algebra"],
     levels: [5],
@@ -140,7 +140,7 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
   },
   {
     id: "math.negative_numbers",
-    slug: "6-klass/negative-numbers",
+    slug: "topics/negative-numbers",
     domain: "algebra",
     domains: ["algebra"],
     levels: [6],

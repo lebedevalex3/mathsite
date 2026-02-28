@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { requireTeacherToolsAccess } from "@/src/lib/auth/teacher-tools-guard";
+import { formatTaskAnswer } from "@/src/lib/tasks/answers";
 import { getVariantDetailForOwner } from "@/src/lib/variants/repository";
 
 type PageProps = { params: Promise<{ locale: string; id: string }> };
@@ -56,7 +57,7 @@ export default async function TeacherToolsVariantAnswersPrintPage({ params }: Pa
             {items.map((item) => (
               <li key={item.id} className="rounded-xl border border-slate-100 bg-white p-3 text-sm">
                 <span className="font-medium text-slate-900">{item.orderIndex + 1}.</span>{" "}
-                <span className="text-slate-700">{item.task.answer.value}</span>
+                <span className="text-slate-700">{formatTaskAnswer(item.task.answer)}</span>
               </li>
             ))}
           </ol>

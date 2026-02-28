@@ -7,11 +7,12 @@ import { listTeacherToolsTopics } from "@/src/lib/teacher-tools/catalog";
 import TrainingRunner from "./TrainingRunner";
 
 const TOPIC_ID = "math.equations";
-const REQUIRED_TASK_COUNT = 10;
+const DEFAULT_TASK_COUNT = 10;
+const ALLOWED_TASK_COUNTS = [5, 10, 15, 20] as const;
 
 type PageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ skill?: string | string[] }>;
+  searchParams: Promise<{ skill?: string | string[]; count?: string | string[] }>;
 };
 
 function shuffle<T>(items: T[]): T[] {
@@ -35,13 +36,21 @@ function groupCounts(tasks: Task[]) {
   return [...counts.entries()].sort(([a], [b]) => a.localeCompare(b));
 }
 
+function parseTaskCount(raw: string | string[] | undefined): number {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  const parsed = value ? Number(value) : NaN;
+  if (ALLOWED_TASK_COUNTS.includes(parsed as (typeof ALLOWED_TASK_COUNTS)[number])) return parsed;
+  return DEFAULT_TASK_COUNT;
+}
+
 export default async function UravneniyaTrainPage({
   params,
   searchParams,
 }: PageProps) {
   const { locale } = await params;
-  const { skill } = await searchParams;
+  const { skill, count } = await searchParams;
   const skillId = Array.isArray(skill) ? skill[0] : skill;
+  const taskCount = parseTaskCount(count);
 
   const { tasks, errors } = await getTasksForTopic(TOPIC_ID);
 
@@ -68,7 +77,7 @@ export default async function UravneniyaTrainPage({
         <ul>
           {allSkillCounts.map(([id, count]) => (
             <li key={id}>
-              <a href={`/${locale}/5-klass/equations/train?skill=${encodeURIComponent(id)}`}>
+              <a href={`/${locale}/topics/equations/train?skill=${encodeURIComponent(id)}&count=${taskCount}`}>
                 {id}
               </a>{" "}
               ({count})
@@ -90,13 +99,13 @@ export default async function UravneniyaTrainPage({
     title: skill.title,
   }));
 
-  if (skillTasks.length < REQUIRED_TASK_COUNT) {
+  if (skillTasks.length < taskCount) {
     return (
       <main>
         <h1>Пока недостаточно задач для тренировки</h1>
         <p>
           Для навыка <code>{skillId}</code> найдено {skillTasks.length} задач(и),
-          нужно минимум {REQUIRED_TASK_COUNT}.
+          нужно минимум {taskCount}.
         </p>
         <p>
           <a href={`/${locale}/teacher-tools?topicId=math.equations`}>Вернуться в генератор</a>
@@ -105,7 +114,7 @@ export default async function UravneniyaTrainPage({
     );
   }
 
-  const selectedTasks = shuffle(skillTasks).slice(0, REQUIRED_TASK_COUNT);
+  const selectedTasks = shuffle(skillTasks).slice(0, taskCount);
 
   return (
     <main>
@@ -114,6 +123,7 @@ export default async function UravneniyaTrainPage({
         skillId={skillId}
         skillTitle={skillTitle}
         skillOrder={skillOrder}
+        trainingCount={taskCount}
         tasks={selectedTasks}
       />
     </main>

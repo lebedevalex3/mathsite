@@ -17,22 +17,42 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/:locale(ru|en|de)/5-klass/uravneniya",
-        destination: "/:locale/5-klass/equations",
+        destination: "/:locale/topics/equations",
         permanent: true,
       },
       {
         source: "/:locale(ru|en|de)/5-klass/uravneniya/:path*",
-        destination: "/:locale/5-klass/equations/:path*",
+        destination: "/:locale/topics/equations/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:locale(ru|en|de)/5-klass/equations",
+        destination: "/:locale/topics/equations",
+        permanent: true,
+      },
+      {
+        source: "/:locale(ru|en|de)/5-klass/equations/:path*",
+        destination: "/:locale/topics/equations/:path*",
         permanent: true,
       },
       {
         source: "/:locale(ru|en|de)/6-klass/otricatelnye-chisla",
-        destination: "/:locale/6-klass/negative-numbers",
+        destination: "/:locale/topics/negative-numbers",
         permanent: true,
       },
       {
         source: "/:locale(ru|en|de)/6-klass/otricatelnye-chisla/:path*",
-        destination: "/:locale/6-klass/negative-numbers/:path*",
+        destination: "/:locale/topics/negative-numbers/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:locale(ru|en|de)/6-klass/negative-numbers",
+        destination: "/:locale/topics/negative-numbers",
+        permanent: true,
+      },
+      {
+        source: "/:locale(ru|en|de)/6-klass/negative-numbers/:path*",
+        destination: "/:locale/topics/negative-numbers/:path*",
         permanent: true,
       },
       {

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { MarkdownMath } from "@/lib/ui/MarkdownMath";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
@@ -31,6 +32,8 @@ type ProgressPayload = {
 };
 
 type SkillSectionId = "base" | "equations" | "word_problems" | "other";
+const TRAINING_COUNTS = [5, 10, 15, 20] as const;
+type TrainingCount = (typeof TRAINING_COUNTS)[number];
 
 const copy: Record<
   Locale,
@@ -48,6 +51,7 @@ const copy: Record<
     sectionProgress: string;
     optionalBranch: string;
     branchCode: string;
+    taskCountLabel: string;
     sectionTitles: Record<SkillSectionId, string>;
     sectionHints: Record<SkillSectionId, string>;
   }
@@ -66,6 +70,7 @@ const copy: Record<
     sectionProgress: "Освоено",
     optionalBranch: "Опционально",
     branchCode: "Ветка",
+    taskCountLabel: "Количество задач",
     sectionTitles: {
       base: "База",
       equations: "Решение пропорций",
@@ -93,6 +98,7 @@ const copy: Record<
     sectionProgress: "Mastered",
     optionalBranch: "Optional",
     branchCode: "Branch",
+    taskCountLabel: "Task count",
     sectionTitles: {
       base: "Core",
       equations: "Proportion Solving",
@@ -120,6 +126,7 @@ const copy: Record<
     sectionProgress: "Beherrscht",
     optionalBranch: "Optional",
     branchCode: "Zweig",
+    taskCountLabel: "Aufgabenanzahl",
     sectionTitles: {
       base: "Basis",
       equations: "Proportionen loesen",
@@ -174,8 +181,17 @@ function toLocale(value: string): Locale {
   return "ru";
 }
 
-function buildTrainHref(locale: string, skillId: string) {
-  return `/${locale}/topics/proportion/train?skill=${encodeURIComponent(skillId)}`;
+function parseTrainingCount(raw: string | null): TrainingCount {
+  const parsed = raw ? Number(raw) : NaN;
+  if (TRAINING_COUNTS.includes(parsed as TrainingCount)) return parsed as TrainingCount;
+  return 10;
+}
+
+function buildTrainHref(locale: string, skillId: string, count: TrainingCount) {
+  const params = new URLSearchParams();
+  params.set("skill", skillId);
+  params.set("count", String(count));
+  return `/${locale}/topics/proportion/train?${params.toString()}`;
 }
 
 function resolveStatus(progressMap: SkillProgressMap, skillId: string): SkillProgressStatus {
@@ -204,7 +220,15 @@ function resolveSectionId(skillId: string): SkillSectionId {
 export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
   const typedLocale = toLocale(locale);
   const t = copy[typedLocale];
+  const searchParams = useSearchParams();
+  const [trainingCount, setTrainingCount] = useState<TrainingCount>(() =>
+    parseTrainingCount(searchParams.get("count")),
+  );
   const [progressMap, setProgressMap] = useState<SkillProgressMap>({});
+
+  useEffect(() => {
+    setTrainingCount(parseTrainingCount(searchParams.get("count")));
+  }, [searchParams]);
 
   useEffect(() => {
     let cancelled = false;
@@ -241,7 +265,7 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
   );
 
   const recommendedHref = recommendedSkill
-    ? buildTrainHref(locale, recommendedSkill.skillId)
+    ? buildTrainHref(locale, recommendedSkill.skillId, trainingCount)
     : `/${locale}/topics/proportion/trainer`;
 
   const sections = useMemo(() => {
@@ -348,6 +372,28 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
           {recommendedSkill?.title ?? t.recommendationFallback}
         </p>
         <p className="mt-1 text-sm text-[var(--text-muted)]">{t.recommendationHint}</p>
+        <div className="mt-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+            {t.taskCountLabel}
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {TRAINING_COUNTS.map((count) => (
+              <button
+                key={count}
+                type="button"
+                onClick={() => setTrainingCount(count)}
+                className={[
+                  "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
+                  trainingCount === count
+                    ? "border-[var(--primary)] bg-[var(--primary)] text-white"
+                    : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface-soft)]",
+                ].join(" ")}
+              >
+                {count}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="mt-4">
           <ButtonLink href={recommendedHref} variant="primary">
             {t.startTraining}
@@ -403,7 +449,7 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
                       : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)]";
 
                 return (
-                  <Link key={skill.skillId} href={buildTrainHref(locale, skill.skillId)} className="block h-full">
+                  <Link key={skill.skillId} href={buildTrainHref(locale, skill.skillId, trainingCount)} className="block h-full">
                     <SurfaceCard className="h-full p-5 transition-all hover:border-[var(--primary)] hover:shadow-[0_10px_24px_-18px_rgba(29,78,216,0.45)]">
                       <div className="flex items-center justify-between gap-2">
                         <span className={["rounded-full border px-2 py-0.5 text-xs font-semibold", statusClass].join(" ")}>
@@ -423,7 +469,7 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
                       </div>
                       <div className="mt-4">
                         <span className="inline-flex items-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-[var(--primary)]">
-                          {t.tenTasks}
+                          {trainingCount} {t.tenTasks.replace(/^10\s*/, "")}
                         </span>
                       </div>
                     </SurfaceCard>

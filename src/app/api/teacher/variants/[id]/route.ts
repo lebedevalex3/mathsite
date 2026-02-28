@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { notFound, toApiError } from "@/src/lib/api/errors";
+import { formatTaskAnswer } from "@/src/lib/tasks/answers";
 import { requireTeacherFromCookies } from "@/src/lib/variants/auth";
 import { getVariantDetailForOwner } from "@/src/lib/variants/repository";
 
@@ -30,7 +31,7 @@ export async function GET(_request: Request, { params }: RouteProps) {
         orderIndex: number;
         statementMd: string;
         difficulty: number;
-        answer: number;
+        answer: string;
       }>
     >();
 
@@ -41,7 +42,7 @@ export async function GET(_request: Request, { params }: RouteProps) {
         orderIndex: item.orderIndex,
         statementMd: item.task.statement_md,
         difficulty: item.task.difficulty,
-        answer: item.task.answer.value,
+        answer: formatTaskAnswer(item.task.answer),
       });
       groups.set(item.sectionLabel, arr);
     }
