@@ -10,7 +10,7 @@ function makeTask(params: {
   const suffix = String(index).padStart(6, "0");
   return {
     id: `${skillId}.${suffix}`,
-    topic_id: "g5.proporcii",
+    topic_id: "math.proportion",
     skill_id: skillId,
     difficulty,
     statement_md: `Задача ${skillId} #${index}`,
@@ -33,27 +33,27 @@ export function createTaskBankFixture(): Task[] {
     }
   };
 
-  addSeries("g5.proporcii.naiti_neizvestnyi_krainei", 12, [1, 2, 3, 4]);
-  addSeries("g5.proporcii.naiti_neizvestnyi_srednii", 12, [1, 2, 3, 4]);
-  addSeries("g5.proporcii.primenit_svoistvo_proporcii", 12, [1, 2, 3, 4]);
-  addSeries("g5.proporcii.proverit_proporciyu", 12, [1, 2, 3, 4]);
-  addSeries("g5.proporcii.reshit_zadachu_na_cenu", 12, [1, 2, 3, 4]);
-  addSeries("g5.proporcii.reshit_zadachu_na_masshtab", 12, [2, 3, 4]);
+  addSeries("math.proportion.find_unknown_extreme", 12, [1, 2, 3, 4]);
+  addSeries("math.proportion.find_unknown_middle", 12, [1, 2, 3, 4]);
+  addSeries("math.proportion.apply_proportion_property", 12, [1, 2, 3, 4]);
+  addSeries("math.proportion.check_proportion", 12, [1, 2, 3, 4]);
+  addSeries("math.proportion.solve_price_word_problem", 12, [1, 2, 3, 4]);
+  addSeries("math.proportion.solve_scale_word_problem", 12, [2, 3, 4]);
 
   return tasks;
 }
 
 export function createTemplateFixture(): VariantTemplate {
   return {
-    id: "g5.proporcii.test.10",
+    id: "math.proportion.test.10",
     title: "Test template 10",
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     sections: [
       {
         label: "Основное свойство",
         skillIds: [
-          "g5.proporcii.naiti_neizvestnyi_krainei",
-          "g5.proporcii.naiti_neizvestnyi_srednii",
+          "math.proportion.find_unknown_extreme",
+          "math.proportion.find_unknown_middle",
         ],
         count: 6,
         difficulty: [1, 3],
@@ -61,8 +61,8 @@ export function createTemplateFixture(): VariantTemplate {
       {
         label: "Задачи",
         skillIds: [
-          "g5.proporcii.reshit_zadachu_na_cenu",
-          "g5.proporcii.reshit_zadachu_na_masshtab",
+          "math.proportion.solve_price_word_problem",
+          "math.proportion.solve_scale_word_problem",
         ],
         count: 4,
         difficulty: [2, 4],

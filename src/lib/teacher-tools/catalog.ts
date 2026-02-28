@@ -1,16 +1,16 @@
 import { getTasksForTopic } from "@/lib/tasks/query";
-import { proporciiSkills } from "@/src/lib/topics/proporcii/module-data";
+import { proportionSkills } from "@/src/lib/topics/proportion/module-data";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 
 import type { TeacherToolsSkill, TeacherToolsTopicConfig } from "./types";
 
-const proporciiSkillCards: Record<
+const proportionSkillCards: Record<
   string,
   Pick<TeacherToolsSkill, "cardHref" | "trainerHref" | "example" | "algorithm">
 > = {
-  "g5.proporcii.raspoznat_proporciyu": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.raspoznat_proporciyu",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.raspoznat_proporciyu",
+  "math.proportion.recognize_proportion": {
+    cardHref: "/teacher-tools/skills/math.proportion.recognize_proportion",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.recognize_proportion",
     example: "Является ли равенство 2:3 = 4:6 пропорцией?",
     algorithm: [
       "Проверь, что записаны два отношения.",
@@ -18,9 +18,9 @@ const proporciiSkillCards: Record<
       "Если отношения равны, это пропорция.",
     ],
   },
-  "g5.proporcii.proverit_proporciyu": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.proverit_proporciyu",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.proverit_proporciyu",
+  "math.proportion.check_proportion": {
+    cardHref: "/teacher-tools/skills/math.proportion.check_proportion",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.check_proportion",
     example: "Проверь пропорцию: 3/5 = 9/15.",
     algorithm: [
       "Перемножь крайние и средние члены.",
@@ -28,9 +28,9 @@ const proporciiSkillCards: Record<
       "Если они равны, пропорция верна.",
     ],
   },
-  "g5.proporcii.naiti_neizvestnyi_krainei": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.naiti_neizvestnyi_krainei",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.naiti_neizvestnyi_krainei",
+  "math.proportion.find_unknown_extreme": {
+    cardHref: "/teacher-tools/skills/math.proportion.find_unknown_extreme",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.find_unknown_extreme",
     example: "Реши пропорцию: x/9 = 4/6.",
     algorithm: [
       "Запиши основное свойство пропорции ad = bc.",
@@ -38,9 +38,9 @@ const proporciiSkillCards: Record<
       "Выполни вычисления и проверь подстановкой.",
     ],
   },
-  "g5.proporcii.naiti_neizvestnyi_srednii": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.naiti_neizvestnyi_srednii",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.naiti_neizvestnyi_srednii",
+  "math.proportion.find_unknown_middle": {
+    cardHref: "/teacher-tools/skills/math.proportion.find_unknown_middle",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.find_unknown_middle",
     example: "Реши: 3/x = 6/10.",
     algorithm: [
       "Применяй равенство произведений ad = bc.",
@@ -48,9 +48,9 @@ const proporciiSkillCards: Record<
       "Посчитай и проверь ответ.",
     ],
   },
-  "g5.proporcii.primenit_svoistvo_proporcii": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.primenit_svoistvo_proporcii",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.primenit_svoistvo_proporcii",
+  "math.proportion.apply_proportion_property": {
+    cardHref: "/teacher-tools/skills/math.proportion.apply_proportion_property",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.apply_proportion_property",
     example: "Используй ad = bc для 4/7 = x/21.",
     algorithm: [
       "Перепиши пропорцию в виде произведений ad = bc.",
@@ -58,9 +58,9 @@ const proporciiSkillCards: Record<
       "Найди неизвестное и проверь.",
     ],
   },
-  "g5.proporcii.preobrazovat_otnoshenie": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.preobrazovat_otnoshenie",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.preobrazovat_otnoshenie",
+  "math.proportion.transform_ratio": {
+    cardHref: "/teacher-tools/skills/math.proportion.transform_ratio",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.transform_ratio",
     example: "Преобразуй отношение 12:18 к простому виду.",
     algorithm: [
       "Найди общий делитель чисел в отношении.",
@@ -68,9 +68,9 @@ const proporciiSkillCards: Record<
       "Убедись, что отношение стало проще.",
     ],
   },
-  "g5.proporcii.sostavit_proporciyu_po_usloviyu": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.sostavit_proporciyu_po_usloviyu",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.sostavit_proporciyu_po_usloviyu",
+  "math.proportion.build_proportion_from_text": {
+    cardHref: "/teacher-tools/skills/math.proportion.build_proportion_from_text",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.build_proportion_from_text",
     example: "По условию «3 тетради стоят 120 руб.» составь пропорцию для 5 тетрадей.",
     algorithm: [
       "Выдели две связанные величины и одинаковую единицу.",
@@ -78,9 +78,9 @@ const proporciiSkillCards: Record<
       "Составь второе отношение и приравняй их.",
     ],
   },
-  "g5.proporcii.reshit_zadachu_na_proizvoditelnost": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.reshit_zadachu_na_proizvoditelnost",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+  "math.proportion.solve_productivity_word_problem": {
+    cardHref: "/teacher-tools/skills/math.proportion.solve_productivity_word_problem",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.solve_productivity_word_problem",
     example: "Если 4 рабочих делают задачу за 6 часов, за сколько сделают 6 рабочих?",
     algorithm: [
       "Определи тип зависимости (обратная пропорциональность).",
@@ -88,9 +88,9 @@ const proporciiSkillCards: Record<
       "Реши пропорцию и запиши ответ с единицами.",
     ],
   },
-  "g5.proporcii.reshit_zadachu_na_masshtab": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.reshit_zadachu_na_masshtab",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.reshit_zadachu_na_masshtab",
+  "math.proportion.solve_scale_word_problem": {
+    cardHref: "/teacher-tools/skills/math.proportion.solve_scale_word_problem",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.solve_scale_word_problem",
     example: "Масштаб 1:100000, на карте 3 см. Найди расстояние на местности.",
     algorithm: [
       "Запиши соответствие масштаба в одинаковых единицах.",
@@ -98,9 +98,9 @@ const proporciiSkillCards: Record<
       "Реши и переведи ответ в нужные единицы.",
     ],
   },
-  "g5.proporcii.reshit_zadachu_na_cenu": {
-    cardHref: "/teacher-tools/skills/g5.proporcii.reshit_zadachu_na_cenu",
-    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.reshit_zadachu_na_cenu",
+  "math.proportion.solve_price_word_problem": {
+    cardHref: "/teacher-tools/skills/math.proportion.solve_price_word_problem",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.solve_price_word_problem",
     example: "3 кг яблок стоят 180 руб. Сколько стоят 5 кг?",
     algorithm: [
       "Определи, что цена за единицу постоянна.",
@@ -112,12 +112,12 @@ const proporciiSkillCards: Record<
 
 const uravneniyaSkills: TeacherToolsSkill[] = [
   {
-    id: "g5.uravneniya.ponyat_uravnenie_i_koren",
+    id: "math.equations.understand_equation_and_root",
     title: "Понимать, что такое уравнение и корень",
     summary: "Различать уравнение и находить число, которое делает равенство верным.",
     example: "Какое число является корнем уравнения x + 4 = 9?",
-    cardHref: "/teacher-tools/skills/g5.uravneniya.ponyat_uravnenie_i_koren",
-    trainerHref: "/5-klass/uravneniya/train?skill=g5.uravneniya.ponyat_uravnenie_i_koren",
+    cardHref: "/teacher-tools/skills/math.equations.understand_equation_and_root",
+    trainerHref: "/5-klass/equations/train?skill=math.equations.understand_equation_and_root",
     algorithm: [
       "Прочитай уравнение и найди, где стоит x.",
       "Подбери число или выполни обратное действие.",
@@ -127,12 +127,12 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     status: "ready",
   },
   {
-    id: "g5.uravneniya.proverit_koren",
+    id: "math.equations.check_root",
     title: "Проверять, является ли число корнем уравнения",
     summary: "Подставлять число и определять, верно ли равенство.",
     example: "Проверь: число 3 является корнем уравнения x + 5 = 8?",
-    cardHref: "/teacher-tools/skills/g5.uravneniya.proverit_koren",
-    trainerHref: "/5-klass/uravneniya/train?skill=g5.uravneniya.proverit_koren",
+    cardHref: "/teacher-tools/skills/math.equations.check_root",
+    trainerHref: "/5-klass/equations/train?skill=math.equations.check_root",
     algorithm: [
       "Подставь данное число вместо x.",
       "Вычисли левую часть уравнения.",
@@ -142,12 +142,12 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     status: "ready",
   },
   {
-    id: "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+    id: "math.equations.solve_x_plus_minus_a_equals_b",
     title: "Решать x + a = b и x - a = b",
     summary: "Находить неизвестное при сложении и вычитании, когда x стоит слева.",
     example: "Реши уравнение: x + 9 = 17",
-    cardHref: "/teacher-tools/skills/g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
-    trainerHref: "/5-klass/uravneniya/train?skill=g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+    cardHref: "/teacher-tools/skills/math.equations.solve_x_plus_minus_a_equals_b",
+    trainerHref: "/5-klass/equations/train?skill=math.equations.solve_x_plus_minus_a_equals_b",
     algorithm: [
       "Определи вид уравнения: x + a = b или x - a = b.",
       "Для x + a = b: вычисли x = b - a.",
@@ -157,12 +157,12 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     status: "ready",
   },
   {
-    id: "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+    id: "math.equations.solve_a_plus_minus_x_equals_b",
     title: "Решать a + x = b и a - x = b",
     summary: "Решать уравнения, где неизвестное стоит после числа.",
     example: "Реши уравнение: 25 - x = 7",
-    cardHref: "/teacher-tools/skills/g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
-    trainerHref: "/5-klass/uravneniya/train?skill=g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+    cardHref: "/teacher-tools/skills/math.equations.solve_a_plus_minus_x_equals_b",
+    trainerHref: "/5-klass/equations/train?skill=math.equations.solve_a_plus_minus_x_equals_b",
     algorithm: [
       "Определи вид уравнения: a + x = b или a - x = b.",
       "Для a + x = b: вычисли x = b - a.",
@@ -172,12 +172,12 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     status: "ready",
   },
   {
-    id: "g5.uravneniya.reshat_mnozhenie_i_delenie",
+    id: "math.equations.solve_multiplication_and_division_equations",
     title: "Решать a·x = b и x : a = b",
     summary: "Решать уравнения на умножение и деление с целыми ответами.",
     example: "Реши уравнение: 6 · x = 42",
-    cardHref: "/teacher-tools/skills/g5.uravneniya.reshat_mnozhenie_i_delenie",
-    trainerHref: "/5-klass/uravneniya/train?skill=g5.uravneniya.reshat_mnozhenie_i_delenie",
+    cardHref: "/teacher-tools/skills/math.equations.solve_multiplication_and_division_equations",
+    trainerHref: "/5-klass/equations/train?skill=math.equations.solve_multiplication_and_division_equations",
     algorithm: [
       "Определи вид уравнения: a · x = b или x : a = b.",
       "Для a · x = b: вычисли x = b : a.",
@@ -187,12 +187,12 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     status: "ready",
   },
   {
-    id: "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+    id: "math.equations.solve_basic_word_equations",
     title: "Составлять и решать простые уравнения по условию",
     summary: "Короткие текстовые задачи в 1 шаг на составление уравнения.",
     example: "У Маши было x карандашей. После покупки ещё 6 стало 15. Найди x.",
-    cardHref: "/teacher-tools/skills/g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
-    trainerHref: "/5-klass/uravneniya/train?skill=g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+    cardHref: "/teacher-tools/skills/math.equations.solve_basic_word_equations",
+    trainerHref: "/5-klass/equations/train?skill=math.equations.solve_basic_word_equations",
     algorithm: [
       "Выдели неизвестное и обозначь его x.",
       "Переведи условие в уравнение.",
@@ -205,28 +205,28 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
 
 const otricatelnyeChislaSkills: TeacherToolsSkill[] = [
   {
-    id: "g6.otricatelnye_chisla.sravnit_celye_chisla",
+    id: "math.negative_numbers.compare_integers",
     title: "Сравнивать целые числа",
     summary: "Сравнивать положительные и отрицательные числа по координатной прямой.",
     example: "Какое число больше: -3 или -8?",
     status: "ready",
   },
   {
-    id: "g6.otricatelnye_chisla.naiti_modul_chisla",
+    id: "math.negative_numbers.find_absolute_value",
     title: "Находить модуль числа",
     summary: "Определять модуль положительных и отрицательных чисел.",
     example: "Найди модуль числа -12.",
     status: "ready",
   },
   {
-    id: "g6.otricatelnye_chisla.slozhenie_i_vychitanie_celyh",
+    id: "math.negative_numbers.add_subtract_integers",
     title: "Складывать и вычитать целые числа",
     summary: "Выполнять действия с числами разных знаков без скобок.",
     example: "Вычисли: -7 + 10.",
     status: "ready",
   },
   {
-    id: "g6.otricatelnye_chisla.umnozhenie_i_delenie_celyh",
+    id: "math.negative_numbers.multiply_divide_integers",
     title: "Умножать и делить целые числа",
     summary: "Применять правила знаков при умножении и делении.",
     example: "Вычисли: -6 · 4.",
@@ -237,31 +237,31 @@ const otricatelnyeChislaSkills: TeacherToolsSkill[] = [
 export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
   const topics: TeacherToolsTopicConfig[] = [];
   for (const cfg of listContentTopicConfigs()) {
-    if (cfg.topicSlug === "proporcii") {
+    if (cfg.topicSlug === "proportion") {
       topics.push({
-        topicId: "g5.proporcii",
+        topicId: "math.proportion",
         title: {
           ru: cfg.titles?.ru ?? "Пропорции",
           en: cfg.titles?.en ?? "Proportions",
           de: cfg.titles?.de ?? "Proportionen",
         },
-        skills: proporciiSkills.map((skill) => ({
+        skills: proportionSkills.map((skill) => ({
           id: skill.id,
           title: skill.title,
           summary: skill.summary,
-          cardHref: proporciiSkillCards[skill.id]?.cardHref,
-          trainerHref: proporciiSkillCards[skill.id]?.trainerHref,
-          example: proporciiSkillCards[skill.id]?.example,
-          algorithm: proporciiSkillCards[skill.id]?.algorithm,
+          cardHref: proportionSkillCards[skill.id]?.cardHref,
+          trainerHref: proportionSkillCards[skill.id]?.trainerHref,
+          example: proportionSkillCards[skill.id]?.example,
+          algorithm: proportionSkillCards[skill.id]?.algorithm,
           status: "ready" as const,
         })),
       });
       continue;
     }
 
-    if (cfg.topicSlug === "uravneniya") {
+    if (cfg.topicSlug === "equations") {
       topics.push({
-        topicId: "g5.uravneniya",
+        topicId: "math.equations",
         title: {
           ru: cfg.titles?.ru ?? "Уравнения",
           en: cfg.titles?.en ?? "Equations",
@@ -271,9 +271,9 @@ export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
       });
     }
 
-    if (cfg.topicSlug === "g6.otricatelnye_chisla") {
+    if (cfg.topicSlug === "negative-numbers") {
       topics.push({
-        topicId: "g6.otricatelnye_chisla",
+        topicId: "math.negative_numbers",
         title: {
           ru: cfg.titles?.ru ?? "Отрицательные числа",
           en: cfg.titles?.en ?? "Negative Numbers",

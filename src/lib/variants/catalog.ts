@@ -1,9 +1,9 @@
-import { proporciiSkills, proporciiSubtopics } from "@/src/lib/topics/proporcii/module-data";
+import { proportionSkills, proportionSubtopics } from "@/src/lib/topics/proportion/module-data";
 
-export function getProporciiSkillMap() {
-  return new Map(proporciiSkills.map((skill) => [skill.id, skill]));
+export function getProportionSkillMap() {
+  return new Map(proportionSkills.map((skill) => [skill.id, skill]));
 }
 
-export function getProporciiSubtopicMap() {
-  return new Map(proporciiSubtopics.map((subtopic) => [subtopic.id, subtopic]));
+export function getProportionSubtopicMap() {
+  return new Map(proportionSubtopics.map((subtopic) => [subtopic.id, subtopic]));
 }

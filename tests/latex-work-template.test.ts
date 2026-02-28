@@ -8,7 +8,7 @@ test("renderWorkTwoLandscapeLatex uses landscape geometry and minipage columns",
   const doc: PrintableWorkDocument = {
     workId: "w1",
     locale: "ru",
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     title: "Работа",
     workType: "quiz",
     profile: { layout: "two", orientation: "landscape" },

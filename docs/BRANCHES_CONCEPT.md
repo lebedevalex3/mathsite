@@ -17,20 +17,20 @@
 ## Текущая реализация
 
 Источник данных:
-- `src/lib/topics/proporcii/module-data.ts`
+- `src/lib/topics/proportion/module-data.ts`
 
 Ключевые сущности:
-- `ProporciiBranch`
-- `proporciiBranches`
-- `getProporciiBranchValidationErrors()`
+- `ProportionBranch`
+- `proportionBranches`
+- `getProportionBranchValidationErrors()`
 
 Рендер:
-- `src/components/topic/ProporciiTrainerSkillGrid.tsx`
+- `src/components/topic/ProportionTrainerSkillGrid.tsx`
 
 ## Модель ветки
 
 ```ts
-type ProporciiBranch = {
+type ProportionBranch = {
   id: "O" | "P" | "E" | "T" | "A";
   order: number;
   title: { ru: string; en: string; de: string };
@@ -43,17 +43,17 @@ type ProporciiBranch = {
 
 ## Правила
 
-1. `skillIds` в ветках должны ссылаться только на существующие `proporciiSkills`.
+1. `skillIds` в ветках должны ссылаться только на существующие `proportionSkills`.
 2. Один `skillId` желательно держать в одной ветке (чтобы не дублировать прогресс).
 3. `dependsOn` в MVP — только метаданные (без блокировки UI).
 4. При ошибке конфигурации веток UI обязан иметь fallback на старые секции.
 
 ## Как добавить новую ветку
 
-1. Добавить ветку в `proporciiBranches`:
+1. Добавить ветку в `proportionBranches`:
    - `id`, `order`, `title`, `goal`, `skillIds`.
-2. Проверить, что все `skillIds` существуют в `proporciiSkills`.
-3. Убедиться, что страница `/{locale}/topics/proporcii/trainer`:
+2. Проверить, что все `skillIds` существуют в `proportionSkills`.
+3. Убедиться, что страница `/{locale}/topics/proportion/trainer`:
    - показывает новую ветку;
    - считает `Освоено X/Y` корректно.
 

@@ -9,8 +9,8 @@
 2. `src/app/[locale]/.../page.mdx` (fallback, чтобы не ломать текущие роуты)
 
 Для пилотной темы `Пропорции`:
-- **канонический контент** хранится в `content/ru/arithmetic/proporcii/*.mdx`
-- route-файлы в `src/app/[locale]/5-klass/proporcii/*/page.tsx` — это thin wrappers (re-export `default`)
+- **канонический контент** хранится в `content/ru/arithmetic/proportion/*.mdx`
+- route-файлы в `src/app/[locale]/5-klass/proportion/*/page.tsx` — это thin wrappers (re-export `default`)
 
 Для других тем (пока без миграции) loader всё ещё умеет fallback в `src/app/[locale]/.../page.mdx`.
 
@@ -21,12 +21,12 @@
 
 1. Создай файл из шаблона:
 ```bash
-pnpm content:new-subtopic -- --topic proporcii --slug direct-extra --title "Дополнительная подтема" --order 25
+pnpm content:new-subtopic -- --topic proportion --slug direct-extra --title "Дополнительная подтема" --order 25
 ```
 
 Опционально можно указать локаль файла контента:
 ```bash
-pnpm content:new-subtopic -- --locale en --topic proporcii --slug direct-extra --title "Direct Proportion" --order 25
+pnpm content:new-subtopic -- --locale en --topic proportion --slug direct-extra --title "Direct Proportion" --order 25
 ```
 
 2. Открой созданный `content/.../*.mdx` и заполни контент.
@@ -82,8 +82,8 @@ pnpm content:new-topic -- --domain arithmetic --topic ratios --title "Отнош
 
 Ручной способ (если нужно):
 - шаблон: `templates/content/subtopic-page.mdx.template`
-- контент: `content/ru/arithmetic/proporcii/<slug>.mdx`
-- route wrapper: `src/app/[locale]/5-klass/proporcii/<slug>/page.tsx`
+- контент: `content/ru/arithmetic/proportion/<slug>.mdx`
+- route wrapper: `src/app/[locale]/5-klass/proportion/<slug>/page.tsx`
 
 ## Контракт metadata (обязательно)
 В начале MDX-файла подтемы должен быть export:
@@ -187,12 +187,12 @@ pnpm content:new-topic -- --domain arithmetic --topic ratios --title "Отнош
 
 - Создать новую подтему из шаблона:
 ```bash
-pnpm content:new-subtopic -- --topic proporcii --slug my-subtopic --title "Моя подтема" --order 50
+pnpm content:new-subtopic -- --topic proportion --slug my-subtopic --title "Моя подтема" --order 50
 ```
 
 - Создать локализованный вариант контента (без перезаписи route wrapper):
 ```bash
-pnpm content:new-subtopic -- --locale en --topic proporcii --slug my-subtopic-en --title "My Subtopic" --order 60
+pnpm content:new-subtopic -- --locale en --topic proportion --slug my-subtopic-en --title "My Subtopic" --order 60
 ```
 
 - Проверить контент (metadata/TOC/anchors):

@@ -9,17 +9,17 @@ import {
   listTeacherToolsTopics,
 } from "@/src/lib/teacher-tools/catalog";
 
-test('teacher tools catalog includes topic "g5.uravneniya"', async () => {
+test('teacher tools catalog includes topic "math.equations"', async () => {
   const topics = listTeacherToolsTopics();
-  const topic = topics.find((item) => item.topicId === "g5.uravneniya");
+  const topic = topics.find((item) => item.topicId === "math.equations");
 
-  assert.ok(topic, "Expected g5.uravneniya in teacher tools topics");
+  assert.ok(topic, "Expected math.equations in teacher tools topics");
   assert.ok((topic?.skills.length ?? 0) >= 5, "Expected at least 5 skills in topic config");
 });
 
-test("g5.uravneniya skills have task counts and generator builds variants", async () => {
-  const topic = await getTeacherToolsTopicSkills("g5.uravneniya");
-  assert.ok(topic, "Expected topic payload for g5.uravneniya");
+test("math.equations skills have task counts and generator builds variants", async () => {
+  const topic = await getTeacherToolsTopicSkills("math.equations");
+  assert.ok(topic, "Expected topic payload for math.equations");
 
   const readySkills = topic.skills.filter((skill) => skill.status !== "soon");
   assert.ok(readySkills.length >= 5, "Expected at least 5 ready skills");
@@ -31,7 +31,7 @@ test("g5.uravneniya skills have task counts and generator builds variants", asyn
     );
   }
 
-  const { tasks, errors } = await getTasksForTopic("g5.uravneniya");
+  const { tasks, errors } = await getTasksForTopic("math.equations");
   assert.deepEqual(errors, []);
 
   const skillsById = new Map(readySkills.map((skill) => [skill.id, { title: skill.title }]));
@@ -40,7 +40,7 @@ test("g5.uravneniya skills have task counts and generator builds variants", asyn
     count: index < 2 ? 4 : 3,
   }));
   const template20 = buildDemoTemplate({
-    topicId: "g5.uravneniya",
+    topicId: "math.equations",
     plan: plan20,
     skillsById,
     mode: "control20",
@@ -58,7 +58,7 @@ test("g5.uravneniya skills have task counts and generator builds variants", asyn
     count: index < 4 ? 2 : 1,
   }));
   const template10 = buildDemoTemplate({
-    topicId: "g5.uravneniya",
+    topicId: "math.equations",
     plan: plan10,
     skillsById,
     mode: "training10",
@@ -73,43 +73,43 @@ test("g5.uravneniya skills have task counts and generator builds variants", asyn
 });
 
 test("teacher demo template supports mixed skills from multiple topics", async () => {
-  const [proporcii, uravneniya] = await Promise.all([
-    getTeacherToolsTopicSkills("g5.proporcii"),
-    getTeacherToolsTopicSkills("g5.uravneniya"),
+  const [proportion, uravneniya] = await Promise.all([
+    getTeacherToolsTopicSkills("math.proportion"),
+    getTeacherToolsTopicSkills("math.equations"),
   ]);
-  assert.ok(proporcii && uravneniya, "Expected both topics in teacher tools catalog");
+  assert.ok(proportion && uravneniya, "Expected both topics in teacher tools catalog");
 
-  const proporciiSkill = proporcii.skills.find((skill) => (skill.availableCount ?? 0) >= 2);
+  const proportionSkill = proportion.skills.find((skill) => (skill.availableCount ?? 0) >= 2);
   const uravneniyaSkill = uravneniya.skills.find((skill) => (skill.availableCount ?? 0) >= 2);
-  assert.ok(proporciiSkill && uravneniyaSkill, "Expected at least one populated skill in each topic");
+  assert.ok(proportionSkill && uravneniyaSkill, "Expected at least one populated skill in each topic");
 
-  const [proporciiTasks, uravneniyaTasks] = await Promise.all([
-    getTasksForTopic("g5.proporcii"),
-    getTasksForTopic("g5.uravneniya"),
+  const [proportionTasks, uravneniyaTasks] = await Promise.all([
+    getTasksForTopic("math.proportion"),
+    getTasksForTopic("math.equations"),
   ]);
-  assert.deepEqual(proporciiTasks.errors, []);
+  assert.deepEqual(proportionTasks.errors, []);
   assert.deepEqual(uravneniyaTasks.errors, []);
 
   const template = buildDemoTemplate({
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     plan: [
-      { topicId: "g5.proporcii", skillId: proporciiSkill.id, count: 2 },
-      { topicId: "g5.uravneniya", skillId: uravneniyaSkill.id, count: 2 },
+      { topicId: "math.proportion", skillId: proportionSkill.id, count: 2 },
+      { topicId: "math.equations", skillId: uravneniyaSkill.id, count: 2 },
     ],
     skillsById: new Map([
-      [proporciiSkill.id, { title: proporciiSkill.title }],
+      [proportionSkill.id, { title: proportionSkill.title }],
       [uravneniyaSkill.id, { title: uravneniyaSkill.title }],
     ]),
     mode: "mixed20",
   });
 
   const selected = buildVariantPlan({
-    tasks: [...proporciiTasks.tasks, ...uravneniyaTasks.tasks],
+    tasks: [...proportionTasks.tasks, ...uravneniyaTasks.tasks],
     template,
     seed: "mixed-topics-seed",
   });
   assert.equal(selected.length, 4);
   const selectedSkillIds = new Set(selected.map((item) => item.task.skill_id));
-  assert.ok(selectedSkillIds.has(proporciiSkill.id));
+  assert.ok(selectedSkillIds.has(proportionSkill.id));
   assert.ok(selectedSkillIds.has(uravneniyaSkill.id));
 });

@@ -32,7 +32,7 @@ export function parseTaxonomyMarkdownText(
 
   for (const line of text.split(/\r?\n/)) {
     const skillMatch = line.match(
-      /^- `(g\d+\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*)`\s+—\s+(.+)$/,
+      /^- `([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*)`\s+—\s+(.+)$/,
     );
     if (!skillMatch) continue;
 

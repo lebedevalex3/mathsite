@@ -35,7 +35,7 @@ function parseArgs(argv: string[]): Args {
 
   if (!topic || !slug || !title || !orderRaw) {
     throw new Error(
-      'Usage: pnpm content:new-subtopic -- --topic proporcii --slug direct-extra --title "..." --order 50 [--locale ru]',
+      'Usage: pnpm content:new-subtopic -- --topic proportion --slug direct-extra --title "..." --order 50 [--locale ru]',
     );
   }
 

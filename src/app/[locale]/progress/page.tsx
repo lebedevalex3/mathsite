@@ -1,5 +1,5 @@
 import { ProgressPageClient } from "@/src/components/ui/ProgressPageClient";
-import { proporciiSkills, proporciiSubtopics } from "@/src/lib/topics/proporcii/module-data";
+import { proportionSkills, proportionSubtopics } from "@/src/lib/topics/proportion/module-data";
 
 type PageProps = {
   params: Promise<{ locale: "ru" | "en" | "de" }>;
@@ -11,13 +11,13 @@ export default async function ProgressPage({ params }: PageProps) {
   return (
     <ProgressPageClient
       locale={locale}
-      topicId="g5.proporcii"
-      subtopics={proporciiSubtopics.map((item) => ({
+      topicId="math.proportion"
+      subtopics={proportionSubtopics.map((item) => ({
         id: item.id,
         slug: item.slug,
         title: item.title,
       }))}
-      skills={proporciiSkills.map((item) => ({
+      skills={proportionSkills.map((item) => ({
         id: item.id,
         title: item.title,
         subtopicId: item.subtopicId,

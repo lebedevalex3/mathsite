@@ -10,16 +10,16 @@ export type TopicMasteryData = {
 };
 
 export const topicMastery: Record<string, TopicMasteryData> = {
-  "g5.proporcii": {
+  "math.proportion": {
     masteryLevels: [
       {
         id: "base",
         title: "База",
         hint: "Понимание и проверка записи пропорции.",
         skillIds: [
-          "g5.proporcii.raspoznat_proporciyu",
-          "g5.proporcii.proverit_proporciyu",
-          "g5.proporcii.primenit_svoistvo_proporcii",
+          "math.proportion.recognize_proportion",
+          "math.proportion.check_proportion",
+          "math.proportion.apply_proportion_property",
         ],
       },
       {
@@ -27,9 +27,9 @@ export const topicMastery: Record<string, TopicMasteryData> = {
         title: "Вычисление",
         hint: "Находим неизвестный член и собираем пропорцию.",
         skillIds: [
-          "g5.proporcii.naiti_neizvestnyi_krainei",
-          "g5.proporcii.naiti_neizvestnyi_srednii",
-          "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+          "math.proportion.find_unknown_extreme",
+          "math.proportion.find_unknown_middle",
+          "math.proportion.build_proportion_from_text",
         ],
       },
       {
@@ -37,9 +37,9 @@ export const topicMastery: Record<string, TopicMasteryData> = {
         title: "Применение",
         hint: "Решаем типовые задачи на пропорции.",
         skillIds: [
-          "g5.proporcii.reshit_zadachu_na_masshtab",
-          "g5.proporcii.reshit_zadachu_na_cenu",
-          "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+          "math.proportion.solve_scale_word_problem",
+          "math.proportion.solve_price_word_problem",
+          "math.proportion.solve_productivity_word_problem",
         ],
       },
     ],

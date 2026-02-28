@@ -20,7 +20,7 @@ type SkillCatalogListProps = {
 };
 
 const DEFAULT_VISIBLE_COUNT = 6;
-const PROGRESS_TOPIC_ID = "g5.proporcii";
+const PROGRESS_TOPIC_ID = "math.proportion";
 
 function getSkillIdFromTrainHref(trainHref: string): string | null {
   try {

@@ -1,0 +1,29 @@
+{
+  "id": "math.proportion.training10.v1",
+  "title": "Тренировочный вариант (10 заданий)",
+  "topicId": "math.proportion",
+  "sections": [
+    {
+      "label": "Основное свойство пропорции",
+      "skillIds": [
+        "math.proportion.find_unknown_extreme",
+        "math.proportion.find_unknown_middle"
+      ],
+      "count": 6,
+      "difficulty": [1, 4]
+    },
+    {
+      "label": "Задачи на цену и масштаб",
+      "skillIds": [
+        "math.proportion.solve_price_word_problem",
+        "math.proportion.solve_scale_word_problem"
+      ],
+      "count": 4,
+      "difficulty": [1, 4]
+    }
+  ],
+  "header": {
+    "gradeLabel": "5 класс",
+    "topicLabel": "Пропорции"
+  }
+}

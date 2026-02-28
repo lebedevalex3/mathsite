@@ -16,7 +16,7 @@ type MotivationPayload = {
   motivation?: MotivationModel;
 };
 
-const TOPIC_ID = "g5.proporcii";
+const TOPIC_ID = "math.proportion";
 
 const copy = {
   ru: {

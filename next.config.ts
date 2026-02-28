@@ -16,13 +16,33 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/:locale(ru|en|de)/5-klass/proporcii",
-        destination: "/:locale/topics/proporcii",
+        source: "/:locale(ru|en|de)/5-klass/uravneniya",
+        destination: "/:locale/5-klass/equations",
         permanent: true,
       },
       {
-        source: "/:locale(ru|en|de)/5-klass/proporcii/:path*",
-        destination: "/:locale/topics/proporcii/:path*",
+        source: "/:locale(ru|en|de)/5-klass/uravneniya/:path*",
+        destination: "/:locale/5-klass/equations/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:locale(ru|en|de)/6-klass/otricatelnye-chisla",
+        destination: "/:locale/6-klass/negative-numbers",
+        permanent: true,
+      },
+      {
+        source: "/:locale(ru|en|de)/6-klass/otricatelnye-chisla/:path*",
+        destination: "/:locale/6-klass/negative-numbers/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:locale(ru|en|de)/5-klass/proportion",
+        destination: "/:locale/topics/proportion",
+        permanent: true,
+      },
+      {
+        source: "/:locale(ru|en|de)/5-klass/proportion/:path*",
+        destination: "/:locale/topics/proportion/:path*",
         permanent: true,
       },
     ];

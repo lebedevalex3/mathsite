@@ -1,5 +1,5 @@
 import { KeyIdea, Steps, Mistakes } from "@/src/components/mdx";
-import { SubtopicPageTemplate } from "@/src/app/[locale]/5-klass/proporcii/subtopic-page-template";
+import { SubtopicPageTemplate } from "@/src/app/[locale]/5-klass/proportion/subtopic-page-template";
 
 export const subtopicMeta = {
   title: "Название подтемы",

@@ -12,9 +12,9 @@
 ## Hard constraints (DO NOT BREAK)
 
 - IDs are stable:
-  - topic_id: g5.proporcii
-  - skill_id: g5.proporcii.naiti_neizvestnyi_krainei (или другой из docs/TAXONOMY*.md для topic_id)
-  - task_id: g5.proporcii.naiti_neizvestnyi_krainei.000123
+  - topic_id: math.proportion
+  - skill_id: math.proportion.find_unknown_extreme (или другой из docs/TAXONOMY*.md для topic_id)
+  - task_id: math.proportion.find_unknown_extreme.000123
 - Math is written as Markdown with LaTeX ($...$, $$...$$).
 - Any change to task bank must pass validation script.
 - No Moodle integration in MVP.

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 import { formatDateTime, formatNumber } from "@/src/lib/i18n/format";
+import { topicCatalogEntries } from "@/src/lib/topicMeta";
 import type { WorkType } from "@/src/lib/variants/print-recommendation";
 
 type Locale = "ru" | "en" | "de";
@@ -240,7 +241,10 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   const topicTitleById = useMemo(() => {
     const map = new Map<string, string>();
     for (const cfg of topicConfigs) {
-      const topicId = cfg.topicSlug.includes(".") ? cfg.topicSlug : `g5.${cfg.topicSlug}`;
+      const topicId =
+        topicCatalogEntries.find(
+          (entry) => entry.id === cfg.topicSlug || entry.slug.endsWith(`/${cfg.topicSlug}`),
+        )?.id ?? cfg.topicSlug;
       const title = cfg.titles?.[locale] ?? cfg.titles?.ru ?? topicId;
       map.set(topicId, title);
     }

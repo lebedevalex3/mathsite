@@ -35,7 +35,7 @@ export function HomeProgressCta({ locale }: HomeProgressCtaProps) {
 
     async function load() {
       try {
-        const response = await fetch("/api/progress?topicId=g5.proporcii", {
+        const response = await fetch("/api/progress?topicId=math.proportion", {
           credentials: "same-origin",
         });
         if (!response.ok) {
@@ -72,7 +72,7 @@ export function HomeProgressCta({ locale }: HomeProgressCtaProps) {
   }
 
   return (
-    <ButtonLink href={`/${locale}/topics/proporcii/trainer`} variant="primary">
+    <ButtonLink href={`/${locale}/topics/proportion/trainer`} variant="primary">
       {t.startLabel}
     </ButtonLink>
   );

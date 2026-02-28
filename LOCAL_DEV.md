@@ -27,7 +27,7 @@ pnpm dev
 
 Открой:
 - `http://localhost:3000/ru`
-- `http://localhost:3000/ru/5-klass/proporcii`
+- `http://localhost:3000/ru/5-klass/proportion`
 - `http://localhost:3000/ru/progress`
 - `http://localhost:3000/ru/teacher/variants`
 - `http://localhost:3000/ru/teacher/cabinet`
@@ -143,7 +143,7 @@ pnpm dev
 ### 6) Проверить attempts/progress (MVP)
 
 1. Открой тренажёр, например:
-   - `http://localhost:3000/ru/5-klass/proporcii/train?skill=g5.proporcii.naiti_neizvestnyi_krainei`
+   - `http://localhost:3000/ru/5-klass/proportion/train?skill=math.proportion.find_unknown_extreme`
 2. Реши несколько задач и нажимай `Check`
 3. Открой:
    - `http://localhost:3000/ru/progress`
@@ -342,7 +342,7 @@ pnpm cleanup:demo-works -- --older-than-hours 24 --apply
 Это означает, что шаблон просит больше задач, чем реально доступно в банке задач по секции/навыкам/сложности.
 
 Проверь:
-- шаблоны в `templates/variants/g5/proporcii/*.json`
+- шаблоны в `templates/variants/g5/proportion/*.json`
 - `count` в секциях
 - диапазон `difficulty`
 - `skillIds` (должны существовать в таксономии и банке задач)

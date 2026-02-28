@@ -302,17 +302,21 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
   const allTopics = useMemo(
     () =>
-      topicConfigs.map((cfg) => ({
-        topicId: cfg.topicSlug.includes(".") ? cfg.topicSlug : `g5.${cfg.topicSlug}`,
-        title: cfg.titles?.[locale] ?? cfg.titles?.ru ?? cfg.topicSlug,
-        meta: topicCatalogEntries.find((entry) =>
-          entry.id === (cfg.topicSlug.includes(".") ? cfg.topicSlug : `g5.${cfg.topicSlug}`),
-        ) ?? null,
-      })),
+      topicConfigs.map((cfg) => {
+        const topicId =
+          topicCatalogEntries.find(
+            (entry) => entry.id === cfg.topicSlug || entry.slug.endsWith(`/${cfg.topicSlug}`),
+          )?.id ?? cfg.topicSlug;
+        return {
+          topicId,
+          title: cfg.titles?.[locale] ?? cfg.titles?.ru ?? cfg.topicSlug,
+          meta: topicCatalogEntries.find((entry) => entry.id === topicId) ?? null,
+        };
+      }),
     [locale, topicConfigs],
   );
 
-  const initialTopicId = params.get("topicId") ?? allTopics[0]?.topicId ?? "g5.proporcii";
+  const initialTopicId = params.get("topicId") ?? allTopics[0]?.topicId ?? "math.proportion";
   const initialTopicsParam = params.get("topics");
   const initialSelectedTopicIds = Array.from(
     new Set(

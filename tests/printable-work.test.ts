@@ -7,7 +7,7 @@ import type { VariantDetail } from "@/src/lib/variants/types";
 test("buildPrintableWorkDocument normalizes print profile and assembles printable variants", () => {
   const work = {
     id: "work-1",
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     title: "Работа • demo",
     workType: "quiz",
     printProfileJson: {
@@ -49,7 +49,7 @@ test("buildPrintableWorkDocument normalizes print profile and assembles printabl
   const makeVariant = (id: string, text: string): VariantDetail => ({
     id,
     ownerUserId: "u1",
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     templateId: "demo",
     title: `Variant ${id}`,
     seed: "seed",
@@ -62,8 +62,8 @@ test("buildPrintableWorkDocument normalizes print profile and assembles printabl
         orderIndex: 0,
         task: {
           id: `${id}.task.1`,
-          topic_id: "g5.proporcii",
-          skill_id: "g5.proporcii.find_unknown_term",
+          topic_id: "math.proportion",
+          skill_id: "math.proportion.find_unknown_term",
           statement_md: text,
           answer: { type: "number", value: 5 },
           difficulty: 2,

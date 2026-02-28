@@ -52,7 +52,7 @@ cat .env | grep DATABASE_URL
 
 Рекомендуемый путь (UI):
 1. Открыть:
-   - `http://localhost:3000/ru/5-klass/proporcii/train?skill=g5.proporcii.naiti_neizvestnyi_krainei`
+   - `http://localhost:3000/ru/5-klass/proportion/train?skill=math.proportion.find_unknown_extreme`
 2. Решить задачу и нажать `Check`
 
 Ожидаемый результат:
@@ -66,9 +66,9 @@ cat .env | grep DATABASE_URL
 curl -i -X POST http://localhost:3000/api/attempts \
   -H 'Content-Type: application/json' \
   -d '{
-    "topicId":"g5.proporcii",
-    "skillId":"g5.proporcii.naiti_neizvestnyi_krainei",
-    "taskId":"g5.proporcii.naiti_neizvestnyi_krainei.000001",
+    "topicId":"math.proportion",
+    "skillId":"math.proportion.find_unknown_extreme",
+    "taskId":"math.proportion.find_unknown_extreme.000001",
     "isCorrect":true,
     "userAnswer":"2",
     "durationMs":1500
@@ -84,7 +84,7 @@ curl -i -X POST http://localhost:3000/api/attempts \
 Действие (API):
 
 ```bash
-curl -i "http://localhost:3000/api/progress?topicId=g5.proporcii"
+curl -i "http://localhost:3000/api/progress?topicId=math.proportion"
 ```
 
 Ожидаемый результат:
@@ -105,7 +105,7 @@ curl -i "http://localhost:3000/api/progress?topicId=g5.proporcii"
 Действие:
 
 ```bash
-curl -i "http://localhost:3000/api/compare?topicId=g5.proporcii"
+curl -i "http://localhost:3000/api/compare?topicId=math.proportion"
 ```
 
 Ожидаемый результат:
@@ -128,7 +128,7 @@ curl -i "http://localhost:3000/api/compare?topicId=g5.proporcii"
 4. Открыть созданный вариант
 
 Ожидаемый результат:
-- шаблоны загружаются (`/api/teacher/templates?topicId=g5.proporcii`)
+- шаблоны загружаются (`/api/teacher/templates?topicId=math.proportion`)
 - список вариантов загружается (`/api/teacher/variants`)
 - после генерации появляется новый вариант в списке
 - страница деталей `/{locale}/teacher/variants/{id}` открывается без ошибки
@@ -136,7 +136,7 @@ curl -i "http://localhost:3000/api/compare?topicId=g5.proporcii"
 Быстрые API-проверки (роль teacher обязательна):
 
 ```bash
-curl -i "http://localhost:3000/api/teacher/templates?topicId=g5.proporcii"
+curl -i "http://localhost:3000/api/teacher/templates?topicId=math.proportion"
 curl -i "http://localhost:3000/api/teacher/variants"
 ```
 
@@ -323,7 +323,7 @@ pnpm validate:tasks -- --latex-warn
 - [ ] DB и Prisma ок
 - [ ] Attempts пишутся (или UI не падает с fallback)
 - [ ] `/ru/progress` работает
-- [ ] `/api/compare?topicId=g5.proporcii` отвечает
+- [ ] `/api/compare?topicId=math.proportion` отвечает
 - [ ] Teacher variants генерируются
 - [ ] Print pages открываются
 - [ ] PDF endpoint даёт `200 pdf` **или** корректный `501 fallback`

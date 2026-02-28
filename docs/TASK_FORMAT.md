@@ -9,13 +9,13 @@
 ```json
 {
   "schema_version": 1,
-  "topic_id": "g5.proporcii",
+  "topic_id": "math.proportion",
   "title": "Пропорции (5 класс): стартовый банк",
   "tasks": [
     {
-      "id": "g5.proporcii.naiti_neizvestnyi_krainei.000001",
-      "topic_id": "g5.proporcii",
-      "skill_id": "g5.proporcii.naiti_neizvestnyi_krainei",
+      "id": "math.proportion.find_unknown_extreme.000001",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_extreme",
       "difficulty": 2,
       "statement_md": "Найди $x$: $$\\\\frac{x}{3}=\\\\frac{8}{12}$$",
       "answer": { "type": "number", "value": 2 }
@@ -27,7 +27,7 @@
 ## Поля задачи
 
 - `id`: стабильный `task_id`, уникальный во всех JSON-файлах
-- `topic_id`: `g<класс>.<topic_slug>` (например, `g5.proporcii`, `g6.otricatelnye_chisla`)
+- `topic_id`: `g<класс>.<topic_slug>` (например, `math.proportion`, `math.negative_numbers`)
 - `skill_id`: один из `skill_id` из соответствующего файла `docs/TAXONOMY*.md`
 - `difficulty`: целое число от `1` до `5`
 - `statement_md`: непустой Markdown-текст (можно использовать LaTeX)

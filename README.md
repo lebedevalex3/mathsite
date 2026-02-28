@@ -46,7 +46,7 @@ Detailed local setup and troubleshooting: [LOCAL_DEV.md](./LOCAL_DEV.md).
 ## Main Paths
 
 - Student home: `http://localhost:3000/ru`
-- Topic: `http://localhost:3000/ru/5-klass/proporcii`
+- Topic: `http://localhost:3000/ru/5-klass/proportion`
 - Progress: `http://localhost:3000/ru/progress`
 - Teacher variants: `http://localhost:3000/ru/teacher/variants`
 - Health check: `http://localhost:3000/api/health`

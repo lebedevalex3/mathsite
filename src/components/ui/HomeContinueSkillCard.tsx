@@ -17,11 +17,11 @@ type SkillRef = {
   title: Record<Locale, string>;
 };
 
-const TOPIC_ID = "g5.proporcii";
+const TOPIC_ID = "math.proportion";
 
 const SKILL_ORDER: SkillRef[] = [
   {
-    id: "g5.proporcii.proverit_proporciyu",
+    id: "math.proportion.check_proportion",
     title: {
       ru: "Проверить пропорцию",
       en: "Check a proportion",
@@ -29,7 +29,7 @@ const SKILL_ORDER: SkillRef[] = [
     },
   },
   {
-    id: "g5.proporcii.naiti_neizvestnyi_krainei",
+    id: "math.proportion.find_unknown_extreme",
     title: {
       ru: "Найти неизвестный крайний член",
       en: "Find unknown extreme term",
@@ -37,7 +37,7 @@ const SKILL_ORDER: SkillRef[] = [
     },
   },
   {
-    id: "g5.proporcii.naiti_neizvestnyi_srednii",
+    id: "math.proportion.find_unknown_middle",
     title: {
       ru: "Найти неизвестный средний член",
       en: "Find unknown middle term",
@@ -45,7 +45,7 @@ const SKILL_ORDER: SkillRef[] = [
     },
   },
   {
-    id: "g5.proporcii.reshit_zadachu_na_masshtab",
+    id: "math.proportion.solve_scale_word_problem",
     title: {
       ru: "Задачи на масштаб",
       en: "Scale problems",
@@ -91,8 +91,8 @@ const copy = {
 } as const;
 
 function buildTrainHref(locale: Locale, skillId?: string) {
-  if (!skillId) return `/${locale}/topics/proporcii/trainer`;
-  return `/${locale}/topics/proporcii/train?skill=${encodeURIComponent(skillId)}`;
+  if (!skillId) return `/${locale}/topics/proportion/trainer`;
+  return `/${locale}/topics/proportion/train?skill=${encodeURIComponent(skillId)}`;
 }
 
 function pickNextSkill(progressMap: SkillProgressMap) {

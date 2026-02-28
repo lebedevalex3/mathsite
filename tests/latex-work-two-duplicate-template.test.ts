@@ -8,7 +8,7 @@ test("renderWorkTwoDuplicateLandscapeLatex duplicates the same variant in two co
   const doc: PrintableWorkDocument = {
     workId: "w1",
     locale: "ru",
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     title: "Работа",
     workType: "lesson",
     profile: { layout: "two_dup", orientation: "landscape" },

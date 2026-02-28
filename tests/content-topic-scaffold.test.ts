@@ -37,7 +37,7 @@ test("buildTopicScaffoldPlan produces expected paths", () => {
 });
 
 test("insertRegistryTopicEntry appends topic and rejects duplicates", () => {
-  const source = `const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {\n  proporcii: {\n    topicSlug: "proporcii",\n  },\n};\n`;
+  const source = `const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {\n  proportion: {\n    topicSlug: "proportion",\n  },\n};\n`;
   const inserted = insertRegistryTopicEntry(
     source,
     "ratios",

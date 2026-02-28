@@ -1,14 +1,14 @@
 export function progressAttemptsFixture() {
   return [
-    { skillId: "g5.proporcii.naiti_neizvestnyi_krainei", isCorrect: true },
-    { skillId: "g5.proporcii.naiti_neizvestnyi_krainei", isCorrect: false },
-    { skillId: "g5.proporcii.naiti_neizvestnyi_krainei", isCorrect: true },
-    { skillId: "g5.proporcii.naiti_neizvestnyi_srednii", isCorrect: false },
-    { skillId: "g5.proporcii.naiti_neizvestnyi_srednii", isCorrect: false },
-    { skillId: "g5.proporcii.reshit_zadachu_na_cenu", isCorrect: true },
-    { skillId: "g5.proporcii.reshit_zadachu_na_cenu", isCorrect: true },
-    { skillId: "g5.proporcii.reshit_zadachu_na_cenu", isCorrect: true },
-    { skillId: "g5.proporcii.reshit_zadachu_na_cenu", isCorrect: true },
-    { skillId: "g5.proporcii.reshit_zadachu_na_cenu", isCorrect: true },
+    { skillId: "math.proportion.find_unknown_extreme", isCorrect: true },
+    { skillId: "math.proportion.find_unknown_extreme", isCorrect: false },
+    { skillId: "math.proportion.find_unknown_extreme", isCorrect: true },
+    { skillId: "math.proportion.find_unknown_middle", isCorrect: false },
+    { skillId: "math.proportion.find_unknown_middle", isCorrect: false },
+    { skillId: "math.proportion.solve_price_word_problem", isCorrect: true },
+    { skillId: "math.proportion.solve_price_word_problem", isCorrect: true },
+    { skillId: "math.proportion.solve_price_word_problem", isCorrect: true },
+    { skillId: "math.proportion.solve_price_word_problem", isCorrect: true },
+    { skillId: "math.proportion.solve_price_word_problem", isCorrect: true },
   ];
 }

@@ -112,7 +112,7 @@
 
 ## Навигационные цели CTA
 
-- `Я ученик` -> `/{locale}/topics/proporcii`
+- `Я ученик` -> `/{locale}/topics/proportion`
 - `Я учитель` -> `/{locale}/teacher/variants`
 - `Продолжить тренажёр` -> последний активный trainer route
 - `Собрать вариант` -> `/{locale}/teacher/variants` (с предзаполнением параметров, если доступны)

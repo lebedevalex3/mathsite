@@ -70,7 +70,10 @@ export function TeacherQuickStartWidget({ locale }: Props) {
   const topics = useMemo(() => {
     return listContentTopicConfigs()
       .map((cfg) => {
-        const topicId = cfg.topicSlug.includes(".") ? cfg.topicSlug : `g5.${cfg.topicSlug}`;
+        const topicId =
+          topicCatalogEntries.find(
+            (entry) => entry.id === cfg.topicSlug || entry.slug.endsWith(`/${cfg.topicSlug}`),
+          )?.id ?? cfg.topicSlug;
         const catalog = topicCatalogEntries.find((entry) => entry.id === topicId);
         if (!catalog) return null;
         return {
@@ -81,7 +84,7 @@ export function TeacherQuickStartWidget({ locale }: Props) {
       .filter((item): item is NonNullable<typeof item> => item !== null);
   }, [locale]);
 
-  const [topicId, setTopicId] = useState<string>(topics[0]?.topicId ?? "g5.proporcii");
+  const [topicId, setTopicId] = useState<string>(topics[0]?.topicId ?? "math.proportion");
   const [preset, setPreset] = useState<PresetId>("control20");
 
   function handleSubmit() {

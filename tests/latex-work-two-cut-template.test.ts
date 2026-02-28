@@ -40,7 +40,7 @@ test("renderWorkTwoCutLandscapeLatex swaps columns on back side for cut-safe lay
   const doc: PrintableWorkDocument = {
     workId: "w1",
     locale: "ru",
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     title: "Работа",
     workType: "quiz",
     profile: { layout: "two_cut", orientation: "landscape" },

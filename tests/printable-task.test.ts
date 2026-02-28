@@ -5,12 +5,12 @@ import { toPrintableTask, toPrintableTasks } from "@/src/lib/variants/printable-
 
 test("toPrintableTask classifies short plain-text task as short with inline answer space", () => {
   const item = toPrintableTask({
-    taskId: "g5.proporcii.test.000001",
+    taskId: "math.proportion.test.000001",
     orderIndex: 0,
     task: {
       statement_md: "Найди x: 2x = 10.",
       answer: { type: "number", value: 5 },
-      skill_id: "g5.proporcii.find_unknown_term",
+      skill_id: "math.proportion.find_unknown_term",
     },
   });
 
@@ -22,7 +22,7 @@ test("toPrintableTask classifies short plain-text task as short with inline answ
 
 test("toPrintableTask detects display math and upgrades complexity", () => {
   const item = toPrintableTask({
-    taskId: "g5.proporcii.test.000002",
+    taskId: "math.proportion.test.000002",
     orderIndex: 1,
     task: {
       statement_md: "Реши:\n\n$$\\frac{3}{5} = \\frac{x}{15}$$",
@@ -37,7 +37,7 @@ test("toPrintableTask detects display math and upgrades complexity", () => {
 
 test("toPrintableTask classifies long word problem as long", () => {
   const item = toPrintableTask({
-    taskId: "g5.proporcii.test.000003",
+    taskId: "math.proportion.test.000003",
     orderIndex: 2,
     task: {
       statement_md:
@@ -53,7 +53,7 @@ test("toPrintableTask classifies long word problem as long", () => {
 
 test("toPrintableTask prefers answer_md over numeric answer", () => {
   const item = toPrintableTask({
-    taskId: "g5.proporcii.test.000004",
+    taskId: "math.proportion.test.000004",
     orderIndex: 3,
     task: {
       statement_md: "Представь ответ в виде отношения.",

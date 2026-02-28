@@ -27,7 +27,7 @@ function pushAttempts(
 
 export function compareAttemptsFixture(now: Date): CompareAttemptRow[] {
   const rows: CompareAttemptRow[] = [];
-  const topicId = "g5.proporcii";
+  const topicId = "math.proportion";
 
   // Current user (12 attempts, 9 correct => 75%)
   pushAttempts(rows, {
@@ -54,7 +54,7 @@ export function compareAttemptsFixture(now: Date): CompareAttemptRow[] {
   // Different topic (should be ignored)
   pushAttempts(rows, {
     userId: "user-z",
-    topicId: "g5.other",
+    topicId: "math.other",
     total: 20,
     correct: 10,
     createdAt: daysAgo(now, 2),
@@ -65,7 +65,7 @@ export function compareAttemptsFixture(now: Date): CompareAttemptRow[] {
 
 export function compareAttemptsCurrentUserBelowThresholdFixture(now: Date): CompareAttemptRow[] {
   const rows: CompareAttemptRow[] = [];
-  const topicId = "g5.proporcii";
+  const topicId = "math.proportion";
 
   // Current user < 10 attempts
   pushAttempts(rows, {

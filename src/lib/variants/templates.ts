@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { getTasksForTopic } from "@/lib/tasks/query";
 
-import { getProporciiSkillMap } from "./catalog";
+import { getProportionSkillMap } from "./catalog";
 import { validateTemplate } from "./templateSchema";
 import type { VariantTemplate } from "./types";
 
@@ -13,10 +13,10 @@ async function readTemplateFile(filePath: string) {
 }
 
 function templateDirForTopic(topicId: string) {
-  if (topicId !== "g5.proporcii") {
+  if (topicId !== "math.proportion") {
     throw new Error(`Unsupported topic for templates: ${topicId}`);
   }
-  return path.join(process.cwd(), "templates", "variants", "g5", "proporcii");
+  return path.join(process.cwd(), "templates", "variants", "math", "proportion");
 }
 
 export async function listVariantTemplates(topicId: string): Promise<VariantTemplate[]> {
@@ -38,7 +38,7 @@ export async function getVariantTemplateById(topicId: string, templateId: string
 }
 
 export async function validateTemplates(topicId: string, templates: VariantTemplate[]) {
-  const skillMap = getProporciiSkillMap();
+  const skillMap = getProportionSkillMap();
   const { tasks, errors } = await getTasksForTopic(topicId);
   if (errors.length > 0) {
     throw new Error(`Task bank errors: ${errors[0]}`);

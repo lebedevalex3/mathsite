@@ -11,7 +11,7 @@ import {
 test("aggregateLeaderboard returns top entries in expected order", () => {
   const now = new Date("2026-02-24T12:00:00.000Z");
   const leaderboard = aggregateLeaderboard({
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     currentUserId: "user-a",
     attempts: compareAttemptsFixture(now),
     now,
@@ -34,7 +34,7 @@ test("aggregateLeaderboard returns top entries in expected order", () => {
 test("aggregateLeaderboard returns null position when current user is outside cohort", () => {
   const now = new Date("2026-02-24T12:00:00.000Z");
   const leaderboard = aggregateLeaderboard({
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     currentUserId: "user-a",
     attempts: compareAttemptsCurrentUserBelowThresholdFixture(now),
     now,

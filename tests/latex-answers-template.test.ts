@@ -7,7 +7,7 @@ import type { PrintableWorkDocument } from "@/src/lib/variants/printable-work";
 const doc: PrintableWorkDocument = {
   workId: "w1",
   locale: "ru",
-  topicId: "g5.proporcii",
+  topicId: "math.proportion",
   title: "Работа",
   workType: "quiz",
   profile: { layout: "single", orientation: "portrait" },

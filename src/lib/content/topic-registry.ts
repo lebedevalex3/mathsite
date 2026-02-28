@@ -9,10 +9,10 @@ export type ContentTopicRegistryItem = {
 };
 
 const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {
-  proporcii: {
-    topicSlug: "proporcii",
+  proportion: {
+    topicSlug: "proportion",
     domain: "arithmetic",
-    routePathSegments: ["5-klass", "proporcii"],
+    routePathSegments: ["topics", "proportion"],
     defaultLocale: "ru",
     titles: {
       ru: "Пропорции",
@@ -20,10 +20,10 @@ const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {
       de: "Proportionen",
     },
   },
-  uravneniya: {
-    topicSlug: "uravneniya",
+  equations: {
+    topicSlug: "equations",
     domain: "algebra",
-    routePathSegments: ["5-klass", "uravneniya"],
+    routePathSegments: ["5-klass", "equations"],
     defaultLocale: "ru",
     titles: {
       ru: "Уравнения",
@@ -31,10 +31,10 @@ const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {
       de: "Gleichungen",
     },
   },
-  "g6.otricatelnye_chisla": {
-    topicSlug: "g6.otricatelnye_chisla",
+  "negative-numbers": {
+    topicSlug: "negative-numbers",
     domain: "algebra",
-    routePathSegments: ["6-klass", "otricatelnye-chisla"],
+    routePathSegments: ["6-klass", "negative-numbers"],
     defaultLocale: "ru",
     titles: {
       ru: "Отрицательные числа",

@@ -1,0 +1,31 @@
+{
+  "id": "math.proportion.control30.v1",
+  "title": "Контрольная №2 (30 заданий)",
+  "topicId": "math.proportion",
+  "sections": [
+    {
+      "label": "Основное свойство пропорции",
+      "skillIds": [
+        "math.proportion.find_unknown_extreme",
+        "math.proportion.find_unknown_middle",
+        "math.proportion.apply_proportion_property",
+        "math.proportion.check_proportion"
+      ],
+      "count": 18,
+      "difficulty": [1, 4]
+    },
+    {
+      "label": "Задачи на цену и масштаб",
+      "skillIds": [
+        "math.proportion.solve_price_word_problem",
+        "math.proportion.solve_scale_word_problem"
+      ],
+      "count": 12,
+      "difficulty": [1, 4]
+    }
+  ],
+  "header": {
+    "gradeLabel": "5 класс",
+    "topicLabel": "Пропорции"
+  }
+}

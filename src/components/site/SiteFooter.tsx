@@ -25,7 +25,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
               </Link>
             </li>
             <li>
-              <Link href={`/${locale}/topics/proporcii`} className="hover:text-[var(--text-strong)]">
+              <Link href={`/${locale}/topics/proportion`} className="hover:text-[var(--text-strong)]">
                 Пропорции (5 класс)
               </Link>
             </li>

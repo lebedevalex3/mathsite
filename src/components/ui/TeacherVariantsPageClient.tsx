@@ -78,7 +78,7 @@ export function TeacherVariantsPageClient({
     setError(null);
     try {
       const [templatesResponse, variantsResponse] = await Promise.all([
-        fetch("/api/teacher/templates?topicId=g5.proporcii", { credentials: "same-origin" }),
+        fetch("/api/teacher/templates?topicId=math.proportion", { credentials: "same-origin" }),
         fetch("/api/teacher/variants", { credentials: "same-origin" }),
       ]);
 
@@ -157,7 +157,7 @@ export function TeacherVariantsPageClient({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify({ topicId: "g5.proporcii", templateId }),
+        body: JSON.stringify({ topicId: "math.proportion", templateId }),
       });
       const payload = (await response.json()) as {
         ok?: boolean;

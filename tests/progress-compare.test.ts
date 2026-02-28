@@ -10,21 +10,21 @@ import { progressAttemptsFixture } from "./fixtures/attempts.progress";
 test("aggregateSkillProgress computes counts, accuracy and status per skill", () => {
   const progress = aggregateSkillProgress(progressAttemptsFixture());
 
-  assert.deepEqual(progress["g5.proporcii.naiti_neizvestnyi_krainei"], {
+  assert.deepEqual(progress["math.proportion.find_unknown_extreme"], {
     total: 3,
     correct: 2,
     accuracy: 2 / 3,
     status: "in_progress",
   });
 
-  assert.deepEqual(progress["g5.proporcii.naiti_neizvestnyi_srednii"], {
+  assert.deepEqual(progress["math.proportion.find_unknown_middle"], {
     total: 2,
     correct: 0,
     accuracy: 0,
     status: "in_progress",
   });
 
-  assert.deepEqual(progress["g5.proporcii.reshit_zadachu_na_cenu"], {
+  assert.deepEqual(progress["math.proportion.solve_price_word_problem"], {
     total: 5,
     correct: 5,
     accuracy: 1,
@@ -39,7 +39,7 @@ test("aggregateSkillProgress returns empty map for empty input", () => {
 test("aggregateCompare computes user/platform metrics and filters by 30-day window", () => {
   const now = new Date("2026-02-24T12:00:00.000Z");
   const result = aggregateCompare({
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     currentUserId: "user-a",
     attempts: compareAttemptsFixture(now),
     now,
@@ -69,7 +69,7 @@ test("aggregateCompare computes user/platform metrics and filters by 30-day wind
 test("aggregateCompare handles current user with total < 10 while cohort still exists", () => {
   const now = new Date("2026-02-24T12:00:00.000Z");
   const result = aggregateCompare({
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     currentUserId: "user-a",
     attempts: compareAttemptsCurrentUserBelowThresholdFixture(now),
     now,
@@ -91,20 +91,20 @@ test("aggregateCompare returns null percentile/platform values when no cohort us
   const attempts = [
     {
       userId: "user-a",
-      topicId: "g5.proporcii",
+      topicId: "math.proportion",
       isCorrect: true,
       createdAt: now,
     },
     {
       userId: "user-b",
-      topicId: "g5.proporcii",
+      topicId: "math.proportion",
       isCorrect: false,
       createdAt: now,
     },
   ];
 
   const result = aggregateCompare({
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     currentUserId: "user-a",
     attempts,
     now,

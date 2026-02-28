@@ -80,8 +80,8 @@ function buildTopicHref(locale: AppLocale, entry: TopicCatalogEntry) {
 }
 
 function buildTrainerHref(locale: AppLocale, entry: TopicCatalogEntry) {
-  if (entry.id === "g5.proporcii") {
-    return `/${locale}/topics/proporcii/trainer`;
+  if (entry.id === "math.proportion") {
+    return `/${locale}/topics/proportion/trainer`;
   }
   return buildTopicHref(locale, entry);
 }

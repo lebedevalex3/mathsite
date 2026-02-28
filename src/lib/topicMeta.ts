@@ -18,8 +18,8 @@ export type TopicCatalogEntry = {
 
 export const topicCatalogEntries: TopicCatalogEntry[] = [
   {
-    id: "g5.proporcii",
-    slug: "topics/proporcii",
+    id: "math.proportion",
+    slug: "topics/proportion",
     domain: "arithmetic",
     levels: [5],
     status: "ready",
@@ -42,7 +42,7 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canTrain: true,
   },
   {
-    id: "g5.fractions",
+    id: "math.fractions",
     slug: "5-klass/drobi",
     domain: "arithmetic",
     levels: [5],
@@ -66,8 +66,8 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canTrain: false,
   },
   {
-    id: "g5.uravneniya",
-    slug: "5-klass/uravneniya",
+    id: "math.equations",
+    slug: "5-klass/equations",
     domain: "algebra",
     domains: ["arithmetic", "algebra"],
     levels: [5],
@@ -91,7 +91,7 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canTrain: false,
   },
   {
-    id: "g5.geometry-angles",
+    id: "math.geometry_angles",
     slug: "5-klass/geometriya-ugly",
     domain: "geometry",
     levels: [5],
@@ -115,7 +115,7 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canTrain: false,
   },
   {
-    id: "g6.percentages",
+    id: "math.percentages",
     slug: "6-klass/procenty",
     domain: "data",
     levels: [6],
@@ -139,8 +139,8 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canTrain: false,
   },
   {
-    id: "g6.otricatelnye_chisla",
-    slug: "6-klass/otricatelnye-chisla",
+    id: "math.negative_numbers",
+    slug: "6-klass/negative-numbers",
     domain: "algebra",
     domains: ["algebra"],
     levels: [6],

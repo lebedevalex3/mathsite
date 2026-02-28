@@ -40,7 +40,7 @@ export type TopicSkillPath = {
 };
 
 export const topicMaps: Record<string, TopicMapData> = {
-  "g5.proporcii": {
+  "math.proportion": {
     essence: [
       "Пропорция — равенство двух отношений.",
       "Основное свойство: a/b = c/d ⇔ ad = bc.",
@@ -85,31 +85,31 @@ export const topicMaps: Record<string, TopicMapData> = {
           id: "recognize",
           title: "Распознать пропорцию",
           status: "soon",
-          skillId: "g5.proporcii.raspoznat_proporciyu",
+          skillId: "math.proportion.recognize_proportion",
         },
         {
           id: "check",
           title: "Проверить пропорцию",
           status: "ready",
-          skillId: "g5.proporcii.proverit_proporciyu",
+          skillId: "math.proportion.check_proportion",
         },
         {
           id: "find_outer",
           title: "Найти неизвестный крайний",
           status: "ready",
-          skillId: "g5.proporcii.naiti_neizvestnyi_krainei",
+          skillId: "math.proportion.find_unknown_extreme",
         },
         {
           id: "find_middle",
           title: "Найти неизвестный средний",
           status: "ready",
-          skillId: "g5.proporcii.naiti_neizvestnyi_srednii",
+          skillId: "math.proportion.find_unknown_middle",
         },
         {
           id: "word_problems",
           title: "Решать задачи на пропорции",
           status: "ready",
-          skillId: "g5.proporcii.reshit_zadachu_na_masshtab",
+          skillId: "math.proportion.solve_scale_word_problem",
         },
       ],
       edges: [

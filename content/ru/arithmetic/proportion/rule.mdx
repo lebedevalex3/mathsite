@@ -1,0 +1,125 @@
+import { KeyIdea, Steps, Mistakes, Practice } from "@/src/components/mdx";
+import { MarkdownMath } from "@/lib/ui/MarkdownMath";
+import { SubtopicPageTemplate } from "@/src/app/[locale]/5-klass/proportion/subtopic-page-template";
+
+export const subtopicMeta = {
+  title: "Основное правило пропорции",
+  slug: "rule",
+  order: 10,
+};
+
+export default async function RuleSubtopicPage({ params }) {
+  const { locale } = await params;
+
+return (
+
+<SubtopicPageTemplate
+      locale={locale}
+      slug="rule"
+      intro="Подтема про основное свойство пропорции, проверку пропорций и вычисление неизвестного члена."
+    >
+<h2 id="toc">Содержание</h2>
+<ul>
+<li><a href="#opredelenie">Определение</a></li>
+<li><a href="#osnovnoe-svoystvo">Основное свойство</a></li>
+<li><a href="#algoritm-resheniya">Алгоритм решения</a></li>
+<li><a href="#primery">Примеры</a></li>
+<li><a href="#tipichnye-oshibki">Типичные ошибки</a></li>
+<li><a href="#praktika">Практика</a></li>
+</ul>
+
+      <h2 id="opredelenie">Определение</h2>
+      <p>
+        Пропорци — это равенство двух отношений. В задачах 5 класса это удобный
+        способ записать одинаковую зависимость между величинами и найти неизвестное.
+      </p>
+      <p>
+        Важно сохранять один и тот же порядок величин в обеих частях пропорции,
+        иначе решение будет неверным даже при правильных вычислениях.
+      </p>
+
+      <h2 id="osnovnoe-svoystvo">Основное свойство</h2>
+      <KeyIdea title="Основное свойство пропорции">
+        <MarkdownMath>{`Если $$\\frac{a}{b}=\\frac{c}{d}$$, то $$ad=bc$$.`}</MarkdownMath>
+
+        Именно это свойство используется для проверки пропорции и для нахождения
+        неизвестного члена.
+      </KeyIdea>
+
+      <p>
+        Проверка работает в обе стороны: если произведение крайних членов равно
+        произведению средних членов, пропорция верна.
+      </p>
+
+      <h2 id="algoritm-resheniya">Алгоритм решения</h2>
+      <Steps title="Алгоритм решения">
+        <li>Запиши пропорцию аккуратно и выдели неизвестный член.</li>
+        <li>Примени основное свойство: приравняй произведения.</li>
+        <li>Вырази неизвестное и выполни вычисления.</li>
+        <li>Проверь ответ подстановкой в исходную пропорцию.</li>
+      </Steps>
+
+      <h2 id="primery">Примеры</h2>
+      Пример 1: найти неизвестный крайний член.
+
+      <MarkdownMath>{`$$\\frac{x}{5}=\\frac{12}{20} \\Rightarrow x \\cdot 20 = 5 \\cdot 12 \\Rightarrow 20x = 60 \\Rightarrow x = 3$$`}</MarkdownMath>
+
+      Пример 2: найти неизвестный средний член.
+
+      <MarkdownMath>{`$$\\frac{4}{x}=\\frac{10}{15} \\Rightarrow 4 \\cdot 15 = 10x \\Rightarrow 60 = 10x \\Rightarrow x = 6$$`}</MarkdownMath>
+
+      Пример 3: проверить пропорцию.
+
+      <MarkdownMath>{`$$\\frac{6}{9}=\\frac{10}{15}, \\quad 6 \\cdot 15 = 90,\\; 9 \\cdot 10 = 90$$`}</MarkdownMath>
+
+      Произведения равны, значит пропорция верна.
+
+      <h2 id="tipichnye-oshibki">Типичные ошибки</h2>
+      <Mistakes title="Что проверить перед ответом">
+        <li>Перепутан порядок членов при составлении пропорции.</li>
+        <li>Неправильно определены крайние и средние члены.</li>
+        <li>После нахождения x не выполнена проверка подстановкой.</li>
+        <li>Сокращение или умножение выполнено с арифметической ошибкой.</li>
+      </Mistakes>
+
+      <h2 id="praktika">Практика</h2>
+      <p>
+        Начните с поиска неизвестного члена, затем переходите к проверке пропорций
+        и применению свойства в более сложных примерах.
+      </p>
+
+      <Practice
+        items={[
+          {
+            label: "Найти неизвестный крайний член",
+            readHref: `/${locale}/5-klass/proportion/skills/find-unknown`,
+            trainHref: `/${locale}/5-klass/proportion/train?skill=math.proportion.find_unknown_extreme`,
+            note: "В текущем банке задач достаточно заданий для режима «10 задач подряд».",
+          },
+          {
+            label: "Найти неизвестный средний член",
+            readHref: `/${locale}/5-klass/proportion/skills/find-unknown`,
+            trainHref: null,
+            disabledReason: "Пока меньше 10 задач",
+            note: "Навык уже есть в банке, но задач пока недостаточно для полноценной тренировки.",
+          },
+          {
+            label: "Проверить пропорцию",
+            readHref: `/${locale}/5-klass/proportion/skills/find-unknown`,
+            trainHref: null,
+            disabledReason: "Пока меньше 10 задач",
+            note: "Подходит для коротких упражнений на проверку равенства отношений.",
+          },
+          {
+            label: "Применить свойство пропорции",
+            readHref: `/${locale}/5-klass/proportion/skills/find-unknown`,
+            trainHref: null,
+            disabledReason: "Пока меньше 10 задач",
+            note: "Отдельные задачи на переход к равенству произведений ad = bc.",
+          },
+        ]}
+      />
+    </SubtopicPageTemplate>
+
+);
+}

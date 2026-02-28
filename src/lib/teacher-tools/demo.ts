@@ -96,9 +96,13 @@ export function buildDemoTemplate({
   mode,
 }: BuildDemoTemplateParams): VariantTemplate {
   const topicLabels: Record<string, string> = {
-    "g5.proporcii": "Пропорции",
-    "g5.uravneniya": "Уравнения",
-    "g6.otricatelnye_chisla": "Отрицательные числа",
+    "math.proportion": "Пропорции",
+    "math.equations": "Уравнения",
+    "math.negative_numbers": "Отрицательные числа",
+  };
+  const gradeLabels: Record<string, string> = {
+    "math.proportion": "5 класс",
+    "math.equations": "5 класс",
   };
 
   return {
@@ -106,7 +110,7 @@ export function buildDemoTemplate({
     title: mode ? `Конструктор вариантов • ${mode}` : "Конструктор вариантов",
     topicId,
     header: {
-      gradeLabel: topicId.startsWith("g5.") ? "5 класс" : "Класс",
+      gradeLabel: gradeLabels[topicId] ?? "Класс",
       topicLabel: topicLabels[topicId] ?? topicId,
     },
     sections: plan.map((item) => ({

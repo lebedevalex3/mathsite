@@ -9,7 +9,7 @@ import type { VariantTemplate } from "@/src/lib/variants/types";
 
 import { createTaskBankFixture } from "./fixtures/variant-generator.fixtures";
 
-const TEMPLATE_DIR = path.join(process.cwd(), "templates", "variants", "g5", "proporcii");
+const TEMPLATE_DIR = path.join(process.cwd(), "templates", "variants", "math", "proportion");
 
 async function loadTemplateFile(fileName: string): Promise<VariantTemplate> {
   const filePath = path.join(TEMPLATE_DIR, fileName);
@@ -22,8 +22,8 @@ test("real teacher templates are valid against TemplateSchema", async () => {
 
   for (const file of files) {
     const template = await loadTemplateFile(file);
-    assert.ok(template.id.startsWith("g5.proporcii."));
-    assert.equal(template.topicId, "g5.proporcii");
+    assert.ok(template.id.startsWith("math.proportion."));
+    assert.equal(template.topicId, "math.proportion");
     assert.ok(template.sections.length > 0);
   }
 });
@@ -44,9 +44,9 @@ test("fixture task bank can satisfy real templates via variant planner", async (
 
 test("validateTemplate throws InvalidTemplateError for malformed template JSON", () => {
   const badTemplate = {
-    id: "g5.proporcii.bad.v1",
+    id: "math.proportion.bad.v1",
     title: "Bad",
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     sections: [
       {
         label: "Broken",
@@ -77,7 +77,7 @@ test("realistic impossible template fails with INSUFFICIENT_TASKS on fixture tas
   const template = await loadTemplateFile("control30.v1.json");
   const impossibleTemplate: VariantTemplate = {
     ...template,
-    id: "g5.proporcii.control30-impossible.v1",
+    id: "math.proportion.control30-impossible.v1",
     sections: [
       ...template.sections.slice(0, 1),
       {
@@ -98,4 +98,3 @@ test("realistic impossible template fails with INSUFFICIENT_TASKS on fixture tas
     },
   );
 });
-

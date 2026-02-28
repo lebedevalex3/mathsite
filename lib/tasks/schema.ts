@@ -1,18 +1,24 @@
 import { z } from "zod";
 
-export const TOPIC_ID = "g5.proporcii" as const;
+export const TOPIC_ID = "math.proportion" as const;
 
 const topicIdSchema = z
   .string()
-  .regex(/^g\d+\.[a-z][a-z0-9_]*$/, "Invalid topic_id format (expected g<grade>.<topic>)");
+  .regex(
+    /^[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/,
+    "Invalid topic_id format (expected <namespace>.<topic>)",
+  );
 const skillIdSchema = z
   .string()
-  .regex(/^g\d+\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/, "Invalid skill_id format");
+  .regex(
+    /^[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/,
+    "Invalid skill_id format",
+  );
 const taskIdSchema = z
   .string()
   .regex(
-    /^g\d+\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.\d{6}$/,
-    "Invalid task_id format (expected g<grade>.<topic>.<skill>.000001)",
+    /^[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.\d{6}$/,
+    "Invalid task_id format (expected <namespace>.<topic>.<skill>.000001)",
   );
 
 export const numberAnswerSchema = z.object({

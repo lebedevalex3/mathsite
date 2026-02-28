@@ -1,0 +1,131 @@
+import Link from "next/link";
+
+import { TopicLeaderboardPanel } from "@/src/components/topic/TopicLeaderboardPanel";
+import { TopicSkillMap } from "@/src/components/topic/TopicSkillMap";
+import { TopicMotivationPanel } from "@/src/components/topic/TopicMotivationPanel";
+import { ButtonLink } from "@/src/components/ui/ButtonLink";
+import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { topicMastery } from "@/src/lib/topicMastery";
+
+import {
+  proportionSkills,
+  proportionSubtopics,
+} from "@/src/lib/topics/proportion/module-data";
+
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function ProportionTopicPage({ params }: PageProps) {
+  const { locale } = await params;
+  const mastery = topicMastery["math.proportion"];
+  const readConspetsHref = `/${locale}/topics/proportion/rule`;
+  const skillById = new Map(proportionSkills.map((skill) => [skill.id, skill]));
+  const masteryLevels = (mastery?.masteryLevels ?? [])
+    .map((level) => ({
+      id: level.id,
+      title: level.title,
+      hint: level.hint,
+      skills: level.skillIds
+        .map((skillId) => skillById.get(skillId))
+        .filter((skill): skill is (typeof proportionSkills)[number] => Boolean(skill))
+        .map((skill) => ({
+          id: skill.id,
+          title: skill.title,
+          summary: skill.summary,
+          trainHref:
+            skill.id === "math.proportion.recognize_proportion"
+              ? undefined
+              : `/${locale}/topics/proportion/train?skill=${encodeURIComponent(skill.id)}`,
+        })),
+    }))
+    .filter((level) => level.skills.length > 0);
+
+  return (
+    <main className="space-y-6">
+      <nav aria-label="Breadcrumbs" className="text-sm text-[var(--text-muted)]">
+        <ol className="flex flex-wrap items-center gap-2">
+          <li>
+            <Link href={`/${locale}`} className="hover:text-[var(--text-strong)]">
+              Главная
+            </Link>
+          </li>
+          <li>/</li>
+          <li>
+            <span>{locale === "ru" ? "Арифметика" : locale === "de" ? "Arithmetik" : "Arithmetic"}</span>
+          </li>
+          <li>/</li>
+          <li className="font-medium text-[var(--text-strong)]">Пропорции</li>
+        </ol>
+      </nav>
+
+      <section className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_20px_45px_-30px_rgba(11,60,138,0.45)] sm:p-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-3xl">
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--accent-foreground)]">Тема</p>
+              <span className="rounded-full border border-[var(--border)] bg-[var(--info)] px-2.5 py-0.5 text-xs font-semibold text-[var(--info-foreground)]">
+                Level 5
+              </span>
+            </div>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-[var(--text-strong)] sm:text-4xl">Пропорции</h1>
+            <p className="mt-3 text-base leading-7 text-[var(--text-muted)]">
+              Тема представлена как карта навыков: двигайся по шагам, тренируй конкретные умения
+              и закрывай слабые места.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <ButtonLink
+              href={`/${locale}/topics/proportion/trainer`}
+              variant="primary"
+            >
+              Тренировать
+            </ButtonLink>
+            <ButtonLink href={readConspetsHref} variant="secondary">
+              Короткая теория
+            </ButtonLink>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-2">
+        <TopicMotivationPanel
+          locale={locale as "ru" | "en" | "de"}
+          topicId="math.proportion"
+          progressHref={`/${locale}/progress`}
+        />
+        <TopicLeaderboardPanel locale={locale as "ru" | "en" | "de"} topicId="math.proportion" />
+      </section>
+
+      <TopicSkillMap locale={locale as "ru" | "en" | "de"} topicId="math.proportion" levels={masteryLevels} />
+
+      <section className="space-y-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight text-[var(--text-strong)]">Подтемы</h2>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
+              Если нужен краткий разбор идеи перед тренировкой, открой нужную подтему.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {proportionSubtopics.map((subtopic) => (
+            <SurfaceCard key={subtopic.id} className="flex h-full flex-col p-5">
+              <h3 className="text-lg font-semibold tracking-tight text-[var(--text-strong)]">{subtopic.title}</h3>
+              <p className="mt-2 flex-1 text-sm leading-6 text-[var(--text-muted)]">{subtopic.description}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <ButtonLink
+                  href={`/${locale}/topics/proportion/${subtopic.slug}`}
+                  variant="secondary"
+                >
+                  Открыть подтему
+                </ButtonLink>
+              </div>
+            </SurfaceCard>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}

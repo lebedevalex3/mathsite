@@ -75,7 +75,7 @@ test("variant generator selects unique tasks and respects template quotas/constr
 test("variant generator throws InsufficientTasksError when template cannot be satisfied", () => {
   const tasks = createTaskBankFixture().filter(
     (task) =>
-      task.skill_id === "g5.proporcii.reshit_zadachu_na_masshtab" && task.difficulty === 4,
+      task.skill_id === "math.proportion.solve_scale_word_problem" && task.difficulty === 4,
   );
 
   const template = {
@@ -83,7 +83,7 @@ test("variant generator throws InsufficientTasksError when template cannot be sa
     sections: [
       {
         label: "Невыполнимая секция",
-        skillIds: ["g5.proporcii.reshit_zadachu_na_masshtab"],
+        skillIds: ["math.proportion.solve_scale_word_problem"],
         count: 10,
         difficulty: [4, 4] as [number, number],
       },
@@ -106,25 +106,25 @@ test("variant generator throws InsufficientTasksError when template cannot be sa
 test("variant generator backtracks on overlapping sections instead of false INSUFFICIENT_TASKS", () => {
   const tasks: Task[] = [
     {
-      id: "g5.proporcii.skill_a.000001",
-      topic_id: "g5.proporcii",
-      skill_id: "g5.proporcii.skill_a",
+      id: "math.proportion.skill_a.000001",
+      topic_id: "math.proportion",
+      skill_id: "math.proportion.skill_a",
       difficulty: 1,
       statement_md: "A1",
       answer: { type: "number", value: 1 },
     },
     {
-      id: "g5.proporcii.skill_a.000002",
-      topic_id: "g5.proporcii",
-      skill_id: "g5.proporcii.skill_a",
+      id: "math.proportion.skill_a.000002",
+      topic_id: "math.proportion",
+      skill_id: "math.proportion.skill_a",
       difficulty: 2,
       statement_md: "A2",
       answer: { type: "number", value: 2 },
     },
     {
-      id: "g5.proporcii.skill_b.000001",
-      topic_id: "g5.proporcii",
-      skill_id: "g5.proporcii.skill_b",
+      id: "math.proportion.skill_b.000001",
+      topic_id: "math.proportion",
+      skill_id: "math.proportion.skill_b",
       difficulty: 2,
       statement_md: "B1",
       answer: { type: "number", value: 3 },
@@ -132,9 +132,9 @@ test("variant generator backtracks on overlapping sections instead of false INSU
   ];
 
   const template = {
-    id: "g5.proporcii.overlap.v1",
+    id: "math.proportion.overlap.v1",
     title: "Overlap",
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     header: {
       gradeLabel: "5 класс",
       topicLabel: "Пропорции",
@@ -142,13 +142,13 @@ test("variant generator backtracks on overlapping sections instead of false INSU
     sections: [
       {
         label: "Широкая секция",
-        skillIds: ["g5.proporcii.skill_a", "g5.proporcii.skill_b"],
+        skillIds: ["math.proportion.skill_a", "math.proportion.skill_b"],
         count: 2,
         difficulty: [1, 2] as [number, number],
       },
       {
         label: "Узкая секция",
-        skillIds: ["g5.proporcii.skill_b"],
+        skillIds: ["math.proportion.skill_b"],
         count: 1,
         difficulty: [2, 2] as [number, number],
       },
@@ -160,23 +160,23 @@ test("variant generator backtracks on overlapping sections instead of false INSU
   assert.equal(plan.length, 3);
   assert.equal(new Set(plan.map((item) => item.task.id)).size, 3);
   assert.equal(plan[2]?.sectionLabel, "Узкая секция");
-  assert.equal(plan[2]?.task.id, "g5.proporcii.skill_b.000001");
+  assert.equal(plan[2]?.task.id, "math.proportion.skill_b.000001");
 });
 
 test("variant generator returns INSUFFICIENT_TASKS for global overlap conflict with useful details", () => {
   const tasks: Task[] = [
     {
-      id: "g5.proporcii.skill_a.000001",
-      topic_id: "g5.proporcii",
-      skill_id: "g5.proporcii.skill_a",
+      id: "math.proportion.skill_a.000001",
+      topic_id: "math.proportion",
+      skill_id: "math.proportion.skill_a",
       difficulty: 2,
       statement_md: "A",
       answer: { type: "number", value: 1 },
     },
     {
-      id: "g5.proporcii.skill_b.000001",
-      topic_id: "g5.proporcii",
-      skill_id: "g5.proporcii.skill_b",
+      id: "math.proportion.skill_b.000001",
+      topic_id: "math.proportion",
+      skill_id: "math.proportion.skill_b",
       difficulty: 2,
       statement_md: "B",
       answer: { type: "number", value: 2 },
@@ -184,9 +184,9 @@ test("variant generator returns INSUFFICIENT_TASKS for global overlap conflict w
   ];
 
   const template = {
-    id: "g5.proporcii.overlap-impossible.v1",
+    id: "math.proportion.overlap-impossible.v1",
     title: "Overlap impossible",
-    topicId: "g5.proporcii",
+    topicId: "math.proportion",
     header: {
       gradeLabel: "5 класс",
       topicLabel: "Пропорции",
@@ -194,19 +194,19 @@ test("variant generator returns INSUFFICIENT_TASKS for global overlap conflict w
     sections: [
       {
         label: "Широкая секция",
-        skillIds: ["g5.proporcii.skill_a", "g5.proporcii.skill_b"],
+        skillIds: ["math.proportion.skill_a", "math.proportion.skill_b"],
         count: 1,
         difficulty: [2, 2] as [number, number],
       },
       {
         label: "Узкая секция 1",
-        skillIds: ["g5.proporcii.skill_a"],
+        skillIds: ["math.proportion.skill_a"],
         count: 1,
         difficulty: [2, 2] as [number, number],
       },
       {
         label: "Узкая секция 2",
-        skillIds: ["g5.proporcii.skill_a"],
+        skillIds: ["math.proportion.skill_a"],
         count: 1,
         difficulty: [2, 2] as [number, number],
       },
@@ -224,7 +224,7 @@ test("variant generator returns INSUFFICIENT_TASKS for global overlap conflict w
       );
       assert.equal(error.details.requiredCount, 1);
       assert.ok(error.details.availableCount <= 1);
-      assert.deepEqual(error.details.skillIds, ["g5.proporcii.skill_a"]);
+      assert.deepEqual(error.details.skillIds, ["math.proportion.skill_a"]);
       assert.deepEqual(error.details.difficulty, [2, 2]);
       return true;
     },

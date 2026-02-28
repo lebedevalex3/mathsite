@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "topic_id": "g5.uravneniya",
+  "topic_id": "math.equations",
   "title": "Уравнения (5 класс): стартовый банк",
   "tasks": [
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000001",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000001",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 1,
       "statement_md": "Какое число является корнем уравнения x + 4 = 9? Запиши число.",
       "answer": {
@@ -15,9 +15,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000002",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000002",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 1,
       "statement_md": "Какое число является корнем уравнения x - 3 = 6? Запиши число.",
       "answer": {
@@ -26,9 +26,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000003",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000003",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 1,
       "statement_md": "Сколько чисел из набора 1, 2, 3, 4 являются корнями уравнения x + 2 = 5? Запиши количество.",
       "answer": {
@@ -37,9 +37,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000004",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000004",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 2,
       "statement_md": "Сколько чисел из набора 6, 7, 8 являются корнями уравнения 10 - x = 3? Запиши количество.",
       "answer": {
@@ -48,9 +48,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000005",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000005",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 2,
       "statement_md": "Какое число нужно подставить вместо x, чтобы равенство x : 5 = 4 стало верным?",
       "answer": {
@@ -59,9 +59,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000006",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000006",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 2,
       "statement_md": "Какое число нужно подставить вместо x, чтобы равенство 3 · x = 18 стало верным?",
       "answer": {
@@ -70,9 +70,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000007",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000007",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 3,
       "statement_md": "Какое число является корнем уравнения 14 + x = 23? Запиши число.",
       "answer": {
@@ -81,9 +81,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000008",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000008",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 3,
       "statement_md": "Какое число является корнем уравнения 50 - x = 18? Запиши число.",
       "answer": {
@@ -92,9 +92,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000009",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000009",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 3,
       "statement_md": "Сколько чисел из набора 2, 4, 6, 8 являются корнями уравнения x : 2 = 3? Запиши количество.",
       "answer": {
@@ -103,9 +103,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000010",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000010",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 3,
       "statement_md": "Какое наибольшее число из набора 5, 7, 9, 11 является корнем уравнения x + 8 = 19? Запиши число.",
       "answer": {
@@ -114,9 +114,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000011",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000011",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 4,
       "statement_md": "Какое число нужно подставить вместо x, чтобы равенство 7 · x = 63 стало верным?",
       "answer": {
@@ -125,9 +125,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000012",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000012",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 4,
       "statement_md": "Какое число нужно подставить вместо x, чтобы равенство x : 6 = 8 стало верным?",
       "answer": {
@@ -136,9 +136,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000013",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000013",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 4,
       "statement_md": "Сколько чисел из набора 12, 15, 18, 21 являются корнями уравнения 30 - x = 12? Запиши количество.",
       "answer": {
@@ -147,9 +147,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000014",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000014",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 5,
       "statement_md": "Какое число из набора 14, 16, 18 является корнем уравнения 3 · x = 48? Запиши это число.",
       "answer": {
@@ -158,9 +158,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.ponyat_uravnenie_i_koren.000015",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.ponyat_uravnenie_i_koren",
+      "id": "math.equations.understand_equation_and_root.000015",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.understand_equation_and_root",
       "difficulty": 5,
       "statement_md": "Сколько чисел из набора 10, 12, 14, 16, 18 являются корнями уравнения x - 12 = 4? Запиши количество.",
       "answer": {
@@ -169,9 +169,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000001",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000001",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 1,
       "statement_md": "Проверь: число 3 является корнем уравнения x + 5 = 8? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -180,9 +180,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000002",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000002",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 1,
       "statement_md": "Проверь: число 7 является корнем уравнения x - 2 = 10? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -191,9 +191,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000003",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000003",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 2,
       "statement_md": "Проверь: число 12 является корнем уравнения 20 - x = 8? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -202,9 +202,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000004",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000004",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 2,
       "statement_md": "Проверь: число 4 является корнем уравнения 6 · x = 18? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -213,9 +213,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000005",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000005",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 2,
       "statement_md": "Проверь: число 20 является корнем уравнения x : 4 = 5? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -224,9 +224,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000006",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000006",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 1,
       "statement_md": "Проверь: число 15 является корнем уравнения 9 + x = 25? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -235,9 +235,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000007",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000007",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 3,
       "statement_md": "Проверь: число 9 является корнем уравнения 14 + x = 23? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -246,9 +246,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000008",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000008",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 3,
       "statement_md": "Проверь: число 32 является корнем уравнения 50 - x = 19? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -257,9 +257,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000009",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000009",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 3,
       "statement_md": "Проверь: число 48 является корнем уравнения x : 6 = 8? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -268,9 +268,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000010",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000010",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 4,
       "statement_md": "Проверь: число 16 является корнем уравнения 3 · x = 45? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -279,9 +279,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000011",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000011",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 4,
       "statement_md": "Проверь: число 21 является корнем уравнения 63 : x = 3? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -290,9 +290,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000012",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000012",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 4,
       "statement_md": "Проверь: число 14 является корнем уравнения 5 · x = 75? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -301,9 +301,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000013",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000013",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 5,
       "statement_md": "Проверь: число 18 является корнем уравнения 30 - x = 12? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -312,9 +312,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000014",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000014",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 5,
       "statement_md": "Проверь: число 24 является корнем уравнения x : 3 = 7? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -323,9 +323,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.proverit_koren.000015",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.proverit_koren",
+      "id": "math.equations.check_root.000015",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.check_root",
       "difficulty": 5,
       "statement_md": "Проверь: число 11 является корнем уравнения 8 + x = 20? Запиши 1, если да, и 0, если нет.",
       "answer": {
@@ -334,9 +334,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000001",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000001",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 1,
       "statement_md": "Реши уравнение: x + 9 = 17",
       "answer": {
@@ -345,9 +345,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000002",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000002",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 1,
       "statement_md": "Реши уравнение: x - 6 = 14",
       "answer": {
@@ -356,9 +356,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000003",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000003",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 1,
       "statement_md": "Реши уравнение: x + 13 = 30",
       "answer": {
@@ -367,9 +367,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000004",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000004",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 1,
       "statement_md": "Реши уравнение: x - 8 = 5",
       "answer": {
@@ -378,9 +378,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000005",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000005",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 2,
       "statement_md": "Реши уравнение: x + 25 = 40",
       "answer": {
@@ -389,9 +389,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000006",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000006",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 2,
       "statement_md": "Реши уравнение: x - 17 = 12",
       "answer": {
@@ -400,9 +400,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000007",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000007",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 3,
       "statement_md": "Реши уравнение: x + 27 = 58",
       "answer": {
@@ -411,9 +411,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000008",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000008",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 3,
       "statement_md": "Реши уравнение: x - 19 = 34",
       "answer": {
@@ -422,9 +422,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000009",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000009",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 3,
       "statement_md": "Реши уравнение: x + 48 = 73",
       "answer": {
@@ -433,9 +433,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000010",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000010",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 4,
       "statement_md": "Реши уравнение: x - 27 = 46",
       "answer": {
@@ -444,9 +444,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000011",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000011",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 4,
       "statement_md": "Реши уравнение: x + 36 = 92",
       "answer": {
@@ -455,9 +455,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000012",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000012",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 4,
       "statement_md": "Реши уравнение: x - 38 = 57",
       "answer": {
@@ -466,9 +466,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000013",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000013",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 5,
       "statement_md": "Реши уравнение: x + 125 = 240",
       "answer": {
@@ -477,9 +477,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000014",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000014",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 5,
       "statement_md": "Реши уравнение: x - 96 = 108",
       "answer": {
@@ -488,9 +488,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b.000015",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_x_plus_minus_a_ravno_b",
+      "id": "math.equations.solve_x_plus_minus_a_equals_b.000015",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_x_plus_minus_a_equals_b",
       "difficulty": 5,
       "statement_md": "Реши уравнение: x + 79 = 154",
       "answer": {
@@ -499,9 +499,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000001",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000001",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 1,
       "statement_md": "Реши уравнение: 11 + x = 30",
       "answer": {
@@ -510,9 +510,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000002",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000002",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 1,
       "statement_md": "Реши уравнение: 25 - x = 7",
       "answer": {
@@ -521,9 +521,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000003",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000003",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 1,
       "statement_md": "Реши уравнение: 8 + x = 21",
       "answer": {
@@ -532,9 +532,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000004",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000004",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 1,
       "statement_md": "Реши уравнение: 40 - x = 16",
       "answer": {
@@ -543,9 +543,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000005",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000005",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 2,
       "statement_md": "Реши уравнение: 17 + x = 45",
       "answer": {
@@ -554,9 +554,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000006",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000006",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 2,
       "statement_md": "Реши уравнение: 63 - x = 27",
       "answer": {
@@ -565,9 +565,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000007",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000007",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 3,
       "statement_md": "Реши уравнение: 34 + x = 79",
       "answer": {
@@ -576,9 +576,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000008",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000008",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 3,
       "statement_md": "Реши уравнение: 90 - x = 37",
       "answer": {
@@ -587,9 +587,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000009",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000009",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 3,
       "statement_md": "Реши уравнение: 56 + x = 123",
       "answer": {
@@ -598,9 +598,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000010",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000010",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 4,
       "statement_md": "Реши уравнение: 140 - x = 58",
       "answer": {
@@ -609,9 +609,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000011",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000011",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 4,
       "statement_md": "Реши уравнение: 75 + x = 168",
       "answer": {
@@ -620,9 +620,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000012",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000012",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 4,
       "statement_md": "Реши уравнение: 203 - x = 117",
       "answer": {
@@ -631,9 +631,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000013",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000013",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 5,
       "statement_md": "Реши уравнение: 350 - x = 128",
       "answer": {
@@ -642,9 +642,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000014",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000014",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 5,
       "statement_md": "Реши уравнение: 126 + x = 305",
       "answer": {
@@ -653,9 +653,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b.000015",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_a_plus_minus_x_ravno_b",
+      "id": "math.equations.solve_a_plus_minus_x_equals_b.000015",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_a_plus_minus_x_equals_b",
       "difficulty": 5,
       "statement_md": "Реши уравнение: 480 - x = 265",
       "answer": {
@@ -664,9 +664,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000001",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000001",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 1,
       "statement_md": "Реши уравнение: 6 · x = 42",
       "answer": {
@@ -675,9 +675,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000002",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000002",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 1,
       "statement_md": "Реши уравнение: x : 4 = 5",
       "answer": {
@@ -686,9 +686,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000003",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000003",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 1,
       "statement_md": "Реши уравнение: 8 · x = 56",
       "answer": {
@@ -697,9 +697,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000004",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000004",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 1,
       "statement_md": "Реши уравнение: x : 7 = 6",
       "answer": {
@@ -708,9 +708,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000005",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000005",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 2,
       "statement_md": "Реши уравнение: 9 · x = 72",
       "answer": {
@@ -719,9 +719,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000006",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000006",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 2,
       "statement_md": "Реши уравнение: x : 3 = 14",
       "answer": {
@@ -730,9 +730,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000007",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000007",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 3,
       "statement_md": "Реши уравнение: 12 · x = 84",
       "answer": {
@@ -741,9 +741,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000008",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000008",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 3,
       "statement_md": "Реши уравнение: x : 8 = 14",
       "answer": {
@@ -752,9 +752,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000009",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000009",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 3,
       "statement_md": "Реши уравнение: 15 · x = 135",
       "answer": {
@@ -763,9 +763,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000010",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000010",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 4,
       "statement_md": "Реши уравнение: x : 12 = 18",
       "answer": {
@@ -774,9 +774,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000011",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000011",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 4,
       "statement_md": "Реши уравнение: 14 · x = 168",
       "answer": {
@@ -785,9 +785,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000012",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000012",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 4,
       "statement_md": "Реши уравнение: x : 25 = 16",
       "answer": {
@@ -796,9 +796,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000013",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000013",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 5,
       "statement_md": "Реши уравнение: 18 · x = 306",
       "answer": {
@@ -807,9 +807,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000014",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000014",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 5,
       "statement_md": "Реши уравнение: x : 24 = 35",
       "answer": {
@@ -818,9 +818,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_mnozhenie_i_delenie.000015",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_mnozhenie_i_delenie",
+      "id": "math.equations.solve_multiplication_and_division_equations.000015",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_multiplication_and_division_equations",
       "difficulty": 5,
       "statement_md": "Реши уравнение: 27 · x = 486",
       "answer": {
@@ -829,9 +829,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000001",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000001",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 1,
       "statement_md": "У Маши было x карандашей. После того как она купила ещё 6, стало 15. Найди x.",
       "answer": {
@@ -840,9 +840,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000002",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000002",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 1,
       "statement_md": "На полке было x книг. Убрали 4 книги, осталось 12. Найди x.",
       "answer": {
@@ -851,9 +851,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000003",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000003",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 1,
       "statement_md": "В коробке было x яблок. Добавили 8 яблок, стало 19. Найди x.",
       "answer": {
@@ -862,9 +862,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000004",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000004",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 2,
       "statement_md": "В автобусе было x пассажиров. На остановке вышли 5, осталось 18. Найди x.",
       "answer": {
@@ -873,9 +873,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000005",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000005",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 1,
       "statement_md": "Длина отрезка была x см. После увеличения на 7 см стала 20 см. Найди x.",
       "answer": {
@@ -884,9 +884,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000006",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000006",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 2,
       "statement_md": "У Пети было x рублей. Он потратил 9 рублей, осталось 14 рублей. Найди x.",
       "answer": {
@@ -895,9 +895,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000007",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000007",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 3,
       "statement_md": "В коробке было x конфет. После того как съели 12, осталось 25. Найди x.",
       "answer": {
@@ -906,9 +906,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000008",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000008",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 3,
       "statement_md": "В классе было x тетрадей для проверки. Учитель добавил ещё 18, стало 47. Найди x.",
       "answer": {
@@ -917,9 +917,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000009",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000009",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 3,
       "statement_md": "Длина ленты была x см. Отрезали 15 см, осталось 28 см. Найди x.",
       "answer": {
@@ -928,9 +928,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000010",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000010",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 4,
       "statement_md": "В 6 одинаковых пакетах лежит x яблок в каждом. Всего 54 яблока. Найди x.",
       "answer": {
@@ -939,9 +939,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000011",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000011",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 4,
       "statement_md": "Число x разделили на 7 и получили 8. Найди x.",
       "answer": {
@@ -950,9 +950,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000012",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000012",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 4,
       "statement_md": "У Антона было x рублей. После покупки за 27 рублей у него осталось 35 рублей. Найди x.",
       "answer": {
@@ -961,9 +961,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000013",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000013",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 5,
       "statement_md": "В 12 коробках поровну лежат карандаши, по x в каждой. Всего 180 карандашей. Найди x.",
       "answer": {
@@ -972,9 +972,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000014",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000014",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 5,
       "statement_md": "Из числа x вычли 48 и получили 127. Найди x.",
       "answer": {
@@ -983,9 +983,9 @@
       }
     },
     {
-      "id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya.000015",
-      "topic_id": "g5.uravneniya",
-      "skill_id": "g5.uravneniya.reshat_prostye_tekstovye_uravneniya",
+      "id": "math.equations.solve_basic_word_equations.000015",
+      "topic_id": "math.equations",
+      "skill_id": "math.equations.solve_basic_word_equations",
       "difficulty": 5,
       "statement_md": "К числу x прибавили 96 и получили 243. Найди x.",
       "answer": {

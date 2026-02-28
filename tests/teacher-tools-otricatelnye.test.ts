@@ -6,9 +6,9 @@ import { buildVariantPlan } from "@/src/lib/variants/plan";
 import { buildDemoTemplate } from "@/src/lib/teacher-tools/demo";
 import { getTeacherToolsTopicSkills } from "@/src/lib/teacher-tools/catalog";
 
-test("g6.otricatelnye_chisla topic is available in teacher tools and can generate", async () => {
-  const topic = await getTeacherToolsTopicSkills("g6.otricatelnye_chisla");
-  assert.ok(topic, "Expected topic payload for g6.otricatelnye_chisla");
+test("math.negative_numbers topic is available in teacher tools and can generate", async () => {
+  const topic = await getTeacherToolsTopicSkills("math.negative_numbers");
+  assert.ok(topic, "Expected topic payload for math.negative_numbers");
 
   const readySkills = topic.skills.filter((skill) => skill.status !== "soon");
   assert.ok(readySkills.length >= 4, "Expected at least 4 ready skills");
@@ -20,7 +20,7 @@ test("g6.otricatelnye_chisla topic is available in teacher tools and can generat
     );
   }
 
-  const { tasks, errors } = await getTasksForTopic("g6.otricatelnye_chisla");
+  const { tasks, errors } = await getTasksForTopic("math.negative_numbers");
   assert.deepEqual(errors, []);
 
   const skillsById = new Map(readySkills.map((skill) => [skill.id, { title: skill.title }]));
@@ -30,7 +30,7 @@ test("g6.otricatelnye_chisla topic is available in teacher tools and can generat
     count: 5,
   }));
   const template20 = buildDemoTemplate({
-    topicId: "g6.otricatelnye_chisla",
+    topicId: "math.negative_numbers",
     plan: plan20,
     skillsById,
     mode: "control20",
@@ -48,7 +48,7 @@ test("g6.otricatelnye_chisla topic is available in teacher tools and can generat
     count: index < 2 ? 3 : 2,
   }));
   const template10 = buildDemoTemplate({
-    topicId: "g6.otricatelnye_chisla",
+    topicId: "math.negative_numbers",
     plan: plan10,
     skillsById,
     mode: "training10",

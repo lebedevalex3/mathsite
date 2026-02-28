@@ -59,20 +59,20 @@ test('shuffleItemsWithSeed does not mutate input array', () => {
 
 test('buildDemoTemplate maps plan items into sections and labels', () => {
   const template = buildDemoTemplate({
-    topicId: 'g5.proporcii',
+    topicId: 'math.proportion',
     plan: [
-      { skillId: 'g5.proporcii.find_unknown_term', count: 2 },
-      { skillId: 'g5.proporcii.reshit_zadachu_na_masshtab', count: 1 },
+      { skillId: 'math.proportion.find_unknown_term', count: 2 },
+      { skillId: 'math.proportion.solve_scale_word_problem', count: 1 },
     ],
     skillsById: new Map([
-      ['g5.proporcii.find_unknown_term', { title: 'Найти неизвестный член пропорции' }],
-      ['g5.proporcii.reshit_zadachu_na_masshtab', { title: 'Масштаб' }],
+      ['math.proportion.find_unknown_term', { title: 'Найти неизвестный член пропорции' }],
+      ['math.proportion.solve_scale_word_problem', { title: 'Масштаб' }],
     ]),
     mode: 'custom',
   });
 
-  assert.equal(template.id, 'demo.g5.proporcii.custom');
-  assert.equal(template.topicId, 'g5.proporcii');
+  assert.equal(template.id, 'demo.math.proportion.custom');
+  assert.equal(template.topicId, 'math.proportion');
   assert.equal(template.header.gradeLabel, '5 класс');
   assert.equal(template.header.topicLabel, 'Пропорции');
   assert.deepEqual(
@@ -85,13 +85,13 @@ test('buildDemoTemplate maps plan items into sections and labels', () => {
     [
       {
         label: 'Найти неизвестный член пропорции',
-        skillIds: ['g5.proporcii.find_unknown_term'],
+        skillIds: ['math.proportion.find_unknown_term'],
         count: 2,
         difficulty: [1, 5],
       },
       {
         label: 'Масштаб',
-        skillIds: ['g5.proporcii.reshit_zadachu_na_masshtab'],
+        skillIds: ['math.proportion.solve_scale_word_problem'],
         count: 1,
         difficulty: [1, 5],
       },
