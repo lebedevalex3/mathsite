@@ -283,7 +283,7 @@ export default function TrainingRunner({
 
           <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Рекомендация
+              Следующий шаг
             </p>
             <p className="mt-1 text-sm text-slate-700">
               {accuracyPercent < 70
@@ -293,8 +293,8 @@ export default function TrainingRunner({
                   : "Отлично! Можно вернуться к карте темы."}
             </p>
             <p className="mt-1 text-xs text-slate-500">
-              Общее время: {formatSecondsFromMs(totalElapsedMs)} сек
-              {averageTaskSeconds !== null ? ` • Среднее: ${averageTaskSeconds} сек` : ""}
+              Время серии: {formatSecondsFromMs(totalElapsedMs)} сек
+              {averageTaskSeconds !== null ? ` • В среднем: ${averageTaskSeconds} сек/задача` : ""}
             </p>
           </div>
 
@@ -303,7 +303,7 @@ export default function TrainingRunner({
               href={`/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(skillId)}`}
               variant="primary"
             >
-              Пройти ещё 10 задач
+              Повторить этот навык
             </ButtonLink>
             <ButtonLink href={`/${locale}/5-klass/proporcii`} variant="secondary">
               Вернуться к теме
@@ -313,7 +313,7 @@ export default function TrainingRunner({
                 href={`/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(recommendedNextSkill.id)}`}
                 variant="secondary"
               >
-                Следующий рекомендованный навык
+                Перейти к следующему навыку
               </ButtonLink>
             ) : null}
           </div>
@@ -407,6 +407,23 @@ export default function TrainingRunner({
             <p className="mt-1 text-sm font-medium text-slate-900">
               Задача {currentIndex + 1} / {tasks.length}
             </p>
+            <p className="mt-1 text-xs text-slate-600">{skillTitle}</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <ButtonLink
+                href={`/${locale}/5-klass/proporcii/trainer`}
+                variant="secondary"
+                className="px-2.5 py-1.5 text-xs"
+              >
+                К выбору навыков
+              </ButtonLink>
+              <ButtonLink
+                href={`/${locale}/5-klass/proporcii`}
+                variant="secondary"
+                className="px-2.5 py-1.5 text-xs"
+              >
+                К теме
+              </ButtonLink>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -448,7 +465,7 @@ export default function TrainingRunner({
               Задача {currentIndex + 1} из {tasks.length}
             </h1>
             <p className="mt-1 text-sm text-slate-600">
-              Ответьте числом и нажмите «Проверить».
+              Введите ответ числом и проверьте результат.
             </p>
           </div>
           <div className="text-right">
@@ -510,10 +527,10 @@ export default function TrainingRunner({
               disabled={checked}
               className="inline-flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Проверить
+              Проверить ответ
             </button>
           </div>
-          <p className="mt-2 text-xs text-slate-500">Enter — проверить</p>
+          <p className="mt-2 text-xs text-slate-500">Нажмите Enter, чтобы проверить ответ</p>
         </div>
 
         {showDebug ? (
@@ -576,11 +593,11 @@ export default function TrainingRunner({
               onClick={handleNext}
               className="inline-flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700"
             >
-              Следующая задача
+              К следующей задаче
             </button>
           </div>
 
-          {lastTaskElapsedMs !== null ? (
+          {showDebug && lastTaskElapsedMs !== null ? (
             <p className="mt-3 text-xs text-slate-500">
               Служебное время проверки: {formatSecondsFromMs(lastTaskElapsedMs)} сек
             </p>

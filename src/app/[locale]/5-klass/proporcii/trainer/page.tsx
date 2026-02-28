@@ -52,11 +52,11 @@ export default async function ProporciiTrainerEntryPage({ params }: PageProps) {
           Тренажёр • 10 задач подряд
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
-          Выберите микро-умение
+          Выберите навык для тренировки
         </h1>
         <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">
-          Выберите навык по теме «Пропорции», затем откроется серия из 10 задач.
-          Если задач пока меньше 10, вы увидите сообщение без ошибки.
+          Выберите навык по теме «Пропорции» и решите серию из 10 задач подряд.
+          После серии вы получите краткий итог и рекомендацию, что тренировать дальше.
         </p>
       </section>
 

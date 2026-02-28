@@ -104,7 +104,7 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
             ))}
           </div>
           <ButtonLink
-            href={`/${locale}/5-klass/proporcii/train?skill=g5.proporcii.naiti_neizvestnyi_krainei`}
+            href={`/${locale}/5-klass/proporcii/trainer`}
             variant="secondary"
             className="hidden sm:inline-flex"
           >

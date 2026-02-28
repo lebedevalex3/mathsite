@@ -96,7 +96,7 @@ export const proporciiSkills: ProporciiSkill[] = [
   {
     id: "g5.proporcii.naiti_neizvestnyi_krainei",
     title: "Найти неизвестный крайний член",
-    summary: "Решение пропорций вида x/b = c/d или a/b = c/x.",
+    summary: "Решение пропорций вида $\\frac{x}{b}=\\frac{c}{d}$ или $\\frac{a}{b}=\\frac{c}{x}$.",
     subtopicId: "g5.proporcii.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
   },
@@ -110,7 +110,7 @@ export const proporciiSkills: ProporciiSkill[] = [
   {
     id: "g5.proporcii.primenit_svoistvo_proporcii",
     title: "Применить свойство пропорции",
-    summary: "Переход от равенства отношений к произведениям ad = bc.",
+    summary: "Переход от равенства отношений к произведениям $ad=bc$.",
     subtopicId: "g5.proporcii.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
   },
