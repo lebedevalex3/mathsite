@@ -27,7 +27,7 @@ export default async function TeacherToolsVariantDetailPage({ params }: PageProp
   return (
     <main className="space-y-6">
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
           Конструктор вариантов
         </p>
         <div className="mt-3">

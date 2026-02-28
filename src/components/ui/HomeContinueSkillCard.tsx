@@ -156,8 +156,8 @@ export function HomeContinueSkillCard({ locale }: Props) {
     <SurfaceCard className="p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.title}</h2>
-          <p className="mt-1 text-sm text-slate-600">{t.subtitle}</p>
+          <h2 className="text-xl font-semibold tracking-tight text-[var(--text-strong)]">{t.title}</h2>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">{t.subtitle}</p>
         </div>
         <ButtonLink href={ctaHref} variant="primary">
           {ctaLabel}
@@ -165,19 +165,19 @@ export function HomeContinueSkillCard({ locale }: Props) {
       </div>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.topic}</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">{t.topicValue}</p>
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.topic}</p>
+          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">{t.topicValue}</p>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.progress}</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.progress}</p>
+          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">
             {loaded ? `${masteryPercent}%` : "…"}
           </p>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.nextSkill}</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.nextSkill}</p>
+          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">
             {hasAnyProgress ? nextSkill?.title[locale] : t.fallbackSkill}
           </p>
         </div>

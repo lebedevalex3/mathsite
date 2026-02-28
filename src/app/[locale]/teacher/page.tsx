@@ -70,7 +70,7 @@ export default async function TeacherLandingPage({ params }: PageProps) {
       </nav>
 
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
           Early access
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">{t.title}</h1>
@@ -111,7 +111,7 @@ export default async function TeacherLandingPage({ params }: PageProps) {
           <div className="mt-4">
             <Link
               href={`/${locale}/teacher/cabinet`}
-              className="text-sm font-medium text-blue-700 hover:text-blue-900"
+              className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
             >
               /{locale}/teacher/cabinet
             </Link>

@@ -90,13 +90,13 @@ function statusBadge(status: TopicStatus, locale: AppLocale) {
   const t = copy[locale];
   if (status === "ready") {
     return (
-      <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+      <span className="rounded-full border border-[var(--success)]/30 bg-[var(--success-soft)] px-2 py-0.5 text-xs font-semibold text-[var(--success)]">
         {t.ready}
       </span>
     );
   }
   return (
-    <span className="rounded-full border border-slate-300 bg-white px-2 py-0.5 text-xs font-semibold text-slate-500">
+    <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2 py-0.5 text-xs font-semibold text-[var(--text-muted)]">
       {t.soon}
     </span>
   );
@@ -155,8 +155,8 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
   return (
     <section id="topics-catalog" className="space-y-4 scroll-mt-24">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-950">{t.title}</h2>
-        <p className="mt-1 text-sm text-slate-600">{t.subtitle}</p>
+        <h2 className="text-2xl font-semibold tracking-tight text-[var(--text-strong)]">{t.title}</h2>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">{t.subtitle}</p>
       </div>
 
       <SurfaceCard className="p-4">
@@ -171,7 +171,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t.searchPlaceholder}
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-strong)] outline-none ring-0 placeholder:text-[var(--text-muted)] focus:border-[var(--primary)]"
             />
           </div>
 
@@ -184,8 +184,8 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
                 className={[
                   "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
                   domain === item
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+                    ? "border-[var(--primary)] bg-[var(--primary)] text-white"
+                    : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface-soft)]",
                 ].join(" ")}
               >
                 {t.domains[item]}
@@ -195,7 +195,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
 
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
                 {t.levelLabel}
               </span>
               {levels.map((item) => (
@@ -206,8 +206,8 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
                   className={[
                     "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                     level === item
-                      ? "border-blue-700 bg-blue-50 text-blue-700"
-                      : "border-slate-300 bg-white text-slate-600 hover:bg-slate-100",
+                      ? "border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary)]"
+                      : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)] hover:bg-[var(--surface-soft)]",
                   ].join(" ")}
                 >
                   Level {item}
@@ -216,7 +216,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
                 {t.statusLabel}
               </span>
               {(["ready", "soon"] as const).map((item) => (
@@ -227,8 +227,8 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
                   className={[
                     "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                     status === item
-                      ? "border-slate-900 bg-slate-900 text-white"
-                      : "border-slate-300 bg-white text-slate-600 hover:bg-slate-100",
+                      ? "border-[var(--primary)] bg-[var(--primary)] text-white"
+                      : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)] hover:bg-[var(--surface-soft)]",
                   ].join(" ")}
                 >
                   {item === "ready" ? t.ready : t.soon}
@@ -241,7 +241,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
 
       {filtered.length === 0 ? (
         <SurfaceCard className="p-5">
-          <p className="text-sm text-slate-600">{t.noResults}</p>
+          <p className="text-sm text-[var(--text-muted)]">{t.noResults}</p>
         </SurfaceCard>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -250,14 +250,14 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
               key={topic.id}
               className={[
                 "flex h-full flex-col p-5",
-                topic.status === "soon" ? "border-dashed border-slate-300 bg-slate-50" : "",
+                topic.status === "soon" ? "border-dashed bg-[var(--surface-soft)]" : "",
               ].join(" ")}
             >
               <div className="flex items-center justify-between gap-2">
-                <h3 className="text-lg font-semibold text-slate-950">{topic.title[locale]}</h3>
+                <h3 className="text-lg font-semibold text-[var(--text-strong)]">{topic.title[locale]}</h3>
                 {statusBadge(topic.status, locale)}
               </div>
-              <p className="mt-2 flex-1 text-sm leading-6 text-slate-600">
+              <p className="mt-2 flex-1 text-sm leading-6 text-[var(--text-muted)]">
                 {topic.description[locale]}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -266,19 +266,19 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
                     {t.read}
                   </ButtonLink>
                 ) : (
-                  <span className="inline-flex cursor-not-allowed items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-400">
+                  <span className="inline-flex cursor-not-allowed items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-[var(--text-muted)]/60">
                     {t.read}
                   </span>
                 )}
                 {topic.canTrain ? (
                   <Link
                     href={buildTrainerHref(locale, topic)}
-                    className="inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium text-blue-700 hover:bg-slate-100 hover:text-blue-900"
+                    className="inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium text-[var(--primary)] hover:bg-[var(--surface-soft)] hover:text-[var(--primary-hover)]"
                   >
                     {t.train}
                   </Link>
                 ) : (
-                  <span className="inline-flex cursor-not-allowed items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-400">
+                  <span className="inline-flex cursor-not-allowed items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-[var(--text-muted)]/60">
                     {t.train}
                   </span>
                 )}

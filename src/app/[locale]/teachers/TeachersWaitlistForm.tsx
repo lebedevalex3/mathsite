@@ -16,7 +16,7 @@ export default function TeachersWaitlistForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-emerald-900">
+      <div className="rounded-2xl border border-[var(--success)]/30 bg-[var(--success-soft)] p-5 text-[var(--success)]">
         <h2 className="text-lg font-semibold">Спасибо, мы свяжемся</h2>
         <p className="mt-2 text-sm leading-6">
           Вы в списке раннего доступа. Напишем, когда откроем материалы для учителей.
@@ -49,7 +49,7 @@ export default function TeachersWaitlistForm() {
               email: event.target.value,
             }))
           }
-          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-blue-500"
+          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-[var(--primary)]"
         />
       </div>
 
@@ -66,7 +66,7 @@ export default function TeachersWaitlistForm() {
               role: event.target.value as FormState["role"],
             }))
           }
-          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-500"
+          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--primary)]"
         >
           <option value="teacher">Учитель</option>
           <option value="tutor">Репетитор</option>

@@ -123,35 +123,35 @@ export function HomeMotivationPanel({ locale }: Props) {
 
   return (
     <SurfaceCard className="p-6">
-      <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.title}</h2>
-      <p className="mt-1 text-sm text-slate-600">{t.subtitle}</p>
+      <h2 className="text-xl font-semibold tracking-tight text-[var(--text-strong)]">{t.title}</h2>
+      <p className="mt-1 text-sm text-[var(--text-muted)]">{t.subtitle}</p>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.level}</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">{level}</p>
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.level}</p>
+          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">{level}</p>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.xp}</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">{xp}</p>
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.xp}</p>
+          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">{xp}</p>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.rank}</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.rank}</p>
+          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">
             {formatRank(rankPosition, rankCohortSize, rankPercentile, t.rankFallback)}
           </p>
         </div>
       </div>
 
-      <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.badge}</p>
-        <p className="mt-1 text-sm font-medium text-slate-900">{badgeTitle}</p>
-        <p className="mt-2 text-xs text-slate-500">
+      <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.badge}</p>
+        <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">{badgeTitle}</p>
+        <p className="mt-2 text-xs text-[var(--text-muted)]">
           {t.badgeProgress}: {percent(Math.min(1, badgeProgress))}
         </p>
-        <div className="mt-2 h-2 rounded-full bg-slate-100">
+        <div className="mt-2 h-2 rounded-full bg-[var(--surface-tint)]">
           <div
-            className="h-2 rounded-full bg-blue-600 transition-all"
+            className="h-2 rounded-full bg-[var(--accent)] transition-all"
             style={{ width: `${Math.min(100, Math.round(badgeProgress * 100))}%` }}
           />
         </div>

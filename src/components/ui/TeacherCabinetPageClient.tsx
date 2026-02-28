@@ -397,7 +397,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   return (
     <main className="space-y-6">
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">{t.eyebrow}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">{t.eyebrow}</p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">{t.title}</h1>
         <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">{t.subtitle}</p>
         {initialReason ? (

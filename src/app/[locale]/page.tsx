@@ -132,43 +132,43 @@ export default async function LocaleHomePage({ params }: PageProps) {
 
   return (
     <main className="space-y-10">
-      <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
-        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-r from-blue-100 via-cyan-50 to-emerald-100" />
+      <section className="relative overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_20px_45px_-30px_rgba(11,60,138,0.45)] sm:p-10">
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-r from-[var(--primary-soft)] via-[var(--surface-tint)] to-[var(--accent-soft)]" />
         <div className="relative">
-          <p className="mb-3 inline-flex rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700">
+          <p className="mb-3 inline-flex rounded-full border border-[var(--border)] bg-[var(--info)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--info-foreground)]">
             MVP • textbook + trainer + teacher tools
           </p>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl">
+          <h1 className="text-3xl font-bold tracking-tight text-[var(--text-strong)] sm:text-5xl">
             {t.heroTitle}
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+          <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--text-muted)] sm:text-lg">
             {t.heroSubtitle}
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-slate-200 bg-white/90 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)]/95 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
                 {t.studentLabel}
               </p>
-              <p className="mt-1 text-sm text-slate-600">{t.studentHint}</p>
+              <p className="mt-1 text-sm text-[var(--text-muted)]">{t.studentHint}</p>
               <div className="mt-3">
                 <Link
                   href={`/${locale}#topics-catalog`}
-                  className="inline-flex items-center justify-center rounded-lg border border-blue-700 bg-blue-700 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-800"
+                  className="inline-flex items-center justify-center rounded-lg border border-[var(--primary)] bg-[var(--primary)] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-hover)]"
                 >
                   {t.studentCta}
                 </Link>
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white/90 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-tint)] p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
                 {t.teacherLabel}
               </p>
-              <p className="mt-1 text-sm text-slate-600">{t.teacherHint}</p>
+              <p className="mt-1 text-sm text-[var(--text-muted)]">{t.teacherHint}</p>
               <div className="mt-3">
                 <Link
                   href={`/${locale}/teacher/variants`}
-                  className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+                  className="inline-flex items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-[var(--primary)] transition-colors hover:bg-[var(--surface-soft)]"
                 >
                   {t.teacherHeroCta}
                 </Link>
@@ -183,28 +183,28 @@ export default async function LocaleHomePage({ params }: PageProps) {
       <TeacherQuickStartWidget locale={locale} />
 
       <SurfaceCard className="p-6">
-        <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.howTitle}</h2>
+        <h2 className="text-xl font-semibold tracking-tight text-[var(--text-strong)]">{t.howTitle}</h2>
         <ol className="mt-4 space-y-3">
           {t.howSteps.map((step, index) => (
             <li
               key={step}
-              className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3"
+              className="flex items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3"
             >
-              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
+              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] text-sm font-semibold text-white">
                 {index + 1}
               </span>
-              <span className="pt-0.5 text-sm leading-6 text-slate-700">{step}</span>
+              <span className="pt-0.5 text-sm leading-6 text-[var(--text)]">{step}</span>
             </li>
           ))}
         </ol>
       </SurfaceCard>
 
       <SurfaceCard className="p-6">
-        <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.teacherTitle}</h2>
-        <p className="mt-3 text-sm leading-6 text-slate-600">{t.teacherBody}</p>
-        <ul className="mt-4 space-y-2 text-sm text-slate-700">
+        <h2 className="text-xl font-semibold tracking-tight text-[var(--text-strong)]">{t.teacherTitle}</h2>
+        <p className="mt-3 text-sm leading-6 text-[var(--text-muted)]">{t.teacherBody}</p>
+        <ul className="mt-4 space-y-2 text-sm text-[var(--text)]">
           {t.teacherBullets.map((item) => (
-            <li key={item} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+            <li key={item} className="rounded-lg border border-[var(--border)] bg-[var(--surface-soft)] px-3 py-2">
               {item}
             </li>
           ))}
@@ -212,7 +212,7 @@ export default async function LocaleHomePage({ params }: PageProps) {
         <div className="mt-5">
           <Link
             href={`/${locale}/teacher-tools`}
-            className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+            className="inline-flex items-center justify-center rounded-lg border border-[var(--primary)] bg-[var(--primary)] px-3 py-2 text-sm font-medium text-[var(--primary-foreground)] transition-colors hover:bg-[var(--primary-hover)]"
           >
             {t.teacherCta}
           </Link>
@@ -227,24 +227,24 @@ export default async function LocaleHomePage({ params }: PageProps) {
         <Container className="px-0">
           <div className="grid gap-4 md:grid-cols-2">
             <SurfaceCard className="p-5">
-              <p className="text-sm font-semibold text-slate-900">{t.sectionsTitle}</p>
-              <p className="mt-2 text-sm text-slate-600">{t.sectionsBody}</p>
+              <p className="text-sm font-semibold text-[var(--text-strong)]">{t.sectionsTitle}</p>
+              <p className="mt-2 text-sm text-[var(--text-muted)]">{t.sectionsBody}</p>
               <div className="mt-4">
                 <Link
                   href={`/${locale}/5-klass/proporcii`}
-                  className="text-sm font-medium text-blue-700 hover:text-blue-900"
+                  className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
                 >
                   {t.sectionsLink}
                 </Link>
               </div>
             </SurfaceCard>
             <SurfaceCard className="p-5">
-              <p className="text-sm font-semibold text-slate-900">{t.practiceTitle}</p>
-              <p className="mt-2 text-sm text-slate-600">{t.practiceBody}</p>
+              <p className="text-sm font-semibold text-[var(--text-strong)]">{t.practiceTitle}</p>
+              <p className="mt-2 text-sm text-[var(--text-muted)]">{t.practiceBody}</p>
               <div className="mt-4">
                 <Link
                   href={`/${locale}/5-klass/proporcii`}
-                  className="text-sm font-medium text-blue-700 hover:text-blue-900"
+                  className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
                 >
                   {t.practiceLink}
                 </Link>

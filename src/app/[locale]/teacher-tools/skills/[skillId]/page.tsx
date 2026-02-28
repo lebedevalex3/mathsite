@@ -91,7 +91,7 @@ export default async function TeacherToolsSkillCardPage({ params, searchParams }
         <p className="text-sm text-slate-600">{t.notFound}</p>
         <Link
           href={backHref}
-          className="text-sm font-medium text-blue-700 hover:text-blue-900"
+          className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
         >
           {t.back}
         </Link>
@@ -102,7 +102,7 @@ export default async function TeacherToolsSkillCardPage({ params, searchParams }
   return (
     <main className="mx-auto max-w-3xl space-y-6 p-6">
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
           Teacher tools
         </p>
         <h1 className="text-2xl font-semibold text-slate-950">{t.title}</h1>

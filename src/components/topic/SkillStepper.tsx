@@ -92,7 +92,7 @@ export function SkillStepper({ nodes, path, onSelectSkill }: SkillStepperProps) 
               className={[
                 "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
                 active
-                  ? "bg-blue-700 text-white"
+                  ? "bg-[var(--primary)] text-white"
                   : "bg-slate-900 text-white",
               ].join(" ")}
             >
@@ -108,7 +108,7 @@ export function SkillStepper({ nodes, path, onSelectSkill }: SkillStepperProps) 
                   disabled
                     ? "cursor-not-allowed border-slate-200 text-slate-400"
                     : active
-                      ? "border-blue-300 bg-blue-50 text-slate-900"
+                      ? "border-[var(--border)] bg-[var(--info)] text-slate-900"
                       : "border-slate-200 text-slate-900 hover:border-slate-300 hover:bg-slate-50",
                 ].join(" ")}
                 aria-current={active ? "step" : undefined}
@@ -127,7 +127,7 @@ export function SkillStepper({ nodes, path, onSelectSkill }: SkillStepperProps) 
                   <button
                     type="button"
                     onClick={() => openSkill(step.id)}
-                    className="inline-flex items-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100"
+                    className="inline-flex items-center rounded-lg border border-[var(--border)] bg-[var(--info)] px-3 py-1.5 text-xs font-semibold text-[var(--primary)] hover:bg-[var(--primary-soft)]"
                   >
                     Тренировать этот навык
                   </button>
@@ -175,7 +175,7 @@ export function SkillStepper({ nodes, path, onSelectSkill }: SkillStepperProps) 
                     className={[
                       "rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
                       active
-                        ? "border-blue-700 bg-blue-50 text-blue-700"
+                        ? "border-[var(--primary)] bg-[var(--info)] text-[var(--primary)]"
                         : "border-slate-300 bg-white text-slate-600 hover:bg-slate-100",
                     ].join(" ")}
                     aria-pressed={active}

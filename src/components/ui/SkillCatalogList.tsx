@@ -112,7 +112,7 @@ export function SkillCatalogList({
                 setQuery(event.target.value);
               }}
               placeholder="Поиск по навыкам..."
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--primary)] focus:outline-none"
             />
           </div>
 
@@ -124,7 +124,7 @@ export function SkillCatalogList({
                 setExpanded(false);
                 setOnlyWithTrainer(event.target.checked);
               }}
-              className="h-4 w-4 rounded border-slate-300 text-blue-600"
+              className="h-4 w-4 rounded border-slate-300 text-[var(--primary)]"
             />
             Только с тренажёром
           </label>
@@ -154,7 +154,7 @@ export function SkillCatalogList({
                             {badgeText}
                           </span>
                           {progress?.status === "mastered" ? (
-                            <span className="inline-flex items-center rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                            <span className="inline-flex items-center rounded-md border border-[var(--success)]/30 bg-[var(--success-soft)] px-2 py-0.5 text-xs font-medium text-[var(--success)]">
                               Освоено
                             </span>
                           ) : null}

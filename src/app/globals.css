@@ -1,6 +1,41 @@
 @import "tailwindcss";
 
+:root {
+  --background: #f7f8fc;
+  --card: #ffffff;
+  --surface: var(--card);
+  --surface-soft: #f2f5fc;
+  --surface-tint: #eef2fb;
+  --text-strong: #0f172a;
+  --text: #1e293b;
+  --text-muted: #334155;
+  --muted: #e9eef8;
+  --muted-foreground: var(--text-muted);
+  --border: #ccd7ea;
+  --primary: #1d4ed8;
+  --primary-hover: #1e40af;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e8efff;
+  --secondary: #f7f9ff;
+  --secondary-foreground: #1e293b;
+  --accent: #5b6b8c;
+  --accent-soft: #edf2fb;
+  --accent-foreground: #334155;
+  --info: #ecf2ff;
+  --info-foreground: #334155;
+  --success: #15803d;
+  --success-soft: #e9f7ee;
+  --success-foreground: #ffffff;
+  --accent-warm: #f59e0b;
+  --bg-page: var(--background);
+}
+
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 500px at 0% -10%, rgba(11, 60, 138, 0.08), transparent 60%),
+    radial-gradient(1000px 500px at 100% 0%, rgba(29, 78, 216, 0.06), transparent 55%),
+    var(--bg-page);
 }

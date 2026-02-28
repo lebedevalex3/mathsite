@@ -228,7 +228,7 @@ export function TeacherVariantsPageClient({
   return (
     <main className="space-y-6">
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
           Teacher MVP
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
@@ -398,13 +398,13 @@ export function TeacherVariantsPageClient({
                         </ButtonLink>
                         <Link
                           href={`/api/teacher/variants/${variant.id}/pdf?locale=${encodeURIComponent(locale)}`}
-                          className="inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium text-blue-700 hover:bg-slate-100 hover:text-blue-900"
+                          className="inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium text-[var(--primary)] hover:bg-slate-100 hover:text-[var(--primary-hover)]"
                         >
                           PDF
                         </Link>
                         <Link
                           href={`/api/teacher/variants/${variant.id}/answers-pdf?locale=${encodeURIComponent(locale)}`}
-                          className="inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium text-blue-700 hover:bg-slate-100 hover:text-blue-900"
+                          className="inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium text-[var(--primary)] hover:bg-slate-100 hover:text-[var(--primary-hover)]"
                         >
                           Ответы PDF
                         </Link>

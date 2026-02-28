@@ -10,11 +10,11 @@ type ButtonLinkProps = {
 
 const variantClasses: Record<NonNullable<ButtonLinkProps["variant"]>, string> = {
   primary:
-    "bg-slate-900 text-white hover:bg-slate-700 border border-slate-900",
+    "border border-[var(--primary)] bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)]",
   secondary:
-    "bg-white text-slate-900 hover:bg-slate-100 border border-slate-300",
+    "border border-[var(--border)] bg-[var(--surface)] text-[var(--text-strong)] hover:bg-[var(--surface-soft)]",
   ghost:
-    "bg-transparent text-slate-700 hover:bg-slate-100 border border-transparent",
+    "border border-transparent bg-transparent text-[var(--text-muted)] hover:bg-[var(--surface-soft)]",
 };
 
 export function ButtonLink({

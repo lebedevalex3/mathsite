@@ -683,7 +683,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
   return (
     <main className="space-y-6">
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
           Teacher tools
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">{t.title}</h1>
@@ -765,7 +765,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
                             return (
                               <span
                                 key={selectedId}
-                                className="inline-flex max-w-full items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700"
+                                className="inline-flex max-w-full items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--info)] px-2 py-0.5 text-xs font-semibold text-[var(--primary)]"
                                 title={label}
                               >
                                 <span className="truncate">{label}</span>
@@ -787,7 +787,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                       });
                                     }
                                   }}
-                                  className="rounded-full px-1 leading-none text-blue-700 hover:bg-blue-100"
+                                  className="rounded-full px-1 leading-none text-[var(--primary)] hover:bg-[var(--primary-soft)]"
                                 >
                                   ×
                                 </span>
@@ -968,7 +968,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                 <div className="mt-2">
                                   <Link
                                     href={buildSkillCardHref(skill.cardHref)}
-                                    className="text-sm font-medium text-blue-700 hover:text-blue-900"
+                                    className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
                                   >
                                     {t.skillCard}
                                   </Link>

@@ -96,27 +96,27 @@ export function TopicLeaderboardPanel({ locale, topicId }: Props) {
 
   return (
     <SurfaceCard className="p-6">
-      <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.title}</h2>
-      <p className="mt-1 text-sm text-slate-600">{t.subtitle}</p>
+      <h2 className="text-xl font-semibold tracking-tight text-[var(--text-strong)]">{t.title}</h2>
+      <p className="mt-1 text-sm text-[var(--text-muted)]">{t.subtitle}</p>
 
       {state && state.entries.length > 0 ? (
         <>
-          <div className="mt-4 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+          <div className="mt-4 divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]">
             {state.entries.map((entry) => (
               <div
                 key={entry.handle}
                 className={`grid grid-cols-[64px_1fr_120px_100px] items-center gap-3 px-4 py-3 text-sm ${
-                  entry.isCurrentUser ? "bg-blue-50" : ""
+                  entry.isCurrentUser ? "bg-[var(--primary-soft)]" : ""
                 }`}
               >
-                <p className="font-semibold text-slate-900">#{entry.position}</p>
-                <p className="font-medium text-slate-700">{entry.handle}</p>
-                <p className="text-slate-700">{percent(entry.accuracy)}</p>
-                <p className="text-slate-700">{entry.attempts}</p>
+                <p className="font-semibold text-[var(--text-strong)]">#{entry.position}</p>
+                <p className="font-medium text-[var(--text)]">{entry.handle}</p>
+                <p className="text-[var(--text)]">{percent(entry.accuracy)}</p>
+                <p className="text-[var(--text)]">{entry.attempts}</p>
               </div>
             ))}
           </div>
-          <div className="mt-3 flex items-center justify-between text-xs text-slate-600">
+          <div className="mt-3 flex items-center justify-between text-xs text-[var(--text-muted)]">
             <span>
               {t.yourPosition}:{" "}
               {state.currentUserPosition ? `#${state.currentUserPosition}/${state.cohortSize}` : t.noPosition}
@@ -127,7 +127,7 @@ export function TopicLeaderboardPanel({ locale, topicId }: Props) {
           </div>
         </>
       ) : (
-        <p className="mt-4 text-sm text-slate-600">{t.empty}</p>
+        <p className="mt-4 text-sm text-[var(--text-muted)]">{t.empty}</p>
       )}
     </SurfaceCard>
   );

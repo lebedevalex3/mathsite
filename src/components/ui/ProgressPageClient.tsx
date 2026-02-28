@@ -331,7 +331,7 @@ export function ProgressPageClient({
     return (
       <main className="space-y-6">
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">MVP • Progress</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">MVP • Progress</p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">{t.title}</h1>
           <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">{t.subtitle}</p>
         </section>
@@ -358,7 +358,7 @@ export function ProgressPageClient({
   return (
     <main className="space-y-6">
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">MVP • Progress</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">MVP • Progress</p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">{t.title}</h1>
         <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">{t.subtitle}</p>
       </section>
@@ -471,7 +471,7 @@ export function ProgressPageClient({
                 <div className="flex w-full max-w-xs items-center gap-3">
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-200">
                     <div
-                      className="h-full rounded-full bg-blue-600 transition-all"
+                      className="h-full rounded-full bg-[var(--primary)] transition-all"
                       style={{ width: `${Math.round(row.accuracy * 100)}%` }}
                     />
                   </div>
@@ -503,7 +503,7 @@ export function ProgressPageClient({
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="text-base font-semibold text-slate-950">{skill.title}</h3>
                       {progress?.status === "mastered" ? (
-                        <span className="inline-flex items-center rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                        <span className="inline-flex items-center rounded-md border border-[var(--success)]/30 bg-[var(--success-soft)] px-2 py-0.5 text-xs font-medium text-[var(--success)]">
                           {t.mastered}
                         </span>
                       ) : null}

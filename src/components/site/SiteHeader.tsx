@@ -56,14 +56,14 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
       : "arithmetic";
 
   return (
-    <header className="site-header sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+    <header className="site-header sticky top-0 z-30 border-b border-[var(--border)]/80 bg-[var(--surface)]/90 backdrop-blur">
       <Container className="flex h-16 items-center justify-between gap-4">
         <div className="flex items-center gap-6">
           <Link
             href={`/${locale}`}
-            className="inline-flex items-center gap-2 font-semibold tracking-tight text-slate-950"
+            className="inline-flex items-center gap-2 font-semibold tracking-tight text-[var(--text-strong)]"
           >
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--primary)] text-sm font-bold text-white">
               M
             </span>
             <span>Mathsite</span>
@@ -76,8 +76,8 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
                 className={[
                   "rounded-md px-3 py-2 transition-colors",
                   isCatalogRoute && activeCatalogDomain === domain
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-700 hover:bg-slate-100 hover:text-slate-950",
+                    ? "bg-[var(--primary)] text-white"
+                    : "text-[var(--text-muted)] hover:bg-[var(--surface-soft)] hover:text-[var(--text-strong)]",
                 ].join(" ")}
               >
                 {domainLabels[domain]}
@@ -87,7 +87,7 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="hidden items-center rounded-lg border border-slate-200 bg-slate-50 p-1 sm:flex">
+          <div className="hidden items-center rounded-lg border border-[var(--border)] bg-[var(--surface-soft)] p-1 sm:flex">
             {(["ru", "en", "de"] as const).map((nextLocale) => (
               <Link
                 key={nextLocale}
@@ -95,8 +95,8 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
                 className={[
                   "rounded-md px-2 py-1 text-xs font-semibold uppercase tracking-wide",
                   nextLocale === locale
-                    ? "bg-white text-slate-950 shadow-sm"
-                    : "text-slate-600 hover:text-slate-950",
+                    ? "bg-[var(--surface)] text-[var(--text-strong)] shadow-sm"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-strong)]",
                 ].join(" ")}
               >
                 {nextLocale}

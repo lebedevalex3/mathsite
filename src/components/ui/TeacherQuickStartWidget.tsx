@@ -95,20 +95,20 @@ export function TeacherQuickStartWidget({ locale }: Props) {
     <SurfaceCard className="p-5 sm:p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.title}</h2>
-          <p className="mt-1 text-sm leading-6 text-slate-600">{t.subtitle}</p>
+          <h2 className="text-xl font-semibold tracking-tight text-[var(--text-strong)]">{t.title}</h2>
+          <p className="mt-1 text-sm leading-6 text-[var(--text-muted)]">{t.subtitle}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={handleSubmit}
-            className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+            className="inline-flex items-center justify-center rounded-lg border border-[var(--primary)] bg-[var(--primary)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-hover)]"
           >
             {t.button}
           </button>
           <a
             href={`/${locale}/teacher-tools?topicId=${encodeURIComponent(topicId)}&mode=${encodeURIComponent(preset)}`}
-            className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100"
+            className="inline-flex items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-2.5 text-sm font-medium text-[var(--text-strong)] transition-colors hover:bg-[var(--surface-soft)]"
           >
             {t.configure}
           </a>
@@ -117,13 +117,13 @@ export function TeacherQuickStartWidget({ locale }: Props) {
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <label className="space-y-1">
-          <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
             {t.topicLabel}
           </span>
           <select
             value={topicId}
             onChange={(event) => setTopicId(event.target.value)}
-            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-strong)]"
           >
             {topics.map((topic) => (
               <option key={topic.topicId} value={topic.topicId}>
@@ -134,7 +134,7 @@ export function TeacherQuickStartWidget({ locale }: Props) {
         </label>
 
         <div className="space-y-1">
-          <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
             {t.presetLabel}
           </span>
           <div className="flex flex-wrap gap-2">
@@ -146,8 +146,8 @@ export function TeacherQuickStartWidget({ locale }: Props) {
                 className={[
                   "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
                   preset === id
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+                    ? "border-[var(--primary)] bg-[var(--primary)] text-white"
+                    : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface-soft)]",
                 ].join(" ")}
               >
                 {t.presets[id]}
@@ -157,7 +157,7 @@ export function TeacherQuickStartWidget({ locale }: Props) {
         </div>
       </div>
 
-      <p className="mt-4 text-xs leading-5 text-slate-500">{t.note}</p>
+      <p className="mt-4 text-xs leading-5 text-[var(--text-muted)]">{t.note}</p>
     </SurfaceCard>
   );
 }

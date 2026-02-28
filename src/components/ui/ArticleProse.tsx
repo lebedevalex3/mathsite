@@ -17,7 +17,7 @@ export function ArticleProse({ children, className = "" }: ArticleProseProps) {
         "[&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6",
         "[&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6",
         "[&_li]:my-1",
-        "[&_a]:font-medium [&_a]:text-blue-700 hover:[&_a]:text-blue-900",
+        "[&_a]:font-medium [&_a]:text-[var(--primary)] hover:[&_a]:text-[var(--primary-hover)]",
         "[&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[0.9em]",
         "[&_pre]:overflow-x-auto [&_pre]:rounded-xl [&_pre]:bg-slate-900 [&_pre]:p-4 [&_pre]:text-slate-100",
         "[&_hr]:my-8 [&_hr]:border-slate-200",

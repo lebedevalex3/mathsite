@@ -134,7 +134,7 @@ export function Grade5Sidebar({
           <p className="text-sm font-semibold text-slate-950">{labelCopy.topics}</p>
           <Link
             href={`/${locale}/5-klass`}
-            className="text-xs font-medium text-blue-700 hover:text-blue-900"
+            className="text-xs font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
             onClick={onMobileClose}
           >
             {labelCopy.allTopics}
@@ -177,7 +177,7 @@ export function Grade5Sidebar({
                           "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
                           active
                             ? "bg-white/15 text-white"
-                            : "border border-emerald-200 bg-emerald-50 text-emerald-700",
+                            : "border border-[var(--success)]/30 bg-[var(--success-soft)] text-[var(--success)]",
                         ].join(" ")}
                       >
                         Готово
@@ -218,7 +218,7 @@ export function Grade5Sidebar({
           <p className="text-sm font-semibold text-slate-950">{labelCopy.subtopics}</p>
           <Link
             href={topicSidebarContext?.baseHref ?? `/${locale}/5-klass`}
-            className="text-xs font-medium text-blue-700 hover:text-blue-900"
+            className="text-xs font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
             onClick={onMobileClose}
           >
             {backToTopicLabel}

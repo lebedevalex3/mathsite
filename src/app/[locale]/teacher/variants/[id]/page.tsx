@@ -52,7 +52,7 @@ export default async function TeacherVariantDetailPage({ params }: PageProps) {
   return (
     <main className="space-y-6">
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
           Teacher Variant
         </p>
         <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-950">{detail.title}</h1>

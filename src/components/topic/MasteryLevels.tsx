@@ -28,7 +28,7 @@ function getLevelAccent(levelIndex: number) {
   if (levelIndex === 0) {
     return {
       card: "border-slate-200 bg-white",
-      number: "bg-blue-700",
+      number: "bg-[var(--primary)]",
     };
   }
 
@@ -41,7 +41,7 @@ function getLevelAccent(levelIndex: number) {
 
   return {
     card: "border-slate-200 bg-white",
-    number: "bg-emerald-700",
+    number: "bg-[var(--success)]",
   };
 }
 

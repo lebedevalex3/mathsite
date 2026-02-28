@@ -300,7 +300,7 @@ export default async function TeacherToolsWorkPage({ params, searchParams }: Pag
   return (
     <main className="space-y-6">
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">{t.eyebrow}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">{t.eyebrow}</p>
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
           <Link
             href={`/${locale}/teacher-tools`}

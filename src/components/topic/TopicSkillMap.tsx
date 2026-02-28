@@ -112,10 +112,10 @@ function toUiStatus(skill: SkillItem, progress: SkillProgressEntry | undefined):
 
 function statusPillClass(status: UiStatus) {
   if (status === "mastered") {
-    return "border-emerald-200 bg-emerald-50 text-emerald-700";
+    return "border-[var(--success)]/30 bg-[var(--success-soft)] text-[var(--success)]";
   }
   if (status === "in_progress") {
-    return "border-blue-200 bg-blue-50 text-blue-700";
+    return "border-[var(--border)] bg-[var(--info)] text-[var(--primary)]";
   }
   if (status === "soon") {
     return "border-slate-300 bg-slate-100 text-slate-500";

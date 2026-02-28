@@ -122,7 +122,7 @@ export function TeacherErrorState({
         <div className="mt-4">
           <Link
             href={`/${locale}/teacher/variants`}
-            className="text-sm font-medium text-blue-700 hover:text-blue-900"
+            className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
           >
             Открыть teacher / variants
           </Link>

@@ -118,7 +118,7 @@ function ProgressBar({
   return (
     <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
       <div
-        className="h-full rounded-full bg-blue-600 transition-all"
+        className="h-full rounded-full bg-[var(--primary)] transition-all"
         style={{ width: `${pct}%` }}
       />
     </div>
@@ -232,7 +232,7 @@ export default function TrainingRunner({
     return (
       <section className="mx-auto max-w-4xl space-y-6">
         <SurfaceCard className="p-6 sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
             Тренировка • завершено
           </p>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
@@ -362,7 +362,7 @@ export default function TrainingRunner({
       <SurfaceCard className="p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
               Тренировка: 10 задач подряд
             </p>
             <p className="mt-1 text-sm font-medium text-slate-900">
@@ -387,7 +387,7 @@ export default function TrainingRunner({
               className={[
                 "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                 timerEnabled
-                  ? "border-blue-700 bg-blue-50 text-blue-700"
+                  ? "border-[var(--primary)] bg-[var(--info)] text-[var(--primary)]"
                   : "border-slate-300 bg-white text-slate-600",
               ].join(" ")}
               aria-pressed={timerEnabled}
@@ -498,14 +498,14 @@ export default function TrainingRunner({
             className={[
               "rounded-xl border p-4",
               isCorrect
-                ? "border-emerald-200 bg-emerald-50"
+                ? "border-[var(--success)]/30 bg-[var(--success-soft)]"
                 : "border-rose-200 bg-rose-50",
             ].join(" ")}
           >
             <p
               className={[
                 "text-sm font-semibold",
-                isCorrect ? "text-emerald-800" : "text-rose-800",
+                isCorrect ? "text-[var(--success)]" : "text-rose-800",
               ].join(" ")}
             >
               {isCorrect ? "Верно" : "Неверно"}
