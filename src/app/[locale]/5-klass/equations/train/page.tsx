@@ -40,7 +40,7 @@ function parseTaskCount(raw: string | string[] | undefined): number {
   const value = Array.isArray(raw) ? raw[0] : raw;
   const parsed = value ? Number(value) : NaN;
   if (ALLOWED_TASK_COUNTS.includes(parsed as (typeof ALLOWED_TASK_COUNTS)[number])) return parsed;
-  return DEFAULT_TASK_COUNT;
+  return Number.NaN;
 }
 
 export default async function UravneniyaTrainPage({
@@ -50,7 +50,7 @@ export default async function UravneniyaTrainPage({
   const { locale } = await params;
   const { skill, count } = await searchParams;
   const skillId = Array.isArray(skill) ? skill[0] : skill;
-  const taskCount = parseTaskCount(count);
+  const countFromQuery = parseTaskCount(count);
 
   const { tasks, errors } = await getTasksForTopic(TOPIC_ID);
 
@@ -67,6 +67,7 @@ export default async function UravneniyaTrainPage({
   const allSkillCounts = groupCounts(tasks);
 
   if (!skillId || !isSkillId(skillId)) {
+    const fallbackCount = Number.isFinite(countFromQuery) ? countFromQuery : DEFAULT_TASK_COUNT;
     return (
       <main>
         <h1>Тренировка по теме «Уравнения»</h1>
@@ -77,7 +78,7 @@ export default async function UravneniyaTrainPage({
         <ul>
           {allSkillCounts.map(([id, count]) => (
             <li key={id}>
-              <a href={`/${locale}/topics/equations/train?skill=${encodeURIComponent(id)}&count=${taskCount}`}>
+              <a href={`/${locale}/topics/equations/train?skill=${encodeURIComponent(id)}&count=${fallbackCount}`}>
                 {id}
               </a>{" "}
               ({count})
@@ -93,7 +94,11 @@ export default async function UravneniyaTrainPage({
     notFound();
   }
   const uravneniyaTopic = listTeacherToolsTopics().find((topic) => topic.topicId === TOPIC_ID);
-  const skillTitle = uravneniyaTopic?.skills.find((skill) => skill.id === skillId)?.title ?? skillId;
+  const selectedSkill = uravneniyaTopic?.skills.find((skill) => skill.id === skillId);
+  const taskCount = Number.isFinite(countFromQuery)
+    ? countFromQuery
+    : selectedSkill?.defaultTrainingCount ?? DEFAULT_TASK_COUNT;
+  const skillTitle = selectedSkill?.title ?? skillId;
   const skillOrder = (uravneniyaTopic?.skills ?? []).map((skill) => ({
     id: skill.id,
     title: skill.title,

@@ -124,6 +124,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
       "Подставь найденное число в уравнение.",
       "Проверь, что левая и правая части равны.",
     ],
+    defaultTrainingCount: 10,
     status: "ready",
   },
   {
@@ -139,6 +140,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
       "Сравни результат с правой частью.",
       "Если равны — это корень, если нет — не корень.",
     ],
+    defaultTrainingCount: 10,
     status: "ready",
   },
   {
@@ -154,6 +156,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
       "Для x - a = b: вычисли x = b + a.",
       "Подставь ответ и проверь равенство.",
     ],
+    defaultTrainingCount: 10,
     status: "ready",
   },
   {
@@ -169,6 +172,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
       "Для a - x = b: вычисли x = a - b.",
       "Подставь найденное значение и проверь.",
     ],
+    defaultTrainingCount: 10,
     status: "ready",
   },
   {
@@ -184,6 +188,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
       "Для x : a = b: вычисли x = b · a.",
       "Проверь ответ обратной подстановкой.",
     ],
+    defaultTrainingCount: 10,
     status: "ready",
   },
   {
@@ -199,6 +204,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
       "Реши уравнение обратным действием.",
       "Проверь ответ по тексту задачи.",
     ],
+    defaultTrainingCount: 10,
     status: "ready",
   },
 ];
@@ -253,6 +259,7 @@ export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
           trainerHref: proportionSkillCards[skill.id]?.trainerHref,
           example: proportionSkillCards[skill.id]?.example,
           algorithm: proportionSkillCards[skill.id]?.algorithm,
+          defaultTrainingCount: skill.defaultTrainingCount,
           status: "ready" as const,
         })),
       });

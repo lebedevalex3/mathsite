@@ -7,6 +7,7 @@ export type TeacherToolsSkill = {
   algorithm?: string[];
   trainerHref?: string;
   availableCount?: number;
+  defaultTrainingCount?: number;
   status?: "ready" | "soon";
 };
 

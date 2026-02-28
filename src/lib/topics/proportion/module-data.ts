@@ -16,6 +16,7 @@ export type ProportionSkill = {
   summary: string;
   subtopicId: ProportionSubtopic["id"];
   skillSlug: string;
+  defaultTrainingCount?: number;
 };
 
 export type ProportionBranchId = "O" | "P" | "E" | "T" | "A";
@@ -106,6 +107,7 @@ export const proportionSkills: ProportionSkill[] = [
     summary: "Понять, можно ли считать запись равенством двух отношений.",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.check_proportion",
@@ -113,6 +115,7 @@ export const proportionSkills: ProportionSkill[] = [
     summary: "Проверка равенства отношений по основному свойству.",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.find_unknown_extreme",
@@ -121,6 +124,7 @@ export const proportionSkills: ProportionSkill[] = [
       "Решение пропорций вида $\\frac{x}{b}=\\frac{c}{d}$ или $\\frac{a}{b}=\\frac{c}{x}$.",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.find_unknown_middle",
@@ -128,6 +132,7 @@ export const proportionSkills: ProportionSkill[] = [
     summary: "Решение пропорций, где неизвестное стоит в среднем члене.",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.apply_proportion_property",
@@ -135,6 +140,7 @@ export const proportionSkills: ProportionSkill[] = [
     summary: "Переход от равенства отношений к произведениям $ad=bc$.",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.transform_ratio",
@@ -142,6 +148,7 @@ export const proportionSkills: ProportionSkill[] = [
     summary: "Привести отношения к удобному виду перед составлением пропорции.",
     subtopicId: "math.proportion.direct",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.build_proportion_from_text",
@@ -149,6 +156,7 @@ export const proportionSkills: ProportionSkill[] = [
     summary: "Перевести текстовую зависимость в запись пропорции.",
     subtopicId: "math.proportion.direct",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.solve_productivity_word_problem",
@@ -156,6 +164,7 @@ export const proportionSkills: ProportionSkill[] = [
     summary: "Применение пропорции в задачах с одинаковым объемом работы.",
     subtopicId: "math.proportion.inverse",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.solve_scale_word_problem",
@@ -164,6 +173,7 @@ export const proportionSkills: ProportionSkill[] = [
       "Переход между длиной на плане и длиной на местности через отношение.",
     subtopicId: "math.proportion.problems",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.solve_price_word_problem",
@@ -171,6 +181,7 @@ export const proportionSkills: ProportionSkill[] = [
     summary: "Одинаковая цена за единицу: стоимость, количество, цена.",
     subtopicId: "math.proportion.problems",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 10,
   },
   {
     id: "math.proportion.understand_ratio_as_quotient",
@@ -178,6 +189,7 @@ export const proportionSkills: ProportionSkill[] = [
     summary: "про a:b и a/b",
     subtopicId: "math.proportion.direct",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 5,
   },
 ];
 

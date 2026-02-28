@@ -19,6 +19,7 @@ type SkillItem = {
   skillId: string;
   title: string;
   description: string;
+  trainingCount: number;
 };
 
 type Props = {
@@ -32,8 +33,8 @@ type ProgressPayload = {
 };
 
 type SkillSectionId = "base" | "equations" | "word_problems" | "other";
-const TRAINING_COUNTS = [5, 10, 15, 20] as const;
-type TrainingCount = (typeof TRAINING_COUNTS)[number];
+const DEFAULT_TASK_COUNT = 10;
+const ALLOWED_TASK_COUNTS = [5, 10, 15, 20] as const;
 
 const copy: Record<
   Locale,
@@ -51,7 +52,6 @@ const copy: Record<
     sectionProgress: string;
     optionalBranch: string;
     branchCode: string;
-    taskCountLabel: string;
     sectionTitles: Record<SkillSectionId, string>;
     sectionHints: Record<SkillSectionId, string>;
   }
@@ -61,7 +61,7 @@ const copy: Record<
     continueSkill: "Продолжить последний навык",
     recommendationFallback: "Выберите первый навык и начните серию.",
     startTraining: "Начать тренировку",
-    recommendationHint: "Серия короткая: 10 задач подряд.",
+    recommendationHint: "Серия короткая: количество задач зависит от навыка.",
     attempts: "Попытки",
     notStarted: "Не начато",
     inProgress: "В процессе",
@@ -70,7 +70,6 @@ const copy: Record<
     sectionProgress: "Освоено",
     optionalBranch: "Опционально",
     branchCode: "Ветка",
-    taskCountLabel: "Количество задач",
     sectionTitles: {
       base: "База",
       equations: "Решение пропорций",
@@ -89,7 +88,7 @@ const copy: Record<
     continueSkill: "Continue recent skill",
     recommendationFallback: "Pick your first skill and start a series.",
     startTraining: "Start training",
-    recommendationHint: "Short format: 10 tasks in a row.",
+    recommendationHint: "Short format: task count depends on the skill.",
     attempts: "Attempts",
     notStarted: "Not started",
     inProgress: "In progress",
@@ -98,7 +97,6 @@ const copy: Record<
     sectionProgress: "Mastered",
     optionalBranch: "Optional",
     branchCode: "Branch",
-    taskCountLabel: "Task count",
     sectionTitles: {
       base: "Core",
       equations: "Proportion Solving",
@@ -117,7 +115,7 @@ const copy: Record<
     continueSkill: "Letzte Fähigkeit fortsetzen",
     recommendationFallback: "Waehle die erste Faehigkeit und starte die Serie.",
     startTraining: "Training starten",
-    recommendationHint: "Kurzes Format: 10 Aufgaben am Stueck.",
+    recommendationHint: "Kurzes Format: Anzahl der Aufgaben haengt von der Faehigkeit ab.",
     attempts: "Versuche",
     notStarted: "Nicht gestartet",
     inProgress: "In Arbeit",
@@ -126,7 +124,6 @@ const copy: Record<
     sectionProgress: "Beherrscht",
     optionalBranch: "Optional",
     branchCode: "Zweig",
-    taskCountLabel: "Aufgabenanzahl",
     sectionTitles: {
       base: "Basis",
       equations: "Proportionen loesen",
@@ -181,13 +178,13 @@ function toLocale(value: string): Locale {
   return "ru";
 }
 
-function parseTrainingCount(raw: string | null): TrainingCount {
+function parseTrainingCount(raw: string | null): number | undefined {
   const parsed = raw ? Number(raw) : NaN;
-  if (TRAINING_COUNTS.includes(parsed as TrainingCount)) return parsed as TrainingCount;
-  return 10;
+  if (ALLOWED_TASK_COUNTS.includes(parsed as (typeof ALLOWED_TASK_COUNTS)[number])) return parsed;
+  return undefined;
 }
 
-function buildTrainHref(locale: string, skillId: string, count: TrainingCount) {
+function buildTrainHref(locale: string, skillId: string, count: number) {
   const params = new URLSearchParams();
   params.set("skill", skillId);
   params.set("count", String(count));
@@ -221,14 +218,11 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
   const typedLocale = toLocale(locale);
   const t = copy[typedLocale];
   const searchParams = useSearchParams();
-  const [trainingCount, setTrainingCount] = useState<TrainingCount>(() =>
-    parseTrainingCount(searchParams.get("count")),
+  const countOverride = useMemo(
+    () => parseTrainingCount(searchParams.get("count")),
+    [searchParams],
   );
   const [progressMap, setProgressMap] = useState<SkillProgressMap>({});
-
-  useEffect(() => {
-    setTrainingCount(parseTrainingCount(searchParams.get("count")));
-  }, [searchParams]);
 
   useEffect(() => {
     let cancelled = false;
@@ -264,8 +258,10 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
     [progressMap],
   );
 
+  const recommendedCount =
+    (recommendedSkill ? recommendedSkill.trainingCount : undefined) ?? DEFAULT_TASK_COUNT;
   const recommendedHref = recommendedSkill
-    ? buildTrainHref(locale, recommendedSkill.skillId, trainingCount)
+    ? buildTrainHref(locale, recommendedSkill.skillId, countOverride ?? recommendedCount)
     : `/${locale}/topics/proportion/trainer`;
 
   const sections = useMemo(() => {
@@ -372,28 +368,6 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
           {recommendedSkill?.title ?? t.recommendationFallback}
         </p>
         <p className="mt-1 text-sm text-[var(--text-muted)]">{t.recommendationHint}</p>
-        <div className="mt-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
-            {t.taskCountLabel}
-          </p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {TRAINING_COUNTS.map((count) => (
-              <button
-                key={count}
-                type="button"
-                onClick={() => setTrainingCount(count)}
-                className={[
-                  "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
-                  trainingCount === count
-                    ? "border-[var(--primary)] bg-[var(--primary)] text-white"
-                    : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface-soft)]",
-                ].join(" ")}
-              >
-                {count}
-              </button>
-            ))}
-          </div>
-        </div>
         <div className="mt-4">
           <ButtonLink href={recommendedHref} variant="primary">
             {t.startTraining}
@@ -434,6 +408,7 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {section.items.map((skill) => {
                 const entry = progressMap[skill.skillId];
+                const effectiveTrainingCount = countOverride ?? skill.trainingCount ?? DEFAULT_TASK_COUNT;
                 const status = resolveStatus(progressMap, skill.skillId);
                 const statusText =
                   status === "mastered"
@@ -449,7 +424,11 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
                       : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)]";
 
                 return (
-                  <Link key={skill.skillId} href={buildTrainHref(locale, skill.skillId, trainingCount)} className="block h-full">
+                  <Link
+                    key={skill.skillId}
+                    href={buildTrainHref(locale, skill.skillId, effectiveTrainingCount)}
+                    className="block h-full"
+                  >
                     <SurfaceCard className="h-full p-5 transition-all hover:border-[var(--primary)] hover:shadow-[0_10px_24px_-18px_rgba(29,78,216,0.45)]">
                       <div className="flex items-center justify-between gap-2">
                         <span className={["rounded-full border px-2 py-0.5 text-xs font-semibold", statusClass].join(" ")}>
@@ -469,7 +448,7 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
                       </div>
                       <div className="mt-4">
                         <span className="inline-flex items-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-[var(--primary)]">
-                          {trainingCount} {t.tenTasks.replace(/^10\s*/, "")}
+                          {effectiveTrainingCount} {t.tenTasks.replace(/^10\s*/, "")}
                         </span>
                       </div>
                     </SurfaceCard>

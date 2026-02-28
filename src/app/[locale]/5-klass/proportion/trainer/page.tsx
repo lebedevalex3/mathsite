@@ -24,6 +24,7 @@ export default async function ProportionTrainerEntryPage({ params }: PageProps) 
         skillId: entry.skillId,
         title: meta?.title ?? entry.description,
         description: meta?.summary ?? entry.description,
+        trainingCount: meta?.defaultTrainingCount ?? 10,
       };
     });
 
@@ -49,13 +50,13 @@ export default async function ProportionTrainerEntryPage({ params }: PageProps) 
 
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          Тренажёр • 10 задач подряд
+          Тренажёр • Короткая серия задач
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
           Выберите навык для тренировки
         </h1>
         <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">
-          Выберите навык по теме «Пропорции» и решите серию из 10 задач подряд.
+          Выберите навык по теме «Пропорции» и решите короткую серию задач.
           После серии вы получите краткий итог и рекомендацию, что тренировать дальше.
         </p>
       </section>
