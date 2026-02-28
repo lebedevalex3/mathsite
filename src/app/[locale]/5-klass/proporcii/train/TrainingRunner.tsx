@@ -300,17 +300,17 @@ export default function TrainingRunner({
 
           <div className="mt-6 flex flex-wrap gap-2">
             <ButtonLink
-              href={`/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(skillId)}`}
+              href={`/${locale}/topics/proporcii/train?skill=${encodeURIComponent(skillId)}`}
               variant="primary"
             >
               Повторить этот навык
             </ButtonLink>
-            <ButtonLink href={`/${locale}/5-klass/proporcii`} variant="secondary">
+            <ButtonLink href={`/${locale}/topics/proporcii`} variant="secondary">
               Вернуться к теме
             </ButtonLink>
             {recommendedNextSkill && recommendedNextSkill.id !== skillId ? (
               <ButtonLink
-                href={`/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(recommendedNextSkill.id)}`}
+                href={`/${locale}/topics/proporcii/train?skill=${encodeURIComponent(recommendedNextSkill.id)}`}
                 variant="secondary"
               >
                 Перейти к следующему навыку
@@ -410,14 +410,14 @@ export default function TrainingRunner({
             <p className="mt-1 text-xs text-slate-600">{skillTitle}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               <ButtonLink
-                href={`/${locale}/5-klass/proporcii/trainer`}
+                href={`/${locale}/topics/proporcii/trainer`}
                 variant="secondary"
                 className="px-2.5 py-1.5 text-xs"
               >
                 К выбору навыков
               </ButtonLink>
               <ButtonLink
-                href={`/${locale}/5-klass/proporcii`}
+                href={`/${locale}/topics/proporcii`}
                 variant="secondary"
                 className="px-2.5 py-1.5 text-xs"
               >

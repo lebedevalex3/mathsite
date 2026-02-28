@@ -163,7 +163,7 @@ function toLocale(value: string): Locale {
 }
 
 function buildTrainHref(locale: string, skillId: string) {
-  return `/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(skillId)}`;
+  return `/${locale}/topics/proporcii/train?skill=${encodeURIComponent(skillId)}`;
 }
 
 function resolveStatus(progressMap: SkillProgressMap, skillId: string): SkillProgressStatus {
@@ -230,7 +230,7 @@ export function ProporciiTrainerSkillGrid({ locale, skills }: Props) {
 
   const recommendedHref = recommendedSkill
     ? buildTrainHref(locale, recommendedSkill.skillId)
-    : `/${locale}/5-klass/proporcii/trainer`;
+    : `/${locale}/topics/proporcii/trainer`;
 
   const sections = useMemo(() => {
     const bucket = new Map<SkillSectionId, SkillItem[]>();

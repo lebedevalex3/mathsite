@@ -72,7 +72,7 @@ export function HomeProgressCta({ locale }: HomeProgressCtaProps) {
   }
 
   return (
-    <ButtonLink href={`/${locale}/5-klass/proporcii/trainer`} variant="primary">
+    <ButtonLink href={`/${locale}/topics/proporcii/trainer`} variant="primary">
       {t.startLabel}
     </ButtonLink>
   );

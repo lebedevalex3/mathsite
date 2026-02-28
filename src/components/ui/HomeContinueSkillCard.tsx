@@ -91,8 +91,8 @@ const copy = {
 } as const;
 
 function buildTrainHref(locale: Locale, skillId?: string) {
-  if (!skillId) return `/${locale}/5-klass/proporcii/trainer`;
-  return `/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(skillId)}`;
+  if (!skillId) return `/${locale}/topics/proporcii/trainer`;
+  return `/${locale}/topics/proporcii/train?skill=${encodeURIComponent(skillId)}`;
 }
 
 function pickNextSkill(progressMap: SkillProgressMap) {

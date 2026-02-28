@@ -10,7 +10,7 @@ import { topicMastery } from "@/src/lib/topicMastery";
 import {
   proporciiSkills,
   proporciiSubtopics,
-} from "./module-data";
+} from "@/src/lib/topics/proporcii/module-data";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -19,7 +19,7 @@ type PageProps = {
 export default async function ProporciiTopicPage({ params }: PageProps) {
   const { locale } = await params;
   const mastery = topicMastery["g5.proporcii"];
-  const readConspetsHref = `/${locale}/5-klass/proporcii/rule`;
+  const readConspetsHref = `/${locale}/topics/proporcii/rule`;
   const skillById = new Map(proporciiSkills.map((skill) => [skill.id, skill]));
   const masteryLevels = (mastery?.masteryLevels ?? [])
     .map((level) => ({
@@ -36,7 +36,7 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
           trainHref:
             skill.id === "g5.proporcii.raspoznat_proporciyu"
               ? undefined
-              : `/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(skill.id)}`,
+              : `/${locale}/topics/proporcii/train?skill=${encodeURIComponent(skill.id)}`,
         })),
     }))
     .filter((level) => level.skills.length > 0);
@@ -76,7 +76,7 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
           </div>
           <div className="flex flex-wrap gap-2">
             <ButtonLink
-              href={`/${locale}/5-klass/proporcii/trainer`}
+              href={`/${locale}/topics/proporcii/trainer`}
               variant="primary"
             >
               Тренировать
@@ -116,7 +116,7 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
               <p className="mt-2 flex-1 text-sm leading-6 text-[var(--text-muted)]">{subtopic.description}</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <ButtonLink
-                  href={`/${locale}/5-klass/proporcii/${subtopic.slug}`}
+                  href={`/${locale}/topics/proporcii/${subtopic.slug}`}
                   variant="secondary"
                 >
                   Открыть подтему

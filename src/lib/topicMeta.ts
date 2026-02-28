@@ -19,7 +19,7 @@ export type TopicCatalogEntry = {
 export const topicCatalogEntries: TopicCatalogEntry[] = [
   {
     id: "g5.proporcii",
-    slug: "5-klass/proporcii",
+    slug: "topics/proporcii",
     domain: "arithmetic",
     levels: [5],
     status: "ready",

@@ -45,7 +45,11 @@ const grade5TopicSeeds: Grade5TopicSeed[] = [
 export function getGrade5Topics(locale: string): Grade5Topic[] {
   return grade5TopicSeeds.map((topic) => ({
     ...topic,
-    href: topic.status === "ready" ? `/${locale}/5-klass/${topic.slug}` : null,
+    href:
+      topic.status === "ready"
+        ? topic.id === "g5.proporcii"
+          ? `/${locale}/topics/proporcii`
+          : `/${locale}/5-klass/${topic.slug}`
+        : null,
   }));
 }
-

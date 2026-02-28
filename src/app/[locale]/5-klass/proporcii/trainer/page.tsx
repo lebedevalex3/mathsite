@@ -3,7 +3,7 @@ import path from "node:path";
 import Link from "next/link";
 
 import { parseTaxonomyMarkdownDetails } from "@/lib/tasks/taxonomy";
-import { proporciiSkills } from "@/src/app/[locale]/5-klass/proporcii/module-data";
+import { proporciiSkills } from "@/src/lib/topics/proporcii/module-data";
 import { ProporciiTrainerSkillGrid } from "@/src/components/topic/ProporciiTrainerSkillGrid";
 
 type PageProps = {
@@ -38,7 +38,7 @@ export default async function ProporciiTrainerEntryPage({ params }: PageProps) {
           </li>
           <li>/</li>
           <li>
-            <Link href={`/${locale}/5-klass/proporcii`} className="hover:text-slate-950">
+            <Link href={`/${locale}/topics/proporcii`} className="hover:text-slate-950">
               Пропорции
             </Link>
           </li>

@@ -12,7 +12,7 @@ import {
   getSkillsForSubtopic,
   getSubtopicBySlug,
   type ProporciiSubtopic,
-} from "./module-data";
+} from "@/src/lib/topics/proporcii/module-data";
 
 type TemplateProps = {
   locale: string;
@@ -49,8 +49,8 @@ export async function SubtopicPageTemplate({
     return {
       title: skill.title,
       description: skill.summary,
-      readHref: `/${locale}/5-klass/proporcii/skills/${skill.skillSlug}`,
-      trainHref: `/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(skill.id)}`,
+      readHref: `/${locale}/topics/proporcii/skills/${skill.skillSlug}`,
+      trainHref: `/${locale}/topics/proporcii/train?skill=${encodeURIComponent(skill.id)}`,
       hasTrainer,
     };
   });
@@ -58,9 +58,9 @@ export async function SubtopicPageTemplate({
   const subtopicNavItems = contentIndex.subtopics.map((item) => ({
     id: item.slug,
     title: item.title,
-    href: `/${locale}/5-klass/proporcii/${item.slug}`,
+    href: `/${locale}/topics/proporcii/${item.slug}`,
   }));
-  const currentSubtopicHref = `/${locale}/5-klass/proporcii/${subtopic.slug}`;
+  const currentSubtopicHref = `/${locale}/topics/proporcii/${subtopic.slug}`;
   const currentSubtopicTitle = contentSubtopic?.title ?? subtopic.title;
 
   return (
@@ -78,7 +78,7 @@ export async function SubtopicPageTemplate({
           </li>
           <li>/</li>
           <li>
-            <Link href={`/${locale}/5-klass/proporcii`} className="hover:text-slate-950">
+            <Link href={`/${locale}/topics/proporcii`} className="hover:text-slate-950">
               Пропорции
             </Link>
           </li>

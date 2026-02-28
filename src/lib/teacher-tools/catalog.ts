@@ -1,5 +1,5 @@
 import { getTasksForTopic } from "@/lib/tasks/query";
-import { proporciiSkills } from "@/src/app/[locale]/5-klass/proporcii/module-data";
+import { proporciiSkills } from "@/src/lib/topics/proporcii/module-data";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 
 import type { TeacherToolsSkill, TeacherToolsTopicConfig } from "./types";
@@ -10,7 +10,7 @@ const proporciiSkillCards: Record<
 > = {
   "g5.proporcii.raspoznat_proporciyu": {
     cardHref: "/teacher-tools/skills/g5.proporcii.raspoznat_proporciyu",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.raspoznat_proporciyu",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.raspoznat_proporciyu",
     example: "Является ли равенство 2:3 = 4:6 пропорцией?",
     algorithm: [
       "Проверь, что записаны два отношения.",
@@ -20,7 +20,7 @@ const proporciiSkillCards: Record<
   },
   "g5.proporcii.proverit_proporciyu": {
     cardHref: "/teacher-tools/skills/g5.proporcii.proverit_proporciyu",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.proverit_proporciyu",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.proverit_proporciyu",
     example: "Проверь пропорцию: 3/5 = 9/15.",
     algorithm: [
       "Перемножь крайние и средние члены.",
@@ -30,7 +30,7 @@ const proporciiSkillCards: Record<
   },
   "g5.proporcii.naiti_neizvestnyi_krainei": {
     cardHref: "/teacher-tools/skills/g5.proporcii.naiti_neizvestnyi_krainei",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.naiti_neizvestnyi_krainei",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.naiti_neizvestnyi_krainei",
     example: "Реши пропорцию: x/9 = 4/6.",
     algorithm: [
       "Запиши основное свойство пропорции ad = bc.",
@@ -40,7 +40,7 @@ const proporciiSkillCards: Record<
   },
   "g5.proporcii.naiti_neizvestnyi_srednii": {
     cardHref: "/teacher-tools/skills/g5.proporcii.naiti_neizvestnyi_srednii",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.naiti_neizvestnyi_srednii",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.naiti_neizvestnyi_srednii",
     example: "Реши: 3/x = 6/10.",
     algorithm: [
       "Применяй равенство произведений ad = bc.",
@@ -50,7 +50,7 @@ const proporciiSkillCards: Record<
   },
   "g5.proporcii.primenit_svoistvo_proporcii": {
     cardHref: "/teacher-tools/skills/g5.proporcii.primenit_svoistvo_proporcii",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.primenit_svoistvo_proporcii",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.primenit_svoistvo_proporcii",
     example: "Используй ad = bc для 4/7 = x/21.",
     algorithm: [
       "Перепиши пропорцию в виде произведений ad = bc.",
@@ -60,7 +60,7 @@ const proporciiSkillCards: Record<
   },
   "g5.proporcii.preobrazovat_otnoshenie": {
     cardHref: "/teacher-tools/skills/g5.proporcii.preobrazovat_otnoshenie",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.preobrazovat_otnoshenie",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.preobrazovat_otnoshenie",
     example: "Преобразуй отношение 12:18 к простому виду.",
     algorithm: [
       "Найди общий делитель чисел в отношении.",
@@ -70,7 +70,7 @@ const proporciiSkillCards: Record<
   },
   "g5.proporcii.sostavit_proporciyu_po_usloviyu": {
     cardHref: "/teacher-tools/skills/g5.proporcii.sostavit_proporciyu_po_usloviyu",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.sostavit_proporciyu_po_usloviyu",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.sostavit_proporciyu_po_usloviyu",
     example: "По условию «3 тетради стоят 120 руб.» составь пропорцию для 5 тетрадей.",
     algorithm: [
       "Выдели две связанные величины и одинаковую единицу.",
@@ -80,7 +80,7 @@ const proporciiSkillCards: Record<
   },
   "g5.proporcii.reshit_zadachu_na_proizvoditelnost": {
     cardHref: "/teacher-tools/skills/g5.proporcii.reshit_zadachu_na_proizvoditelnost",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.reshit_zadachu_na_proizvoditelnost",
     example: "Если 4 рабочих делают задачу за 6 часов, за сколько сделают 6 рабочих?",
     algorithm: [
       "Определи тип зависимости (обратная пропорциональность).",
@@ -90,7 +90,7 @@ const proporciiSkillCards: Record<
   },
   "g5.proporcii.reshit_zadachu_na_masshtab": {
     cardHref: "/teacher-tools/skills/g5.proporcii.reshit_zadachu_na_masshtab",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.reshit_zadachu_na_masshtab",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.reshit_zadachu_na_masshtab",
     example: "Масштаб 1:100000, на карте 3 см. Найди расстояние на местности.",
     algorithm: [
       "Запиши соответствие масштаба в одинаковых единицах.",
@@ -100,7 +100,7 @@ const proporciiSkillCards: Record<
   },
   "g5.proporcii.reshit_zadachu_na_cenu": {
     cardHref: "/teacher-tools/skills/g5.proporcii.reshit_zadachu_na_cenu",
-    trainerHref: "/5-klass/proporcii/train?skill=g5.proporcii.reshit_zadachu_na_cenu",
+    trainerHref: "/topics/proporcii/train?skill=g5.proporcii.reshit_zadachu_na_cenu",
     example: "3 кг яблок стоят 180 руб. Сколько стоят 5 кг?",
     algorithm: [
       "Определи, что цена за единицу постоянна.",

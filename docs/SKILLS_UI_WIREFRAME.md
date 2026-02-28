@@ -87,12 +87,12 @@
   - `src/components/ui/HomeProgressCta.tsx`
   - `src/components/ui/TeacherQuickStartWidget.tsx`
 - Тема/навыки:
-  - `src/app/[locale]/5-klass/proporcii/page.tsx`
+  - `src/app/[locale]/topics/proporcii/page.tsx`
   - `src/components/topic/SkillStepper.tsx`
   - `src/components/topic/MasteryLevels.tsx`
 - Тренировка навыка:
-  - `src/app/[locale]/5-klass/proporcii/train/page.tsx`
-  - `src/app/[locale]/5-klass/proporcii/train/TrainingRunner.tsx`
+  - `src/app/[locale]/topics/proporcii/train/page.tsx`
+  - `src/app/[locale]/topics/proporcii/train/TrainingRunner.tsx`
 
 ## Новые компоненты (предложение)
 

@@ -151,15 +151,15 @@ const copy = {
 } as const;
 
 function buildSkillReadHref(locale: string, skillSlug: string) {
-  return `/${locale}/5-klass/proporcii/skills/${skillSlug}`;
+  return `/${locale}/topics/proporcii/skills/${skillSlug}`;
 }
 
 function buildSkillTrainHref(locale: string, skillId: string) {
-  return `/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(skillId)}`;
+  return `/${locale}/topics/proporcii/train?skill=${encodeURIComponent(skillId)}`;
 }
 
 function buildSubtopicHref(locale: string, slug: string) {
-  return `/${locale}/5-klass/proporcii/${slug}`;
+  return `/${locale}/topics/proporcii/${slug}`;
 }
 
 export function ProgressPageClient({
@@ -343,10 +343,10 @@ export function ProgressPageClient({
             <p className="mt-2 text-sm text-amber-700">{t.apiError}</p>
           ) : null}
           <div className="mt-4 flex flex-wrap gap-2">
-            <ButtonLink href={`/${locale}/5-klass/proporcii/trainer`} variant="primary">
+            <ButtonLink href={`/${locale}/topics/proporcii/trainer`} variant="primary">
               {t.startTraining}
             </ButtonLink>
-            <ButtonLink href={`/${locale}/5-klass/proporcii`} variant="secondary">
+            <ButtonLink href={`/${locale}/topics/proporcii`} variant="secondary">
               {t.openTopic}
             </ButtonLink>
           </div>

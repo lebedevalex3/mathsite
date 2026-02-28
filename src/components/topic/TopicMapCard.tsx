@@ -22,7 +22,7 @@ export function TopicMapCard({
     href:
       node.status === "soon" || !node.skillId
         ? undefined
-        : `/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(node.skillId)}`,
+        : `/${locale}/topics/proporcii/train?skill=${encodeURIComponent(node.skillId)}`,
   }));
 
   return (

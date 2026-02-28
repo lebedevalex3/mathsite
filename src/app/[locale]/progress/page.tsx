@@ -1,6 +1,5 @@
 import { ProgressPageClient } from "@/src/components/ui/ProgressPageClient";
-
-import { proporciiSkills, proporciiSubtopics } from "../5-klass/proporcii/module-data";
+import { proporciiSkills, proporciiSubtopics } from "@/src/lib/topics/proporcii/module-data";
 
 type PageProps = {
   params: Promise<{ locale: "ru" | "en" | "de" }>;

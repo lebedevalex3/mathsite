@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { getTasksForTopic } from "@/lib/tasks/query";
 import type { Task } from "@/lib/tasks/schema";
-import { proporciiSkills } from "@/src/app/[locale]/5-klass/proporcii/module-data";
+import { proporciiSkills } from "@/src/lib/topics/proporcii/module-data";
 
 import TrainingRunner from "./TrainingRunner";
 
@@ -68,7 +68,7 @@ export default async function ProporciiTrainPage({
         <ul>
           {allSkillCounts.map(([id, count]) => (
             <li key={id}>
-              <a href={`/${locale}/5-klass/proporcii/train?skill=${encodeURIComponent(id)}`}>
+              <a href={`/${locale}/topics/proporcii/train?skill=${encodeURIComponent(id)}`}>
                 {id}
               </a>{" "}
               ({count})
@@ -99,7 +99,7 @@ export default async function ProporciiTrainPage({
           нужно минимум {REQUIRED_TASK_COUNT}.
         </p>
         <p>
-          <a href={`/${locale}/5-klass/proporcii`}>Вернуться к теме</a>
+          <a href={`/${locale}/topics/proporcii`}>Вернуться к теме</a>
         </p>
       </main>
     );

@@ -104,7 +104,7 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
             ))}
           </div>
           <ButtonLink
-            href={`/${locale}/5-klass/proporcii/trainer`}
+            href={`/${locale}/topics/proporcii/trainer`}
             variant="secondary"
             className="hidden sm:inline-flex"
           >

@@ -231,7 +231,7 @@ export default async function LocaleHomePage({ params }: PageProps) {
               <p className="mt-2 text-sm text-[var(--text-muted)]">{t.sectionsBody}</p>
               <div className="mt-4">
                 <Link
-                  href={`/${locale}/5-klass/proporcii`}
+                  href={`/${locale}/topics/proporcii`}
                   className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
                 >
                   {t.sectionsLink}
@@ -243,7 +243,7 @@ export default async function LocaleHomePage({ params }: PageProps) {
               <p className="mt-2 text-sm text-[var(--text-muted)]">{t.practiceBody}</p>
               <div className="mt-4">
                 <Link
-                  href={`/${locale}/5-klass/proporcii`}
+                  href={`/${locale}/topics/proporcii`}
                   className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
                 >
                   {t.practiceLink}
