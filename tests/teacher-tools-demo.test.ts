@@ -10,6 +10,7 @@ import {
   DEMO_MAX_TOTAL_TASKS,
   shuffleItemsWithSeed,
 } from '@/src/lib/teacher-tools/demo';
+import { InsufficientTasksError } from '@/src/lib/variants/plan';
 import type { Task } from '@/lib/tasks/schema';
 
 test('validateDemoPlan normalizes positive counts', () => {
@@ -187,4 +188,42 @@ test('buildDemoVariantDrafts allows task reuse between variants', () => {
   assert.equal(drafts.length, 2);
   assert.equal(drafts[0]?.ordered.length, 10);
   assert.equal(drafts[1]?.ordered.length, 10);
+});
+
+test('buildDemoVariantDrafts requires enough unique tasks for fixed level across variants', () => {
+  const tasks: Task[] = Array.from({ length: 10 }, (_, index) => ({
+    id: `math.proportion.check_proportion.${String(index + 1).padStart(6, '0')}`,
+    topic_id: 'math.proportion',
+    skill_id: 'math.proportion.check_proportion',
+    difficulty: index < 5 ? 1 : 2,
+    statement_md: `Задача #${index + 1}`,
+    answer: { type: 'number', value: index + 1 },
+  }));
+
+  const template = buildDemoTemplate({
+    topicId: 'math.proportion',
+    plan: [{ skillId: 'math.proportion.check_proportion', count: 5, difficulty: 1 }],
+    skillsById: new Map([
+      ['math.proportion.check_proportion', { title: 'Проверить пропорцию' }],
+    ]),
+    mode: 'custom',
+  });
+
+  assert.throws(
+    () =>
+      buildDemoVariantDrafts({
+        tasks,
+        template,
+        variantsCount: 2,
+        seed: 42,
+        topicId: 'math.proportion',
+      }),
+    (error: unknown) => {
+      assert.ok(error instanceof InsufficientTasksError);
+      assert.equal(error.details.requiredCount, 10);
+      assert.equal(error.details.availableCount, 5);
+      assert.deepEqual(error.details.difficulty, [1, 1]);
+      return true;
+    },
+  );
 });

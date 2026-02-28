@@ -251,6 +251,22 @@ type DemoVariantDraft = {
   fit: VariantPrintFitMetrics;
 };
 
+function isFixedDifficultyLevel(difficulty: [number, number]) {
+  return parseDemoDifficulty(difficulty[0]) != null && difficulty[0] === difficulty[1];
+}
+
+function taskMatchesSection(
+  task: Awaited<ReturnType<typeof getTasksForTopic>>["tasks"][number],
+  section: VariantTemplate["sections"][number],
+) {
+  const [minDifficulty, maxDifficulty] = section.difficulty;
+  return (
+    section.skillIds.includes(task.skill_id) &&
+    task.difficulty >= minDifficulty &&
+    task.difficulty <= maxDifficulty
+  );
+}
+
 export function buildDemoVariantDrafts(params: {
   tasks: Awaited<ReturnType<typeof getTasksForTopic>>["tasks"];
   template: VariantTemplate;
@@ -260,6 +276,10 @@ export function buildDemoVariantDrafts(params: {
   topicId: string;
 }) {
   const { tasks, template, variantsCount } = params;
+  const fixedDifficultySections = template.sections.filter((section) =>
+    isFixedDifficultyLevel(section.difficulty),
+  );
+  const hasFixedDifficultySections = fixedDifficultySections.length > 0;
 
   for (const section of template.sections) {
     const [minDifficulty, maxDifficulty] = section.difficulty;
@@ -269,10 +289,13 @@ export function buildDemoVariantDrafts(params: {
         task.difficulty >= minDifficulty &&
         task.difficulty <= maxDifficulty,
     ).length;
-    if (availableCount < section.count) {
+    const requiredCount = isFixedDifficultyLevel(section.difficulty)
+      ? section.count * variantsCount
+      : section.count;
+    if (availableCount < requiredCount) {
       throw new InsufficientTasksError({
         sectionLabel: section.label,
-        requiredCount: section.count,
+        requiredCount,
         availableCount,
         skillIds: [...section.skillIds],
         difficulty: section.difficulty,
@@ -281,11 +304,19 @@ export function buildDemoVariantDrafts(params: {
   }
 
   const drafts: DemoVariantDraft[] = [];
+  const usedFixedDifficultyTaskIds = new Set<string>();
   for (let i = 0; i < variantsCount; i += 1) {
     const seed = params.seed != null ? `${params.seed}-${i}` : makeSeed(i);
+    const availableTasks = hasFixedDifficultySections
+      ? tasks.filter(
+          (task) =>
+            !usedFixedDifficultyTaskIds.has(task.id) ||
+            !fixedDifficultySections.some((section) => taskMatchesSection(task, section)),
+        )
+      : tasks;
     let selected;
     try {
-      selected = buildVariantPlan({ tasks, template, seed });
+      selected = buildVariantPlan({ tasks: availableTasks, template, seed });
     } catch (error) {
       if (error instanceof InsufficientTasksError) {
         const wrapped = new Error(error.message) as Error & {
@@ -297,11 +328,18 @@ export function buildDemoVariantDrafts(params: {
           ...error.details,
           variantIndex: i + 1,
           variantsCount,
-          remainingUniqueTasks: tasks.length,
+          remainingUniqueTasks: availableTasks.length,
         };
         throw wrapped;
       }
       throw error;
+    }
+    if (hasFixedDifficultySections) {
+      for (const item of selected) {
+        if (fixedDifficultySections.some((section) => taskMatchesSection(item.task, section))) {
+          usedFixedDifficultyTaskIds.add(item.task.id);
+        }
+      }
     }
     const ordered = params.shuffleOrder
       ? shuffleItemsWithSeed(selected, `${seed}:shuffle`)
