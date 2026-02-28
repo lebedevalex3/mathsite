@@ -28,6 +28,7 @@ type AttemptRecord = {
 type TrainingRunnerProps = {
   locale: string;
   skillId: string;
+  skillTitle: string;
   tasks: TrainingTask[];
 };
 
@@ -39,12 +40,6 @@ function formatTimerSeconds(seconds: number) {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${String(secs).padStart(2, "0")}`;
-}
-
-function humanizeSkillId(skillId: string) {
-  const raw = skillId.split(".").pop() ?? skillId;
-  const text = raw.replaceAll("_", " ");
-  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 function useTaskTimer(enabled: boolean) {
@@ -185,6 +180,7 @@ async function persistAttempt(
 export default function TrainingRunner({
   locale,
   skillId,
+  skillTitle,
   tasks,
 }: TrainingRunnerProps) {
   const [sessionId] = useState(
@@ -239,7 +235,7 @@ export default function TrainingRunner({
             Серия из {tasks.length} задач выполнена
           </h1>
           <p className="mt-2 text-sm text-slate-600">
-            {humanizeSkillId(skillId)}
+            {skillTitle}
           </p>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-3">

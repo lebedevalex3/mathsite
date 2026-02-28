@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import { getTasksForTopic } from "@/lib/tasks/query";
 import type { Task } from "@/lib/tasks/schema";
+import { listTeacherToolsTopics } from "@/src/lib/teacher-tools/catalog";
 
 import TrainingRunner from "./TrainingRunner";
 
@@ -82,6 +83,8 @@ export default async function UravneniyaTrainPage({
   if (skillTasks.length === 0) {
     notFound();
   }
+  const uravneniyaTopic = listTeacherToolsTopics().find((topic) => topic.topicId === TOPIC_ID);
+  const skillTitle = uravneniyaTopic?.skills.find((skill) => skill.id === skillId)?.title ?? skillId;
 
   if (skillTasks.length < REQUIRED_TASK_COUNT) {
     return (
@@ -102,7 +105,7 @@ export default async function UravneniyaTrainPage({
 
   return (
     <main>
-      <TrainingRunner locale={locale} skillId={skillId} tasks={selectedTasks} />
+      <TrainingRunner locale={locale} skillId={skillId} skillTitle={skillTitle} tasks={selectedTasks} />
     </main>
   );
 }

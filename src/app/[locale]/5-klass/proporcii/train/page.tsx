@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import { getTasksForTopic } from "@/lib/tasks/query";
 import type { Task } from "@/lib/tasks/schema";
+import { proporciiSkills } from "@/src/app/[locale]/5-klass/proporcii/module-data";
 
 import TrainingRunner from "./TrainingRunner";
 
@@ -82,6 +83,8 @@ export default async function ProporciiTrainPage({
   if (skillTasks.length === 0) {
     notFound();
   }
+  const skillTitle =
+    proporciiSkills.find((skill) => skill.id === skillId)?.title ?? skillId;
 
   if (skillTasks.length < REQUIRED_TASK_COUNT) {
     return (
@@ -102,8 +105,7 @@ export default async function ProporciiTrainPage({
 
   return (
     <main>
-      <TrainingRunner locale={locale} skillId={skillId} tasks={selectedTasks} />
+      <TrainingRunner locale={locale} skillId={skillId} skillTitle={skillTitle} tasks={selectedTasks} />
     </main>
   );
 }
-
