@@ -14,6 +14,18 @@ export type ProporciiSkill = {
   skillSlug: string;
 };
 
+export type ProporciiBranchId = "O" | "P" | "E" | "T" | "A";
+
+export type ProporciiBranch = {
+  id: ProporciiBranchId;
+  order: number;
+  title: { ru: string; en: string; de: string };
+  goal: { ru: string; en: string; de: string };
+  skillIds: string[];
+  optional?: boolean;
+  dependsOn?: ProporciiBranchId[];
+};
+
 export type SubtopicTocItem = {
   id: string;
   label: string;
@@ -150,6 +162,123 @@ export const proporciiSkills: ProporciiSkill[] = [
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
   },
 ];
+
+export const proporciiBranches: ProporciiBranch[] = [
+  {
+    id: "O",
+    order: 1,
+    title: {
+      ru: "Ветка O: Отношение",
+      en: "Branch O: Ratio",
+      de: "Zweig O: Verhaeltnis",
+    },
+    goal: {
+      ru: "Базовые действия с отношениями и подготовка к пропорциям.",
+      en: "Core ratio operations as a foundation for proportions.",
+      de: "Grundlagen zu Verhaeltnissen als Basis fuer Proportionen.",
+    },
+    skillIds: [
+      "g5.proporcii.preobrazovat_otnoshenie",
+    ],
+  },
+  {
+    id: "P",
+    order: 2,
+    title: {
+      ru: "Ветка P: Понятие пропорции",
+      en: "Branch P: Proportion Basics",
+      de: "Zweig P: Grundlagen der Proportion",
+    },
+    goal: {
+      ru: "Понимание определения и проверка верности пропорции.",
+      en: "Understand and verify whether a proportion is valid.",
+      de: "Verstehen und pruefen, ob eine Proportion gueltig ist.",
+    },
+    skillIds: [
+      "g5.proporcii.raspoznat_proporciyu",
+      "g5.proporcii.proverit_proporciyu",
+      "g5.proporcii.primenit_svoistvo_proporcii",
+    ],
+    dependsOn: ["O"],
+  },
+  {
+    id: "E",
+    order: 3,
+    title: {
+      ru: "Ветка E: Уравнения в пропорциях",
+      en: "Branch E: Proportion Equations",
+      de: "Zweig E: Gleichungen mit Proportionen",
+    },
+    goal: {
+      ru: "Решение пропорций с неизвестным членом.",
+      en: "Solve proportions with an unknown term.",
+      de: "Proportionen mit unbekanntem Glied loesen.",
+    },
+    skillIds: [
+      "g5.proporcii.naiti_neizvestnyi_krainei",
+      "g5.proporcii.naiti_neizvestnyi_srednii",
+    ],
+    dependsOn: ["P"],
+  },
+  {
+    id: "T",
+    order: 4,
+    title: {
+      ru: "Ветка T: Преобразования и конструирование",
+      en: "Branch T: Transform and Construct",
+      de: "Zweig T: Umformen und Konstruieren",
+    },
+    goal: {
+      ru: "Составление корректной пропорции из условия.",
+      en: "Build a correct proportion from text conditions.",
+      de: "Eine korrekte Proportion aus Textbedingungen aufstellen.",
+    },
+    skillIds: [
+      "g5.proporcii.sostavit_proporciyu_po_usloviyu",
+    ],
+    dependsOn: ["P"],
+  },
+  {
+    id: "A",
+    order: 5,
+    optional: true,
+    title: {
+      ru: "Ветка A: Применение",
+      en: "Branch A: Applications",
+      de: "Zweig A: Anwendungen",
+    },
+    goal: {
+      ru: "Применение пропорций в сюжетных задачах.",
+      en: "Apply proportions in word problems.",
+      de: "Proportionen in Sachaufgaben anwenden.",
+    },
+    skillIds: [
+      "g5.proporcii.reshit_zadachu_na_masshtab",
+      "g5.proporcii.reshit_zadachu_na_cenu",
+      "g5.proporcii.reshit_zadachu_na_proizvoditelnost",
+    ],
+    dependsOn: ["E", "T"],
+  },
+];
+
+export function getProporciiBranchValidationErrors() {
+  const skillIds = new Set(proporciiSkills.map((skill) => skill.id));
+  const errors: string[] = [];
+
+  for (const branch of proporciiBranches) {
+    for (const skillId of branch.skillIds) {
+      if (!skillIds.has(skillId)) {
+        errors.push(`Unknown skill_id in branch ${branch.id}: ${skillId}`);
+      }
+    }
+  }
+
+  return errors;
+}
+
+export function getProporciiBranchBySkillId(skillId: string) {
+  return proporciiBranches.find((branch) => branch.skillIds.includes(skillId));
+}
 
 export function getSubtopicBySlug(slug: string) {
   return proporciiSubtopics.find((item) => item.slug === slug);

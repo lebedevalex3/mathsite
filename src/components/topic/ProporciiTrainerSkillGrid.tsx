@@ -6,6 +6,10 @@ import { useEffect, useMemo, useState } from "react";
 import { MarkdownMath } from "@/lib/ui/MarkdownMath";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import {
+  getProporciiBranchValidationErrors,
+  proporciiBranches,
+} from "@/src/lib/topics/proporcii/module-data";
 import type { SkillProgressMap, SkillProgressStatus } from "@/src/lib/progress/types";
 
 type Locale = "ru" | "en" | "de";
@@ -42,6 +46,8 @@ const copy: Record<
     mastered: string;
     tenTasks: string;
     sectionProgress: string;
+    optionalBranch: string;
+    branchCode: string;
     sectionTitles: Record<SkillSectionId, string>;
     sectionHints: Record<SkillSectionId, string>;
   }
@@ -58,6 +64,8 @@ const copy: Record<
     mastered: "Освоено",
     tenTasks: "10 задач",
     sectionProgress: "Освоено",
+    optionalBranch: "Опционально",
+    branchCode: "Ветка",
     sectionTitles: {
       base: "База",
       equations: "Решение пропорций",
@@ -83,6 +91,8 @@ const copy: Record<
     mastered: "Mastered",
     tenTasks: "10 tasks",
     sectionProgress: "Mastered",
+    optionalBranch: "Optional",
+    branchCode: "Branch",
     sectionTitles: {
       base: "Core",
       equations: "Proportion Solving",
@@ -108,6 +118,8 @@ const copy: Record<
     mastered: "Beherrscht",
     tenTasks: "10 Aufgaben",
     sectionProgress: "Beherrscht",
+    optionalBranch: "Optional",
+    branchCode: "Zweig",
     sectionTitles: {
       base: "Basis",
       equations: "Proportionen loesen",
@@ -233,6 +245,62 @@ export function ProporciiTrainerSkillGrid({ locale, skills }: Props) {
     : `/${locale}/topics/proporcii/trainer`;
 
   const sections = useMemo(() => {
+    const branchErrors = getProporciiBranchValidationErrors();
+    const canUseBranches = branchErrors.length === 0 && proporciiBranches.length > 0;
+
+    if (canUseBranches) {
+      const assigned = new Set<string>();
+      const branchSections: Array<{
+        id: string;
+        branchId?: string;
+        title: string;
+        hint: string;
+        optional: boolean;
+        items: SkillItem[];
+      }> = [...proporciiBranches]
+        .sort((left, right) => left.order - right.order)
+        .map((branch) => {
+          const items = skills.filter((skill) => branch.skillIds.includes(skill.skillId));
+          for (const item of items) assigned.add(item.skillId);
+          return {
+            id: branch.id,
+            branchId: branch.id,
+            title: branch.title[typedLocale] ?? branch.title.ru,
+            hint: branch.goal[typedLocale] ?? branch.goal.ru,
+            optional: Boolean(branch.optional),
+            items: [...items].sort((left, right) => {
+              const leftStatus = resolveStatus(progressMap, left.skillId);
+              const rightStatus = resolveStatus(progressMap, right.skillId);
+              if (statusPriority[leftStatus] !== statusPriority[rightStatus]) {
+                return statusPriority[leftStatus] - statusPriority[rightStatus];
+              }
+              const leftAttempts = progressMap[left.skillId]?.total ?? 0;
+              const rightAttempts = progressMap[right.skillId]?.total ?? 0;
+              if (leftAttempts !== rightAttempts) return rightAttempts - leftAttempts;
+              return left.title.localeCompare(right.title);
+            }),
+          };
+        })
+        .filter((section) => section.items.length > 0);
+
+      const unassigned = skills
+        .filter((skill) => !assigned.has(skill.skillId))
+        .sort((left, right) => left.title.localeCompare(right.title));
+
+      if (unassigned.length > 0) {
+        branchSections.push({
+          id: "other",
+          branchId: undefined,
+          title: t.sectionTitles.other,
+          hint: t.sectionHints.other,
+          optional: false,
+          items: unassigned,
+        });
+      }
+
+      return branchSections;
+    }
+
     const bucket = new Map<SkillSectionId, SkillItem[]>();
     for (const skill of skills) {
       const sectionId = resolveSectionId(skill.skillId);
@@ -251,7 +319,11 @@ export function ProporciiTrainerSkillGrid({ locale, skills }: Props) {
     return ordered
       .filter((section) => section.items.length > 0)
       .map((section) => ({
-        ...section,
+        id: section.id,
+        branchId: undefined,
+        title: t.sectionTitles[section.id],
+        hint: t.sectionHints[section.id],
+        optional: false,
         items: [...section.items].sort((left, right) => {
           const leftStatus = resolveStatus(progressMap, left.skillId);
           const rightStatus = resolveStatus(progressMap, right.skillId);
@@ -264,7 +336,7 @@ export function ProporciiTrainerSkillGrid({ locale, skills }: Props) {
           return left.title.localeCompare(right.title);
         }),
       }));
-  }, [progressMap, skills]);
+  }, [progressMap, skills, t.sectionHints, t.sectionTitles, typedLocale]);
 
   return (
     <section className="space-y-4">
@@ -292,13 +364,25 @@ export function ProporciiTrainerSkillGrid({ locale, skills }: Props) {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h2 className="text-lg font-semibold tracking-tight text-[var(--text-strong)]">
-                  {t.sectionTitles[section.id]}
+                  {section.title}
                 </h2>
-                <p className="mt-1 text-sm text-[var(--text-muted)]">{t.sectionHints[section.id]}</p>
+                <p className="mt-1 text-sm text-[var(--text-muted)]">{section.hint}</p>
               </div>
-              <span className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--text)]">
-                {t.sectionProgress}: {masteredCount}/{section.items.length}
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                {section.branchId ? (
+                  <span className="inline-flex items-center rounded-full border border-[var(--primary)]/25 bg-[var(--info)] px-2 py-1 text-xs font-semibold text-[var(--primary)]">
+                    {t.branchCode} {section.branchId}
+                  </span>
+                ) : null}
+                {section.optional ? (
+                  <span className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-2 py-1 text-xs font-semibold text-[var(--text-muted)]">
+                    {t.optionalBranch}
+                  </span>
+                ) : null}
+                <span className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--text)]">
+                  {t.sectionProgress}: {masteredCount}/{section.items.length}
+                </span>
+              </div>
             </div>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
