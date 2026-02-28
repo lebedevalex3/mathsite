@@ -11,7 +11,6 @@ import {
   type AppLocale,
   type TopicCatalogEntry,
   type TopicDomain,
-  type TopicStatus,
   topicCatalogEntries,
 } from "@/src/lib/topicMeta";
 
@@ -22,15 +21,12 @@ type HomeTopicCatalogProps = {
 const copy = {
   ru: {
     title: "Темы",
-    subtitle: "Ищите темы по доменам, уровню и статусу готовности.",
+    subtitle: "Ищите темы по доменам и классам.",
     searchPlaceholder: "Найти тему или навык…",
     noResults: "По выбранным фильтрам пока ничего не найдено.",
     read: "Читать",
     train: "Тренировать",
-    ready: "Доступно",
-    soon: "Скоро",
-    levelLabel: "Level",
-    statusLabel: "Статус",
+    classLabel: "Класс",
     domains: {
       arithmetic: "Арифметика",
       algebra: "Алгебра",
@@ -40,15 +36,12 @@ const copy = {
   },
   en: {
     title: "Topics",
-    subtitle: "Browse topics by domain, level, and readiness status.",
+    subtitle: "Browse topics by domain and grade.",
     searchPlaceholder: "Find a topic or skill…",
     noResults: "No topics found for the current filters.",
     read: "Read",
     train: "Train",
-    ready: "Available",
-    soon: "Soon",
-    levelLabel: "Level",
-    statusLabel: "Status",
+    classLabel: "Grade",
     domains: {
       arithmetic: "Arithmetic",
       algebra: "Algebra",
@@ -58,15 +51,12 @@ const copy = {
   },
   de: {
     title: "Themen",
-    subtitle: "Themen nach Bereich, Level und Status filtern.",
+    subtitle: "Themen nach Bereich und Klasse filtern.",
     searchPlaceholder: "Thema oder Fähigkeit suchen…",
     noResults: "Keine Themen für die aktuellen Filter gefunden.",
     read: "Lesen",
     train: "Trainieren",
-    ready: "Verfügbar",
-    soon: "Bald",
-    levelLabel: "Level",
-    statusLabel: "Status",
+    classLabel: "Klasse",
     domains: {
       arithmetic: "Arithmetik",
       algebra: "Algebra",
@@ -77,29 +67,12 @@ const copy = {
 } as const;
 
 const domainOrder: TopicDomain[] = ["arithmetic", "algebra", "geometry", "data"];
-const levels = [5, 6];
 
 function parseDomainParam(value: string | null): TopicDomain | null {
   if (value === "arithmetic" || value === "algebra" || value === "geometry" || value === "data") {
     return value;
   }
   return null;
-}
-
-function statusBadge(status: TopicStatus, locale: AppLocale) {
-  const t = copy[locale];
-  if (status === "ready") {
-    return (
-      <span className="rounded-full border border-[var(--success)]/30 bg-[var(--success-soft)] px-2 py-0.5 text-xs font-semibold text-[var(--success)]">
-        {t.ready}
-      </span>
-    );
-  }
-  return (
-    <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2 py-0.5 text-xs font-semibold text-[var(--text-muted)]">
-      {t.soon}
-    </span>
-  );
 }
 
 function buildTopicHref(locale: AppLocale, entry: TopicCatalogEntry) {
@@ -120,9 +93,14 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
   const searchParams = useSearchParams();
   const queryDomain = parseDomainParam(searchParams.get("domain"));
   const domain = queryDomain ?? "arithmetic";
+  const gradeOptions = useMemo(
+    () =>
+      [...new Set(topicCatalogEntries.flatMap((entry) => entry.levels))]
+        .sort((left, right) => left - right),
+    [],
+  );
   const [query, setQuery] = useState("");
-  const [level, setLevel] = useState<number>(5);
-  const [status, setStatus] = useState<TopicStatus>("ready");
+  const [grade, setGrade] = useState<number>(gradeOptions[0] ?? 5);
 
   function handleDomainChange(nextDomain: TopicDomain) {
     const nextParams = new URLSearchParams(searchParams.toString());
@@ -135,8 +113,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
     const normalizedQuery = query.trim().toLowerCase();
     return topicCatalogEntries.filter((entry) => {
       if (!getTopicDomains(entry).includes(domain)) return false;
-      if (!entry.levels.includes(level)) return false;
-      if (entry.status !== status) return false;
+      if (!entry.levels.includes(grade)) return false;
 
       if (!normalizedQuery) return true;
 
@@ -150,7 +127,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
 
       return haystack.includes(normalizedQuery);
     });
-  }, [domain, level, locale, query, status]);
+  }, [domain, grade, locale, query]);
 
   return (
     <section id="topics-catalog" className="space-y-4 scroll-mt-24">
@@ -193,48 +170,21 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
             ))}
           </div>
 
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
-                {t.levelLabel}
-              </span>
-              {levels.map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => setLevel(item)}
-                  className={[
-                    "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
-                    level === item
-                      ? "border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary)]"
-                      : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)] hover:bg-[var(--surface-soft)]",
-                  ].join(" ")}
-                >
-                  Level {item}
-                </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+              {t.classLabel}
+            </span>
+            <select
+              value={grade}
+              onChange={(event) => setGrade(Number(event.target.value))}
+              className="min-w-40 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-strong)]"
+            >
+              {gradeOptions.map((item) => (
+                <option key={item} value={item}>
+                  {locale === "ru" ? `${item} класс` : locale === "de" ? `${item}. Klasse` : `Grade ${item}`}
+                </option>
               ))}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
-                {t.statusLabel}
-              </span>
-              {(["ready", "soon"] as const).map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => setStatus(item)}
-                  className={[
-                    "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
-                    status === item
-                      ? "border-[var(--primary)] bg-[var(--primary)] text-white"
-                      : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)] hover:bg-[var(--surface-soft)]",
-                  ].join(" ")}
-                >
-                  {item === "ready" ? t.ready : t.soon}
-                </button>
-              ))}
-            </div>
+            </select>
           </div>
         </div>
       </SurfaceCard>
@@ -246,17 +196,8 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((topic) => (
-            <SurfaceCard
-              key={topic.id}
-              className={[
-                "flex h-full flex-col p-5",
-                topic.status === "soon" ? "border-dashed bg-[var(--surface-soft)]" : "",
-              ].join(" ")}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="text-lg font-semibold text-[var(--text-strong)]">{topic.title[locale]}</h3>
-                {statusBadge(topic.status, locale)}
-              </div>
+            <SurfaceCard key={topic.id} className="flex h-full flex-col p-5">
+              <h3 className="text-lg font-semibold text-[var(--text-strong)]">{topic.title[locale]}</h3>
               <p className="mt-2 flex-1 text-sm leading-6 text-[var(--text-muted)]">
                 {topic.description[locale]}
               </p>
