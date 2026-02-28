@@ -49,9 +49,9 @@ test('validateDemoPlan keeps fixed difficulty when payload uses L1/L2/L3', () =>
   ]);
 });
 
-test('shouldEnforceDemoRateLimit defaults to prod only and supports override', () => {
+test('shouldEnforceDemoRateLimit is enabled by default and supports override', () => {
   assert.equal(shouldEnforceDemoRateLimit({ NODE_ENV: 'production' } as NodeJS.ProcessEnv), true);
-  assert.equal(shouldEnforceDemoRateLimit({ NODE_ENV: 'development' } as NodeJS.ProcessEnv), false);
+  assert.equal(shouldEnforceDemoRateLimit({ NODE_ENV: 'development' } as NodeJS.ProcessEnv), true);
   assert.equal(
     shouldEnforceDemoRateLimit({
       NODE_ENV: 'development',

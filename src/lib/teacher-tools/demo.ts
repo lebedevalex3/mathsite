@@ -67,7 +67,7 @@ function parseBooleanEnv(value: string | undefined): boolean | undefined {
 export function shouldEnforceDemoRateLimit(env: NodeJS.ProcessEnv = process.env): boolean {
   const override = parseBooleanEnv(env.DEMO_ENFORCE_RATE_LIMIT);
   if (override != null) return override;
-  return env.NODE_ENV === "production";
+  return true;
 }
 
 export async function enforceDemoRateLimit(ownerUserId: string) {
