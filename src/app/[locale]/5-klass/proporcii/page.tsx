@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { TopicLeaderboardPanel } from "@/src/components/topic/TopicLeaderboardPanel";
 import { TopicSkillMap } from "@/src/components/topic/TopicSkillMap";
 import { TopicMotivationPanel } from "@/src/components/topic/TopicMotivationPanel";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
@@ -87,11 +88,14 @@ export default async function ProporciiTopicPage({ params }: PageProps) {
         </div>
       </section>
 
-      <TopicMotivationPanel
-        locale={locale as "ru" | "en" | "de"}
-        topicId="g5.proporcii"
-        progressHref={`/${locale}/progress`}
-      />
+      <section className="grid gap-4 lg:grid-cols-2">
+        <TopicMotivationPanel
+          locale={locale as "ru" | "en" | "de"}
+          topicId="g5.proporcii"
+          progressHref={`/${locale}/progress`}
+        />
+        <TopicLeaderboardPanel locale={locale as "ru" | "en" | "de"} topicId="g5.proporcii" />
+      </section>
 
       <TopicSkillMap locale={locale as "ru" | "en" | "de"} topicId="g5.proporcii" levels={masteryLevels} />
 
