@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
-import type { SkillProgressMap } from "@/src/lib/progress/types";
+import type { MotivationBadgeKind, MotivationModel } from "@/src/lib/motivation/model";
 
 type Locale = "ru" | "en" | "de";
 
@@ -11,9 +11,9 @@ type Props = {
   locale: Locale;
 };
 
-type ComparePayload = {
+type MotivationPayload = {
   ok?: boolean;
-  percentile?: number | null;
+  motivation?: MotivationModel;
 };
 
 const TOPIC_ID = "g5.proporcii";
@@ -69,42 +69,21 @@ function percent(value: number) {
 
 export function HomeMotivationPanel({ locale }: Props) {
   const t = copy[locale];
-  const [progressMap, setProgressMap] = useState<SkillProgressMap>({});
-  const [percentile, setPercentile] = useState<number | null>(null);
+  const [motivation, setMotivation] = useState<MotivationModel | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
       try {
-        const [progressResponse, compareResponse] = await Promise.all([
-          fetch(`/api/progress?topicId=${encodeURIComponent(TOPIC_ID)}`, {
-            credentials: "same-origin",
-          }),
-          fetch(`/api/compare?topicId=${encodeURIComponent(TOPIC_ID)}`, {
-            credentials: "same-origin",
-          }),
-        ]);
-
-        if (progressResponse.ok) {
-          const progressPayload = (await progressResponse.json()) as {
-            ok?: boolean;
-            progress?: SkillProgressMap;
-          };
-          if (!cancelled && progressPayload.ok && progressPayload.progress) {
-            setProgressMap(progressPayload.progress);
-          }
-        }
-
-        if (compareResponse.ok) {
-          const comparePayload = (await compareResponse.json()) as ComparePayload;
-          if (!cancelled) {
-            setPercentile(
-              typeof comparePayload.percentile === "number"
-                ? comparePayload.percentile
-                : null,
-            );
-          }
+        const response = await fetch(
+          `/api/motivation?topicId=${encodeURIComponent(TOPIC_ID)}&scope=home`,
+          { credentials: "same-origin" },
+        );
+        if (!response.ok) return;
+        const payload = (await response.json()) as MotivationPayload;
+        if (!cancelled && payload.ok && payload.motivation) {
+          setMotivation(payload.motivation);
         }
       } catch {
         // keep fallback values
@@ -117,50 +96,22 @@ export function HomeMotivationPanel({ locale }: Props) {
     };
   }, []);
 
-  const summary = useMemo(() => {
-    const entries = Object.values(progressMap);
-    const totalAttempts = entries.reduce((sum, entry) => sum + entry.total, 0);
-    const totalCorrect = entries.reduce((sum, entry) => sum + entry.correct, 0);
-    const mastered = entries.filter((entry) => entry.status === "mastered").length;
-    const accuracy = totalAttempts > 0 ? totalCorrect / totalAttempts : 0;
+  const badgeLabelByKind = useMemo<Record<MotivationBadgeKind, string>>(
+    () => ({
+      attempts: t.attemptsBadge,
+      accuracy: t.accuracyBadge,
+      mastery: t.masteryBadge,
+      streak: t.masteryBadge,
+      done: t.allDone,
+    }),
+    [t.accuracyBadge, t.allDone, t.attemptsBadge, t.masteryBadge],
+  );
 
-    const level = Math.max(1, Math.floor(totalAttempts / 20) + 1);
-    const xp = totalCorrect * 5 + mastered * 50;
-
-    return {
-      totalAttempts,
-      totalCorrect,
-      mastered,
-      accuracy,
-      level,
-      xp,
-    };
-  }, [progressMap]);
-
-  const badge = useMemo(() => {
-    if (summary.totalAttempts < 30) {
-      return {
-        title: t.attemptsBadge,
-        progress: summary.totalAttempts / 30,
-      };
-    }
-    if (summary.accuracy < 0.8) {
-      return {
-        title: t.accuracyBadge,
-        progress: summary.accuracy / 0.8,
-      };
-    }
-    if (summary.mastered < 3) {
-      return {
-        title: t.masteryBadge,
-        progress: summary.mastered / 3,
-      };
-    }
-    return {
-      title: t.allDone,
-      progress: 1,
-    };
-  }, [summary.accuracy, summary.mastered, summary.totalAttempts, t.accuracyBadge, t.allDone, t.attemptsBadge, t.masteryBadge]);
+  const badgeTitle = motivation ? badgeLabelByKind[motivation.badge.kind] : t.attemptsBadge;
+  const badgeProgress = motivation?.badge.progress ?? 0;
+  const level = motivation?.level ?? 1;
+  const xp = motivation?.xp ?? 0;
+  const rankPercentile = motivation?.rankPercentile ?? null;
 
   return (
     <SurfaceCard className="p-6">
@@ -170,30 +121,30 @@ export function HomeMotivationPanel({ locale }: Props) {
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.level}</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">{summary.level}</p>
+          <p className="mt-1 text-sm font-medium text-slate-900">{level}</p>
         </div>
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.xp}</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">{summary.xp}</p>
+          <p className="mt-1 text-sm font-medium text-slate-900">{xp}</p>
         </div>
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.rank}</p>
           <p className="mt-1 text-sm font-medium text-slate-900">
-            {percentile === null ? t.rankFallback : `${percentile}%`}
+            {rankPercentile === null ? t.rankFallback : `${rankPercentile}%`}
           </p>
         </div>
       </div>
 
       <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.badge}</p>
-        <p className="mt-1 text-sm font-medium text-slate-900">{badge.title}</p>
+        <p className="mt-1 text-sm font-medium text-slate-900">{badgeTitle}</p>
         <p className="mt-2 text-xs text-slate-500">
-          {t.badgeProgress}: {percent(Math.min(1, badge.progress))}
+          {t.badgeProgress}: {percent(Math.min(1, badgeProgress))}
         </p>
         <div className="mt-2 h-2 rounded-full bg-slate-100">
           <div
             className="h-2 rounded-full bg-blue-600 transition-all"
-            style={{ width: `${Math.min(100, Math.round(badge.progress * 100))}%` }}
+            style={{ width: `${Math.min(100, Math.round(badgeProgress * 100))}%` }}
           />
         </div>
       </div>
