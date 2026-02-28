@@ -295,12 +295,13 @@ function parseDifficultiesFromQuery(values: string[]) {
     const sepIndex = item.lastIndexOf(":");
     if (sepIndex <= 0) continue;
     const skillId = item.slice(0, sepIndex);
-    const rawDifficulty = item.slice(sepIndex + 1);
+    const rawDifficulty = item.slice(sepIndex + 1).trim().toLowerCase();
     if (rawDifficulty === "any") {
       parsed[skillId] = "any";
       continue;
     }
-    const difficulty = Number(rawDifficulty);
+    const levelMatch = rawDifficulty.match(/^l(?:evel)?\s*([123])$/);
+    const difficulty = levelMatch ? Number(levelMatch[1]) : Number(rawDifficulty);
     if (difficulty === 1 || difficulty === 2 || difficulty === 3) {
       parsed[skillId] = difficulty;
     }

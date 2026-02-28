@@ -34,6 +34,23 @@ type BuildDemoTemplateParams = {
   mode?: string;
 };
 
+export function parseDemoDifficulty(value: unknown): 1 | 2 | 3 | undefined {
+  if (typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 3) {
+    return value as 1 | 2 | 3;
+  }
+
+  if (typeof value !== "string") return undefined;
+  const normalized = value.trim().toLowerCase();
+  const plain = Number(normalized);
+  if (Number.isInteger(plain) && plain >= 1 && plain <= 3) {
+    return plain as 1 | 2 | 3;
+  }
+
+  const levelMatch = normalized.match(/^l(?:evel)?\s*([123])$/);
+  if (!levelMatch) return undefined;
+  return Number(levelMatch[1]) as 1 | 2 | 3;
+}
+
 export type WorkTitleTemplate = {
   customTitle?: string | null;
   date?: string | null;
@@ -72,12 +89,7 @@ export function validateDemoPlan(plan: DemoPlanItem[], variantsCount: number) {
   const normalized = plan
     .filter((item) => Number.isFinite(item.count) && item.count > 0)
     .map((item) => {
-      const difficultyRaw =
-        typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty;
-      const parsedDifficulty =
-        Number.isInteger(difficultyRaw) && difficultyRaw != null && difficultyRaw >= 1 && difficultyRaw <= 3
-          ? (difficultyRaw as 1 | 2 | 3)
-          : undefined;
+      const parsedDifficulty = parseDemoDifficulty(item.difficulty);
       return {
         ...(typeof item.topicId === "string" && item.topicId.length > 0 ? { topicId: item.topicId } : {}),
         skillId: item.skillId,
@@ -122,14 +134,17 @@ export function buildDemoTemplate({
       gradeLabel: gradeLabels[topicId] ?? "Класс",
       topicLabel: topicLabels[topicId] ?? topicId,
     },
-    sections: plan.map((item) => ({
-      label: skillsById.get(item.skillId)?.title ?? item.skillId,
-      skillIds: [item.skillId],
-      count: item.count,
-      difficulty: item.difficulty
-        ? ([item.difficulty, item.difficulty] as [number, number])
-        : ([1, 5] as [number, number]),
-    })),
+    sections: plan.map((item) => {
+      const parsedDifficulty = parseDemoDifficulty(item.difficulty);
+      return {
+        label: skillsById.get(item.skillId)?.title ?? item.skillId,
+        skillIds: [item.skillId],
+        count: item.count,
+        difficulty: parsedDifficulty
+          ? ([parsedDifficulty, parsedDifficulty] as [number, number])
+          : ([1, 5] as [number, number]),
+      };
+    }),
   };
 }
 
@@ -402,15 +417,17 @@ export async function generateDemoWorkWithVariants(params: {
             topicIds: sourceTopicIds,
             titleTemplate: params.titleTemplate ?? null,
             plan: template.sections.flatMap((section) =>
-              section.skillIds.map((skillId) => ({
-                skillId,
-                count: section.count,
-                ...(section.difficulty[0] === section.difficulty[1] &&
-                section.difficulty[0] >= 1 &&
-                section.difficulty[0] <= 3
-                  ? { difficulty: section.difficulty[0] }
-                  : {}),
-              })),
+              section.skillIds.map((skillId) => {
+                const parsedDifficulty =
+                  section.difficulty[0] === section.difficulty[1]
+                    ? parseDemoDifficulty(section.difficulty[0])
+                    : undefined;
+                return {
+                  skillId,
+                  count: section.count,
+                  ...(parsedDifficulty ? { difficulty: parsedDifficulty } : {}),
+                };
+              }),
             ),
           },
           fit,

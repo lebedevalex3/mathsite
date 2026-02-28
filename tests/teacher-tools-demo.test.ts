@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   buildDemoTemplate,
   buildDemoVariantDrafts,
+  parseDemoDifficulty,
   validateDemoPlan,
   DEMO_MAX_TOTAL_TASKS,
   shuffleItemsWithSeed,
@@ -24,6 +25,26 @@ test('validateDemoPlan normalizes positive counts', () => {
     { skillId: 'd', count: 2, difficulty: 2 },
   ]);
   assert.equal(result.totalPerVariant, 7);
+});
+
+test('parseDemoDifficulty supports legacy string formats', () => {
+  assert.equal(parseDemoDifficulty(1), 1);
+  assert.equal(parseDemoDifficulty('1'), 1);
+  assert.equal(parseDemoDifficulty('L1'), 1);
+  assert.equal(parseDemoDifficulty('level 2'), 2);
+  assert.equal(parseDemoDifficulty('L3'), 3);
+  assert.equal(parseDemoDifficulty('any'), undefined);
+});
+
+test('validateDemoPlan keeps fixed difficulty when payload uses L1/L2/L3', () => {
+  const rawPlan = [
+    { skillId: 'math.proportion.check_proportion', count: 5, difficulty: 'L1' },
+  ] as unknown as Parameters<typeof validateDemoPlan>[0];
+
+  const result = validateDemoPlan(rawPlan, 2);
+  assert.deepEqual(result.normalized, [
+    { skillId: 'math.proportion.check_proportion', count: 5, difficulty: 1 },
+  ]);
 });
 
 test('validateDemoPlan rejects too many tasks', () => {

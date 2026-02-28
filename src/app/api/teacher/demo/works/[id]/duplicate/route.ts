@@ -10,6 +10,7 @@ import { getTeacherToolsTopicSkills } from "@/src/lib/teacher-tools/catalog";
 import {
   buildDemoTemplate,
   generateDemoWorkWithVariants,
+  parseDemoDifficulty,
   type WorkTitleTemplate,
 } from "@/src/lib/teacher-tools/demo";
 import { normalizePrintProfile } from "@/src/lib/variants/print-profile";
@@ -131,21 +132,14 @@ export async function POST(request: Request, { params }: RouteProps) {
       ? generation.plan
           .map((item) => (item && typeof item === "object" ? (item as Record<string, unknown>) : null))
           .filter((item): item is Record<string, unknown> => Boolean(item))
-          .map((item) => ({
-            skillId: typeof item.skillId === "string" ? item.skillId : "",
-            count: typeof item.count === "number" ? Math.max(0, Math.trunc(item.count)) : 0,
-            ...(Number.isInteger(typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty) &&
-            Number(typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty) >= 1 &&
-            Number(typeof item.difficulty === "string" ? Number(item.difficulty) : item.difficulty) <= 3
-              ? {
-                  difficulty: Number(
-                    typeof item.difficulty === "string"
-                      ? Number(item.difficulty)
-                      : item.difficulty,
-                  ) as 1 | 2 | 3,
-                }
-              : {}),
-          }))
+          .map((item) => {
+            const parsedDifficulty = parseDemoDifficulty(item.difficulty);
+            return {
+              skillId: typeof item.skillId === "string" ? item.skillId : "",
+              count: typeof item.count === "number" ? Math.max(0, Math.trunc(item.count)) : 0,
+              ...(parsedDifficulty ? { difficulty: parsedDifficulty } : {}),
+            };
+          })
           .filter((item) => item.skillId.length > 0 && item.count > 0)
       : [];
 
