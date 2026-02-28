@@ -73,17 +73,16 @@ export function aggregateCompare({
   windowDays = DEFAULT_COMPARE_WINDOW_DAYS,
 }: AggregateCompareInput): AggregateCompareResult {
   const topicAttempts = attempts.filter((row) => row.topicId === topicId);
-  const currentUserAttempts = topicAttempts.filter((row) => row.userId === currentUserId);
+  const cutoff = new Date(now.getTime() - windowDays * 24 * 60 * 60 * 1000);
+  const windowAttempts = topicAttempts.filter((row) => row.createdAt >= cutoff);
+  const currentUserAttempts = windowAttempts.filter((row) => row.userId === currentUserId);
   const currentUser = toUserTotals(
     currentUserAttempts.length,
     currentUserAttempts.filter((row) => row.isCorrect).length,
   );
 
-  const cutoff = new Date(now.getTime() - windowDays * 24 * 60 * 60 * 1000);
-  const cohortWindowAttempts = topicAttempts.filter((row) => row.createdAt >= cutoff);
-
   const totalsByUser = new Map<string, { total: number; correct: number }>();
-  for (const row of cohortWindowAttempts) {
+  for (const row of windowAttempts) {
     const current = totalsByUser.get(row.userId) ?? { total: 0, correct: 0 };
     current.total += 1;
     if (row.isCorrect) current.correct += 1;

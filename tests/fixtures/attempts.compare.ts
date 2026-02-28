@@ -37,6 +37,14 @@ export function compareAttemptsFixture(now: Date): CompareAttemptRow[] {
     correct: 9,
     createdAt: daysAgo(now, 5),
   });
+  // Old attempts for current user must be ignored by compare window.
+  pushAttempts(rows, {
+    userId: "user-a",
+    topicId,
+    total: 4,
+    correct: 4,
+    createdAt: daysAgo(now, 45),
+  });
 
   // Cohort users in 30-day window (all >=10)
   pushAttempts(rows, { userId: "user-b", topicId, total: 10, correct: 5, createdAt: daysAgo(now, 2) }); // 50%
