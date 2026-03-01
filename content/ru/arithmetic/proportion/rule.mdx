@@ -91,31 +91,28 @@ return (
       <Practice
         items={[
           {
-            label: "Найти неизвестный крайний член",
+            label: "Найти неизвестный член пропорции",
             readHref: `/${locale}/5-klass/proportion/skills/find-unknown`,
-            trainHref: `/${locale}/5-klass/proportion/train?skill=math.proportion.find_unknown_extreme`,
+            trainHref: `/${locale}/5-klass/proportion/train?skill=math.proportion.find_unknown_term`,
             note: "В текущем банке задач достаточно заданий для режима «10 задач подряд».",
-          },
-          {
-            label: "Найти неизвестный средний член",
-            readHref: `/${locale}/5-klass/proportion/skills/find-unknown`,
-            trainHref: null,
-            disabledReason: "Пока меньше 10 задач",
-            note: "Навык уже есть в банке, но задач пока недостаточно для полноценной тренировки.",
           },
           {
             label: "Проверить пропорцию",
             readHref: `/${locale}/5-klass/proportion/skills/find-unknown`,
-            trainHref: null,
-            disabledReason: "Пока меньше 10 задач",
+            trainHref: `/${locale}/5-klass/proportion/train?skill=math.proportion.check_proportion`,
             note: "Подходит для коротких упражнений на проверку равенства отношений.",
           },
           {
             label: "Применить свойство пропорции",
             readHref: `/${locale}/5-klass/proportion/skills/find-unknown`,
-            trainHref: null,
-            disabledReason: "Пока меньше 10 задач",
+            trainHref: `/${locale}/5-klass/proportion/train?skill=math.proportion.apply_proportion_property`,
             note: "Отдельные задачи на переход к равенству произведений ad = bc.",
+          },
+          {
+            label: "Решить скрытую дробную пропорцию",
+            readHref: `/${locale}/5-klass/proportion/skills/find-unknown`,
+            trainHref: `/${locale}/5-klass/proportion/train?skill=math.proportion.solve_hidden_linear_fraction`,
+            note: "Тренировка на уравнения в форме линейных дробей.",
           },
         ]}
       />

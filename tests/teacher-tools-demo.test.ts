@@ -108,11 +108,11 @@ test('buildDemoTemplate maps plan items into sections and labels', () => {
     topicId: 'math.proportion',
     plan: [
       { skillId: 'math.proportion.find_unknown_term', count: 2 },
-      { skillId: 'math.proportion.solve_scale_word_problem', count: 1 },
+      { skillId: 'math.proportion.solve_hidden_linear_fraction', count: 1 },
     ],
     skillsById: new Map([
       ['math.proportion.find_unknown_term', { title: 'Найти неизвестный член пропорции' }],
-      ['math.proportion.solve_scale_word_problem', { title: 'Масштаб' }],
+      ['math.proportion.solve_hidden_linear_fraction', { title: 'Скрытые дробные пропорции' }],
     ]),
     mode: 'custom',
   });
@@ -136,8 +136,8 @@ test('buildDemoTemplate maps plan items into sections and labels', () => {
         difficulty: [1, 5],
       },
       {
-        label: 'Масштаб',
-        skillIds: ['math.proportion.solve_scale_word_problem'],
+        label: 'Скрытые дробные пропорции',
+        skillIds: ['math.proportion.solve_hidden_linear_fraction'],
         count: 1,
         difficulty: [1, 5],
       },
@@ -148,9 +148,9 @@ test('buildDemoTemplate maps plan items into sections and labels', () => {
 test('buildDemoTemplate supports fixed per-skill difficulty', () => {
   const template = buildDemoTemplate({
     topicId: 'math.proportion',
-    plan: [{ skillId: 'math.proportion.solve_scale_word_problem', count: 2, difficulty: 3 }],
+    plan: [{ skillId: 'math.proportion.solve_hidden_linear_fraction', count: 2, difficulty: 3 }],
     skillsById: new Map([
-      ['math.proportion.solve_scale_word_problem', { title: 'Масштаб' }],
+      ['math.proportion.solve_hidden_linear_fraction', { title: 'Скрытые дробные пропорции' }],
     ]),
     mode: 'custom',
   });

@@ -13,8 +13,8 @@
 
 - IDs are stable:
   - topic_id: math.proportion
-  - skill_id: math.proportion.find_unknown_extreme (или другой из docs/TAXONOMY*.md для topic_id)
-  - task_id: math.proportion.find_unknown_extreme.000123
+  - skill_id: math.proportion.find_unknown_term (или другой из docs/TAXONOMY*.md для topic_id)
+  - task_id: math.proportion.find_unknown_term.000123
 - Math is written as Markdown with LaTeX ($...$, $$...$$).
 - Any change to task bank must pass validation script.
 - No Moodle integration in MVP.

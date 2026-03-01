@@ -75,7 +75,8 @@ test("variant generator selects unique tasks and respects template quotas/constr
 test("variant generator throws InsufficientTasksError when template cannot be satisfied", () => {
   const tasks = createTaskBankFixture().filter(
     (task) =>
-      task.skill_id === "math.proportion.solve_scale_word_problem" && task.difficulty === 4,
+      task.skill_id === "math.proportion.solve_hidden_linear_fraction" &&
+      task.difficulty === 3,
   );
 
   const template = {
@@ -83,9 +84,9 @@ test("variant generator throws InsufficientTasksError when template cannot be sa
     sections: [
       {
         label: "Невыполнимая секция",
-        skillIds: ["math.proportion.solve_scale_word_problem"],
+        skillIds: ["math.proportion.solve_hidden_linear_fraction"],
         count: 10,
-        difficulty: [4, 4] as [number, number],
+        difficulty: [3, 3] as [number, number],
       },
     ],
   };

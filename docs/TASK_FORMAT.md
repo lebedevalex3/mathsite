@@ -13,9 +13,9 @@
   "title": "Пропорции (5 класс): стартовый банк",
   "tasks": [
     {
-      "id": "math.proportion.find_unknown_extreme.000001",
+      "id": "math.proportion.find_unknown_term.000001",
       "topic_id": "math.proportion",
-      "skill_id": "math.proportion.find_unknown_extreme",
+      "skill_id": "math.proportion.find_unknown_term",
       "difficulty": 2,
       "statement_md": "Найди $x$: $$\\\\frac{x}{3}=\\\\frac{8}{12}$$",
       "answer": { "type": "number", "value": 2 }

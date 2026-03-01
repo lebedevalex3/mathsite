@@ -8,54 +8,14 @@ const proportionSkillCards: Record<
   string,
   Pick<TeacherToolsSkill, "cardHref" | "trainerHref" | "example" | "algorithm">
 > = {
-  "math.proportion.recognize_proportion": {
-    cardHref: "/teacher-tools/skills/math.proportion.recognize_proportion",
-    trainerHref: "/topics/proportion/train?skill=math.proportion.recognize_proportion",
-    example: "Является ли равенство 2:3 = 4:6 пропорцией?",
+  "math.proportion.understand_ratio_as_quotient": {
+    cardHref: "/teacher-tools/skills/math.proportion.understand_ratio_as_quotient",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.understand_ratio_as_quotient",
+    example: "Запиши отношение 12:3 как частное и вычисли.",
     algorithm: [
-      "Проверь, что записаны два отношения.",
-      "Сравни их значения или приведи к общему виду.",
-      "Если отношения равны, это пропорция.",
-    ],
-  },
-  "math.proportion.check_proportion": {
-    cardHref: "/teacher-tools/skills/math.proportion.check_proportion",
-    trainerHref: "/topics/proportion/train?skill=math.proportion.check_proportion",
-    example: "Проверь пропорцию: 3/5 = 9/15.",
-    algorithm: [
-      "Перемножь крайние и средние члены.",
-      "Сравни полученные произведения.",
-      "Если они равны, пропорция верна.",
-    ],
-  },
-  "math.proportion.find_unknown_extreme": {
-    cardHref: "/teacher-tools/skills/math.proportion.find_unknown_extreme",
-    trainerHref: "/topics/proportion/train?skill=math.proportion.find_unknown_extreme",
-    example: "Реши пропорцию: x/9 = 4/6.",
-    algorithm: [
-      "Запиши основное свойство пропорции ad = bc.",
-      "Вырази неизвестный крайний член.",
-      "Выполни вычисления и проверь подстановкой.",
-    ],
-  },
-  "math.proportion.find_unknown_middle": {
-    cardHref: "/teacher-tools/skills/math.proportion.find_unknown_middle",
-    trainerHref: "/topics/proportion/train?skill=math.proportion.find_unknown_middle",
-    example: "Реши: 3/x = 6/10.",
-    algorithm: [
-      "Применяй равенство произведений ad = bc.",
-      "Вырази неизвестный средний член через известные.",
-      "Посчитай и проверь ответ.",
-    ],
-  },
-  "math.proportion.apply_proportion_property": {
-    cardHref: "/teacher-tools/skills/math.proportion.apply_proportion_property",
-    trainerHref: "/topics/proportion/train?skill=math.proportion.apply_proportion_property",
-    example: "Используй ad = bc для 4/7 = x/21.",
-    algorithm: [
-      "Перепиши пропорцию в виде произведений ad = bc.",
-      "Подставь известные значения.",
-      "Найди неизвестное и проверь.",
+      "Прочитай запись a:b как a/b.",
+      "Вычисли частное и сократи дробь при необходимости.",
+      "Проверь, что смысл отношения сохранен.",
     ],
   },
   "math.proportion.transform_ratio": {
@@ -78,44 +38,64 @@ const proportionSkillCards: Record<
       "Запиши результат с формулировкой «в ... раз».",
     ],
   },
-  "math.proportion.build_proportion_from_text": {
-    cardHref: "/teacher-tools/skills/math.proportion.build_proportion_from_text",
-    trainerHref: "/topics/proportion/train?skill=math.proportion.build_proportion_from_text",
-    example: "По условию «3 тетради стоят 120 руб.» составь пропорцию для 5 тетрадей.",
+  "math.proportion.part_of_whole_as_ratio": {
+    cardHref: "/teacher-tools/skills/math.proportion.part_of_whole_as_ratio",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.part_of_whole_as_ratio",
+    example: "В классе 20 учеников, 5 из них дежурные. Какую часть составляют дежурные?",
     algorithm: [
-      "Выдели две связанные величины и одинаковую единицу.",
-      "Запиши отношение для известных данных.",
-      "Составь второе отношение и приравняй их.",
+      "Определи часть и целое.",
+      "Запиши отношение часть/целое в виде дроби.",
+      "Сократи дробь и при необходимости переведи в проценты.",
     ],
   },
-  "math.proportion.solve_productivity_word_problem": {
-    cardHref: "/teacher-tools/skills/math.proportion.solve_productivity_word_problem",
-    trainerHref: "/topics/proportion/train?skill=math.proportion.solve_productivity_word_problem",
-    example: "Если 4 рабочих делают задачу за 6 часов, за сколько сделают 6 рабочих?",
+  "math.proportion.recognize_proportion": {
+    cardHref: "/teacher-tools/skills/math.proportion.recognize_proportion",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.recognize_proportion",
+    example: "Является ли равенство 2:3 = 4:6 пропорцией?",
     algorithm: [
-      "Определи тип зависимости (обратная пропорциональность).",
-      "Составь пропорцию между числом рабочих и временем.",
-      "Реши пропорцию и запиши ответ с единицами.",
+      "Проверь, что записаны два отношения.",
+      "Сравни их значения или приведи к общему виду.",
+      "Если отношения равны, это пропорция.",
     ],
   },
-  "math.proportion.solve_scale_word_problem": {
-    cardHref: "/teacher-tools/skills/math.proportion.solve_scale_word_problem",
-    trainerHref: "/topics/proportion/train?skill=math.proportion.solve_scale_word_problem",
-    example: "Масштаб 1:100000, на карте 3 см. Найди расстояние на местности.",
+  "math.proportion.check_proportion": {
+    cardHref: "/teacher-tools/skills/math.proportion.check_proportion",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.check_proportion",
+    example: "Проверь пропорцию: 3/5 = 9/15.",
     algorithm: [
-      "Запиши соответствие масштаба в одинаковых единицах.",
-      "Составь пропорцию «карта - местность».",
-      "Реши и переведи ответ в нужные единицы.",
+      "Перемножь крайние и средние члены.",
+      "Сравни полученные произведения.",
+      "Если они равны, пропорция верна.",
     ],
   },
-  "math.proportion.solve_price_word_problem": {
-    cardHref: "/teacher-tools/skills/math.proportion.solve_price_word_problem",
-    trainerHref: "/topics/proportion/train?skill=math.proportion.solve_price_word_problem",
-    example: "3 кг яблок стоят 180 руб. Сколько стоят 5 кг?",
+  "math.proportion.apply_proportion_property": {
+    cardHref: "/teacher-tools/skills/math.proportion.apply_proportion_property",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.apply_proportion_property",
+    example: "Используй ad = bc для 4/7 = x/21.",
     algorithm: [
-      "Определи, что цена за единицу постоянна.",
-      "Составь пропорцию между количеством и стоимостью.",
-      "Реши пропорцию и проверь смысл ответа.",
+      "Перепиши пропорцию в виде произведений ad = bc.",
+      "Подставь известные значения.",
+      "Найди неизвестное и проверь.",
+    ],
+  },
+  "math.proportion.find_unknown_term": {
+    cardHref: "/teacher-tools/skills/math.proportion.find_unknown_term",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.find_unknown_term",
+    example: "Реши пропорцию: 3:5 = x:20.",
+    algorithm: [
+      "Применяй равенство произведений ad = bc.",
+      "Вырази неизвестный член через известные.",
+      "Посчитай и проверь ответ.",
+    ],
+  },
+  "math.proportion.solve_hidden_linear_fraction": {
+    cardHref: "/teacher-tools/skills/math.proportion.solve_hidden_linear_fraction",
+    trainerHref: "/topics/proportion/train?skill=math.proportion.solve_hidden_linear_fraction",
+    example: "Реши: (x + 2) / 6 = 5 / 3.",
+    algorithm: [
+      "Приведи выражение к пропорции и запиши пары членов.",
+      "Применяй свойство ad = bc.",
+      "Реши уравнение и проверь подстановкой.",
     ],
   },
 };

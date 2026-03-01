@@ -4,22 +4,24 @@
   "topicId": "math.proportion",
   "sections": [
     {
-      "label": "Основное свойство пропорции",
+      "label": "Пропорции и неизвестный член",
       "skillIds": [
-        "math.proportion.find_unknown_extreme",
-        "math.proportion.find_unknown_middle"
+        "math.proportion.check_proportion",
+        "math.proportion.apply_proportion_property",
+        "math.proportion.find_unknown_term"
       ],
       "count": 6,
-      "difficulty": [1, 4]
+      "difficulty": [1, 3]
     },
     {
-      "label": "Задачи на цену и масштаб",
+      "label": "Отношения и скрытые дроби",
       "skillIds": [
-        "math.proportion.solve_price_word_problem",
-        "math.proportion.solve_scale_word_problem"
+        "math.proportion.part_of_whole_as_ratio",
+        "math.proportion.compare_ratio_multiples",
+        "math.proportion.solve_hidden_linear_fraction"
       ],
       "count": 4,
-      "difficulty": [1, 4]
+      "difficulty": [1, 3]
     }
   ],
   "header": {

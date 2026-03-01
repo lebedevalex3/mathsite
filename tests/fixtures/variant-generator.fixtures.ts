@@ -33,12 +33,12 @@ export function createTaskBankFixture(): Task[] {
     }
   };
 
-  addSeries("math.proportion.find_unknown_extreme", 12, [1, 2, 3, 4]);
-  addSeries("math.proportion.find_unknown_middle", 12, [1, 2, 3, 4]);
+  addSeries("math.proportion.find_unknown_term", 12, [1, 2, 3]);
+  addSeries("math.proportion.solve_hidden_linear_fraction", 12, [1, 2, 3]);
   addSeries("math.proportion.apply_proportion_property", 12, [1, 2, 3, 4]);
   addSeries("math.proportion.check_proportion", 12, [1, 2, 3, 4]);
-  addSeries("math.proportion.solve_price_word_problem", 12, [1, 2, 3, 4]);
-  addSeries("math.proportion.solve_scale_word_problem", 12, [2, 3, 4]);
+  addSeries("math.proportion.part_of_whole_as_ratio", 12, [1, 2, 3]);
+  addSeries("math.proportion.compare_ratio_multiples", 12, [1, 2, 3]);
 
   return tasks;
 }
@@ -52,20 +52,20 @@ export function createTemplateFixture(): VariantTemplate {
       {
         label: "Основное свойство",
         skillIds: [
-          "math.proportion.find_unknown_extreme",
-          "math.proportion.find_unknown_middle",
+          "math.proportion.find_unknown_term",
+          "math.proportion.solve_hidden_linear_fraction",
         ],
         count: 6,
         difficulty: [1, 3],
       },
       {
-        label: "Задачи",
+        label: "Отношения",
         skillIds: [
-          "math.proportion.solve_price_word_problem",
-          "math.proportion.solve_scale_word_problem",
+          "math.proportion.part_of_whole_as_ratio",
+          "math.proportion.compare_ratio_multiples",
         ],
         count: 4,
-        difficulty: [2, 4],
+        difficulty: [1, 3],
       },
     ],
     header: {

@@ -143,7 +143,7 @@ pnpm dev
 ### 6) Проверить attempts/progress (MVP)
 
 1. Открой тренажёр, например:
-   - `http://localhost:3000/ru/5-klass/proportion/train?skill=math.proportion.find_unknown_extreme`
+   - `http://localhost:3000/ru/5-klass/proportion/train?skill=math.proportion.find_unknown_term`
 2. Реши несколько задач и нажимай `Check`
 3. Открой:
    - `http://localhost:3000/ru/progress`

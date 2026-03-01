@@ -10,21 +10,21 @@ import { progressAttemptsFixture } from "./fixtures/attempts.progress";
 test("aggregateSkillProgress computes counts, accuracy and status per skill", () => {
   const progress = aggregateSkillProgress(progressAttemptsFixture());
 
-  assert.deepEqual(progress["math.proportion.find_unknown_extreme"], {
+  assert.deepEqual(progress["math.proportion.find_unknown_term"], {
     total: 3,
     correct: 2,
     accuracy: 2 / 3,
     status: "in_progress",
   });
 
-  assert.deepEqual(progress["math.proportion.find_unknown_middle"], {
+  assert.deepEqual(progress["math.proportion.solve_hidden_linear_fraction"], {
     total: 2,
     correct: 0,
     accuracy: 0,
     status: "in_progress",
   });
 
-  assert.deepEqual(progress["math.proportion.solve_price_word_problem"], {
+  assert.deepEqual(progress["math.proportion.part_of_whole_as_ratio"], {
     total: 5,
     correct: 5,
     accuracy: 1,

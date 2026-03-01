@@ -52,7 +52,7 @@ cat .env | grep DATABASE_URL
 
 Рекомендуемый путь (UI):
 1. Открыть:
-   - `http://localhost:3000/ru/5-klass/proportion/train?skill=math.proportion.find_unknown_extreme`
+   - `http://localhost:3000/ru/5-klass/proportion/train?skill=math.proportion.find_unknown_term`
 2. Решить задачу и нажать `Check`
 
 Ожидаемый результат:
@@ -67,8 +67,8 @@ curl -i -X POST http://localhost:3000/api/attempts \
   -H 'Content-Type: application/json' \
   -d '{
     "topicId":"math.proportion",
-    "skillId":"math.proportion.find_unknown_extreme",
-    "taskId":"math.proportion.find_unknown_extreme.000001",
+    "skillId":"math.proportion.find_unknown_term",
+    "taskId":"math.proportion.find_unknown_term.000001",
     "isCorrect":true,
     "userAnswer":"2",
     "durationMs":1500
