@@ -33,13 +33,13 @@ const copy = {
     openSubtopic: "Открыть подтему",
     levelTitleById: {
       base: "База",
-      calculation: "Вычисление",
+      calculation: "Пропорция",
       application: "Применение",
     },
     levelHintById: {
-      base: "Понимание и проверка записи пропорции.",
-      calculation: "Находим неизвестный член и собираем пропорцию.",
-      application: "Решаем типовые задачи на пропорции.",
+      base: "Отношения, сокращение и доля от целого.",
+      calculation: "Распознавание и проверка пропорций, поиск неизвестного члена.",
+      application: "Решение пропорций в скрытой дробной форме.",
     },
     skillLabels: {
       "math.proportion.understand_ratio_as_quotient": {
@@ -80,13 +80,13 @@ const copy = {
     openSubtopic: "Open subtopic",
     levelTitleById: {
       base: "Core",
-      calculation: "Computation",
+      calculation: "Proportion",
       application: "Application",
     },
     levelHintById: {
-      base: "Understanding and checking proportion notation.",
-      calculation: "Finding unknown terms and building proportions.",
-      application: "Solving common proportion word problems.",
+      base: "Ratios, simplification, and part-of-whole.",
+      calculation: "Recognizing and checking proportions, finding unknown terms.",
+      application: "Solving proportions in hidden fraction form.",
     },
     skillLabels: {
       "math.proportion.understand_ratio_as_quotient": {
@@ -128,13 +128,13 @@ const copy = {
     openSubtopic: "Unterthema öffnen",
     levelTitleById: {
       base: "Basis",
-      calculation: "Berechnung",
+      calculation: "Proportion",
       application: "Anwendung",
     },
     levelHintById: {
-      base: "Verständnis und Prüfung der Proportionsschreibweise.",
-      calculation: "Unbekannte Glieder finden und Proportionen aufstellen.",
-      application: "Typische Sachaufgaben zu Proportionen lösen.",
+      base: "Verhaeltnisse, Kuerzen und Anteile.",
+      calculation: "Proportionen erkennen, pruefen und Unbekannte finden.",
+      application: "Proportionen in versteckter Bruchform loesen.",
     },
     skillLabels: {
       "math.proportion.understand_ratio_as_quotient": {

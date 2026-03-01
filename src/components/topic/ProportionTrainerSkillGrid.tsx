@@ -32,7 +32,7 @@ type ProgressPayload = {
   progress?: SkillProgressMap;
 };
 
-type SkillSectionId = "base" | "equations" | "word_problems" | "other";
+type SkillSectionId = "base" | "proportion" | "equations" | "other";
 const DEFAULT_TASK_COUNT = 10;
 const ALLOWED_TASK_COUNTS = [5, 10, 15, 20] as const;
 
@@ -72,14 +72,14 @@ const copy: Record<
     branchCode: "Ветка",
     sectionTitles: {
       base: "База",
-      equations: "Решение пропорций",
-      word_problems: "Текстовые задачи",
+      proportion: "Пропорции",
+      equations: "Уравнения на пропорции",
       other: "Дополнительно",
     },
     sectionHints: {
-      base: "Распознавание и базовые свойства пропорции.",
-      equations: "Поиск неизвестного и составление пропорции.",
-      word_problems: "Применение пропорций в сюжетных задачах.",
+      base: "Отношения, сокращение и доля от целого.",
+      proportion: "Распознавание и проверка пропорций.",
+      equations: "Поиск неизвестного и скрытые дробные формы.",
       other: "Дополнительные навыки темы.",
     },
   },
@@ -99,14 +99,14 @@ const copy: Record<
     branchCode: "Branch",
     sectionTitles: {
       base: "Core",
-      equations: "Proportion Solving",
-      word_problems: "Word Problems",
+      proportion: "Proportions",
+      equations: "Proportion Equations",
       other: "Additional",
     },
     sectionHints: {
-      base: "Recognition and core proportion properties.",
-      equations: "Finding unknowns and building equations.",
-      word_problems: "Applying proportions in word tasks.",
+      base: "Ratios, simplification, and part-of-whole.",
+      proportion: "Recognizing and checking proportions.",
+      equations: "Finding unknown terms and hidden fraction forms.",
       other: "Additional topic skills.",
     },
   },
@@ -126,14 +126,14 @@ const copy: Record<
     branchCode: "Zweig",
     sectionTitles: {
       base: "Basis",
-      equations: "Proportionen loesen",
-      word_problems: "Sachaufgaben",
+      proportion: "Proportionen",
+      equations: "Proportionen als Gleichungen",
       other: "Zusaetzlich",
     },
     sectionHints: {
-      base: "Erkennen und Grundregeln der Proportion.",
-      equations: "Unbekannte finden und Proportionen aufstellen.",
-      word_problems: "Proportionen in Sachaufgaben anwenden.",
+      base: "Verhaeltnisse, Kuerzen und Anteile.",
+      proportion: "Proportionen erkennen und pruefen.",
+      equations: "Unbekannte Glieder und versteckte Bruchformen.",
       other: "Weitere Faehigkeiten im Thema.",
     },
   },
@@ -149,26 +149,25 @@ const sectionRules: Array<{ id: SkillSectionId; skillIds: string[] }> = [
   {
     id: "base",
     skillIds: [
+      "math.proportion.understand_ratio_as_quotient",
+      "math.proportion.transform_ratio",
+      "math.proportion.compare_ratio_multiples",
+      "math.proportion.part_of_whole_as_ratio",
+    ],
+  },
+  {
+    id: "proportion",
+    skillIds: [
       "math.proportion.recognize_proportion",
       "math.proportion.check_proportion",
       "math.proportion.apply_proportion_property",
-      "math.proportion.transform_ratio",
     ],
   },
   {
     id: "equations",
     skillIds: [
-      "math.proportion.find_unknown_extreme",
-      "math.proportion.find_unknown_middle",
-      "math.proportion.build_proportion_from_text",
-    ],
-  },
-  {
-    id: "word_problems",
-    skillIds: [
-      "math.proportion.solve_productivity_word_problem",
-      "math.proportion.solve_scale_word_problem",
-      "math.proportion.solve_price_word_problem",
+      "math.proportion.find_unknown_term",
+      "math.proportion.solve_hidden_linear_fraction",
     ],
   },
 ];
@@ -331,8 +330,8 @@ export function ProportionTrainerSkillGrid({ locale, skills }: Props) {
 
     const ordered: Array<{ id: SkillSectionId; items: SkillItem[] }> = [
       { id: "base", items: bucket.get("base") ?? [] },
+      { id: "proportion", items: bucket.get("proportion") ?? [] },
       { id: "equations", items: bucket.get("equations") ?? [] },
-      { id: "word_problems", items: bucket.get("word_problems") ?? [] },
       { id: "other", items: bucket.get("other") ?? [] },
     ];
 

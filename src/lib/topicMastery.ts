@@ -15,34 +15,33 @@ export const topicMastery: Record<string, TopicMasteryData> = {
       {
         id: "base",
         title: "База",
-        hint: "Понимание и проверка записи пропорции.",
+        hint: "Базовые операции с отношениями и долями.",
         skillIds: [
-          "math.proportion.recognize_proportion",
-          "math.proportion.check_proportion",
-          "math.proportion.apply_proportion_property",
+          "math.proportion.understand_ratio_as_quotient",
+          "math.proportion.transform_ratio",
+          "math.proportion.compare_ratio_multiples",
+          "math.proportion.part_of_whole_as_ratio",
         ],
       },
       {
         id: "calculation",
-        title: "Вычисление",
-        hint: "Находим неизвестный член и собираем пропорцию.",
+        title: "Пропорция",
+        hint: "Распознаем пропорции, проверяем запись и находим неизвестный член.",
         skillIds: [
-          "math.proportion.find_unknown_extreme",
-          "math.proportion.find_unknown_middle",
-          "math.proportion.build_proportion_from_text",
+          "math.proportion.recognize_proportion",
+          "math.proportion.check_proportion",
+          "math.proportion.apply_proportion_property",
+          "math.proportion.find_unknown_term",
         ],
       },
       {
         id: "application",
         title: "Применение",
-        hint: "Решаем типовые задачи на пропорции.",
+        hint: "Решаем пропорции в скрытой форме линейных дробей.",
         skillIds: [
-          "math.proportion.solve_scale_word_problem",
-          "math.proportion.solve_price_word_problem",
-          "math.proportion.solve_productivity_word_problem",
+          "math.proportion.solve_hidden_linear_fraction",
         ],
       },
     ],
   },
 };
-

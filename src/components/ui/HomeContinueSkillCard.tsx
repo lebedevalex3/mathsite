@@ -29,27 +29,27 @@ const SKILL_ORDER: SkillRef[] = [
     },
   },
   {
-    id: "math.proportion.find_unknown_extreme",
+    id: "math.proportion.apply_proportion_property",
     title: {
-      ru: "Найти неизвестный крайний член",
-      en: "Find unknown extreme term",
-      de: "Unbekanntes Außenverhältnis finden",
+      ru: "Проверить по основному свойству",
+      en: "Check with cross multiplication",
+      de: "Mit der Kreuzregel prüfen",
     },
   },
   {
-    id: "math.proportion.find_unknown_middle",
+    id: "math.proportion.find_unknown_term",
     title: {
-      ru: "Найти неизвестный средний член",
-      en: "Find unknown middle term",
-      de: "Unbekanntes Mittelglied finden",
+      ru: "Найти неизвестный член",
+      en: "Find an unknown term",
+      de: "Unbekanntes Glied finden",
     },
   },
   {
-    id: "math.proportion.solve_scale_word_problem",
+    id: "math.proportion.solve_hidden_linear_fraction",
     title: {
-      ru: "Задачи на масштаб",
-      en: "Scale problems",
-      de: "Maßstab-Aufgaben",
+      ru: "Решить скрытую пропорцию",
+      en: "Solve a hidden proportion",
+      de: "Versteckte Proportion lösen",
     },
   },
 ];
