@@ -125,6 +125,55 @@ export const proportionSkills: ProportionSkill[] = [
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 8,
   },
+  {
+    id: "math.proportion.part_of_whole_as_ratio",
+    title: "Доля от целого как отношение",
+    summary: "находить часть от целого в виде дроби",
+    subtopicId: "math.proportion.direct",
+    skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 8,
+  },
+  {
+    id: "math.proportion.recognize_proportion",
+    title: "Определение пропорции",
+    summary: "распознавать и дополнять пропорции",
+    subtopicId: "math.proportion.rule",
+    skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 8,
+  },
+  {
+    id: "math.proportion.check_proportion",
+    title: "Проверка пропорции по определению",
+    summary: "проверять равенство отношений a:b = c:d",
+    subtopicId: "math.proportion.rule",
+    skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 8,
+  },
+  {
+    id: "math.proportion.apply_proportion_property",
+    title: "Проверка пропорции по основному свойству",
+    summary: "проверять пропорции правилом крест-накрест",
+    subtopicId: "math.proportion.rule",
+    skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 8,
+  },
+  {
+    id: "math.proportion.solve_hidden_linear_fraction",
+    title: "Пропорции, замаскированные под линейные дроби",
+    summary: "решать пропорции в виде линейных дробей",
+    subtopicId: "math.proportion.problems",
+    skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 8,
+  },
+  {
+    id: "math.proportion.find_unknown_term",
+    title: "Нахождение неизвестного члена пропорции",
+    summary:
+      "находить неизвестный член пропорции с помощью правила крест-накрест",
+    subtopicId: "math.proportion.rule",
+    skillSlug: DEFAULT_SKILL_PAGE_SLUG,
+    defaultTrainingCount: 8,
+  },
 ];
 
 export const proportionBranches: ProportionBranch[] = [
@@ -145,7 +194,47 @@ export const proportionBranches: ProportionBranch[] = [
       "math.proportion.understand_ratio_as_quotient",
       "math.proportion.transform_ratio",
       "math.proportion.compare_ratio_multiples",
+      "math.proportion.part_of_whole_as_ratio",
     ],
+  },
+  {
+    id: "P",
+    order: 2,
+    title: {
+      ru: "Ветка P: Пропорция",
+      en: "Branch P: Proportion",
+      de: "Zweig P: Proportion",
+    },
+    goal: {
+      ru: "Распознавать пропорции и работать с их записью.",
+      en: "Recognize proportions and work with their notation.",
+      de: "Proportionen erkennen und korrekt notieren.",
+    },
+    skillIds: [
+      "math.proportion.recognize_proportion",
+      "math.proportion.check_proportion",
+      "math.proportion.apply_proportion_property",
+    ],
+    dependsOn: ["O"],
+  },
+  {
+    id: "E",
+    order: 3,
+    title: {
+      ru: "Ветка E: Уравнения на пропорции",
+      en: "Branch E: Proportion Equations",
+      de: "Zweig E: Proportionen als Gleichungen",
+    },
+    goal: {
+      ru: "Решать уравнения, замаскированные под пропорции.",
+      en: "Solve equations disguised as proportions.",
+      de: "Gleichungen loesen, die als Proportionen dargestellt sind.",
+    },
+    skillIds: [
+      "math.proportion.solve_hidden_linear_fraction",
+      "math.proportion.find_unknown_term",
+    ],
+    dependsOn: ["P"],
   },
 ];
 

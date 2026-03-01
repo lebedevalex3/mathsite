@@ -399,6 +399,814 @@
         "numerator": 3,
         "denominator": 2
       }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000001",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 1,
+      "statement_md": "В коробке 20 конфет, из них 5 — шоколадные. Какую часть от общего числа составляют шоколадные конфеты? Сократите дробь.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000002",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 1,
+      "statement_md": "В классе 28 учеников, из них 14 — девочки. Какую часть класса составляют девочки? Сократите дробь.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000003",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 1,
+      "statement_md": "В книге 120 страниц, ученик прочитал 30 страниц. Какую часть книги он прочитал? Сократите дробь.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000004",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 1,
+      "statement_md": "На дереве 36 яблок, из них 9 зелёных. Какую часть всех яблок составляют зелёные? Сократите дробь.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000005",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 2,
+      "statement_md": "В группе 25 человек, 10 из них занимаются шахматами. Какую часть группы составляют шахматисты? Сколько это процентов?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000006",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 2,
+      "statement_md": "На складе 80 коробок, 12 из них с соком. Какую часть всех коробок составляют коробки с соком? Сколько это процентов?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 20
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000007",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 2,
+      "statement_md": "В тесте 40 вопросов, ученик ответил верно на 32. Какую часть всех вопросов он решил верно? Сколько это процентов?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000008",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 2,
+      "statement_md": "В бассейне 50 дорожек, из них 5 закрыты на ремонт. Какую часть дорожек закрыли? Сколько это процентов?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 10
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000009",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 3,
+      "statement_md": "В магазине продали 90 кг яблок и 60 кг груш. Какую часть от всего проданного составляют яблоки? Сократите дробь. Сколько это процентов?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000010",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 3,
+      "statement_md": "В школьной библиотеке 1200 книг. Учебников на 300 больше, чем художественных книг. Какую часть всех книг составляют учебники? Сколько это процентов?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 5,
+        "denominator": 8
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000011",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 3,
+      "statement_md": "В коробке 60 шаров: красных в 2 раза больше, чем синих, остальные — зелёные (их 12). Какую часть всех шаров составляют зелёные? Сколько это процентов?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "math.proportion.part_of_whole_as_ratio.000012",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.part_of_whole_as_ratio",
+      "difficulty": 3,
+      "statement_md": "В классе 30 учеников. Отсутствуют 4 ученика. Какую часть класса составляют отсутствующие? Сколько процентов учеников отсутствует?",
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 15
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000001",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 1,
+      "statement_md": "Дополните пропорцию: 3:8 = 12: __.",
+      "answer": {
+        "type": "number",
+        "value": 32
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000002",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 1,
+      "statement_md": "Дополните пропорцию: __ : 5 = 14 : 10.",
+      "answer": {
+        "type": "number",
+        "value": 7
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000003",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 1,
+      "statement_md": "Дополните пропорцию: 7:9 = 21: __.",
+      "answer": {
+        "type": "number",
+        "value": 27
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000004",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 1,
+      "statement_md": "Дополните пропорцию: __ : 6 = 15 : 18.",
+      "answer": {
+        "type": "number",
+        "value": 5
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000005",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 2,
+      "statement_md": "Какие из записей являются пропорциями (то есть равенствами отношений)? a) 4:6 = 10:15 b) 4:6 = 10:12 c) 4:6 = 2:3. Введите количество верных вариантов.",
+      "answer": {
+        "type": "number",
+        "value": 2
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000006",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 2,
+      "statement_md": "Какие из записей являются пропорциями (то есть равенствами отношений)? a) 9:12 = 3:4 b) 9:12 = 6:9 c) 9:12 = 12:9. Введите количество верных вариантов.",
+      "answer": {
+        "type": "number",
+        "value": 2
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000007",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 2,
+      "statement_md": "Какие из записей являются пропорциями (то есть равенствами отношений)? a) 5:20 = 1:4 b) 5:20 = 2:5 c) 5:20 = 10:40. Введите количество верных вариантов.",
+      "answer": {
+        "type": "number",
+        "value": 2
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000008",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 2,
+      "statement_md": "Какие из записей являются пропорциями (то есть равенствами отношений)? a) 14:21 = 2:3 b) 14:21 = 3:2 c) 14:21 = 4:5. Введите количество верных вариантов.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000009",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 3,
+      "statement_md": "За 2 часа поезд проехал 140 км, а за 3 часа другой поезд проехал 210 км. Запишите отношение их скоростей в сокращенном виде (первого ко второму).",
+      "answer": {
+        "type": "ratio",
+        "left": 1,
+        "right": 1
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000010",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 3,
+      "statement_md": "За 0,5 часа пешеход прошёл 3 км, а за 2 часа другой пешеход прошёл 12 км. Запишите отношение их скоростей в сокращенном виде (первого ко второму).",
+      "answer": {
+        "type": "ratio",
+        "left": 1,
+        "right": 1
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000011",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 3,
+      "statement_md": "Приведите к одним единицам и запишите отношение 45 см к 0,9 м в сокращенном виде.",
+      "answer": {
+        "type": "ratio",
+        "left": 1,
+        "right": 2
+      }
+    },
+    {
+      "id": "math.proportion.recognize_proportion.000012",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.recognize_proportion",
+      "difficulty": 3,
+      "statement_md": "Приведите к одним единицам и запишите отношение 250 г к 1 кг в сокращенном виде.",
+      "answer": {
+        "type": "ratio",
+        "left": 1,
+        "right": 4
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000001",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 1,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 2:3 = 4:6. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000002",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 1,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 3:5 = 9:14. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000003",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 1,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 6:8 = 9:12. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000004",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 1,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 7:9 = 14:20. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000005",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 2,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 12:18 = 20:30. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000006",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 2,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 16:24 = 9:14. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000007",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 2,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 21:28 = 15:18. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000008",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 2,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 25:40 = 15:24. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000009",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 3,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 0,6:1,2 = 3:6. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000010",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 3,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 2,5:5 = 7,5:15. Введите: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000011",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 3,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: (3/4):(1/2) = 9:6. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.check_proportion.000012",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.check_proportion",
+      "difficulty": 3,
+      "statement_md": "Проверьте, верна ли пропорция, используя определение: 0,8:1,6 = 5:8. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000001",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 1,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 2:5 = 6:15. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000002",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 1,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 3:7 = 6:15. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000003",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 1,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 4:9 = 12:27. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000004",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 1,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 5:8 = 15:25. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000005",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 2,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 14:21 = 20:30. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000006",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 2,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 18:24 = 27:36. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000007",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 2,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 16:40 = 12:30. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000008",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 2,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 35:50 = 21:28. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000009",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 3,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 0,6:1,5 = 1,2:3. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000010",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 3,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 2,4:3,6 = 6:8. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 0
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000011",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 3,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 1 1/2 : 2 1/4 = 2 : 3. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.apply_proportion_property.000012",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.apply_proportion_property",
+      "difficulty": 3,
+      "statement_md": "Проверьте, верна ли пропорция, используя основное свойство пропорции: 3 3/5 : 4,5 = 0,8 : 1. Запись: 1 — да, 0 — нет.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000001",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 1,
+      "statement_md": "Найдите $x:$ $\\frac{x + 2}{6} = \\frac{5}{3}$.",
+      "answer": {
+        "type": "number",
+        "value": 8
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000002",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 1,
+      "statement_md": "Найдите $x:$ $\\dfrac{x - 4}{8} = \\dfrac{3}{2}$.",
+      "answer": {
+        "type": "number",
+        "value": 16
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000003",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 1,
+      "statement_md": "Найдите $x:$ $\\dfrac{9}{x - 1} = \\dfrac{3}{2}$.",
+      "answer": {
+        "type": "number",
+        "value": 7
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000004",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 1,
+      "statement_md": "Найдите $x:$ $\\dfrac{x + 1}{4} = \\dfrac{7}{2}$.",
+      "answer": {
+        "type": "number",
+        "value": 13
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000005",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 2,
+      "statement_md": "Найдите $x:$ $\\dfrac{x + 2}{2,4} = \\dfrac{8,5}{6,8}$.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000006",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 2,
+      "statement_md": "Найдите $x:$ $\\dfrac{3,6}{x - 1} = \\dfrac{7,8}{6,5}$.",
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000007",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 2,
+      "statement_md": "Найдите $x:$ $\\dfrac{x - 0,6}{1,5} = \\dfrac{2,4}{3,0}$.",
+      "answer": {
+        "type": "number",
+        "value": 1.8
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000008",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 2,
+      "statement_md": "Найдите $x:$ $\\dfrac{5,6}{x + 0,4} = \\dfrac{2,8}{1,4}$.",
+      "answer": {
+        "type": "number",
+        "value": 2.4
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000009",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 3,
+      "statement_md": "Найдите $x:$  $\\dfrac{x + 3}{\\dfrac{3}{4}} = \\dfrac{8}{\\dfrac{1}{2}}$.",
+      "answer": {
+        "type": "number",
+        "value": 9
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000010",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 3,
+      "statement_md": "Найдите $x:$ $\\dfrac{\\dfrac{5}{6}}{x - \\dfrac{1}{3}} = \\dfrac{5}{4}$.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000011",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 3,
+      "statement_md": "Найдите $x:$ $\\dfrac{x - 2}{1\\dfrac{1}{4}} = \\dfrac{6}{5}$.",
+      "answer": {
+        "type": "number",
+        "value": 3.5
+      }
+    },
+    {
+      "id": "math.proportion.solve_hidden_linear_fraction.000012",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.solve_hidden_linear_fraction",
+      "difficulty": 3,
+      "statement_md": "Найдите $x:$ $\\frac{2\\frac{1}{3}}{x + 1} = \\frac{7}{6}$.",
+      "answer": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000001",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 1,
+      "statement_md": "Найдите x: 3:5 = x:20.",
+      "answer": {
+        "type": "number",
+        "value": 12
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000002",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 1,
+      "statement_md": "Найдите x: x:7 = 12:21.",
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000003",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 1,
+      "statement_md": "Найдите x: 8:x = 4:10.",
+      "answer": {
+        "type": "number",
+        "value": 20
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000004",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 1,
+      "statement_md": "Найдите x: 6:15 = 2:x.",
+      "answer": {
+        "type": "number",
+        "value": 5
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000005",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 2,
+      "statement_md": "Найдите x: 105/70 = x/4.",
+      "answer": {
+        "type": "number",
+        "value": 6
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000006",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 2,
+      "statement_md": "Найдите x: 2/x = 27/108.",
+      "answer": {
+        "type": "number",
+        "value": 8
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000007",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 2,
+      "statement_md": "Найдите x: 84:126 = 10:x.",
+      "answer": {
+        "type": "number",
+        "value": 15
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000008",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 2,
+      "statement_md": "Найдите x: x:45 = 16:60.",
+      "answer": {
+        "type": "number",
+        "value": 12
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000009",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 3,
+      "statement_md": "Найдите x: 2,4:3,6 = x:9.",
+      "answer": {
+        "type": "number",
+        "value": 6
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000010",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 3,
+      "statement_md": "Найдите x: 1,5:x = 6:10.",
+      "answer": {
+        "type": "number",
+        "value": 2.5
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000011",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 3,
+      "statement_md": "Найдите x: 1 1/2 : 2 1/4 = x:6.",
+      "answer": {
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "id": "math.proportion.find_unknown_term.000012",
+      "topic_id": "math.proportion",
+      "skill_id": "math.proportion.find_unknown_term",
+      "difficulty": 3,
+      "statement_md": "Найдите x: x:2,8 = 1,4:0,7.",
+      "answer": {
+        "type": "number",
+        "value": 5.6
+      }
     }
   ]
 }
