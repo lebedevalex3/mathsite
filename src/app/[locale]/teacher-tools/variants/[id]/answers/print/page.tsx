@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
-import { requireTeacherToolsAccess } from "@/src/lib/auth/teacher-tools-guard";
+import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 import { formatTaskAnswer } from "@/src/lib/tasks/answers";
 import { getVariantDetailForOwner } from "@/src/lib/variants/repository";
 
@@ -22,8 +23,8 @@ function PrintStyles() {
 
 export default async function TeacherToolsVariantAnswersPrintPage({ params }: PageProps) {
   const { locale, id } = await params;
-  const user = await requireTeacherToolsAccess(locale);
-  const userId = user.id;
+  const cookieStore = await cookies();
+  const { userId } = await getOrCreateVisitorUser(cookieStore);
   const detail = await getVariantDetailForOwner(id, userId);
   if (!detail) notFound();
 
