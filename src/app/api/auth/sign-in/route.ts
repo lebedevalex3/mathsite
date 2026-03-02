@@ -10,6 +10,7 @@ import {
   verifyPassword,
 } from "@/src/lib/auth/provider";
 import { validateSignInInput } from "@/src/lib/auth/validation";
+import { writeAuditLog } from "@/src/lib/audit/log";
 
 export const runtime = "nodejs";
 
@@ -34,9 +35,18 @@ export async function POST(request: Request) {
     const rateLimit = consumeAuthRateLimit({
       scope: "sign-in",
       headers: request.headers,
-      email: identifier,
+      identifier,
     });
     if (rateLimit.limited) {
+      await writeAuditLog({
+        actorUserId: null,
+        action: "auth.sign_in.blocked",
+        entityType: "auth",
+        entityId: identifier,
+        payload: {
+          reasons: rateLimit.reasons,
+        },
+      });
       const { status, body } = tooManyRequests(
         "Too many sign-in attempts. Please try again later.",
       );
@@ -51,6 +61,15 @@ export async function POST(request: Request) {
 
     const user = await findUserByLogin(identifier);
     if (!user || !user.passwordHash) {
+      await writeAuditLog({
+        actorUserId: null,
+        action: "auth.sign_in.failure",
+        entityType: "auth",
+        entityId: identifier,
+        payload: {
+          reason: "invalid_credentials",
+        },
+      });
       const { status, body } = unauthorized("Invalid credentials");
       logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
@@ -58,6 +77,15 @@ export async function POST(request: Request) {
 
     const valid = await verifyPassword(password, user.passwordHash);
     if (!valid) {
+      await writeAuditLog({
+        actorUserId: user.id,
+        action: "auth.sign_in.failure",
+        entityType: "user",
+        entityId: user.id,
+        payload: {
+          reason: "invalid_credentials",
+        },
+      });
       const { status, body } = unauthorized("Invalid credentials");
       logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
@@ -67,6 +95,15 @@ export async function POST(request: Request) {
     await createAuthSession({
       userId: user.id,
       cookieStore,
+    });
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "auth.sign_in.success",
+      entityType: "user",
+      entityId: user.id,
+      payload: {
+        role: user.role,
+      },
     });
 
     logApiResult(span, 200, { code: "OK" });

@@ -37,9 +37,18 @@ export async function POST(request: Request) {
     const rateLimit = consumeAuthRateLimit({
       scope: "sign-up",
       headers: request.headers,
-      email,
+      identifier: email,
     });
     if (rateLimit.limited) {
+      await writeAuditLog({
+        actorUserId: null,
+        action: "auth.sign_up.blocked",
+        entityType: "auth",
+        entityId: email,
+        payload: {
+          reasons: rateLimit.reasons,
+        },
+      });
       const { status, body } = tooManyRequests(
         "Too many sign-up attempts. Please try again later.",
       );

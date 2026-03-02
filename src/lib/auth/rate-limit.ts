@@ -59,14 +59,16 @@ function consume(
 
 export type AuthRateLimitScope = "sign-in" | "sign-up";
 
-const RULES: Record<AuthRateLimitScope, { ip: RateLimitRule; account: RateLimitRule }> = {
+const RULES: Record<AuthRateLimitScope, { ip: RateLimitRule; identifier: RateLimitRule; pair: RateLimitRule }> = {
   "sign-in": {
     ip: { windowMs: 10 * 60 * 1000, maxAttempts: 25 },
-    account: { windowMs: 10 * 60 * 1000, maxAttempts: 8 },
+    identifier: { windowMs: 10 * 60 * 1000, maxAttempts: 12 },
+    pair: { windowMs: 10 * 60 * 1000, maxAttempts: 8 },
   },
   "sign-up": {
     ip: { windowMs: 10 * 60 * 1000, maxAttempts: 15 },
-    account: { windowMs: 10 * 60 * 1000, maxAttempts: 5 },
+    identifier: { windowMs: 10 * 60 * 1000, maxAttempts: 8 },
+    pair: { windowMs: 10 * 60 * 1000, maxAttempts: 5 },
   },
 };
 
@@ -91,32 +93,49 @@ export function getClientIpFromHeaders(headers: Headers) {
 export function consumeAuthRateLimit(params: {
   scope: AuthRateLimitScope;
   headers: Headers;
-  email: string;
+  identifier: string;
   nowMs?: number;
 }) {
   const rules = RULES[params.scope];
   const nowMs = params.nowMs ?? Date.now();
   const store = getStore();
   const ip = getClientIpFromHeaders(params.headers);
-  const normalizedEmail = params.email.trim().toLowerCase();
+  const normalizedIdentifier = params.identifier.trim().toLowerCase();
 
   const ipResult = consume(store, `${params.scope}:ip:${ip}`, rules.ip, nowMs);
-  const accountResult = consume(
+  const identifierResult = consume(
     store,
-    `${params.scope}:account:${ip}:${normalizedEmail}`,
-    rules.account,
+    `${params.scope}:identifier:${normalizedIdentifier}`,
+    rules.identifier,
+    nowMs,
+  );
+  const pairResult = consume(
+    store,
+    `${params.scope}:pair:${ip}:${normalizedIdentifier}`,
+    rules.pair,
     nowMs,
   );
 
-  if (!ipResult.limited && !accountResult.limited) {
+  const reasons: Array<"ip" | "identifier" | "pair"> = [];
+  if (ipResult.limited) reasons.push("ip");
+  if (identifierResult.limited) reasons.push("identifier");
+  if (pairResult.limited) reasons.push("pair");
+
+  if (reasons.length === 0) {
     return {
       limited: false,
       retryAfterSeconds: 0,
+      reasons,
     } as const;
   }
 
   return {
     limited: true,
-    retryAfterSeconds: Math.max(ipResult.retryAfterSeconds, accountResult.retryAfterSeconds),
+    retryAfterSeconds: Math.max(
+      ipResult.retryAfterSeconds,
+      identifierResult.retryAfterSeconds,
+      pairResult.retryAfterSeconds,
+    ),
+    reasons,
   } as const;
 }

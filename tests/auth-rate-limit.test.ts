@@ -31,7 +31,7 @@ test("consumeAuthRateLimit blocks sign-in after account threshold", () => {
     const result = consumeAuthRateLimit({
       scope: "sign-in",
       headers,
-      email: "student@example.com",
+      identifier: "student@example.com",
       nowMs: 1_000,
     });
     assert.equal(result.limited, false);
@@ -40,11 +40,12 @@ test("consumeAuthRateLimit blocks sign-in after account threshold", () => {
   const blocked = consumeAuthRateLimit({
     scope: "sign-in",
     headers,
-    email: "student@example.com",
+    identifier: "student@example.com",
     nowMs: 1_000,
   });
   assert.equal(blocked.limited, true);
   assert.ok(blocked.retryAfterSeconds >= 1);
+  assert.ok(blocked.reasons.includes("pair"));
 });
 
 test("consumeAuthRateLimit resets after window", () => {
@@ -58,7 +59,7 @@ test("consumeAuthRateLimit resets after window", () => {
     consumeAuthRateLimit({
       scope: "sign-up",
       headers,
-      email: "teacher@example.com",
+      identifier: "teacher@example.com",
       nowMs: 0,
     });
   }
@@ -66,9 +67,35 @@ test("consumeAuthRateLimit resets after window", () => {
   const afterReset = consumeAuthRateLimit({
     scope: "sign-up",
     headers,
-    email: "teacher@example.com",
+    identifier: "teacher@example.com",
     nowMs: 11 * 60 * 1000,
   });
 
   assert.equal(afterReset.limited, false);
+});
+
+test("consumeAuthRateLimit blocks identifier across different IPs", () => {
+  resetRateLimitState();
+
+  for (let i = 0; i < 12; i += 1) {
+    const headers = new Headers({
+      "x-forwarded-for": `198.51.100.${i + 1}`,
+    });
+    const result = consumeAuthRateLimit({
+      scope: "sign-in",
+      headers,
+      identifier: "student@example.com",
+      nowMs: 1_000,
+    });
+    assert.equal(result.limited, false);
+  }
+
+  const blocked = consumeAuthRateLimit({
+    scope: "sign-in",
+    headers: new Headers({ "x-forwarded-for": "203.0.113.200" }),
+    identifier: "student@example.com",
+    nowMs: 1_000,
+  });
+  assert.equal(blocked.limited, true);
+  assert.ok(blocked.reasons.includes("identifier"));
 });
