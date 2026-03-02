@@ -3,6 +3,9 @@
 ## Topic
 
 - `topic_id`: `math.proportion`
+- `section_id`: `math.arithmetic`
+- `module_id`: `math.arithmetic.proportion`
+- `grade_tags`: `5, 6`
 - Название: `Пропорции`
 - Класс: `5`
 
@@ -34,6 +37,12 @@
   - slug: `problems`
   - Заголовок: `Текстовые и скрытые пропорции`
   - Описание: применение пропорций в задачах и нестандартных формах записи
+
+## Branch IDs
+
+- `branch_id`: `math.proportion.direct` — прямые отношения и преобразования
+- `branch_id`: `math.proportion.rule` — проверка и свойства пропорций
+- `branch_id`: `math.proportion.problems` — текстовые и скрытые пропорции
 
 ## Mapping: skill_id -> subtopic_id
 

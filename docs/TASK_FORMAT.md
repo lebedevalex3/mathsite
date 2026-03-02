@@ -10,6 +10,9 @@
 {
   "schema_version": 1,
   "topic_id": "math.proportion",
+  "section_id": "math.arithmetic",
+  "module_id": "math.arithmetic.proportion",
+  "grade_tags": [5, 6],
   "title": "Пропорции (5 класс): стартовый банк",
   "tasks": [
     {
@@ -32,6 +35,13 @@
 - `difficulty`: целое число от `1` до `5`
 - `statement_md`: непустой Markdown-текст (можно использовать LaTeX)
 - `answer`: один из поддерживаемых форматов (см. ниже)
+
+## Поля банка
+
+- `section_id`: раздел курса (например, `math.arithmetic`, `math.algebra`)
+- `module_id`: модуль внутри раздела (например, `math.arithmetic.proportion`)
+- `grade_tags`: список классов-тегов, где материал релевантен (например, `[5, 6]`)
+- `section_id/module_id/grade_tags` должны совпадать с метаданными темы в `docs/TAXONOMY*.md`
 
 ## Ответ
 

@@ -3,6 +3,9 @@
 ## Topic
 
 - `topic_id`: `math.equations`
+- `section_id`: `math.algebra`
+- `module_id`: `math.algebra.equations`
+- `grade_tags`: `5`
 - Название: `Уравнения`
 - Класс: `5`
 
@@ -14,6 +17,21 @@
 - `math.equations.solve_a_plus_minus_x_equals_b` — решать уравнения вида a + x = b и a - x = b
 - `math.equations.solve_multiplication_and_division_equations` — решать уравнения вида a·x = b и x : a = b
 - `math.equations.solve_basic_word_equations` — составлять и решать простые уравнения по условию
+
+## Branch IDs
+
+- `branch_id`: `math.equations.roots` — понятие уравнения, корень, проверка
+- `branch_id`: `math.equations.one_step` — одношаговые уравнения
+- `branch_id`: `math.equations.word` — текстовые задачи через уравнение
+
+## Mapping: skill_id -> branch_id
+
+- `math.equations.understand_equation_and_root` -> `math.equations.roots`
+- `math.equations.check_root` -> `math.equations.roots`
+- `math.equations.solve_x_plus_minus_a_equals_b` -> `math.equations.one_step`
+- `math.equations.solve_a_plus_minus_x_equals_b` -> `math.equations.one_step`
+- `math.equations.solve_multiplication_and_division_equations` -> `math.equations.one_step`
+- `math.equations.solve_basic_word_equations` -> `math.equations.word`
 
 ## Правила стабильности ID
 

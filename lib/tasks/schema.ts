@@ -8,6 +8,18 @@ const topicIdSchema = z
     /^[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/,
     "Invalid topic_id format (expected <namespace>.<topic>)",
   );
+const sectionIdSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/,
+    "Invalid section_id format (expected <namespace>.<section>)",
+  );
+const moduleIdSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/,
+    "Invalid module_id format (expected <namespace>.<section>.<module>)",
+  );
 const skillIdSchema = z
   .string()
   .regex(
@@ -75,12 +87,26 @@ export const taskSchema = z
     }
   });
 
-export const taskBankSchema = z.object({
-  schema_version: z.literal(1),
-  topic_id: topicIdSchema,
-  title: z.string().trim().min(1),
-  tasks: z.array(taskSchema).min(1),
-});
+export const taskBankSchema = z
+  .object({
+    schema_version: z.literal(1),
+    topic_id: topicIdSchema,
+    section_id: sectionIdSchema,
+    module_id: moduleIdSchema,
+    grade_tags: z.array(z.number().int().min(1).max(11)).min(1),
+    title: z.string().trim().min(1),
+    tasks: z.array(taskSchema).min(1),
+  })
+  .superRefine((bank, ctx) => {
+    const uniqueGradeTags = new Set(bank.grade_tags);
+    if (uniqueGradeTags.size !== bank.grade_tags.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["grade_tags"],
+        message: "grade_tags must be unique",
+      });
+    }
+  });
 
 export type NumberAnswer = z.infer<typeof numberAnswerSchema>;
 export type FractionAnswer = z.infer<typeof fractionAnswerSchema>;

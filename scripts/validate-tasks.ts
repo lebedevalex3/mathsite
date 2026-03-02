@@ -25,7 +25,19 @@ async function loadTaxonomies() {
     })),
   );
 
-  const byTopicId = new Map<string, { filePath: string; allowedSkillIds: Set<string>; skillIds: string[] }>();
+  const byTopicId = new Map<
+    string,
+    {
+      filePath: string;
+      sectionId: string;
+      moduleId: string;
+      gradeTags: number[];
+      allowedSkillIds: Set<string>;
+      skillIds: string[];
+      branchIds: Set<string>;
+      skillToBranchId: Map<string, string>;
+    }
+  >();
   for (const item of items) {
     if (byTopicId.has(item.parsed.topicId)) {
       const previous = byTopicId.get(item.parsed.topicId)!;
@@ -35,8 +47,13 @@ async function loadTaxonomies() {
     }
     byTopicId.set(item.parsed.topicId, {
       filePath: item.filePath,
+      sectionId: item.parsed.sectionId,
+      moduleId: item.parsed.moduleId,
+      gradeTags: item.parsed.gradeTags,
       allowedSkillIds: item.parsed.allowedSkillIds,
       skillIds: item.parsed.skills.map((entry) => entry.skillId),
+      branchIds: item.parsed.branchIds,
+      skillToBranchId: item.parsed.skillToBranchId,
     });
   }
 
@@ -299,6 +316,24 @@ async function main() {
       validationErrors.push(
         `${rel(filePath)} | ${task.id} | skill_id not in ${rel(taxonomy.filePath)}: "${task.skill_id}"`,
       );
+      continue;
+    }
+
+    const branchId = taxonomy.skillToBranchId.get(task.skill_id);
+    if (!branchId) {
+      validationErrors.push(
+        `${rel(filePath)} | ${task.id} | no branch mapping for skill_id "${task.skill_id}" in ${rel(
+          taxonomy.filePath,
+        )}`,
+      );
+      continue;
+    }
+    if (!taxonomy.branchIds.has(branchId)) {
+      validationErrors.push(
+        `${rel(filePath)} | ${task.id} | mapped branch_id "${branchId}" is not declared in ${rel(
+          taxonomy.filePath,
+        )}`,
+      );
     }
   }
 
@@ -308,6 +343,24 @@ async function main() {
       validationErrors.push(
         `${rel(filePath)} | bank.topic_id "${bank.topic_id}" has no matching taxonomy file`,
       );
+    } else {
+      if (bank.section_id !== taxonomy.sectionId) {
+        validationErrors.push(
+          `${rel(filePath)} | bank.section_id "${bank.section_id}" must match taxonomy section_id "${taxonomy.sectionId}"`,
+        );
+      }
+      if (bank.module_id !== taxonomy.moduleId) {
+        validationErrors.push(
+          `${rel(filePath)} | bank.module_id "${bank.module_id}" must match taxonomy module_id "${taxonomy.moduleId}"`,
+        );
+      }
+      const bankGrades = [...new Set(bank.grade_tags)].sort((a, b) => a - b);
+      const taxonomyGrades = [...new Set(taxonomy.gradeTags)].sort((a, b) => a - b);
+      if (bankGrades.join(",") !== taxonomyGrades.join(",")) {
+        validationErrors.push(
+          `${rel(filePath)} | bank.grade_tags "${bankGrades.join(",")}" must match taxonomy grade_tags "${taxonomyGrades.join(",")}"`,
+        );
+      }
     }
 
     for (const task of bank.tasks) {
