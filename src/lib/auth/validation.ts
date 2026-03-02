@@ -108,3 +108,55 @@ export function validateStudentId(studentId: string): ValidationResult<{ student
   }
   return { ok: true, value: { studentId } };
 }
+
+export function validateForgotPasswordInput(payload: {
+  email?: unknown;
+}): ValidationResult<{ email: string }> {
+  const email = asString(payload.email).toLowerCase();
+  if (!email) {
+    return {
+      ok: false,
+      error: {
+        code: "AUTH_INPUT_INVALID",
+        message: "email is required",
+      },
+    };
+  }
+  if (!EMAIL_RE.test(email)) {
+    return {
+      ok: false,
+      error: {
+        code: "INVALID_EMAIL",
+        message: "email must be a valid address",
+      },
+    };
+  }
+  return { ok: true, value: { email } };
+}
+
+export function validateResetPasswordInput(payload: {
+  token?: unknown;
+  newPassword?: unknown;
+}): ValidationResult<{ token: string; newPassword: string }> {
+  const token = asString(payload.token);
+  const newPassword = typeof payload.newPassword === "string" ? payload.newPassword : "";
+  if (!token || !newPassword) {
+    return {
+      ok: false,
+      error: {
+        code: "AUTH_PASSWORD_INPUT_INVALID",
+        message: "token and newPassword are required",
+      },
+    };
+  }
+  if (!/^[a-f0-9]{64}$/i.test(token)) {
+    return {
+      ok: false,
+      error: {
+        code: "INVALID_RESET_TOKEN",
+        message: "token format is invalid",
+      },
+    };
+  }
+  return { ok: true, value: { token, newPassword } };
+}

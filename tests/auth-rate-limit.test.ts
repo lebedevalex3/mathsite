@@ -99,3 +99,29 @@ test("consumeAuthRateLimit blocks identifier across different IPs", () => {
   assert.equal(blocked.limited, true);
   assert.ok(blocked.reasons.includes("identifier"));
 });
+
+test("consumeAuthRateLimit enforces forgot-password pair threshold", () => {
+  resetRateLimitState();
+  const headers = new Headers({
+    "x-forwarded-for": "198.51.100.42",
+  });
+
+  for (let i = 0; i < 4; i += 1) {
+    const result = consumeAuthRateLimit({
+      scope: "forgot-password",
+      headers,
+      identifier: "user@example.com",
+      nowMs: 1_000,
+    });
+    assert.equal(result.limited, false);
+  }
+
+  const blocked = consumeAuthRateLimit({
+    scope: "forgot-password",
+    headers,
+    identifier: "user@example.com",
+    nowMs: 1_000,
+  });
+  assert.equal(blocked.limited, true);
+  assert.ok(blocked.reasons.includes("pair"));
+});

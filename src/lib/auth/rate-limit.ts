@@ -57,7 +57,7 @@ function consume(
   };
 }
 
-export type AuthRateLimitScope = "sign-in" | "sign-up";
+export type AuthRateLimitScope = "sign-in" | "sign-up" | "forgot-password";
 
 const RULES: Record<AuthRateLimitScope, { ip: RateLimitRule; identifier: RateLimitRule; pair: RateLimitRule }> = {
   "sign-in": {
@@ -69,6 +69,11 @@ const RULES: Record<AuthRateLimitScope, { ip: RateLimitRule; identifier: RateLim
     ip: { windowMs: 10 * 60 * 1000, maxAttempts: 15 },
     identifier: { windowMs: 10 * 60 * 1000, maxAttempts: 8 },
     pair: { windowMs: 10 * 60 * 1000, maxAttempts: 5 },
+  },
+  "forgot-password": {
+    ip: { windowMs: 10 * 60 * 1000, maxAttempts: 10 },
+    identifier: { windowMs: 10 * 60 * 1000, maxAttempts: 6 },
+    pair: { windowMs: 10 * 60 * 1000, maxAttempts: 4 },
   },
 };
 

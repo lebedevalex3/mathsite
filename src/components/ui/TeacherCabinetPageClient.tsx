@@ -66,6 +66,7 @@ const copy = {
     password: "Пароль",
     signIn: "Войти",
     signUp: "Зарегистрироваться",
+    forgotPassword: "Забыли пароль?",
     signOut: "Выйти",
     signOutAll: "Выйти на всех устройствах",
     loading: "Загрузка...",
@@ -132,6 +133,7 @@ const copy = {
     password: "Password",
     signIn: "Sign in",
     signUp: "Sign up",
+    forgotPassword: "Forgot password?",
     signOut: "Sign out",
     signOutAll: "Sign out all devices",
     loading: "Loading...",
@@ -198,6 +200,7 @@ const copy = {
     password: "Passwort",
     signIn: "Anmelden",
     signUp: "Registrieren",
+    forgotPassword: "Passwort vergessen?",
     signOut: "Abmelden",
     signOutAll: "Auf allen Geraeten abmelden",
     loading: "Laden...",
@@ -908,6 +911,14 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
               >
                 {t.signUp}
               </button>
+            </div>
+            <div>
+              <Link
+                href={`/${locale}/auth/forgot-password`}
+                className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
+              >
+                {t.forgotPassword}
+              </Link>
             </div>
             {error ? <p className="text-sm text-red-700">{error}</p> : null}
           </div>

@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 
 import {
   validateChangePasswordInput,
+  validateForgotPasswordInput,
+  validateResetPasswordInput,
   validateSignInInput,
   validateSignUpInput,
   validateStudentId,
@@ -79,4 +81,21 @@ test("validateStudentId accepts UUID", () => {
   assert.equal(result.ok, true);
   if (!result.ok) return;
   assert.equal(result.value.studentId, "123e4567-e89b-12d3-a456-426614174000");
+});
+
+test("validateForgotPasswordInput requires valid email", () => {
+  const result = validateForgotPasswordInput({ email: "bad-email" });
+  assert.equal(result.ok, false);
+  if (result.ok) return;
+  assert.equal(result.error.code, "INVALID_EMAIL");
+});
+
+test("validateResetPasswordInput checks token format", () => {
+  const result = validateResetPasswordInput({
+    token: "not-token",
+    newPassword: "password123",
+  });
+  assert.equal(result.ok, false);
+  if (result.ok) return;
+  assert.equal(result.error.code, "INVALID_RESET_TOKEN");
 });
