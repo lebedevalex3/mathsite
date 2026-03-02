@@ -17,6 +17,8 @@ import {
 type HomeTopicCatalogProps = {
   locale: AppLocale;
 };
+type GradeFilter = number | "all";
+type DomainFilter = TopicDomain | "all";
 
 const copy = {
   ru: {
@@ -24,9 +26,13 @@ const copy = {
     subtitle: "Ищите темы по доменам и классам.",
     searchPlaceholder: "Найти тему или навык…",
     noResults: "По выбранным фильтрам пока ничего не найдено.",
+    resetFilters: "Сбросить фильтры",
     read: "Читать",
     train: "Тренировать",
     classLabel: "Класс",
+    allGrades: "Все классы",
+    sectionLabel: "Раздел",
+    allSections: "Все разделы",
     domains: {
       arithmetic: "Арифметика",
       algebra: "Алгебра",
@@ -39,9 +45,13 @@ const copy = {
     subtitle: "Browse topics by domain and grade.",
     searchPlaceholder: "Find a topic or skill…",
     noResults: "No topics found for the current filters.",
+    resetFilters: "Reset filters",
     read: "Read",
     train: "Train",
     classLabel: "Grade",
+    allGrades: "All grades",
+    sectionLabel: "Section",
+    allSections: "All sections",
     domains: {
       arithmetic: "Arithmetic",
       algebra: "Algebra",
@@ -54,9 +64,13 @@ const copy = {
     subtitle: "Themen nach Bereich und Klasse filtern.",
     searchPlaceholder: "Thema oder Fähigkeit suchen…",
     noResults: "Keine Themen für die aktuellen Filter gefunden.",
+    resetFilters: "Filter zurücksetzen",
     read: "Lesen",
     train: "Trainieren",
     classLabel: "Klasse",
+    allGrades: "Alle Klassen",
+    sectionLabel: "Bereich",
+    allSections: "Alle Bereiche",
     domains: {
       arithmetic: "Arithmetik",
       algebra: "Algebra",
@@ -68,7 +82,8 @@ const copy = {
 
 const domainOrder: TopicDomain[] = ["arithmetic", "algebra", "geometry", "data"];
 
-function parseDomainParam(value: string | null): TopicDomain | null {
+function parseDomainParam(value: string | null): DomainFilter | null {
+  if (value === "all") return "all";
   if (value === "arithmetic" || value === "algebra" || value === "geometry" || value === "data") {
     return value;
   }
@@ -92,7 +107,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queryDomain = parseDomainParam(searchParams.get("domain"));
-  const domain = queryDomain ?? "arithmetic";
+  const domain = queryDomain ?? "all";
   const gradeOptions = useMemo(
     () =>
       [...new Set(topicCatalogEntries.flatMap((entry) => entry.levels))]
@@ -100,20 +115,26 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
     [],
   );
   const [query, setQuery] = useState("");
-  const [grade, setGrade] = useState<number>(gradeOptions[0] ?? 5);
+  const [grade, setGrade] = useState<GradeFilter>("all");
 
-  function handleDomainChange(nextDomain: TopicDomain) {
+  function handleDomainChange(nextDomain: DomainFilter) {
     const nextParams = new URLSearchParams(searchParams.toString());
     nextParams.set("domain", nextDomain);
 
     router.replace(`${pathname}?${nextParams.toString()}#topics-catalog`, { scroll: false });
   }
 
+  function resetFilters() {
+    setGrade("all");
+    setQuery("");
+    handleDomainChange("all");
+  }
+
   const filtered = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return topicCatalogEntries.filter((entry) => {
-      if (!getTopicDomains(entry).includes(domain)) return false;
-      if (!entry.levels.includes(grade)) return false;
+      if (domain !== "all" && !getTopicDomains(entry).includes(domain)) return false;
+      if (grade !== "all" && !entry.levels.includes(grade)) return false;
 
       if (!normalizedQuery) return true;
 
@@ -153,7 +174,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {domainOrder.map((item) => (
+            {(["all", ...domainOrder] as const).map((item) => (
               <button
                 key={item}
                 type="button"
@@ -165,7 +186,7 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
                     : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface-soft)]",
                 ].join(" ")}
               >
-                {t.domains[item]}
+                {item === "all" ? t.allSections : t.domains[item]}
               </button>
             ))}
           </div>
@@ -175,10 +196,13 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
               {t.classLabel}
             </span>
             <select
-              value={grade}
-              onChange={(event) => setGrade(Number(event.target.value))}
+              value={grade === "all" ? "all" : String(grade)}
+              onChange={(event) => {
+                setGrade(event.target.value === "all" ? "all" : Number(event.target.value));
+              }}
               className="min-w-40 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-strong)]"
             >
+              <option value="all">{t.allGrades}</option>
               {gradeOptions.map((item) => (
                 <option key={item} value={item}>
                   {locale === "ru" ? `${item} класс` : locale === "de" ? `${item}. Klasse` : `Grade ${item}`}
@@ -186,12 +210,34 @@ export function HomeTopicCatalog({ locale }: HomeTopicCatalogProps) {
               ))}
             </select>
           </div>
+          <div className="flex flex-wrap gap-2 text-xs text-[var(--text-muted)]">
+            <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2 py-1">
+              {t.sectionLabel}: {domain === "all" ? t.allSections : t.domains[domain]}
+            </span>
+            <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2 py-1">
+              {t.classLabel}:{" "}
+              {grade === "all"
+                ? t.allGrades
+                : locale === "ru"
+                  ? `${grade} класс`
+                  : locale === "de"
+                    ? `${grade}. Klasse`
+                    : `Grade ${grade}`}
+            </span>
+          </div>
         </div>
       </SurfaceCard>
 
       {filtered.length === 0 ? (
         <SurfaceCard className="p-5">
           <p className="text-sm text-[var(--text-muted)]">{t.noResults}</p>
+          <button
+            type="button"
+            onClick={resetFilters}
+            className="mt-3 inline-flex items-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-soft)]"
+          >
+            {t.resetFilters}
+          </button>
         </SurfaceCard>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

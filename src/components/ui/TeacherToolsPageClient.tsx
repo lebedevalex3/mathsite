@@ -56,6 +56,8 @@ const copy = {
     topicsHelper: "Темы определяют, какие навыки доступны ниже.",
     topicsSearch: "Поиск тем...",
     topicsNotFound: "Темы не найдены",
+    noTopicsForFilters: "Для выбранных фильтров темы не найдены.",
+    resetFilters: "Сбросить фильтры",
     grade: "Класс",
     section: "Раздел",
     allSections: "Все",
@@ -130,6 +132,8 @@ const copy = {
     topicsHelper: "Topics define which skills are available below.",
     topicsSearch: "Search topics...",
     topicsNotFound: "No topics found",
+    noTopicsForFilters: "No topics for selected filters.",
+    resetFilters: "Reset filters",
     grade: "Grade",
     section: "Section",
     allSections: "All",
@@ -204,6 +208,8 @@ const copy = {
     topicsHelper: "Themen bestimmen, welche Skills unten verfügbar sind.",
     topicsSearch: "Themen suchen...",
     topicsNotFound: "Keine Themen gefunden",
+    noTopicsForFilters: "Keine Themen für die gewählten Filter.",
+    resetFilters: "Filter zurücksetzen",
     grade: "Klasse",
     section: "Bereich",
     allSections: "Alle",
@@ -432,23 +438,18 @@ export function TeacherToolsPageClient({ locale }: Props) {
     ? clamp(Math.trunc(initialVariantsRaw), 1, 6)
     : 2;
   const initialShuffleOrder = params.get("shuffle") === "0" ? false : true;
-  const initialTopicMeta = allTopics.find((item) => item.topicId === initialTopicId)?.meta;
   const initialGradeParam = params.get("grade");
   const initialSelectedGrade: GradeFilter =
     initialGradeParam === "all"
       ? "all"
       : initialGradeParam != null && Number.isFinite(Number(initialGradeParam))
         ? Number(initialGradeParam)
-        : (initialTopicMeta?.levels?.[0] ?? 5);
+        : "all";
   const initialDomainParam = params.get("domain");
-  const inferredInitialDomain =
-    (initialTopicMeta ? getTopicDomains(initialTopicMeta)[0] : null) ??
-    (allTopics[0]?.meta ? getTopicDomains(allTopics[0].meta)[0] : null) ??
-    "arithmetic";
   const initialSelectedDomain: SelectedDomainFilter =
     initialDomainParam === "all"
       ? "all"
-      : (initialDomainParam as TopicDomain | null) ?? inferredInitialDomain;
+      : ((initialDomainParam as TopicDomain | null) ?? "all");
 
   const [topicId, setTopicId] = useState(initialTopicId);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>(
@@ -549,6 +550,17 @@ export function TeacherToolsPageClient({ locale }: Props) {
       return next;
     });
   }, [allTopics]);
+
+  useEffect(() => {
+    setSelectedTopicIds((prev) => {
+      const visibleIds = new Set(topics.map((item) => item.topicId));
+      const next = prev.filter((item) => visibleIds.has(item));
+      if (next.length === prev.length && next.every((item, index) => item === prev[index])) {
+        return prev;
+      }
+      return next;
+    });
+  }, [topics]);
 
   useEffect(() => {
     if (selectedTopicIds.length === 0) return;
@@ -823,6 +835,12 @@ export function TeacherToolsPageClient({ locale }: Props) {
     }
   }
 
+  function handleResetTopicFilters() {
+    setSelectedGrade("all");
+    setSelectedDomain("all");
+    setTopicSearchQuery("");
+  }
+
   function buildSkillCardHref(cardHref: string) {
     const query = buildTeacherToolsStateQuery({
       topicId,
@@ -918,6 +936,15 @@ export function TeacherToolsPageClient({ locale }: Props) {
                 {t.section}: {domain === "all" ? t.allSections : t.domains[domain]}
               </button>
             ))}
+          </div>
+          <div className="mb-4 flex flex-wrap gap-2 text-xs text-slate-600">
+            <span className="inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1">
+              {t.section}: {selectedDomain === "all" ? t.allSections : t.domains[selectedDomain]}
+            </span>
+            <span className="inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1">
+              {t.grade}:{" "}
+              {selectedGrade === "all" ? t.allGrades : formatNumber(locale, selectedGrade)}
+            </span>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -1089,6 +1116,18 @@ export function TeacherToolsPageClient({ locale }: Props) {
                     ) : null}
                   </div>
                   <p className="text-xs text-slate-500">{t.topicsHelper}</p>
+                  {topics.length === 0 ? (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                      <p className="text-xs text-slate-600">{t.noTopicsForFilters}</p>
+                      <button
+                        type="button"
+                        onClick={handleResetTopicFilters}
+                        className="mt-2 inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                      >
+                        {t.resetFilters}
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
               </label>
             </div>
