@@ -79,6 +79,7 @@ const copy = {
     redirectedAuth: "Чтобы открыть этот раздел, сначала войдите в личный кабинет.",
     redirectedRole: "Для доступа к этому разделу нужна роль teacher или admin.",
     becomeTeacher: "Стать учителем (dev)",
+    becomeAdmin: "Стать админом (dev)",
     teachersPage: "Страница для учителей",
     goTools: "Открыть конструктор",
     goAdmin: "Открыть админ-панель",
@@ -143,6 +144,7 @@ const copy = {
     redirectedAuth: "Sign in first to open that section.",
     redirectedRole: "Teacher or admin role is required to access that section.",
     becomeTeacher: "Become teacher (dev)",
+    becomeAdmin: "Become admin (dev)",
     teachersPage: "Teachers page",
     goTools: "Open constructor",
     goAdmin: "Open admin panel",
@@ -207,6 +209,7 @@ const copy = {
     redirectedAuth: "Melden Sie sich zuerst an, um diesen Bereich zu öffnen.",
     redirectedRole: "Für diesen Bereich ist die Rolle teacher oder admin erforderlich.",
     becomeTeacher: "Teacher werden (dev)",
+    becomeAdmin: "Admin werden (dev)",
     teachersPage: "Lehrkräfte-Seite",
     goTools: "Konstruktor öffnen",
     goAdmin: "Admin-Bereich öffnen",
@@ -316,6 +319,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   const [historyFilter, setHistoryFilter] = useState<"all" | WorkType>("all");
   const [duplicateWorkId, setDuplicateWorkId] = useState<string | null>(null);
   const [promotingTeacher, setPromotingTeacher] = useState(false);
+  const [promotingAdmin, setPromotingAdmin] = useState(false);
   const [loadingClasses, setLoadingClasses] = useState(false);
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [newClassName, setNewClassName] = useState("");
@@ -459,6 +463,27 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
       setError(t.authError);
     } finally {
       setPromotingTeacher(false);
+    }
+  }
+
+  async function becomeAdminDev() {
+    setPromotingAdmin(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/admin/become", {
+        method: "POST",
+        credentials: "same-origin",
+      });
+      const payload = (await response.json()) as { ok?: boolean; user?: SessionUser; message?: string };
+      if (!response.ok || !payload.ok || !payload.user) {
+        setError(payload.message ?? t.authError);
+        return;
+      }
+      setSessionUser(payload.user);
+    } catch {
+      setError(t.authError);
+    } finally {
+      setPromotingAdmin(false);
     }
   }
 
@@ -762,6 +787,16 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
               >
                 {t.signOut}
               </button>
+              {sessionUser.role !== "admin" ? (
+                <button
+                  type="button"
+                  onClick={() => void becomeAdminDev()}
+                  disabled={promotingAdmin}
+                  className="inline-flex items-center justify-center rounded-lg border border-rose-800 bg-rose-800 px-3 py-2 text-sm font-medium text-white hover:bg-rose-700 disabled:opacity-60"
+                >
+                  {promotingAdmin ? "..." : t.becomeAdmin}
+                </button>
+              ) : null}
             </div>
             {!isTeacherRole ? (
               <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
