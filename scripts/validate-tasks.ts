@@ -4,7 +4,7 @@ import { promises as fs } from "node:fs";
 import { loadTaskBanks } from "../lib/tasks/load";
 import { parseTaxonomyMarkdownDetails } from "../lib/tasks/taxonomy";
 import { analyzeLatexTaskMarkdownCompatibility } from "../src/lib/latex/task-latex-compat";
-import { getCoverageRule } from "./task-coverage.config";
+import { resolveCoverageRule } from "./task-coverage.config";
 
 function rel(filePath: string) {
   return path.relative(process.cwd(), filePath) || filePath;
@@ -52,6 +52,9 @@ type CoverageCell = {
 
 type CoverageSkill = {
   skillId: string;
+  ruleSource: "skill" | "topic" | "default";
+  requiredDifficulties: number[];
+  minTasksPerCell: number;
   total: number;
   cells: CoverageCell[];
 };
@@ -59,8 +62,6 @@ type CoverageSkill = {
 type CoverageTopic = {
   topicId: string;
   taxonomyFilePath: string;
-  requiredDifficulties: number[];
-  minTasksPerCell: number;
   totalTasks: number;
   skills: CoverageSkill[];
 };
@@ -105,10 +106,10 @@ function buildCoverageReport(params: {
 
   const sortedTaxonomies = [...params.taxonomiesByTopicId.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   for (const [topicId, taxonomy] of sortedTaxonomies) {
-    const rule = getCoverageRule(topicId);
     const skills: CoverageSkill[] = [];
 
     for (const skillId of taxonomy.skillIds) {
+      const rule = resolveCoverageRule(topicId, skillId);
       const cells: CoverageCell[] = [];
       let total = 0;
 
@@ -134,7 +135,14 @@ function buildCoverageReport(params: {
         total += count;
       }
 
-      skills.push({ skillId, total, cells });
+      skills.push({
+        skillId,
+        ruleSource: rule.source,
+        requiredDifficulties: rule.requiredDifficulties,
+        minTasksPerCell: rule.minTasksPerCell,
+        total,
+        cells,
+      });
       skillCount += 1;
       cellCount += cells.length;
     }
@@ -142,8 +150,6 @@ function buildCoverageReport(params: {
     topics.push({
       topicId,
       taxonomyFilePath: rel(taxonomy.filePath),
-      requiredDifficulties: rule.requiredDifficulties,
-      minTasksPerCell: rule.minTasksPerCell,
       totalTasks: totalByTopic.get(topicId) ?? 0,
       skills,
     });
@@ -183,18 +189,34 @@ async function writeCoverageReports(report: CoverageReport) {
     lines.push(`## ${topic.topicId}`);
     lines.push("");
     lines.push(`- Taxonomy: \`${topic.taxonomyFilePath}\``);
-    lines.push(`- Required difficulties: \`${topic.requiredDifficulties.join(", ")}\``);
-    lines.push(`- Min tasks per cell: \`${topic.minTasksPerCell}\``);
+    lines.push("- Coverage rule priority: `skill_id -> topic_id -> default`");
     lines.push(`- Total tasks in topic: \`${topic.totalTasks}\``);
     lines.push("");
 
-    const headers = ["skill_id", ...topic.requiredDifficulties.map((value) => `d${value}`), "total"];
+    const topicDifficulties = [...new Set(topic.skills.flatMap((skill) => skill.requiredDifficulties))].sort(
+      (a, b) => a - b,
+    );
+    const headers = [
+      "skill_id",
+      "rule_source",
+      "required_difficulties",
+      "min_per_cell",
+      ...topicDifficulties.map((value) => `d${value}`),
+      "total",
+    ];
     lines.push(`| ${headers.join(" | ")} |`);
     lines.push(`| ${headers.map(() => "---").join(" | ")} |`);
 
     for (const skill of topic.skills) {
-      const cells = skill.cells.map((cell) => (cell.ok ? `${cell.count}` : `${cell.count} ⚠`));
-      lines.push(`| ${skill.skillId} | ${cells.join(" | ")} | ${skill.total} |`);
+      const cellByDifficulty = new Map(skill.cells.map((cell) => [cell.difficulty, cell]));
+      const difficultyCells = topicDifficulties.map((difficulty) => {
+        const cell = cellByDifficulty.get(difficulty);
+        if (!cell) return "—";
+        return cell.ok ? `${cell.count}` : `${cell.count} ⚠`;
+      });
+      lines.push(
+        `| ${skill.skillId} | ${skill.ruleSource} | ${skill.requiredDifficulties.join(",")} | ${skill.minTasksPerCell} | ${difficultyCells.join(" | ")} | ${skill.total} |`,
+      );
     }
     lines.push("");
   }

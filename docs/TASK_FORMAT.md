@@ -70,6 +70,7 @@ pnpm validate:tasks
 - непустой `statement_md`
 - соответствие `skill_id` таксономии `docs/TAXONOMY*.md`
 - матрица покрытия `skill × difficulty × task_count` по правилам из `scripts/task-coverage.config.ts`
+  - приоритет правил: `skill_id -> topic_id -> default`
 
 После запуска формируются отчёты:
 
