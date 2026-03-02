@@ -6,14 +6,15 @@ import { consumeAuthRateLimit } from "@/src/lib/auth/rate-limit";
 import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import {
   createAuthSession,
-  findUserByEmail,
-  sanitizeEmail,
+  findUserByLogin,
+  sanitizeLogin,
   verifyPassword,
 } from "@/src/lib/auth/provider";
 
 export const runtime = "nodejs";
 
 type Payload = {
+  identifier?: unknown;
   email?: unknown;
   password?: unknown;
 };
@@ -22,11 +23,11 @@ export async function POST(request: Request) {
   const span = startApiSpan(request, "/api/auth/sign-in");
   try {
     const body = (await request.json().catch(() => ({}))) as Payload;
-    const email = sanitizeEmail(body.email);
+    const identifier = sanitizeLogin(body.identifier ?? body.email);
     const password = typeof body.password === "string" ? body.password : "";
 
-    if (!email || !password) {
-      const { status, body } = badRequest("email and password are required");
+    if (!identifier || !password) {
+      const { status, body } = badRequest("identifier and password are required");
       logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
     }
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
     const rateLimit = consumeAuthRateLimit({
       scope: "sign-in",
       headers: request.headers,
-      email,
+      email: identifier,
     });
     if (rateLimit.limited) {
       const { status, body } = tooManyRequests(
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
       });
     }
 
-    const user = await findUserByEmail(email);
+    const user = await findUserByLogin(identifier);
     if (!user || !user.passwordHash) {
       const { status, body } = unauthorized("Invalid credentials");
       logApiResult(span, status, { code: body.code, message: body.message });
@@ -76,6 +77,8 @@ export async function POST(request: Request) {
         id: user.id,
         role: user.role,
         email: user.email,
+        username: user.username,
+        mustChangePassword: user.mustChangePassword ?? false,
       },
     });
   } catch (error) {

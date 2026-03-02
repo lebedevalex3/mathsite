@@ -11,13 +11,14 @@ import type { VariantTemplate } from "@/src/lib/variants/types";
 import { buildVariantPlan, InsufficientTasksError } from "@/src/lib/variants/plan";
 import type { WorkType } from "@/src/lib/variants/print-recommendation";
 import { createSeededRng } from "@/src/lib/variants/rng";
+import { GUEST_DEMO_VARIANTS_PER_DAY, GUEST_DEMO_WINDOW_MS } from "@/src/lib/auth/policy";
 
 import type { DemoPlanItem } from "./types";
 
 export const DEMO_MAX_VARIANTS = 6;
 export const DEMO_MAX_TOTAL_TASKS = 60;
-const DEMO_MAX_REQUESTS_PER_WINDOW = 8;
-const DEMO_RATE_WINDOW_MS = 5 * 60 * 1000;
+const DEMO_MAX_REQUESTS_PER_WINDOW = GUEST_DEMO_VARIANTS_PER_DAY;
+const DEMO_RATE_WINDOW_MS = GUEST_DEMO_WINDOW_MS;
 
 export class DemoRateLimitError extends Error {
   status = 429;

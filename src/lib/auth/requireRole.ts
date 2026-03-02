@@ -9,6 +9,8 @@ type CurrentUser = {
   id: string;
   role: AppUserRole;
   visitorId: string | null;
+  email: string | null;
+  username?: string | null;
 };
 
 function createForbiddenError(message: string) {
@@ -29,7 +31,7 @@ export async function getCurrentUserWithRole(cookieStore: ReadonlyRequestCookies
   const { userId } = await getOrCreateVisitorUser(cookieStore);
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, role: true, visitorId: true },
+    select: { id: true, role: true, visitorId: true, email: true, username: true },
   });
 
   if (!user) {

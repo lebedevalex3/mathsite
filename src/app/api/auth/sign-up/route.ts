@@ -12,6 +12,7 @@ import {
 import { consumeAuthRateLimit } from "@/src/lib/auth/rate-limit";
 import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
+import { writeAuditLog } from "@/src/lib/audit/log";
 
 export const runtime = "nodejs";
 
@@ -71,6 +72,15 @@ export async function POST(request: Request) {
       userId: user.id,
       cookieStore,
     });
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "auth.sign_up",
+      entityType: "user",
+      entityId: user.id,
+      payload: {
+        method: "email_password",
+      },
+    });
 
     logApiResult(span, 200, { code: "OK" });
     return NextResponse.json({
@@ -79,6 +89,8 @@ export async function POST(request: Request) {
         id: user.id,
         role: user.role,
         email: user.email,
+        username: user.username,
+        mustChangePassword: user.mustChangePassword ?? false,
       },
     });
   } catch (error) {

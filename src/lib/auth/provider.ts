@@ -29,6 +29,8 @@ export type AuthUser = {
   id: string;
   role: AuthRole;
   email: string | null;
+  username?: string | null;
+  mustChangePassword?: boolean;
 };
 
 function sha256Hex(input: string) {
@@ -36,6 +38,10 @@ function sha256Hex(input: string) {
 }
 
 function normalizeEmail(value: string) {
+  return value.trim().toLowerCase();
+}
+
+function normalizeUsername(value: string) {
   return value.trim().toLowerCase();
 }
 
@@ -135,6 +141,8 @@ export async function getAuthenticatedUserFromCookie(
           id: true,
           role: true,
           email: true,
+          username: true,
+          mustChangePassword: true,
         },
       },
     },
@@ -158,6 +166,29 @@ export async function findUserByEmail(email: string): Promise<AuthUser & { passw
       id: true,
       role: true,
       email: true,
+      username: true,
+      mustChangePassword: true,
+      passwordHash: true,
+    },
+  });
+}
+
+export async function findUserByLogin(login: string): Promise<(AuthUser & { passwordHash: string | null }) | null> {
+  const normalized = login.trim().toLowerCase();
+  if (!normalized) return null;
+
+  if (normalized.includes("@")) {
+    return findUserByEmail(normalized);
+  }
+
+  return prisma.user.findUnique({
+    where: { username: normalizeUsername(normalized) },
+    select: {
+      id: true,
+      role: true,
+      email: true,
+      username: true,
+      mustChangePassword: true,
       passwordHash: true,
     },
   });
@@ -173,15 +204,45 @@ export async function bindCredentialsToUser(params: {
     data: {
       email: normalizeEmail(params.email),
       passwordHash: params.passwordHash,
+      authType: "email_password",
     },
     select: {
       id: true,
       role: true,
       email: true,
+      username: true,
+      mustChangePassword: true,
+    },
+  });
+}
+
+export async function updateUserPassword(params: {
+  userId: string;
+  passwordHash: string;
+  mustChangePassword?: boolean;
+}) {
+  return prisma.user.update({
+    where: { id: params.userId },
+    data: {
+      passwordHash: params.passwordHash,
+      ...(typeof params.mustChangePassword === "boolean"
+        ? { mustChangePassword: params.mustChangePassword }
+        : {}),
+    },
+    select: {
+      id: true,
+      role: true,
+      email: true,
+      username: true,
+      mustChangePassword: true,
     },
   });
 }
 
 export function sanitizeEmail(email: unknown) {
   return typeof email === "string" ? normalizeEmail(email) : "";
+}
+
+export function sanitizeLogin(login: unknown) {
+  return typeof login === "string" ? login.trim().toLowerCase() : "";
 }

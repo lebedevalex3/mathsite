@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/src/lib/db/prisma";
 import { toApiError } from "@/src/lib/api/errors";
 import { getCurrentUserWithRole } from "@/src/lib/variants/auth";
+import { writeAuditLog } from "@/src/lib/audit/log";
 
 export const runtime = "nodejs";
 
@@ -20,16 +21,31 @@ export async function POST() {
     const user = await getCurrentUserWithRole(cookieStore);
 
     if (user.role === "teacher" || user.role === "admin") {
-      return NextResponse.json({ ok: true, role: user.role });
+      return NextResponse.json({
+        ok: true,
+        user: {
+          id: user.id,
+          role: user.role,
+          email: user.email,
+          username: user.username,
+        },
+      });
     }
 
     const updated = await prisma.user.update({
       where: { id: user.id },
       data: { role: "teacher" },
-      select: { role: true },
+      select: { id: true, role: true, email: true, username: true },
+    });
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "user.role.promote_teacher",
+      entityType: "user",
+      entityId: updated.id,
+      payload: { fromRole: user.role, toRole: updated.role, source: "dev_endpoint" },
     });
 
-    return NextResponse.json({ ok: true, role: updated.role });
+    return NextResponse.json({ ok: true, user: updated });
   } catch (error) {
     const { status, body } = toApiError(error, {
       defaultMessage: "Failed to update teacher role.",

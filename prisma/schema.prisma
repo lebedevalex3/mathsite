@@ -13,6 +13,12 @@ enum UserRole {
   admin
 }
 
+enum AuthType {
+  visitor
+  email_password
+  username_password
+}
+
 enum WorkType {
   lesson
   quiz
@@ -21,28 +27,78 @@ enum WorkType {
 }
 
 model User {
-  id        String    @id @default(uuid()) @db.Uuid
-  visitorId String?   @unique
-  email     String?   @unique
-  passwordHash String?
-  role      UserRole  @default(student)
-  createdAt DateTime  @default(now())
-  attempts  Attempt[]
-  variants  Variant[] @relation("VariantOwner")
-  works     Work[]    @relation("WorkOwner")
-  sessions  AuthSession[]
+  id                 String         @id @default(uuid()) @db.Uuid
+  visitorId          String?        @unique
+  email              String?        @unique
+  username           String?        @unique
+  passwordHash       String?
+  authType           AuthType       @default(visitor)
+  mustChangePassword Boolean        @default(false)
+  role               UserRole       @default(student)
+  createdAt          DateTime       @default(now())
+  attempts           Attempt[]
+  variants           Variant[]      @relation("VariantOwner")
+  works              Work[]         @relation("WorkOwner")
+  sessions           AuthSession[]
+  ownedClasses       ClassGroup[]   @relation("ClassOwner")
+  classMemberships   ClassStudent[]
+  auditActions       AuditLog[]     @relation("AuditActor")
+}
+
+model ClassGroup {
+  id             String   @id @default(uuid()) @db.Uuid
+  ownerTeacherId String   @db.Uuid
+  name           String
+  joinCode       String   @unique
+  isArchived     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  ownerTeacher User           @relation("ClassOwner", fields: [ownerTeacherId], references: [id], onDelete: Cascade)
+  students     ClassStudent[]
+
+  @@index([ownerTeacherId, createdAt])
+}
+
+model ClassStudent {
+  id        String   @id @default(uuid()) @db.Uuid
+  classId   String   @db.Uuid
+  studentId String   @db.Uuid
+  isActive  Boolean  @default(true)
+  joinedAt  DateTime @default(now())
+
+  class   ClassGroup @relation(fields: [classId], references: [id], onDelete: Cascade)
+  student User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, studentId])
+  @@index([studentId, joinedAt])
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  actorUserId String?  @db.Uuid
+  action      String
+  entityType  String
+  entityId    String
+  payloadJson Json?
+  createdAt   DateTime @default(now())
+
+  actorUser User? @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId, createdAt])
+  @@index([entityType, entityId, createdAt])
 }
 
 model Attempt {
   id         String   @id @default(uuid()) @db.Uuid
-  userId      String   @db.Uuid
-  topicId     String
-  skillId     String
-  taskId      String
-  isCorrect   Boolean
-  userAnswer  String
-  durationMs  Int
-  createdAt   DateTime @default(now())
+  userId     String   @db.Uuid
+  topicId    String
+  skillId    String
+  taskId     String
+  isCorrect  Boolean
+  userAnswer String
+  durationMs Int
+  createdAt  DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -54,33 +110,33 @@ model Attempt {
 model Variant {
   id          String        @id @default(uuid()) @db.Uuid
   ownerUserId String        @db.Uuid
-  topicId      String
-  templateId   String
-  title        String
-  seed         String
-  createdAt    DateTime     @default(now())
-  owner        User         @relation("VariantOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
-  tasks        VariantTask[]
-  workLinks    WorkVariant[]
+  topicId     String
+  templateId  String
+  title       String
+  seed        String
+  createdAt   DateTime      @default(now())
+  owner       User          @relation("VariantOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  tasks       VariantTask[]
+  workLinks   WorkVariant[]
 
   @@index([ownerUserId, createdAt])
   @@index([topicId, createdAt])
 }
 
 model Work {
-  id             String       @id @default(uuid()) @db.Uuid
-  ownerUserId    String       @db.Uuid
-  topicId        String
-  title          String
-  workType       WorkType
+  id               String    @id @default(uuid()) @db.Uuid
+  ownerUserId      String    @db.Uuid
+  topicId          String
+  title            String
+  workType         WorkType
   printProfileJson Json
-  isDemo         Boolean      @default(false)
-  expiresAt      DateTime?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  isDemo           Boolean   @default(false)
+  expiresAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  owner          User         @relation("WorkOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
-  variants       WorkVariant[]
+  owner    User          @relation("WorkOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  variants WorkVariant[]
 
   @@index([ownerUserId, createdAt])
   @@index([topicId, createdAt])
@@ -89,13 +145,13 @@ model Work {
 
 model WorkVariant {
   id         String   @id @default(uuid()) @db.Uuid
-  workId      String   @db.Uuid
-  variantId   String   @db.Uuid
-  orderIndex  Int
-  createdAt   DateTime @default(now())
+  workId     String   @db.Uuid
+  variantId  String   @db.Uuid
+  orderIndex Int
+  createdAt  DateTime @default(now())
 
-  work        Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
-  variant     Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  work    Work    @relation(fields: [workId], references: [id], onDelete: Cascade)
+  variant Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   @@unique([workId, orderIndex])
   @@unique([workId, variantId])
@@ -103,23 +159,23 @@ model WorkVariant {
 }
 
 model VariantTask {
-  id          String   @id @default(uuid()) @db.Uuid
-  variantId   String   @db.Uuid
-  taskId      String
+  id           String  @id @default(uuid()) @db.Uuid
+  variantId    String  @db.Uuid
+  taskId       String
   sectionLabel String
   orderIndex   Int
-  variant      Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  variant      Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   @@unique([variantId, orderIndex])
   @@index([variantId, sectionLabel])
 }
 
 model AuthSession {
-  id         String   @id @default(uuid()) @db.Uuid
-  userId     String   @db.Uuid
-  tokenHash  String   @unique
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
