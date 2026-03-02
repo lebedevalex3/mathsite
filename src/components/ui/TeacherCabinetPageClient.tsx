@@ -93,6 +93,10 @@ const copy = {
     historyVariantsUnit: "вариантов",
     historyTasksUnit: "задач",
     authError: "Не удалось выполнить действие. Попробуйте ещё раз.",
+    invalidCredentials: "Неверный логин или пароль.",
+    emailExists: "Этот email уже зарегистрирован.",
+    invalidEmail: "Введите корректный email для регистрации.",
+    tooManyAttempts: "Слишком много попыток. Попробуйте позже.",
     passwordHint: "Минимум 8 символов.",
     classesTitle: "Группы",
     classesSubtitle: "Создавайте группы и управляйте учениками без email.",
@@ -153,6 +157,10 @@ const copy = {
     historyVariantsUnit: "variants",
     historyTasksUnit: "tasks",
     authError: "Action failed. Please try again.",
+    invalidCredentials: "Invalid login or password.",
+    emailExists: "This email is already registered.",
+    invalidEmail: "Use a valid email address to sign up.",
+    tooManyAttempts: "Too many attempts. Please try again later.",
     passwordHint: "At least 8 characters.",
     classesTitle: "Classes",
     classesSubtitle: "Create classes and manage students without email.",
@@ -213,6 +221,10 @@ const copy = {
     historyVariantsUnit: "Varianten",
     historyTasksUnit: "Aufgaben",
     authError: "Aktion fehlgeschlagen. Bitte erneut versuchen.",
+    invalidCredentials: "Ungueltiger Login oder Passwort.",
+    emailExists: "Diese E-Mail ist bereits registriert.",
+    invalidEmail: "Geben Sie eine gueltige E-Mail fuer die Registrierung ein.",
+    tooManyAttempts: "Zu viele Versuche. Bitte spaeter erneut versuchen.",
     passwordHint: "Mindestens 8 Zeichen.",
     classesTitle: "Klassen",
     classesSubtitle: "Klassen erstellen und Schüler ohne E-Mail verwalten.",
@@ -323,6 +335,20 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
     temporaryPassword: string;
   } | null>(null);
 
+  function mapAuthError(
+    payload: { code?: string; message?: string } | undefined,
+    authUrl: "/api/auth/sign-in" | "/api/auth/sign-up",
+  ) {
+    const code = payload?.code;
+    if (code === "UNAUTHORIZED") return t.invalidCredentials;
+    if (code === "TOO_MANY_REQUESTS") return t.tooManyAttempts;
+    if (code === "INVALID_EMAIL") return t.invalidEmail;
+    if (authUrl === "/api/auth/sign-up" && (code === "EMAIL_EXISTS" || code === "CONFLICT")) {
+      return t.emailExists;
+    }
+    return payload?.message ?? t.authError;
+  }
+
   const isTeacherRole = sessionUser?.role === "teacher" || sessionUser?.role === "admin";
   const roleText =
     sessionUser?.role === "admin"
@@ -375,13 +401,17 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify({ identifier, password }),
+        body: JSON.stringify(
+          url === "/api/auth/sign-up"
+            ? { email: identifier, identifier, password }
+            : { identifier, password },
+        ),
       });
       const payload = (await response.json()) as
-        | { ok?: boolean; user?: SessionUser; message?: string }
+        | { ok?: boolean; user?: SessionUser; message?: string; code?: string }
         | undefined;
       if (!response.ok || !payload?.ok || !payload.user) {
-        setError(payload?.message ?? t.authError);
+        setError(mapAuthError(payload, url));
         return;
       }
       setSessionUser(payload.user);

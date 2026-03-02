@@ -8,6 +8,7 @@ import {
   updateUserPassword,
   verifyPassword,
 } from "@/src/lib/auth/provider";
+import { validateChangePasswordInput } from "@/src/lib/auth/validation";
 import { prisma } from "@/src/lib/db/prisma";
 import { writeAuditLog } from "@/src/lib/audit/log";
 
@@ -21,13 +22,12 @@ type Payload = {
 export async function POST(request: Request) {
   try {
     const body = (await request.json().catch(() => ({}))) as Payload;
-    const currentPassword = typeof body.currentPassword === "string" ? body.currentPassword : "";
-    const newPassword = typeof body.newPassword === "string" ? body.newPassword : "";
-
-    if (!currentPassword || !newPassword) {
-      const { status, body } = badRequest("currentPassword and newPassword are required");
+    const input = validateChangePasswordInput(body);
+    if (!input.ok) {
+      const { status, body } = badRequest(input.error.message, input.error.code);
       return NextResponse.json(body, { status });
     }
+    const { currentPassword, newPassword } = input.value;
 
     const cookieStore = await cookies();
     const authUser = await getAuthenticatedUserFromCookie(cookieStore);

@@ -7,8 +7,8 @@ import {
   createAuthSession,
   findUserByEmail,
   hashPassword,
-  sanitizeEmail,
 } from "@/src/lib/auth/provider";
+import { validateSignUpInput } from "@/src/lib/auth/validation";
 import { consumeAuthRateLimit } from "@/src/lib/auth/rate-limit";
 import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
@@ -17,6 +17,7 @@ import { writeAuditLog } from "@/src/lib/audit/log";
 export const runtime = "nodejs";
 
 type Payload = {
+  identifier?: unknown;
   email?: unknown;
   password?: unknown;
 };
@@ -25,14 +26,13 @@ export async function POST(request: Request) {
   const span = startApiSpan(request, "/api/auth/sign-up");
   try {
     const body = (await request.json().catch(() => ({}))) as Payload;
-    const email = sanitizeEmail(body.email);
-    const password = typeof body.password === "string" ? body.password : "";
-
-    if (!email || !password) {
-      const { status, body } = badRequest("email and password are required");
+    const input = validateSignUpInput(body);
+    if (!input.ok) {
+      const { status, body } = badRequest(input.error.message, input.error.code);
       logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
     }
+    const { email, password } = input.value;
 
     const rateLimit = consumeAuthRateLimit({
       scope: "sign-up",
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
 
     const existing = await findUserByEmail(email);
     if (existing) {
-      const { status, body } = conflict("Email already exists");
+      const { status, body } = conflict("Email already exists", "EMAIL_EXISTS");
       logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
     }

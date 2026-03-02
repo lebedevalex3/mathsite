@@ -1,8 +1,9 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { forbidden, notFound, toApiError, unauthorized } from "@/src/lib/api/errors";
+import { badRequest, forbidden, notFound, toApiError, unauthorized } from "@/src/lib/api/errors";
 import { getAuthenticatedUserFromCookie, hashPassword } from "@/src/lib/auth/provider";
+import { validateStudentId } from "@/src/lib/auth/validation";
 import { isTeacherRole } from "@/src/lib/auth/access";
 import { prisma } from "@/src/lib/db/prisma";
 import { generateTemporaryPassword } from "@/src/lib/classrooms/credentials";
@@ -34,7 +35,13 @@ async function canResetStudentPassword(actor: { id: string; role: "student" | "t
 
 export async function POST(_: Request, { params }: RouteProps) {
   try {
-    const { id: studentId } = await params;
+    const { id } = await params;
+    const studentIdInput = validateStudentId(id);
+    if (!studentIdInput.ok) {
+      const { status, body } = badRequest(studentIdInput.error.message, studentIdInput.error.code);
+      return NextResponse.json(body, { status });
+    }
+    const { studentId } = studentIdInput.value;
     const cookieStore = await cookies();
     const actor = await getAuthenticatedUserFromCookie(cookieStore);
     if (!actor) {

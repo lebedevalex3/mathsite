@@ -7,9 +7,9 @@ import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import {
   createAuthSession,
   findUserByLogin,
-  sanitizeLogin,
   verifyPassword,
 } from "@/src/lib/auth/provider";
+import { validateSignInInput } from "@/src/lib/auth/validation";
 
 export const runtime = "nodejs";
 
@@ -23,14 +23,13 @@ export async function POST(request: Request) {
   const span = startApiSpan(request, "/api/auth/sign-in");
   try {
     const body = (await request.json().catch(() => ({}))) as Payload;
-    const identifier = sanitizeLogin(body.identifier ?? body.email);
-    const password = typeof body.password === "string" ? body.password : "";
-
-    if (!identifier || !password) {
-      const { status, body } = badRequest("identifier and password are required");
+    const input = validateSignInInput(body);
+    if (!input.ok) {
+      const { status, body } = badRequest(input.error.message, input.error.code);
       logApiResult(span, status, { code: body.code, message: body.message });
       return NextResponse.json(body, { status });
     }
+    const { identifier, password } = input.value;
 
     const rateLimit = consumeAuthRateLimit({
       scope: "sign-in",
