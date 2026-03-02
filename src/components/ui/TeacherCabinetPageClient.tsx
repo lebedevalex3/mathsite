@@ -81,6 +81,7 @@ const copy = {
     becomeTeacher: "Стать учителем (dev)",
     teachersPage: "Страница для учителей",
     goTools: "Открыть конструктор",
+    goAdmin: "Открыть админ-панель",
     historyTitle: "Мои работы",
     historySubtitle: "Сохранённые работы в личном кабинете.",
     historySearch: "Поиск по названию...",
@@ -140,6 +141,7 @@ const copy = {
     becomeTeacher: "Become teacher (dev)",
     teachersPage: "Teachers page",
     goTools: "Open constructor",
+    goAdmin: "Open admin panel",
     historyTitle: "My works",
     historySubtitle: "Saved works in your workspace.",
     historySearch: "Search by title...",
@@ -199,6 +201,7 @@ const copy = {
     becomeTeacher: "Teacher werden (dev)",
     teachersPage: "Lehrkräfte-Seite",
     goTools: "Konstruktor öffnen",
+    goAdmin: "Admin-Bereich öffnen",
     historyTitle: "Meine Arbeiten",
     historySubtitle: "Gespeicherte Arbeiten im persönlichen Bereich.",
     historySearch: "Nach Titel suchen...",
@@ -713,6 +716,14 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
               >
                 {t.goTools}
               </Link>
+              {sessionUser.role === "admin" ? (
+                <Link
+                  href={`/${locale}/admin`}
+                  className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+                >
+                  {t.goAdmin}
+                </Link>
+              ) : null}
               <button
                 type="button"
                 onClick={() => void signOut()}

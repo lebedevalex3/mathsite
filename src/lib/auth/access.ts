@@ -4,6 +4,10 @@ export function isTeacherRole(role: AuthUser["role"]) {
   return role === "teacher" || role === "admin";
 }
 
+export function isAdminRole(role: AuthUser["role"]) {
+  return role === "admin";
+}
+
 export function getTeacherToolsRedirectReason(user: AuthUser | null): "auth" | "role" | null {
   if (!user) return "auth";
   if (!isTeacherRole(user.role)) return "role";
