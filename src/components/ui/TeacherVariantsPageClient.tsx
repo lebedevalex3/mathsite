@@ -132,16 +132,17 @@ export function TeacherVariantsPageClient({
       });
       const payload = (await response.json()) as {
         ok?: boolean;
-        role?: typeof role;
+        user?: { role?: typeof role };
         code?: string;
         error?: string;
         message?: string;
       };
-      if (!response.ok || !payload.ok || !payload.role) {
+      const nextRole = payload.user?.role;
+      if (!response.ok || !payload.ok || !nextRole) {
         setError(parseApiError(payload, "Не удалось выдать роль учителя."));
         return;
       }
-      setRole(payload.role);
+      setRole(nextRole);
       setNotice("Роль учителя выдана.");
     } catch {
       setError({ message: "Ошибка сети при выдаче роли учителя." });

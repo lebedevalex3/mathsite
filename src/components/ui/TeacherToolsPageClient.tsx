@@ -81,6 +81,11 @@ const copy = {
     total: "Всего задач в варианте",
     bySkills: "Распределение по навыкам",
     note: "Можно попробовать без регистрации. Войти нужно только для сохранения истории в teacher-кабинете.",
+    demoLimitTitle: "Демо-лимит для гостя исчерпан",
+    demoLimitBody:
+      "Вы использовали 3 демо-варианта за сутки. Чтобы продолжить генерацию, войдите или зарегистрируйтесь.",
+    demoLimitSignIn: "Войти",
+    demoLimitSignUp: "Регистрация",
     historyTitle: "История работ",
     historySubtitle: "Последние собранные работы. Можно открыть, создать копию и закрепить.",
     historySearch: "Поиск по названию...",
@@ -150,6 +155,11 @@ const copy = {
     total: "Total tasks per variant",
     bySkills: "Distribution by skills",
     note: "You can try it without registration. Sign-in is only needed to save history in the teacher workspace.",
+    demoLimitTitle: "Guest demo limit reached",
+    demoLimitBody:
+      "You have used 3 demo variants for today. Sign in or register to continue generating variants.",
+    demoLimitSignIn: "Sign in",
+    demoLimitSignUp: "Sign up",
     historyTitle: "Work history",
     historySubtitle: "Recently generated works. Open, duplicate, or pin.",
     historySearch: "Search by title...",
@@ -219,6 +229,11 @@ const copy = {
     total: "Gesamtaufgaben pro Variante",
     bySkills: "Verteilung nach Fähigkeiten",
     note: "Ohne Registrierung testbar. Anmeldung ist nur zum Speichern im Lehrkräfte-Bereich nötig.",
+    demoLimitTitle: "Gast-Demo-Limit erreicht",
+    demoLimitBody:
+      "Sie haben heute 3 Demo-Varianten genutzt. Melden Sie sich an oder registrieren Sie sich, um weiter zu generieren.",
+    demoLimitSignIn: "Anmelden",
+    demoLimitSignUp: "Registrieren",
     historyTitle: "Arbeitsverlauf",
     historySubtitle: "Zuletzt erstellte Arbeiten. Öffnen, kopieren, anheften.",
     historySearch: "Nach Titel suchen...",
@@ -460,6 +475,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const [loadingTopic, setLoadingTopic] = useState(false);
   const [building, setBuilding] = useState(false);
   const [error, setError] = useState<TeacherApiError | null>(null);
+  const [requiresGuestRegistration, setRequiresGuestRegistration] = useState(false);
   const themesPickerRef = useRef<HTMLDivElement | null>(null);
 
   const gradeOptions = useMemo(
@@ -786,9 +802,14 @@ export function TeacherToolsPageClient({ locale }: Props) {
       });
       const payload = (await response.json()) as GenerateResponse;
       if (!response.ok || !payload.ok) {
-        setError(parseTeacherError(payload, "Не удалось собрать варианты."));
+        const parsedError = parseTeacherError(payload, "Не удалось собрать варианты.");
+        if (parsedError.code === "RATE_LIMITED") {
+          setRequiresGuestRegistration(true);
+        }
+        setError(parsedError);
         return;
       }
+      setRequiresGuestRegistration(false);
       const nextWorkId = typeof payload.workId === "string" ? payload.workId : null;
       if (nextWorkId) {
         router.push(`/${locale}/teacher-tools/works/${nextWorkId}`);
@@ -858,6 +879,26 @@ export function TeacherToolsPageClient({ locale }: Props) {
       </section>
 
       {error ? <TeacherErrorState error={error} locale={locale} /> : null}
+      {requiresGuestRegistration ? (
+        <SurfaceCard className="border-amber-300 bg-amber-50 p-6">
+          <h2 className="text-lg font-semibold text-amber-950">{t.demoLimitTitle}</h2>
+          <p className="mt-2 text-sm leading-6 text-amber-900">{t.demoLimitBody}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link
+              href={`/${locale}/teacher-cabinet`}
+              className="inline-flex items-center justify-center rounded-lg border border-amber-950 bg-amber-950 px-3 py-2 text-sm font-medium text-white hover:bg-amber-800"
+            >
+              {t.demoLimitSignIn}
+            </Link>
+            <Link
+              href={`/${locale}/teacher-cabinet`}
+              className="inline-flex items-center justify-center rounded-lg border border-amber-500 bg-white px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100"
+            >
+              {t.demoLimitSignUp}
+            </Link>
+          </div>
+        </SurfaceCard>
+      ) : null}
 
       <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
         <SurfaceCard className="p-6">
@@ -1265,7 +1306,13 @@ export function TeacherToolsPageClient({ locale }: Props) {
             <button
               type="button"
               onClick={handleBuild}
-              disabled={building || loadingTopic || summary.total < 1 || insufficientBySelection.length > 0}
+              disabled={
+                requiresGuestRegistration ||
+                building ||
+                loadingTopic ||
+                summary.total < 1 ||
+                insufficientBySelection.length > 0
+              }
               className="inline-flex items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60 lg:hidden"
             >
               {building ? `${t.build}...` : t.build}
@@ -1281,7 +1328,13 @@ export function TeacherToolsPageClient({ locale }: Props) {
           <button
             type="button"
             onClick={handleBuild}
-            disabled={building || loadingTopic || summary.total < 1 || insufficientBySelection.length > 0}
+            disabled={
+              requiresGuestRegistration ||
+              building ||
+              loadingTopic ||
+              summary.total < 1 ||
+              insufficientBySelection.length > 0
+            }
             className="mt-4 hidden w-full items-center justify-center rounded-lg border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60 lg:inline-flex"
           >
             {building ? `${t.build}...` : t.build}

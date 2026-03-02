@@ -85,8 +85,10 @@ export async function POST(request: Request) {
 
   try {
     const cookieStore = await cookies();
-    const { userId } = await getOrCreateVisitorUser(cookieStore);
-    await enforceDemoRateLimit(userId);
+    const { userId, visitorId } = await getOrCreateVisitorUser(cookieStore);
+    if (visitorId) {
+      await enforceDemoRateLimit(userId);
+    }
 
     const topics = await Promise.all(topicIds.map((topicId) => getTeacherToolsTopicSkills(topicId)));
     if (topics.some((topic) => !topic)) {
