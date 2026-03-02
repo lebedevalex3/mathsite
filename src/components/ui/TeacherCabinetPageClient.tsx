@@ -104,6 +104,7 @@ const copy = {
     newStudentUsernamePlaceholder: "username (опционально)",
     createStudent: "Создать ученика",
     removeStudent: "Удалить из группы",
+    resetStudentPassword: "Сбросить пароль",
     temporaryPassword: "Временный пароль",
     temporaryPasswordHint: "Покажите ученику один раз. При первом входе пароль нужно сменить.",
     mustChangePassword: "Требуется смена пароля",
@@ -162,6 +163,7 @@ const copy = {
     newStudentUsernamePlaceholder: "username (optional)",
     createStudent: "Create student",
     removeStudent: "Remove from class",
+    resetStudentPassword: "Reset password",
     temporaryPassword: "Temporary password",
     temporaryPasswordHint: "Show it once to the student. They must change it after first sign-in.",
     mustChangePassword: "Password change required",
@@ -220,6 +222,7 @@ const copy = {
     newStudentUsernamePlaceholder: "Username (optional)",
     createStudent: "Schüler erstellen",
     removeStudent: "Aus Klasse entfernen",
+    resetStudentPassword: "Passwort zurücksetzen",
     temporaryPassword: "Temporäres Passwort",
     temporaryPasswordHint: "Nur einmal dem Schüler zeigen. Beim ersten Login muss es geändert werden.",
     mustChangePassword: "Passwortänderung erforderlich",
@@ -307,7 +310,12 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   const [newStudentUsername, setNewStudentUsername] = useState("");
   const [creatingStudent, setCreatingStudent] = useState(false);
   const [removingStudentId, setRemovingStudentId] = useState<string | null>(null);
+  const [resettingStudentId, setResettingStudentId] = useState<string | null>(null);
   const [lastCreatedCredentials, setLastCreatedCredentials] = useState<{
+    username: string | null;
+    temporaryPassword: string;
+  } | null>(null);
+  const [lastResetCredentials, setLastResetCredentials] = useState<{
     username: string | null;
     temporaryPassword: string;
   } | null>(null);
@@ -544,6 +552,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
     setCreatingStudent(true);
     setError(null);
     setLastCreatedCredentials(null);
+    setLastResetCredentials(null);
     try {
       const response = await fetch(`/api/classes/${selectedClassId}/students`, {
         method: "POST",
@@ -595,6 +604,39 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
       setError(t.authError);
     } finally {
       setRemovingStudentId(null);
+    }
+  }
+
+  async function resetStudentPassword(studentId: string) {
+    setResettingStudentId(studentId);
+    setError(null);
+    setLastResetCredentials(null);
+    try {
+      const response = await fetch(`/api/students/${studentId}/reset-password`, {
+        method: "POST",
+        credentials: "same-origin",
+      });
+      const payload = (await response.json()) as {
+        ok?: boolean;
+        message?: string;
+        student?: { username: string | null };
+        temporaryPassword?: string;
+      };
+      if (!response.ok || !payload.ok || !payload.temporaryPassword) {
+        setError(payload.message ?? t.authError);
+        return;
+      }
+      setLastResetCredentials({
+        username: payload.student?.username ?? null,
+        temporaryPassword: payload.temporaryPassword,
+      });
+      if (selectedClassId) {
+        await loadStudents(selectedClassId);
+      }
+    } catch {
+      setError(t.authError);
+    } finally {
+      setResettingStudentId(null);
     }
   }
 
@@ -846,6 +888,16 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
                   </div>
                 ) : null}
 
+                {lastResetCredentials ? (
+                  <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+                    <p>
+                      <span className="font-semibold">{t.temporaryPassword}:</span>{" "}
+                      <code>{lastResetCredentials.temporaryPassword}</code>
+                    </p>
+                    <p className="mt-1 text-xs">{t.temporaryPasswordHint}</p>
+                  </div>
+                ) : null}
+
                 {loadingStudents ? (
                   <p className="text-sm text-slate-600">...</p>
                 ) : students.length === 0 ? (
@@ -863,14 +915,24 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
                             <p className="text-xs text-amber-700">{t.mustChangePassword}</p>
                           ) : null}
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => void removeStudent(student.id)}
-                          disabled={removingStudentId === student.id}
-                          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
-                        >
-                          {removingStudentId === student.id ? "..." : t.removeStudent}
-                        </button>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => void resetStudentPassword(student.id)}
+                            disabled={resettingStudentId === student.id}
+                            className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
+                          >
+                            {resettingStudentId === student.id ? "..." : t.resetStudentPassword}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void removeStudent(student.id)}
+                            disabled={removingStudentId === student.id}
+                            className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
+                          >
+                            {removingStudentId === student.id ? "..." : t.removeStudent}
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
