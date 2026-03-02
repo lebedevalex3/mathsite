@@ -11,6 +11,7 @@ import {
 } from "@/src/lib/auth/provider";
 import { validateSignInInput } from "@/src/lib/auth/validation";
 import { writeAuditLog } from "@/src/lib/audit/log";
+import { verifyCsrfRequest } from "@/src/lib/auth/csrf";
 
 export const runtime = "nodejs";
 
@@ -23,6 +24,14 @@ type Payload = {
 export async function POST(request: Request) {
   const span = startApiSpan(request, "/api/auth/sign-in");
   try {
+    const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequest(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      logApiResult(span, status, { code: body.code, message: body.message });
+      return NextResponse.json(body, { status });
+    }
+
     const body = (await request.json().catch(() => ({}))) as Payload;
     const input = validateSignInInput(body);
     if (!input.ok) {
@@ -91,7 +100,6 @@ export async function POST(request: Request) {
       return NextResponse.json(body, { status });
     }
 
-    const cookieStore = await cookies();
     await createAuthSession({
       userId: user.id,
       cookieStore,

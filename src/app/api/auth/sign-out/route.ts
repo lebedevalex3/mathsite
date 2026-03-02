@@ -4,12 +4,18 @@ import { NextResponse } from "next/server";
 import { toApiError } from "@/src/lib/api/errors";
 import { destroyAuthSession, getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 import { writeAuditLog } from "@/src/lib/audit/log";
+import { verifyCsrfRequest } from "@/src/lib/auth/csrf";
 
 export const runtime = "nodejs";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequest(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const user = await getAuthenticatedUserFromCookie(cookieStore);
     await destroyAuthSession(cookieStore);
     if (user) {

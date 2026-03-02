@@ -4,12 +4,18 @@ import { NextResponse } from "next/server";
 import { toApiError, unauthorized } from "@/src/lib/api/errors";
 import { destroyAllAuthSessions, getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 import { writeAuditLog } from "@/src/lib/audit/log";
+import { verifyCsrfRequest } from "@/src/lib/auth/csrf";
 
 export const runtime = "nodejs";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequest(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const user = await getAuthenticatedUserFromCookie(cookieStore);
     if (!user) {
       const { status, body } = unauthorized("Sign-in required to sign out all sessions.");

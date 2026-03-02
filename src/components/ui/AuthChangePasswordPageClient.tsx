@@ -12,10 +12,12 @@ type SessionResponse =
   | {
       ok: true;
       authenticated: false;
+      csrfToken?: string;
     }
   | {
       ok: true;
       authenticated: true;
+      csrfToken?: string;
       user: {
         id: string;
         role: "student" | "teacher" | "admin";
@@ -82,6 +84,7 @@ export function AuthChangePasswordPageClient({ locale, nextPath }: Props) {
   const [mustChangePassword, setMustChangePassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
+  const [csrfToken, setCsrfToken] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -92,6 +95,10 @@ export function AuthChangePasswordPageClient({ locale, nextPath }: Props) {
       try {
         const response = await fetch("/api/auth/session", { credentials: "same-origin" });
         const payload = (await response.json()) as SessionResponse;
+        if (payload && typeof payload === "object" && "csrfToken" in payload) {
+          const token = (payload as { csrfToken?: unknown }).csrfToken;
+          if (typeof token === "string" && token) setCsrfToken(token);
+        }
         if (response.ok && payload.ok && payload.authenticated) {
           setAuthenticated(true);
           const shouldChange = payload.user.mustChangePassword === true;
@@ -112,13 +119,17 @@ export function AuthChangePasswordPageClient({ locale, nextPath }: Props) {
   }, [router, safeNextPath]);
 
   async function submitChange() {
+    if (!csrfToken) {
+      setError(t.errorFallback);
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
       const response = await fetch("/api/auth/change-password", {
         method: "POST",
         credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
         body: JSON.stringify({ currentPassword, newPassword }),
       });
       const payload = (await response.json()) as { ok?: boolean; message?: string };

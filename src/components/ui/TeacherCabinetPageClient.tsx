@@ -26,8 +26,8 @@ type SessionUser = {
 };
 
 type SessionResponse =
-  | { ok: true; authenticated: false }
-  | { ok: true; authenticated: true; user: SessionUser }
+  | { ok: true; authenticated: false; csrfToken?: string }
+  | { ok: true; authenticated: true; user: SessionUser; csrfToken?: string }
   | { ok: false; message?: string };
 
 type HistoryWork = {
@@ -315,6 +315,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [busySignOutAll, setBusySignOutAll] = useState(false);
+  const [csrfToken, setCsrfToken] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
   const [loadingWorks, setLoadingWorks] = useState(false);
@@ -382,6 +383,10 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
       try {
         const response = await fetch("/api/auth/session", { credentials: "same-origin" });
         const payload = (await response.json()) as SessionResponse;
+        if (payload && typeof payload === "object" && "csrfToken" in payload) {
+          const token = (payload as { csrfToken?: unknown }).csrfToken;
+          if (typeof token === "string" && token) setCsrfToken(token);
+        }
         if (response.ok && payload.ok && payload.authenticated) {
           setSessionUser(payload.user);
         } else {
@@ -402,12 +407,16 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }, [locale, router, sessionUser?.mustChangePassword]);
 
   async function submitAuth(url: "/api/auth/sign-in" | "/api/auth/sign-up") {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
       const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
         credentials: "same-origin",
         body: JSON.stringify(
           url === "/api/auth/sign-up"
@@ -433,11 +442,16 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }
 
   async function signOut() {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
       await fetch("/api/auth/sign-out", {
         method: "POST",
+        headers: { "x-csrf-token": csrfToken },
         credentials: "same-origin",
       });
       setSessionUser(null);
@@ -450,11 +464,16 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }
 
   async function signOutAll() {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     setBusySignOutAll(true);
     setError(null);
     try {
       await fetch("/api/auth/sign-out-all", {
         method: "POST",
+        headers: { "x-csrf-token": csrfToken },
         credentials: "same-origin",
       });
       setSessionUser(null);

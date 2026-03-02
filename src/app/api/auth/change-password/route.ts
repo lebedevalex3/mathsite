@@ -11,6 +11,7 @@ import {
 import { validateChangePasswordInput } from "@/src/lib/auth/validation";
 import { prisma } from "@/src/lib/db/prisma";
 import { writeAuditLog } from "@/src/lib/audit/log";
+import { verifyCsrfRequest } from "@/src/lib/auth/csrf";
 
 export const runtime = "nodejs";
 
@@ -21,6 +22,13 @@ type Payload = {
 
 export async function POST(request: Request) {
   try {
+    const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequest(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
+
     const body = (await request.json().catch(() => ({}))) as Payload;
     const input = validateChangePasswordInput(body);
     if (!input.ok) {
@@ -29,7 +37,6 @@ export async function POST(request: Request) {
     }
     const { currentPassword, newPassword } = input.value;
 
-    const cookieStore = await cookies();
     const authUser = await getAuthenticatedUserFromCookie(cookieStore);
     if (!authUser) {
       const { status, body } = unauthorized("Sign-in required to change password.");

@@ -59,6 +59,11 @@ const copy = {
     noStudents: "Ученики не найдены.",
     auditTitle: "Журнал аудита",
     auditSearch: "Поиск по action/entity",
+    auditFilterAll: "Все",
+    auditFilterAuth: "Только auth.*",
+    auditFilterSuccess: "Успех",
+    auditFilterFailure: "Ошибки",
+    auditFilterBlocked: "Блокировки",
     noLogs: "События не найдены.",
     refresh: "Обновить",
     loading: "Загрузка...",
@@ -78,6 +83,11 @@ const copy = {
     noStudents: "No students found.",
     auditTitle: "Audit log",
     auditSearch: "Search by action/entity",
+    auditFilterAll: "All",
+    auditFilterAuth: "Auth only",
+    auditFilterSuccess: "Success",
+    auditFilterFailure: "Failures",
+    auditFilterBlocked: "Blocked",
     noLogs: "No events found.",
     refresh: "Refresh",
     loading: "Loading...",
@@ -97,6 +107,11 @@ const copy = {
     noStudents: "Keine Schüler gefunden.",
     auditTitle: "Audit-Log",
     auditSearch: "Suche nach action/entity",
+    auditFilterAll: "Alle",
+    auditFilterAuth: "Nur auth.*",
+    auditFilterSuccess: "Erfolg",
+    auditFilterFailure: "Fehler",
+    auditFilterBlocked: "Blockiert",
     noLogs: "Keine Ereignisse gefunden.",
     refresh: "Aktualisieren",
     loading: "Laden...",
@@ -113,6 +128,9 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [studentsQuery, setStudentsQuery] = useState("");
   const [logs, setLogs] = useState<AuditItem[]>([]);
   const [logsQuery, setLogsQuery] = useState("");
+  const [logsActionFilter, setLogsActionFilter] = useState<
+    "all" | "auth" | "success" | "failure" | "blocked"
+  >("all");
   const [resettingStudentId, setResettingStudentId] = useState<string | null>(null);
   const [lastReset, setLastReset] = useState<{ username: string | null; temporaryPassword: string } | null>(null);
 
@@ -126,14 +144,23 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
 
   const filteredLogs = useMemo(() => {
     const q = logsQuery.trim().toLowerCase();
-    if (!q) return logs;
-    return logs.filter((item) =>
-      [item.action, item.entityType, item.entityId, item.actor?.username ?? "", item.actor?.email ?? ""]
-        .join(" ")
-        .toLowerCase()
-        .includes(q),
-    );
-  }, [logs, logsQuery]);
+    return logs
+      .filter((item) => {
+        if (logsActionFilter === "all") return true;
+        if (logsActionFilter === "auth") return item.action.startsWith("auth.");
+        if (logsActionFilter === "success") return item.action.includes(".success");
+        if (logsActionFilter === "failure") return item.action.includes(".failure");
+        if (logsActionFilter === "blocked") return item.action.includes(".blocked");
+        return true;
+      })
+      .filter((item) => {
+        if (!q) return true;
+        return [item.action, item.entityType, item.entityId, item.actor?.username ?? "", item.actor?.email ?? ""]
+          .join(" ")
+          .toLowerCase()
+          .includes(q);
+      });
+  }, [logs, logsActionFilter, logsQuery]);
 
   const loadStudents = useCallback(async () => {
     const response = await fetch("/api/admin/students", { credentials: "same-origin" });
@@ -287,6 +314,29 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
 
       <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.auditTitle}</h2>
+        <div className="flex flex-wrap gap-2">
+          {([
+            ["all", t.auditFilterAll],
+            ["auth", t.auditFilterAuth],
+            ["success", t.auditFilterSuccess],
+            ["failure", t.auditFilterFailure],
+            ["blocked", t.auditFilterBlocked],
+          ] as const).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setLogsActionFilter(value)}
+              className={[
+                "rounded-full border px-3 py-1 text-xs font-medium",
+                logsActionFilter === value
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+              ].join(" ")}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         <input
           type="text"
           value={logsQuery}

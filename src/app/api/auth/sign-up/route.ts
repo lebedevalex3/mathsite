@@ -13,6 +13,7 @@ import { consumeAuthRateLimit } from "@/src/lib/auth/rate-limit";
 import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 import { writeAuditLog } from "@/src/lib/audit/log";
+import { verifyCsrfRequest } from "@/src/lib/auth/csrf";
 
 export const runtime = "nodejs";
 
@@ -25,6 +26,14 @@ type Payload = {
 export async function POST(request: Request) {
   const span = startApiSpan(request, "/api/auth/sign-up");
   try {
+    const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequest(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      logApiResult(span, status, { code: body.code, message: body.message });
+      return NextResponse.json(body, { status });
+    }
+
     const body = (await request.json().catch(() => ({}))) as Payload;
     const input = validateSignUpInput(body);
     if (!input.ok) {
@@ -69,7 +78,6 @@ export async function POST(request: Request) {
     }
 
     const passwordHash = await hashPassword(password);
-    const cookieStore = await cookies();
     const { userId } = await getOrCreateVisitorUser(cookieStore);
     const user = await bindCredentialsToUser({
       userId,
