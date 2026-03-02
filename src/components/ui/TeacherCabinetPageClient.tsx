@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
@@ -20,6 +21,8 @@ type SessionUser = {
   id: string;
   role: "student" | "teacher" | "admin";
   email: string | null;
+  username: string | null;
+  mustChangePassword: boolean;
 };
 
 type SessionResponse =
@@ -37,12 +40,29 @@ type HistoryWork = {
   variantsCount: number;
 };
 
+type ClassItem = {
+  id: string;
+  name: string;
+  joinCode: string;
+  isArchived: boolean;
+  studentsCount: number;
+  createdAt: string;
+};
+
+type ClassStudentItem = {
+  id: string;
+  username: string | null;
+  mustChangePassword: boolean;
+  createdAt: string;
+};
+
 const copy = {
   ru: {
     eyebrow: "Teacher tools",
     title: "Личный кабинет",
     subtitle: "Войдите, чтобы сохранять и видеть историю собранных работ.",
-    email: "Email",
+    identifier: "Email или username",
+    identifierPlaceholder: "Например, teacher@school.ru или s8k3m2f1",
     password: "Пароль",
     signIn: "Войти",
     signUp: "Зарегистрироваться",
@@ -73,6 +93,21 @@ const copy = {
     historyTasksUnit: "задач",
     authError: "Не удалось выполнить действие. Попробуйте ещё раз.",
     passwordHint: "Минимум 8 символов.",
+    classesTitle: "Группы",
+    classesSubtitle: "Создавайте группы и управляйте учениками без email.",
+    newClassPlaceholder: "Например, 5А",
+    createClass: "Создать группу",
+    joinCode: "Код вступления",
+    studentsCount: "Учеников",
+    studentsTitle: "Ученики группы",
+    studentsEmpty: "В этой группе пока нет учеников.",
+    newStudentUsernamePlaceholder: "username (опционально)",
+    createStudent: "Создать ученика",
+    removeStudent: "Удалить из группы",
+    temporaryPassword: "Временный пароль",
+    temporaryPasswordHint: "Покажите ученику один раз. При первом входе пароль нужно сменить.",
+    mustChangePassword: "Требуется смена пароля",
+    selectClassHint: "Выберите группу, чтобы управлять учениками.",
     workTypes: {
       lesson: "Работа на уроке",
       quiz: "Самостоятельная",
@@ -84,7 +119,8 @@ const copy = {
     eyebrow: "Teacher tools",
     title: "Personal workspace",
     subtitle: "Sign in to save and view generated work history.",
-    email: "Email",
+    identifier: "Email or username",
+    identifierPlaceholder: "For example, teacher@school.com or s8k3m2f1",
     password: "Password",
     signIn: "Sign in",
     signUp: "Sign up",
@@ -115,6 +151,21 @@ const copy = {
     historyTasksUnit: "tasks",
     authError: "Action failed. Please try again.",
     passwordHint: "At least 8 characters.",
+    classesTitle: "Classes",
+    classesSubtitle: "Create classes and manage students without email.",
+    newClassPlaceholder: "For example, 5A",
+    createClass: "Create class",
+    joinCode: "Join code",
+    studentsCount: "Students",
+    studentsTitle: "Class students",
+    studentsEmpty: "No students in this class yet.",
+    newStudentUsernamePlaceholder: "username (optional)",
+    createStudent: "Create student",
+    removeStudent: "Remove from class",
+    temporaryPassword: "Temporary password",
+    temporaryPasswordHint: "Show it once to the student. They must change it after first sign-in.",
+    mustChangePassword: "Password change required",
+    selectClassHint: "Select a class to manage students.",
     workTypes: {
       lesson: "Lesson work",
       quiz: "Quiz",
@@ -126,7 +177,8 @@ const copy = {
     eyebrow: "Teacher tools",
     title: "Persönlicher Bereich",
     subtitle: "Melden Sie sich an, um den Verlauf der erstellten Arbeiten zu speichern und zu sehen.",
-    email: "E-Mail",
+    identifier: "E-Mail oder Username",
+    identifierPlaceholder: "Zum Beispiel teacher@school.de oder s8k3m2f1",
     password: "Passwort",
     signIn: "Anmelden",
     signUp: "Registrieren",
@@ -157,6 +209,21 @@ const copy = {
     historyTasksUnit: "Aufgaben",
     authError: "Aktion fehlgeschlagen. Bitte erneut versuchen.",
     passwordHint: "Mindestens 8 Zeichen.",
+    classesTitle: "Klassen",
+    classesSubtitle: "Klassen erstellen und Schüler ohne E-Mail verwalten.",
+    newClassPlaceholder: "Zum Beispiel, 5A",
+    createClass: "Klasse erstellen",
+    joinCode: "Beitrittscode",
+    studentsCount: "Schüler",
+    studentsTitle: "Schüler der Klasse",
+    studentsEmpty: "Noch keine Schüler in dieser Klasse.",
+    newStudentUsernamePlaceholder: "Username (optional)",
+    createStudent: "Schüler erstellen",
+    removeStudent: "Aus Klasse entfernen",
+    temporaryPassword: "Temporäres Passwort",
+    temporaryPasswordHint: "Nur einmal dem Schüler zeigen. Beim ersten Login muss es geändert werden.",
+    mustChangePassword: "Passwortänderung erforderlich",
+    selectClassHint: "Wählen Sie eine Klasse, um Schüler zu verwalten.",
     workTypes: {
       lesson: "Unterricht",
       quiz: "Kurztest",
@@ -217,9 +284,10 @@ function buildHistoryTitle(params: {
 
 export function TeacherCabinetPageClient({ locale, initialReason = null }: Props) {
   const t = copy[locale];
+  const router = useRouter();
   const topicConfigs = useMemo(() => listContentTopicConfigs(), []);
   const [loading, setLoading] = useState(true);
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -230,6 +298,19 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   const [historyFilter, setHistoryFilter] = useState<"all" | WorkType>("all");
   const [duplicateWorkId, setDuplicateWorkId] = useState<string | null>(null);
   const [promotingTeacher, setPromotingTeacher] = useState(false);
+  const [loadingClasses, setLoadingClasses] = useState(false);
+  const [classes, setClasses] = useState<ClassItem[]>([]);
+  const [newClassName, setNewClassName] = useState("");
+  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+  const [students, setStudents] = useState<ClassStudentItem[]>([]);
+  const [loadingStudents, setLoadingStudents] = useState(false);
+  const [newStudentUsername, setNewStudentUsername] = useState("");
+  const [creatingStudent, setCreatingStudent] = useState(false);
+  const [removingStudentId, setRemovingStudentId] = useState<string | null>(null);
+  const [lastCreatedCredentials, setLastCreatedCredentials] = useState<{
+    username: string | null;
+    temporaryPassword: string;
+  } | null>(null);
 
   const isTeacherRole = sessionUser?.role === "teacher" || sessionUser?.role === "admin";
   const roleText =
@@ -269,6 +350,12 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
     })();
   }, []);
 
+  useEffect(() => {
+    if (!sessionUser?.mustChangePassword) return;
+    const next = encodeURIComponent(`/${locale}/teacher/cabinet`);
+    router.replace(`/${locale}/auth/change-password?next=${next}`);
+  }, [locale, router, sessionUser?.mustChangePassword]);
+
   async function submitAuth(url: "/api/auth/sign-in" | "/api/auth/sign-up") {
     setBusy(true);
     setError(null);
@@ -277,7 +364,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ identifier, password }),
       });
       const payload = (await response.json()) as
         | { ok?: boolean; user?: SessionUser; message?: string }
@@ -287,6 +374,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
         return;
       }
       setSessionUser(payload.user);
+      setIdentifier("");
       setPassword("");
     } catch {
       setError(t.authError);
@@ -353,6 +441,51 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
     }
   }, [sessionUser]);
 
+  const loadClasses = useCallback(async () => {
+    if (!sessionUser) {
+      setClasses([]);
+      setSelectedClassId(null);
+      return;
+    }
+    if (!(sessionUser.role === "teacher" || sessionUser.role === "admin")) {
+      setClasses([]);
+      setSelectedClassId(null);
+      return;
+    }
+    setLoadingClasses(true);
+    try {
+      const response = await fetch("/api/classes", { credentials: "same-origin" });
+      const payload = (await response.json()) as { ok?: boolean; classes?: ClassItem[] };
+      if (!response.ok || !payload.ok) return;
+      const nextClasses = Array.isArray(payload.classes) ? payload.classes : [];
+      setClasses(nextClasses);
+      setSelectedClassId((prev) => {
+        if (prev && nextClasses.some((item) => item.id === prev)) return prev;
+        return nextClasses[0]?.id ?? null;
+      });
+    } catch {
+      // optional block
+    } finally {
+      setLoadingClasses(false);
+    }
+  }, [sessionUser]);
+
+  const loadStudents = useCallback(async (classId: string) => {
+    setLoadingStudents(true);
+    try {
+      const response = await fetch(`/api/classes/${classId}/students`, {
+        credentials: "same-origin",
+      });
+      const payload = (await response.json()) as { ok?: boolean; students?: ClassStudentItem[] };
+      if (!response.ok || !payload.ok) return;
+      setStudents(Array.isArray(payload.students) ? payload.students : []);
+    } catch {
+      // optional block
+    } finally {
+      setLoadingStudents(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (!sessionUser) {
       setWorks([]);
@@ -360,6 +493,110 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
     }
     void loadWorks();
   }, [sessionUser, loadWorks]);
+
+  useEffect(() => {
+    if (!sessionUser || !isTeacherRole) {
+      setClasses([]);
+      setSelectedClassId(null);
+      setStudents([]);
+      return;
+    }
+    void loadClasses();
+  }, [isTeacherRole, loadClasses, sessionUser]);
+
+  useEffect(() => {
+    if (!selectedClassId) {
+      setStudents([]);
+      return;
+    }
+    void loadStudents(selectedClassId);
+  }, [loadStudents, selectedClassId]);
+
+  async function createClass() {
+    const name = newClassName.trim();
+    if (!name) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/classes", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      const payload = (await response.json()) as { ok?: boolean; message?: string; class?: ClassItem };
+      if (!response.ok || !payload.ok) {
+        setError(payload.message ?? t.authError);
+        return;
+      }
+      setNewClassName("");
+      await loadClasses();
+      if (payload.class?.id) setSelectedClassId(payload.class.id);
+    } catch {
+      setError(t.authError);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function createStudent() {
+    if (!selectedClassId) return;
+    setCreatingStudent(true);
+    setError(null);
+    setLastCreatedCredentials(null);
+    try {
+      const response = await fetch(`/api/classes/${selectedClassId}/students`, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: newStudentUsername.trim() || undefined }),
+      });
+      const payload = (await response.json()) as {
+        ok?: boolean;
+        message?: string;
+        student?: { username: string | null };
+        temporaryPassword?: string;
+      };
+      if (!response.ok || !payload.ok || !payload.temporaryPassword) {
+        setError(payload.message ?? t.authError);
+        return;
+      }
+      setNewStudentUsername("");
+      setLastCreatedCredentials({
+        username: payload.student?.username ?? null,
+        temporaryPassword: payload.temporaryPassword,
+      });
+      await loadClasses();
+      await loadStudents(selectedClassId);
+    } catch {
+      setError(t.authError);
+    } finally {
+      setCreatingStudent(false);
+    }
+  }
+
+  async function removeStudent(studentId: string) {
+    if (!selectedClassId) return;
+    setRemovingStudentId(studentId);
+    setError(null);
+    try {
+      const response = await fetch(`/api/classes/${selectedClassId}/students/${studentId}`, {
+        method: "DELETE",
+        credentials: "same-origin",
+      });
+      const payload = (await response.json().catch(() => ({}))) as { ok?: boolean; message?: string };
+      if (!response.ok || !payload.ok) {
+        setError(payload.message ?? t.authError);
+        return;
+      }
+      await loadClasses();
+      await loadStudents(selectedClassId);
+    } catch {
+      setError(t.authError);
+    } finally {
+      setRemovingStudentId(null);
+    }
+  }
 
   async function handleDuplicateWork(workId: string) {
     setDuplicateWorkId(workId);
@@ -397,6 +634,11 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
       })
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }, [historyFilter, historyQuery, locale, works]);
+
+  const activeClass = useMemo(
+    () => classes.find((item) => item.id === selectedClassId) ?? null,
+    [classes, selectedClassId],
+  );
 
   return (
     <main className="space-y-6">
@@ -464,11 +706,12 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
         ) : (
           <div className="space-y-3">
             <label className="block space-y-1">
-              <span className="text-sm font-medium text-slate-700">{t.email}</span>
+              <span className="text-sm font-medium text-slate-700">{t.identifier}</span>
               <input
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                type="text"
+                value={identifier}
+                onChange={(event) => setIdentifier(event.target.value)}
+                placeholder={t.identifierPlaceholder}
                 className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
               />
             </label>
@@ -504,6 +747,139 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
           </div>
         )}
       </SurfaceCard>
+
+      {sessionUser && isTeacherRole ? (
+        <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.classesTitle}</h2>
+              <p className="mt-1 text-sm text-slate-600">{t.classesSubtitle}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void loadClasses()}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+            >
+              {loadingClasses ? "..." : "↻"}
+            </button>
+          </div>
+
+          <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+            <input
+              type="text"
+              value={newClassName}
+              onChange={(event) => setNewClassName(event.target.value)}
+              placeholder={t.newClassPlaceholder}
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            />
+            <button
+              type="button"
+              onClick={() => void createClass()}
+              disabled={busy}
+              className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+            >
+              {t.createClass}
+            </button>
+          </div>
+
+          {classes.length === 0 ? (
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+              {t.selectClassHint}
+            </div>
+          ) : (
+            <div className="grid gap-3 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+              <div className="space-y-2">
+                {classes.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setSelectedClassId(item.id)}
+                    className={[
+                      "w-full rounded-xl border p-3 text-left",
+                      selectedClassId === item.id
+                        ? "border-slate-900 bg-slate-900 text-white"
+                        : "border-slate-200 bg-slate-50 text-slate-900 hover:bg-slate-100",
+                    ].join(" ")}
+                  >
+                    <p className="text-sm font-semibold">{item.name}</p>
+                    <p
+                      className={[
+                        "mt-1 text-xs",
+                        selectedClassId === item.id ? "text-slate-200" : "text-slate-600",
+                      ].join(" ")}
+                    >
+                      {t.joinCode}: {item.joinCode} • {t.studentsCount}: {item.studentsCount}
+                    </p>
+                  </button>
+                ))}
+              </div>
+
+              <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <h3 className="text-lg font-semibold text-slate-950">
+                  {activeClass ? `${t.studentsTitle} · ${activeClass.name}` : t.studentsTitle}
+                </h3>
+                <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+                  <input
+                    type="text"
+                    value={newStudentUsername}
+                    onChange={(event) => setNewStudentUsername(event.target.value)}
+                    placeholder={t.newStudentUsernamePlaceholder}
+                    className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void createStudent()}
+                    disabled={!activeClass || creatingStudent}
+                    className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+                  >
+                    {creatingStudent ? "..." : t.createStudent}
+                  </button>
+                </div>
+
+                {lastCreatedCredentials ? (
+                  <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-900">
+                    <p>
+                      <span className="font-semibold">{t.temporaryPassword}:</span>{" "}
+                      <code>{lastCreatedCredentials.temporaryPassword}</code>
+                    </p>
+                    <p className="mt-1 text-xs">{t.temporaryPasswordHint}</p>
+                  </div>
+                ) : null}
+
+                {loadingStudents ? (
+                  <p className="text-sm text-slate-600">...</p>
+                ) : students.length === 0 ? (
+                  <p className="text-sm text-slate-600">{t.studentsEmpty}</p>
+                ) : (
+                  <div className="space-y-2">
+                    {students.map((student) => (
+                      <div
+                        key={student.id}
+                        className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2"
+                      >
+                        <div>
+                          <p className="text-sm font-semibold text-slate-950">{student.username ?? student.id}</p>
+                          {student.mustChangePassword ? (
+                            <p className="text-xs text-amber-700">{t.mustChangePassword}</p>
+                          ) : null}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => void removeStudent(student.id)}
+                          disabled={removingStudentId === student.id}
+                          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
+                        >
+                          {removingStudentId === student.id ? "..." : t.removeStudent}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </section>
+      ) : null}
 
       {sessionUser && isTeacherRole ? (
         <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
