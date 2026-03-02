@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/reports/task-coverage-matrix.json
+/reports/task-coverage-matrix.md
 
 # next.js
 /.next/

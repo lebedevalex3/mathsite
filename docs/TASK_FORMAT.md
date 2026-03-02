@@ -68,6 +68,15 @@ pnpm validate:tasks
 - уникальность `task.id` во всех файлах
 - диапазон `difficulty` (`1..5`)
 - непустой `statement_md`
+- соответствие `skill_id` таксономии `docs/TAXONOMY*.md`
+- матрица покрытия `skill × difficulty × task_count` по правилам из `scripts/task-coverage.config.ts`
+
+После запуска формируются отчёты:
+
+- `reports/task-coverage-matrix.json`
+- `reports/task-coverage-matrix.md`
+
+Если в обязательной ячейке матрицы задач меньше минимума, `pnpm validate:tasks` завершится с ошибкой.
 
 ## Как безопасно добавлять задачи (README notes)
 

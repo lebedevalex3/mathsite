@@ -2,8 +2,9 @@ import path from "node:path";
 import { promises as fs } from "node:fs";
 
 import { loadTaskBanks } from "../lib/tasks/load";
-import { parseTaxonomyMarkdown } from "../lib/tasks/taxonomy";
+import { parseTaxonomyMarkdownDetails } from "../lib/tasks/taxonomy";
 import { analyzeLatexTaskMarkdownCompatibility } from "../src/lib/latex/task-latex-compat";
+import { getCoverageRule } from "./task-coverage.config";
 
 function rel(filePath: string) {
   return path.relative(process.cwd(), filePath) || filePath;
@@ -18,10 +19,13 @@ async function loadTaxonomies() {
     .sort();
 
   const items = await Promise.all(
-    taxonomyFiles.map(async (filePath) => ({ filePath, parsed: await parseTaxonomyMarkdown(filePath) })),
+    taxonomyFiles.map(async (filePath) => ({
+      filePath,
+      parsed: await parseTaxonomyMarkdownDetails(filePath),
+    })),
   );
 
-  const byTopicId = new Map<string, { filePath: string; allowedSkillIds: Set<string> }>();
+  const byTopicId = new Map<string, { filePath: string; allowedSkillIds: Set<string>; skillIds: string[] }>();
   for (const item of items) {
     if (byTopicId.has(item.parsed.topicId)) {
       const previous = byTopicId.get(item.parsed.topicId)!;
@@ -32,10 +36,187 @@ async function loadTaxonomies() {
     byTopicId.set(item.parsed.topicId, {
       filePath: item.filePath,
       allowedSkillIds: item.parsed.allowedSkillIds,
+      skillIds: item.parsed.skills.map((entry) => entry.skillId),
     });
   }
 
   return { files: taxonomyFiles, byTopicId };
+}
+
+type CoverageCell = {
+  difficulty: number;
+  count: number;
+  minRequired: number;
+  ok: boolean;
+};
+
+type CoverageSkill = {
+  skillId: string;
+  total: number;
+  cells: CoverageCell[];
+};
+
+type CoverageTopic = {
+  topicId: string;
+  taxonomyFilePath: string;
+  requiredDifficulties: number[];
+  minTasksPerCell: number;
+  totalTasks: number;
+  skills: CoverageSkill[];
+};
+
+type CoverageDeficit = {
+  topicId: string;
+  skillId: string;
+  difficulty: number;
+  actual: number;
+  required: number;
+};
+
+type CoverageReport = {
+  generatedAt: string;
+  topics: CoverageTopic[];
+  deficits: CoverageDeficit[];
+  summary: {
+    topics: number;
+    skills: number;
+    cells: number;
+    deficits: number;
+  };
+};
+
+function buildCoverageReport(params: {
+  allTasks: { filePath: string; task: { topic_id: string; skill_id: string; difficulty: number } }[];
+  taxonomiesByTopicId: Map<string, { filePath: string; skillIds: string[] }>;
+}): CoverageReport {
+  const countsByTopicSkillDifficulty = new Map<string, number>();
+  const totalByTopic = new Map<string, number>();
+
+  for (const { task } of params.allTasks) {
+    const key = `${task.topic_id}|${task.skill_id}|${task.difficulty}`;
+    countsByTopicSkillDifficulty.set(key, (countsByTopicSkillDifficulty.get(key) ?? 0) + 1);
+    totalByTopic.set(task.topic_id, (totalByTopic.get(task.topic_id) ?? 0) + 1);
+  }
+
+  const deficits: CoverageDeficit[] = [];
+  const topics: CoverageTopic[] = [];
+  let skillCount = 0;
+  let cellCount = 0;
+
+  const sortedTaxonomies = [...params.taxonomiesByTopicId.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  for (const [topicId, taxonomy] of sortedTaxonomies) {
+    const rule = getCoverageRule(topicId);
+    const skills: CoverageSkill[] = [];
+
+    for (const skillId of taxonomy.skillIds) {
+      const cells: CoverageCell[] = [];
+      let total = 0;
+
+      for (const difficulty of rule.requiredDifficulties) {
+        const key = `${topicId}|${skillId}|${difficulty}`;
+        const count = countsByTopicSkillDifficulty.get(key) ?? 0;
+        const ok = count >= rule.minTasksPerCell;
+        if (!ok) {
+          deficits.push({
+            topicId,
+            skillId,
+            difficulty,
+            actual: count,
+            required: rule.minTasksPerCell,
+          });
+        }
+        cells.push({
+          difficulty,
+          count,
+          minRequired: rule.minTasksPerCell,
+          ok,
+        });
+        total += count;
+      }
+
+      skills.push({ skillId, total, cells });
+      skillCount += 1;
+      cellCount += cells.length;
+    }
+
+    topics.push({
+      topicId,
+      taxonomyFilePath: rel(taxonomy.filePath),
+      requiredDifficulties: rule.requiredDifficulties,
+      minTasksPerCell: rule.minTasksPerCell,
+      totalTasks: totalByTopic.get(topicId) ?? 0,
+      skills,
+    });
+  }
+
+  return {
+    generatedAt: new Date().toISOString(),
+    topics,
+    deficits,
+    summary: {
+      topics: topics.length,
+      skills: skillCount,
+      cells: cellCount,
+      deficits: deficits.length,
+    },
+  };
+}
+
+async function writeCoverageReports(report: CoverageReport) {
+  const reportsDir = path.join(process.cwd(), "reports");
+  const jsonPath = path.join(reportsDir, "task-coverage-matrix.json");
+  const mdPath = path.join(reportsDir, "task-coverage-matrix.md");
+  await fs.mkdir(reportsDir, { recursive: true });
+  await fs.writeFile(jsonPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+
+  const lines: string[] = [];
+  lines.push("# Task Coverage Matrix");
+  lines.push("");
+  lines.push(`Generated at: ${report.generatedAt}`);
+  lines.push("");
+  lines.push(
+    `Summary: topics=${report.summary.topics}, skills=${report.summary.skills}, cells=${report.summary.cells}, deficits=${report.summary.deficits}`,
+  );
+  lines.push("");
+
+  for (const topic of report.topics) {
+    lines.push(`## ${topic.topicId}`);
+    lines.push("");
+    lines.push(`- Taxonomy: \`${topic.taxonomyFilePath}\``);
+    lines.push(`- Required difficulties: \`${topic.requiredDifficulties.join(", ")}\``);
+    lines.push(`- Min tasks per cell: \`${topic.minTasksPerCell}\``);
+    lines.push(`- Total tasks in topic: \`${topic.totalTasks}\``);
+    lines.push("");
+
+    const headers = ["skill_id", ...topic.requiredDifficulties.map((value) => `d${value}`), "total"];
+    lines.push(`| ${headers.join(" | ")} |`);
+    lines.push(`| ${headers.map(() => "---").join(" | ")} |`);
+
+    for (const skill of topic.skills) {
+      const cells = skill.cells.map((cell) => (cell.ok ? `${cell.count}` : `${cell.count} ⚠`));
+      lines.push(`| ${skill.skillId} | ${cells.join(" | ")} | ${skill.total} |`);
+    }
+    lines.push("");
+  }
+
+  lines.push("## Deficits");
+  lines.push("");
+  if (report.deficits.length === 0) {
+    lines.push("No deficits.");
+  } else {
+    for (const deficit of report.deficits) {
+      lines.push(
+        `- ${deficit.topicId} | ${deficit.skillId} | difficulty=${deficit.difficulty} | actual=${deficit.actual} | required=${deficit.required}`,
+      );
+    }
+  }
+  lines.push("");
+
+  await fs.writeFile(mdPath, `${lines.join("\n")}`, "utf8");
+  return {
+    jsonPath: rel(jsonPath),
+    mdPath: rel(mdPath),
+  };
 }
 
 async function main() {
@@ -116,6 +297,22 @@ async function main() {
     }
   }
 
+  const coverageReport = buildCoverageReport({
+    allTasks,
+    taxonomiesByTopicId: new Map(
+      [...taxonomies.byTopicId.entries()].map(([topicId, item]) => [
+        topicId,
+        { filePath: item.filePath, skillIds: item.skillIds },
+      ]),
+    ),
+  });
+  for (const deficit of coverageReport.deficits) {
+    validationErrors.push(
+      `coverage deficit | topic=${deficit.topicId} | skill=${deficit.skillId} | difficulty=${deficit.difficulty} | actual=${deficit.actual} | required>=${deficit.required}`,
+    );
+  }
+  const coveragePaths = await writeCoverageReports(coverageReport);
+
   const totalErrors = [
     ...errors.map((e) => `${rel(e.filePath)}: ${e.message}`),
     ...validationErrors,
@@ -132,6 +329,10 @@ async function main() {
   if (latexWarn) {
     console.log(`- LaTeX compatibility warnings: ${latexWarnings.length}`);
   }
+  console.log(`- Coverage cells checked: ${coverageReport.summary.cells}`);
+  console.log(`- Coverage deficits: ${coverageReport.summary.deficits}`);
+  console.log(`- Coverage report (json): ${coveragePaths.jsonPath}`);
+  console.log(`- Coverage report (md): ${coveragePaths.mdPath}`);
 
   if (totalErrors.length > 0) {
     console.error(`- Errors: ${totalErrors.length}`);
