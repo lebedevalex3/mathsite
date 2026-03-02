@@ -1,4 +1,7 @@
+import path from "node:path";
+
 import { getTasksForTopic } from "@/lib/tasks/query";
+import { parseTaxonomyMarkdownDetails } from "@/lib/tasks/taxonomy";
 import { proportionSkills } from "@/src/lib/topics/proportion/module-data";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 
@@ -283,9 +286,23 @@ export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
   return topics;
 }
 
+const taxonomyPathByTopicId: Record<string, string> = {
+  "math.proportion": path.join(process.cwd(), "docs", "TAXONOMY.md"),
+  "math.equations": path.join(process.cwd(), "docs", "TAXONOMY_URAVNENIYA.md"),
+  "math.negative_numbers": path.join(process.cwd(), "docs", "TAXONOMY_OTRICATELNYE_CHISLA.md"),
+};
+
+async function loadTopicTaxonomy(topicId: string) {
+  const taxonomyPath = taxonomyPathByTopicId[topicId];
+  if (!taxonomyPath) return null;
+  return parseTaxonomyMarkdownDetails(taxonomyPath);
+}
+
 export async function getTeacherToolsTopicSkills(topicId: string) {
   const topic = listTeacherToolsTopics().find((item) => item.topicId === topicId);
   if (!topic) return null;
+  const taxonomy = await loadTopicTaxonomy(topicId);
+  if (!taxonomy) return null;
 
   const { tasks, errors } = await getTasksForTopic(topicId);
   if (errors.length > 0) {
@@ -312,8 +329,12 @@ export async function getTeacherToolsTopicSkills(topicId: string) {
 
   return {
     ...topic,
+    sectionId: taxonomy.sectionId,
+    moduleId: taxonomy.moduleId,
+    gradeTags: taxonomy.gradeTags,
     skills: topic.skills.map((skill): TeacherToolsSkill => ({
       ...skill,
+      branchId: taxonomy.skillToBranchId.get(skill.id),
       availableCount: counts.get(skill.id) ?? 0,
       availableByDifficulty: countsByDifficulty.get(skill.id) ?? { 1: 0, 2: 0, 3: 0 },
     })),

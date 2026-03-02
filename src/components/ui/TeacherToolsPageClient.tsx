@@ -17,6 +17,7 @@ type Locale = "ru" | "en" | "de";
 type TopicSkill = {
   id: string;
   title: string;
+  branchId?: string;
   summary?: string;
   example?: string;
   cardHref?: string;
@@ -29,6 +30,9 @@ type SkillDifficulty = "any" | 1 | 2 | 3;
 
 type TopicPayload = {
   topicId: string;
+  sectionId?: string;
+  moduleId?: string;
+  gradeTags?: number[];
   title: Record<Locale, string>;
   skills: TopicSkill[];
 };
@@ -82,6 +86,11 @@ const copy = {
     build: "Собрать варианты",
     total: "Всего задач в варианте",
     bySkills: "Распределение по навыкам",
+    byBranches: "Ветки",
+    addBranch: "Добавить всю ветку",
+    clearBranch: "Очистить ветку",
+    addModule: "Добавить весь модуль",
+    clearModule: "Очистить модуль",
     note: "Можно попробовать без регистрации. Войти нужно только для сохранения истории в teacher-кабинете.",
     demoLimitTitle: "Демо-лимит для гостя исчерпан",
     demoLimitBody:
@@ -158,6 +167,11 @@ const copy = {
     build: "Assemble variants",
     total: "Total tasks per variant",
     bySkills: "Distribution by skills",
+    byBranches: "Branches",
+    addBranch: "Add whole branch",
+    clearBranch: "Clear branch",
+    addModule: "Add whole module",
+    clearModule: "Clear module",
     note: "You can try it without registration. Sign-in is only needed to save history in the teacher workspace.",
     demoLimitTitle: "Guest demo limit reached",
     demoLimitBody:
@@ -234,6 +248,11 @@ const copy = {
     build: "Varianten zusammenstellen",
     total: "Gesamtaufgaben pro Variante",
     bySkills: "Verteilung nach Fähigkeiten",
+    byBranches: "Zweige",
+    addBranch: "Ganzer Zweig hinzufügen",
+    clearBranch: "Zweig leeren",
+    addModule: "Ganzes Modul hinzufügen",
+    clearModule: "Modul leeren",
     note: "Ohne Registrierung testbar. Anmeldung ist nur zum Speichern im Lehrkräfte-Bereich nötig.",
     demoLimitTitle: "Gast-Demo-Limit erreicht",
     demoLimitBody:
@@ -356,6 +375,15 @@ function parseSkillCountKey(rawKey: string): { skillId: string; difficultyKey: S
     return { skillId, difficultyKey };
   }
   return { skillId, difficultyKey: "any" };
+}
+
+function formatBranchLabel(branchId: string) {
+  const part = branchId.split(".").at(-1) ?? branchId;
+  return part
+    .split("_")
+    .filter((item) => item.length > 0)
+    .map((item) => item[0]?.toUpperCase() + item.slice(1))
+    .join(" ");
 }
 
 function getSkillCountTotal(counts: Record<string, number>, skillId: string) {
@@ -841,6 +869,31 @@ export function TeacherToolsPageClient({ locale }: Props) {
     setTopicSearchQuery("");
   }
 
+  function addSkillsSelection(skills: TopicSkill[]) {
+    setCounts((prev) => {
+      const next = { ...prev };
+      for (const skill of skills) {
+        const selectedDifficulty = difficultyBySkill[skill.id] ?? "any";
+        const difficultyKey = toDifficultyKey(selectedDifficulty);
+        const key = skillCountKey(skill.id, difficultyKey);
+        next[key] = clamp((next[key] ?? 0) + 1, 0, 30);
+      }
+      return next;
+    });
+  }
+
+  function clearSkillsSelection(skills: TopicSkill[]) {
+    setCounts((prev) => {
+      const next = { ...prev };
+      for (const skill of skills) {
+        for (const difficultyKey of ALL_DIFFICULTY_KEYS) {
+          next[skillCountKey(skill.id, difficultyKey)] = 0;
+        }
+      }
+      return next;
+    });
+  }
+
   function buildSkillCardHref(cardHref: string) {
     const query = buildTeacherToolsStateQuery({
       topicId,
@@ -1167,6 +1220,18 @@ export function TeacherToolsPageClient({ locale }: Props) {
                 {loadedTopics.map((loadedTopic) => {
                   const stats = topicStats.get(loadedTopic.topicId) ?? { selectedCount: 0, skillsCount: loadedTopic.skills.length };
                   const isExpanded = expandedByTopicId[loadedTopic.topicId] === true;
+                  const branchGroups = Object.entries(
+                    loadedTopic.skills.reduce(
+                      (acc, skill) => {
+                        const branchId = skill.branchId ?? "__ungrouped";
+                        const list = acc[branchId] ?? [];
+                        list.push(skill);
+                        acc[branchId] = list;
+                        return acc;
+                      },
+                      {} as Record<string, TopicSkill[]>,
+                    ),
+                  );
                   return (
                   <div key={loadedTopic.topicId} className="space-y-3">
                     <button
@@ -1186,7 +1251,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
                       ].join(" ")}
                     >
                       <span className="text-sm font-semibold text-slate-900">
-                        {loadedTopic.title[locale] ?? loadedTopic.title.ru ?? loadedTopic.topicId}
+                        {loadedTopic.title[locale] ?? loadedTopic.title.ru ?? loadedTopic.moduleId ?? loadedTopic.topicId}
                       </span>
                       <span className="inline-flex items-center gap-2 text-xs text-slate-600">
                         <span>{t.selectedShort}: {formatNumber(locale, stats.selectedCount)}</span>
@@ -1194,141 +1259,187 @@ export function TeacherToolsPageClient({ locale }: Props) {
                         <span className="text-slate-500">{isExpanded ? "▾" : "▸"}</span>
                       </span>
                     </button>
-                    {isExpanded ? loadedTopic.skills.map((skill) => {
-                      const availableByDifficulty = skill.availableByDifficulty ?? { 1: 0, 2: 0, 3: 0 };
-                      const availableDifficulties = ([1, 2, 3] as const).filter(
-                        (level) => (availableByDifficulty[level] ?? 0) > 0,
-                      );
-                      const selectedDifficultyCandidate = difficultyBySkill[skill.id] ?? "any";
-                      const selectedDifficulty =
-                        selectedDifficultyCandidate !== "any" &&
-                        (availableByDifficulty[selectedDifficultyCandidate] ?? 0) === 0
-                          ? "any"
-                          : selectedDifficultyCandidate;
-                      const activeDifficultyKey = toDifficultyKey(selectedDifficulty);
-                      const activeCountKey = skillCountKey(skill.id, activeDifficultyKey);
-                      const value = counts[activeCountKey] ?? 0;
-                      const disabled = skill.status === "soon";
-                      return (
-                        <div
-                          key={skill.id}
-                          className={[
-                            "rounded-xl border p-3",
-                            disabled ? "border-slate-200 bg-slate-50 opacity-70" : "border-slate-200 bg-white",
-                          ].join(" ")}
-                        >
-                          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                            <div className="min-w-0">
-                              <p className="font-medium text-slate-950">{skill.title}</p>
-                              {skill.summary ? (
-                                <p className="mt-1 text-sm leading-5 text-slate-600">{skill.summary}</p>
-                              ) : null}
-                              {skill.example ? (
-                                <p className="mt-1 text-sm leading-5 text-slate-700">
-                                  <span className="font-medium text-slate-900">{t.example}:</span>{" "}
-                                  {skill.example}
-                                </p>
-                              ) : null}
-                              {skill.cardHref ? (
-                                <div className="mt-2">
-                                  <Link
-                                    href={buildSkillCardHref(skill.cardHref)}
-                                    className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
-                                  >
-                                    {t.skillCard}
-                                  </Link>
-                                </div>
-                              ) : null}
-                              <p className="mt-1 text-xs text-slate-500">
-                                {t.available}: {formatNumber(locale, skill.availableCount ?? 0)}
-                              </p>
-                              <p className="mt-1 text-xs text-slate-500">
-                                {t.levelsAvailability}:{" "}
-                                {availableDifficulties.length > 0
-                                  ? availableDifficulties
-                                      .map(
-                                        (level) =>
-                                          `L${level}: ${formatNumber(locale, availableByDifficulty[level] ?? 0)}`,
-                                      )
-                                      .join(", ")
-                                  : "—"}
-                              </p>
-                            </div>
-                            <div className="flex shrink-0 items-center gap-2">
-                              <span
-                                title={t.difficultyHint}
-                                aria-label={t.difficultyHint}
-                                className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 bg-white text-xs font-semibold text-slate-600"
-                              >
-                                ?
-                              </span>
-                              <select
-                                aria-label={`${t.difficulty}: ${skill.title}`}
-                                value={String(difficultyBySkill[skill.id] ?? "any")}
-                                disabled={disabled}
-                                onChange={(event) => {
-                                  const value = event.target.value;
-                                  setDifficultyBySkill((prev) => ({
-                                    ...prev,
-                                    [skill.id]:
-                                      value === "1" ? 1 : value === "2" ? 2 : value === "3" ? 3 : "any",
-                                  }));
-                                }}
-                                className="h-8 rounded-lg border border-slate-300 bg-white px-2 text-sm text-slate-800"
-                              >
-                                <option value="any">{t.anyDifficulty}</option>
-                                {availableDifficulties.map((level) => (
-                                  <option key={level} value={String(level)}>
-                                    L{level}
-                                  </option>
-                                ))}
-                              </select>
-                              <button
-                                type="button"
-                                disabled={disabled}
-                                onClick={() =>
-                                  setCounts((prev) => ({
-                                    ...prev,
-                                    [activeCountKey]: clamp((prev[activeCountKey] ?? 0) - 1, 0, 30),
-                                  }))
-                                }
-                                className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
-                              >
-                                -
-                              </button>
-                              <input
-                                aria-label={`${t.quantity}: ${skill.title}`}
-                                type="number"
-                                min={0}
-                                max={30}
-                                disabled={disabled}
-                                value={value}
-                                onChange={(e) =>
-                                  setCounts((prev) => ({
-                                    ...prev,
-                                    [activeCountKey]: clamp(Number(e.target.value || 0), 0, 30),
-                                  }))
-                                }
-                                className="w-16 rounded-lg border border-slate-300 px-2 py-1 text-center text-sm"
-                              />
-                              <button
-                                type="button"
-                                disabled={disabled}
-                                onClick={() =>
-                                  setCounts((prev) => ({
-                                    ...prev,
-                                    [activeCountKey]: clamp((prev[activeCountKey] ?? 0) + 1, 0, 30),
-                                  }))
-                                }
-                                className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
-                              >
-                                +
-                              </button>
-                            </div>
-                          </div>
+                    {isExpanded ? (
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                          <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+                            {loadedTopic.moduleId ?? loadedTopic.topicId}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => addSkillsSelection(loadedTopic.skills)}
+                            className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                          >
+                            {t.addModule}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => clearSkillsSelection(loadedTopic.skills)}
+                            className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                          >
+                            {t.clearModule}
+                          </button>
                         </div>
-                      );
-                    }) : null}
+                        {branchGroups.map(([branchId, branchSkills]) => (
+                          <div key={`${loadedTopic.topicId}:${branchId}`} className="space-y-2 rounded-xl border border-slate-200 bg-slate-50/50 p-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+                                {t.byBranches}: {branchId === "__ungrouped" ? loadedTopic.topicId : formatBranchLabel(branchId)}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => addSkillsSelection(branchSkills)}
+                                className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                              >
+                                {t.addBranch}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => clearSkillsSelection(branchSkills)}
+                                className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                              >
+                                {t.clearBranch}
+                              </button>
+                            </div>
+                            {branchSkills.map((skill) => {
+                              const availableByDifficulty = skill.availableByDifficulty ?? { 1: 0, 2: 0, 3: 0 };
+                              const availableDifficulties = ([1, 2, 3] as const).filter(
+                                (level) => (availableByDifficulty[level] ?? 0) > 0,
+                              );
+                              const selectedDifficultyCandidate = difficultyBySkill[skill.id] ?? "any";
+                              const selectedDifficulty =
+                                selectedDifficultyCandidate !== "any" &&
+                                (availableByDifficulty[selectedDifficultyCandidate] ?? 0) === 0
+                                  ? "any"
+                                  : selectedDifficultyCandidate;
+                              const activeDifficultyKey = toDifficultyKey(selectedDifficulty);
+                              const activeCountKey = skillCountKey(skill.id, activeDifficultyKey);
+                              const value = counts[activeCountKey] ?? 0;
+                              const disabled = skill.status === "soon";
+                              return (
+                                <div
+                                  key={skill.id}
+                                  className={[
+                                    "rounded-xl border p-3",
+                                    disabled ? "border-slate-200 bg-slate-50 opacity-70" : "border-slate-200 bg-white",
+                                  ].join(" ")}
+                                >
+                                  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                                    <div className="min-w-0">
+                                      <p className="font-medium text-slate-950">{skill.title}</p>
+                                      {skill.summary ? (
+                                        <p className="mt-1 text-sm leading-5 text-slate-600">{skill.summary}</p>
+                                      ) : null}
+                                      {skill.example ? (
+                                        <p className="mt-1 text-sm leading-5 text-slate-700">
+                                          <span className="font-medium text-slate-900">{t.example}:</span>{" "}
+                                          {skill.example}
+                                        </p>
+                                      ) : null}
+                                      {skill.cardHref ? (
+                                        <div className="mt-2">
+                                          <Link
+                                            href={buildSkillCardHref(skill.cardHref)}
+                                            className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
+                                          >
+                                            {t.skillCard}
+                                          </Link>
+                                        </div>
+                                      ) : null}
+                                      <p className="mt-1 text-xs text-slate-500">
+                                        {t.available}: {formatNumber(locale, skill.availableCount ?? 0)}
+                                      </p>
+                                      <p className="mt-1 text-xs text-slate-500">
+                                        {t.levelsAvailability}:{" "}
+                                        {availableDifficulties.length > 0
+                                          ? availableDifficulties
+                                              .map(
+                                                (level) =>
+                                                  `L${level}: ${formatNumber(locale, availableByDifficulty[level] ?? 0)}`,
+                                              )
+                                              .join(", ")
+                                          : "—"}
+                                      </p>
+                                    </div>
+                                    <div className="flex shrink-0 items-center gap-2">
+                                      <span
+                                        title={t.difficultyHint}
+                                        aria-label={t.difficultyHint}
+                                        className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 bg-white text-xs font-semibold text-slate-600"
+                                      >
+                                        ?
+                                      </span>
+                                      <select
+                                        aria-label={`${t.difficulty}: ${skill.title}`}
+                                        value={String(difficultyBySkill[skill.id] ?? "any")}
+                                        disabled={disabled}
+                                        onChange={(event) => {
+                                          const value = event.target.value;
+                                          setDifficultyBySkill((prev) => ({
+                                            ...prev,
+                                            [skill.id]:
+                                              value === "1" ? 1 : value === "2" ? 2 : value === "3" ? 3 : "any",
+                                          }));
+                                        }}
+                                        className="h-8 rounded-lg border border-slate-300 bg-white px-2 text-sm text-slate-800"
+                                      >
+                                        <option value="any">{t.anyDifficulty}</option>
+                                        {availableDifficulties.map((level) => (
+                                          <option key={level} value={String(level)}>
+                                            L{level}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <button
+                                        type="button"
+                                        disabled={disabled}
+                                        onClick={() =>
+                                          setCounts((prev) => ({
+                                            ...prev,
+                                            [activeCountKey]: clamp((prev[activeCountKey] ?? 0) - 1, 0, 30),
+                                          }))
+                                        }
+                                        className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
+                                      >
+                                        -
+                                      </button>
+                                      <input
+                                        aria-label={`${t.quantity}: ${skill.title}`}
+                                        type="number"
+                                        min={0}
+                                        max={30}
+                                        disabled={disabled}
+                                        value={value}
+                                        onChange={(e) =>
+                                          setCounts((prev) => ({
+                                            ...prev,
+                                            [activeCountKey]: clamp(Number(e.target.value || 0), 0, 30),
+                                          }))
+                                        }
+                                        className="w-16 rounded-lg border border-slate-300 px-2 py-1 text-center text-sm"
+                                      />
+                                      <button
+                                        type="button"
+                                        disabled={disabled}
+                                        onClick={() =>
+                                          setCounts((prev) => ({
+                                            ...prev,
+                                            [activeCountKey]: clamp((prev[activeCountKey] ?? 0) + 1, 0, 30),
+                                          }))
+                                        }
+                                        className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
                 );
                 })}

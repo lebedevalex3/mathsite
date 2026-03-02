@@ -1,6 +1,7 @@
 export type TeacherToolsSkill = {
   id: string;
   title: string;
+  branchId?: string;
   summary?: string;
   example?: string;
   cardHref?: string;
@@ -18,6 +19,9 @@ export type TeacherToolsSkill = {
 
 export type TeacherToolsTopicConfig = {
   topicId: string;
+  sectionId?: string;
+  moduleId?: string;
+  gradeTags?: number[];
   title: Record<"ru" | "en" | "de", string>;
   skills: TeacherToolsSkill[];
 };
