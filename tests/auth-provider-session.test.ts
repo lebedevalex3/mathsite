@@ -5,10 +5,12 @@ import test from "node:test";
 import { prisma } from "@/src/lib/db/prisma";
 import {
   createAuthSession,
+  destroyAllAuthSessions,
   destroyAuthSession,
   getAuthenticatedUserFromCookie,
   verifyPassword,
 } from "@/src/lib/auth/provider";
+import { AUTH_MAX_ACTIVE_SESSIONS } from "@/src/lib/auth/policy";
 
 type CookieSetCall = {
   name: string;
@@ -52,8 +54,17 @@ test("createAuthSession stores hashed token and sets httpOnly cookie token", asy
         expiresAt: Date;
       };
     }): Promise<void>;
+    findMany(args: {
+      where: { userId: string };
+      orderBy: Array<{ createdAt: "desc" } | { id: "desc" }>;
+      skip: number;
+      select: { id: true };
+    }): Promise<Array<{ id: string }>>;
+    deleteMany(args: { where: { id: { in: string[] } } }): Promise<{ count: number }>;
   };
   const originalCreate = authSession.create;
+  const originalFindMany = authSession.findMany;
+  const originalDeleteMany = authSession.deleteMany;
   const createCalls: Array<{
     userId: string;
     tokenHash: string;
@@ -63,6 +74,8 @@ test("createAuthSession stores hashed token and sets httpOnly cookie token", asy
   authSession.create = async (args) => {
     createCalls.push(args.data);
   };
+  authSession.findMany = async () => [];
+  authSession.deleteMany = async () => ({ count: 0 });
 
   try {
     const { store, setCalls } = createCookieStore();
@@ -80,6 +93,8 @@ test("createAuthSession stores hashed token and sets httpOnly cookie token", asy
     assert.ok(data.expiresAt.getTime() > Date.now());
   } finally {
     authSession.create = originalCreate;
+    authSession.findMany = originalFindMany;
+    authSession.deleteMany = originalDeleteMany;
   }
 });
 
@@ -168,4 +183,72 @@ test("destroyAuthSession clears cookie and deletes session hash", async () => {
 test("verifyPassword returns false for malformed stored hash", async () => {
   const valid = await verifyPassword("password123", "not-a-scrypt-hash");
   assert.equal(valid, false);
+});
+
+test("createAuthSession prunes stale sessions over max limit", async () => {
+  const authSession = prisma.authSession as unknown as {
+    create(args: {
+      data: {
+        userId: string;
+        tokenHash: string;
+        expiresAt: Date;
+      };
+    }): Promise<void>;
+    findMany(args: {
+      where: { userId: string };
+      orderBy: Array<{ createdAt: "desc" } | { id: "desc" }>;
+      skip: number;
+      select: { id: true };
+    }): Promise<Array<{ id: string }>>;
+    deleteMany(args: { where: { id: { in: string[] } } }): Promise<{ count: number }>;
+  };
+  const originalCreate = authSession.create;
+  const originalFindMany = authSession.findMany;
+  const originalDeleteMany = authSession.deleteMany;
+  const deleteCalls: string[][] = [];
+
+  authSession.create = async () => {};
+  authSession.findMany = async (args) => {
+    assert.equal(args.skip, AUTH_MAX_ACTIVE_SESSIONS);
+    return [{ id: "old-1" }, { id: "old-2" }];
+  };
+  authSession.deleteMany = async (args) => {
+    deleteCalls.push(args.where.id.in);
+    return { count: args.where.id.in.length };
+  };
+
+  try {
+    const { store } = createCookieStore();
+    await createAuthSession({ userId: "u-prune", cookieStore: store });
+    assert.deepEqual(deleteCalls, [["old-1", "old-2"]]);
+  } finally {
+    authSession.create = originalCreate;
+    authSession.findMany = originalFindMany;
+    authSession.deleteMany = originalDeleteMany;
+  }
+});
+
+test("destroyAllAuthSessions deletes by user id and clears cookie", async () => {
+  const authSession = prisma.authSession as unknown as {
+    deleteMany(args: { where: { userId: string } }): Promise<{ count: number }>;
+  };
+  const originalDeleteMany = authSession.deleteMany;
+  const deletedUserIds: string[] = [];
+
+  authSession.deleteMany = async (args) => {
+    deletedUserIds.push(args.where.userId);
+    return { count: 3 };
+  };
+
+  try {
+    const { store, setCalls } = createCookieStore("token-existing");
+    await destroyAllAuthSessions({ userId: "u-all", cookieStore: store });
+    assert.deepEqual(deletedUserIds, ["u-all"]);
+    assert.equal(setCalls.length, 1);
+    assert.equal(setCalls[0].name, "auth_session");
+    assert.equal(setCalls[0].value, "");
+    assert.equal(setCalls[0].maxAge, 0);
+  } finally {
+    authSession.deleteMany = originalDeleteMany;
+  }
 });

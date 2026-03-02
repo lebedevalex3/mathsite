@@ -2,3 +2,4 @@ export const GUEST_DEMO_VARIANTS_PER_DAY = 300;
 export const GUEST_DEMO_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 export const TEACHER_MAX_STUDENTS = 50;
+export const AUTH_MAX_ACTIVE_SESSIONS = 5;

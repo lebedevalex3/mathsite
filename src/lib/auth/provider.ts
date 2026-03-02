@@ -2,6 +2,7 @@ import { createHash, randomBytes, scrypt, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 
 import { prisma } from "@/src/lib/db/prisma";
+import { AUTH_MAX_ACTIVE_SESSIONS } from "@/src/lib/auth/policy";
 
 const scryptAsync = promisify(scrypt);
 
@@ -109,6 +110,20 @@ export async function createAuthSession(params: {
     },
   });
 
+  const stale = await prisma.authSession.findMany({
+    where: { userId: params.userId },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    skip: AUTH_MAX_ACTIVE_SESSIONS,
+    select: { id: true },
+  });
+  if (stale.length > 0) {
+    await prisma.authSession.deleteMany({
+      where: {
+        id: { in: stale.map((item) => item.id) },
+      },
+    });
+  }
+
   setSessionCookie(params.cookieStore, rawToken);
 }
 
@@ -122,6 +137,18 @@ export async function destroyAuthSession(cookieStore: CookieStoreLike) {
       tokenHash: sha256Hex(token),
     },
   });
+}
+
+export async function destroyAllAuthSessions(params: {
+  userId: string;
+  cookieStore: CookieStoreLike;
+}) {
+  await prisma.authSession.deleteMany({
+    where: {
+      userId: params.userId,
+    },
+  });
+  clearSessionCookie(params.cookieStore);
 }
 
 export async function getAuthenticatedUserFromCookie(

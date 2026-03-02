@@ -67,6 +67,7 @@ const copy = {
     signIn: "Войти",
     signUp: "Зарегистрироваться",
     signOut: "Выйти",
+    signOutAll: "Выйти на всех устройствах",
     loading: "Загрузка...",
     signedIn: "Вы вошли как",
     roleLabel: "Роль",
@@ -132,6 +133,7 @@ const copy = {
     signIn: "Sign in",
     signUp: "Sign up",
     signOut: "Sign out",
+    signOutAll: "Sign out all devices",
     loading: "Loading...",
     signedIn: "Signed in as",
     roleLabel: "Role",
@@ -197,6 +199,7 @@ const copy = {
     signIn: "Anmelden",
     signUp: "Registrieren",
     signOut: "Abmelden",
+    signOutAll: "Auf allen Geraeten abmelden",
     loading: "Laden...",
     signedIn: "Angemeldet als",
     roleLabel: "Rolle",
@@ -311,6 +314,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [busySignOutAll, setBusySignOutAll] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
   const [loadingWorks, setLoadingWorks] = useState(false);
@@ -442,6 +446,23 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
       setError(t.authError);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function signOutAll() {
+    setBusySignOutAll(true);
+    setError(null);
+    try {
+      await fetch("/api/auth/sign-out-all", {
+        method: "POST",
+        credentials: "same-origin",
+      });
+      setSessionUser(null);
+      setWorks([]);
+    } catch {
+      setError(t.authError);
+    } finally {
+      setBusySignOutAll(false);
     }
   }
 
@@ -786,6 +807,14 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
                 className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
               >
                 {t.signOut}
+              </button>
+              <button
+                type="button"
+                onClick={() => void signOutAll()}
+                disabled={busySignOutAll}
+                className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
+              >
+                {busySignOutAll ? "..." : t.signOutAll}
               </button>
               {sessionUser.role !== "admin" ? (
                 <button
