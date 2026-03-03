@@ -1,4 +1,5 @@
 import type { Task } from "@/lib/tasks/schema";
+import { normalizeDifficultyBand } from "@/lib/tasks/difficulty-band";
 
 import { createSeededRng } from "./rng";
 import type { VariantTemplate } from "./types";
@@ -21,6 +22,7 @@ type PlannerSlot = {
   sectionLabel: string;
   skillIds: string[];
   difficulty: [number, number];
+  allowedBands?: Array<"A" | "B" | "C">;
 };
 
 export class InsufficientTasksError extends Error {
@@ -58,13 +60,20 @@ function sampleWithoutReplacement<T>(
   return result;
 }
 
-function matchesSlot(task: Task, slot: Pick<PlannerSlot, "skillIds" | "difficulty">) {
+function matchesSlot(
+  task: Task,
+  slot: Pick<PlannerSlot, "skillIds" | "difficulty" | "allowedBands">,
+) {
   const [minDifficulty, maxDifficulty] = slot.difficulty;
-  return (
+  const inRange =
     slot.skillIds.includes(task.skill_id) &&
     task.difficulty >= minDifficulty &&
-    task.difficulty <= maxDifficulty
-  );
+    task.difficulty <= maxDifficulty;
+  if (!inRange) return false;
+
+  const allowedBands = slot.allowedBands;
+  if (!allowedBands || allowedBands.length === 0) return true;
+  return allowedBands.includes(normalizeDifficultyBand(task));
 }
 
 function buildPlannerSlots(template: VariantTemplate): PlannerSlot[] {
@@ -79,6 +88,9 @@ function buildPlannerSlots(template: VariantTemplate): PlannerSlot[] {
         sectionLabel: section.label,
         skillIds: [...section.skillIds],
         difficulty: section.difficulty,
+        ...(section.allowedBands && section.allowedBands.length > 0
+          ? { allowedBands: [...section.allowedBands] }
+          : {}),
       });
       slotIndex += 1;
     }
@@ -98,7 +110,11 @@ export function buildVariantPlan({
   // Fast fail for obviously impossible sections before entering backtracking.
   for (const section of template.sections) {
     const candidates = tasks.filter((task) =>
-      matchesSlot(task, { skillIds: section.skillIds, difficulty: section.difficulty }),
+      matchesSlot(task, {
+        skillIds: section.skillIds,
+        difficulty: section.difficulty,
+        allowedBands: section.allowedBands,
+      }),
     );
 
     if (candidates.length < section.count) {

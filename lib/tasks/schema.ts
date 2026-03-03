@@ -1,4 +1,9 @@
 import { z } from "zod";
+import {
+  bandToRepresentativeDifficulty,
+  normalizeDifficultyBand,
+  type DifficultyBand,
+} from "./difficulty-band";
 
 export const TOPIC_ID = "math.proportion" as const;
 
@@ -65,7 +70,8 @@ export const taskSchema = z
     id: taskIdSchema,
     topic_id: topicIdSchema,
     skill_id: skillIdSchema,
-    difficulty: z.number().int().min(1).max(5),
+    difficulty: z.number().int().min(1).max(5).optional(),
+    difficulty_band: z.enum(["A", "B", "C"]).optional(),
     statement_md: z.string().trim().min(1),
     answer: answerSchema,
   })
@@ -85,6 +91,23 @@ export const taskSchema = z
         message: "task.id prefix must match task.skill_id",
       });
     }
+
+    if (task.difficulty == null && task.difficulty_band == null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["difficulty"],
+        message: "task must have difficulty or difficulty_band",
+      });
+    }
+  })
+  .transform((task) => {
+    const difficultyBand = normalizeDifficultyBand(task);
+    const difficulty = task.difficulty ?? bandToRepresentativeDifficulty(difficultyBand);
+    return {
+      ...task,
+      difficulty,
+      difficulty_band: difficultyBand,
+    };
   });
 
 export const taskBankSchema = z
@@ -113,4 +136,5 @@ export type FractionAnswer = z.infer<typeof fractionAnswerSchema>;
 export type RatioAnswer = z.infer<typeof ratioAnswerSchema>;
 export type TaskAnswer = z.infer<typeof answerSchema>;
 export type Task = z.infer<typeof taskSchema>;
+export type TaskDifficultyBand = DifficultyBand;
 export type TaskBank = z.infer<typeof taskBankSchema>;

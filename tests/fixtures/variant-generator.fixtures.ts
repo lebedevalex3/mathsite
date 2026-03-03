@@ -1,6 +1,12 @@
 import type { Task } from "@/lib/tasks/schema";
 import type { VariantTemplate } from "@/src/lib/variants/types";
 
+function toBand(difficulty: number): "A" | "B" | "C" {
+  if (difficulty <= 2) return "A";
+  if (difficulty === 3) return "B";
+  return "C";
+}
+
 function makeTask(params: {
   skillId: string;
   index: number;
@@ -13,6 +19,7 @@ function makeTask(params: {
     topic_id: "math.proportion",
     skill_id: skillId,
     difficulty,
+    difficulty_band: toBand(difficulty),
     statement_md: `Задача ${skillId} #${index}`,
     answer: { type: "number", value: index },
   };

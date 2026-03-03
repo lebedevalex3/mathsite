@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { getTasksForTopic } from "@/lib/tasks/query";
+import { isDifficultyBand } from "@/lib/tasks/difficulty-band";
 import { isTeacherRole } from "@/src/lib/auth/access";
 import { prisma } from "@/src/lib/db/prisma";
 import { badRequest, forbidden, notFound, toApiError, unauthorized } from "@/src/lib/api/errors";
@@ -134,10 +135,21 @@ export async function POST(request: Request, { params }: RouteProps) {
           .filter((item): item is Record<string, unknown> => Boolean(item))
           .map((item) => {
             const parsedDifficulty = parseDemoDifficulty(item.difficulty);
+            const parsedAllowedBands = Array.isArray(item.allowedBands)
+              ? [...new Set(item.allowedBands.filter((band): band is "A" | "B" | "C" => isDifficultyBand(band)))]
+              : [];
+            const rawRouteId =
+              typeof item.routeId === "string"
+                ? item.routeId
+                : typeof item.route_id === "string"
+                  ? item.route_id
+                  : "";
             return {
               skillId: typeof item.skillId === "string" ? item.skillId : "",
               count: typeof item.count === "number" ? Math.max(0, Math.trunc(item.count)) : 0,
               ...(parsedDifficulty ? { difficulty: parsedDifficulty } : {}),
+              ...(parsedAllowedBands.length > 0 ? { allowedBands: parsedAllowedBands } : {}),
+              ...(rawRouteId.trim().length > 0 ? { routeId: rawRouteId.trim() } : {}),
             };
           })
           .filter((item) => item.skillId.length > 0 && item.count > 0)

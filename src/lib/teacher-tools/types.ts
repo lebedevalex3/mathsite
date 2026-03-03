@@ -1,3 +1,5 @@
+import type { DifficultyBand } from "@/lib/tasks/difficulty-band";
+
 export type TeacherToolsSkill = {
   id: string;
   title: string;
@@ -13,8 +15,24 @@ export type TeacherToolsSkill = {
     2: number;
     3: number;
   };
+  availableByBand?: Record<DifficultyBand, number>;
   defaultTrainingCount?: number;
   status?: "ready" | "soon";
+};
+
+export type TeacherToolsRouteStep = {
+  step_id: string;
+  skill_id: string;
+  allowed_bands: DifficultyBand[];
+  order: number;
+  allowed_archetypes?: string[];
+};
+
+export type TeacherToolsRoute = {
+  routeId: string;
+  title: string;
+  steps: TeacherToolsRouteStep[];
+  warnings?: string[];
 };
 
 export type TeacherToolsTopicConfig = {
@@ -24,6 +42,7 @@ export type TeacherToolsTopicConfig = {
   gradeTags?: number[];
   title: Record<"ru" | "en" | "de", string>;
   skills: TeacherToolsSkill[];
+  routes?: TeacherToolsRoute[];
 };
 
 export type DemoPlanItem = {
@@ -31,4 +50,7 @@ export type DemoPlanItem = {
   skillId: string;
   count: number;
   difficulty?: 1 | 2 | 3;
+  routeId?: string | null;
+  route_id?: string | null;
+  allowedBands?: DifficultyBand[];
 };

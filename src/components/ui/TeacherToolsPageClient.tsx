@@ -9,6 +9,7 @@ import { TeacherErrorState, type TeacherApiError } from "@/src/components/ui/Tea
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 import { formatNumber } from "@/src/lib/i18n/format";
 import { getTopicDomains, topicCatalogEntries, type TopicDomain } from "@/src/lib/topicMeta";
+import type { DifficultyBand } from "@/lib/tasks/difficulty-band";
 import { type WorkType } from "@/src/lib/variants/print-recommendation";
 
 type Locale = "ru" | "en" | "de";
@@ -28,7 +29,21 @@ type TopicSkill = {
   cardHref?: string;
   availableCount?: number;
   availableByDifficulty?: { 1: number; 2: number; 3: number };
+  availableByBand?: Record<DifficultyBand, number>;
   status?: "ready" | "soon";
+};
+
+type TopicRouteStep = {
+  step_id: string;
+  skill_id: string;
+  allowed_bands: DifficultyBand[];
+  order: number;
+};
+
+type TopicRoute = {
+  routeId: string;
+  title: string;
+  steps: TopicRouteStep[];
 };
 
 type TopicPayload = {
@@ -38,6 +53,7 @@ type TopicPayload = {
   gradeTags?: number[];
   title: Record<Locale, string>;
   skills: TopicSkill[];
+  routes?: TopicRoute[];
 };
 
 type TopicOption = {
@@ -69,6 +85,7 @@ type WizardState = {
   activeModuleId: string | null;
   selectedBranchIdsByModule: Record<string, string[]>;
   skillCountsByModule: Record<string, Record<string, number>>;
+  routeIdByModule: Record<string, string | null>;
   workMeta: WorkMeta;
 };
 
@@ -82,6 +99,7 @@ type WizardAction =
   | { type: "setBranchIdsForModule"; moduleId: string; branchIds: string[] }
   | { type: "setSkillCount"; moduleId: string; skillId: string; count: number }
   | { type: "setSkillCountsForModule"; moduleId: string; updates: Record<string, number> }
+  | { type: "setRouteForModule"; moduleId: string; routeId: string | null }
   | { type: "setWorkMeta"; patch: Partial<WorkMeta> }
   | { type: "resetModeSelections" };
 
@@ -131,6 +149,9 @@ const copy = {
     selectAllBranches: "Выбрать все",
     clearBranches: "Снять все",
     branchCounter: "Выбрано подтем",
+    routeLabel: "Маршрут/уровень",
+    routeNone: "Без маршрута",
+    routeBadge: "Уровень",
     skills: "Навыки",
     addAllSkills: "Добавить все навыки темы",
     clearSkills: "Очистить тему",
@@ -147,6 +168,8 @@ const copy = {
     summaryTotal: "Всего задач",
     summaryBySkills: "Распределение по навыкам",
     summaryByThemes: "Разбивка по темам",
+    summaryByBands: "По уровню сложности",
+    routeWarnings: "Предупреждения по покрытию",
     emptySummary: "Выберите навыки и добавьте хотя бы одну задачу.",
     emptyThemeWarning: "Некоторые темы пока пустые (0 задач). Можно продолжить или удалить их.",
     validationSelectTopic: "Выберите тему, чтобы продолжить.",
@@ -175,6 +198,9 @@ const copy = {
       custom: "Свое",
     },
     breadcrumbsManyBranches: "Подтемы",
+    planNeed: "нужно",
+    planAvailable: "доступно",
+    planSelected: "будет выбрано",
   },
   en: {
     title: "Skill Variant Builder",
@@ -211,6 +237,9 @@ const copy = {
     selectAllBranches: "Select all",
     clearBranches: "Clear all",
     branchCounter: "Selected subtopics",
+    routeLabel: "Route/level",
+    routeNone: "No route",
+    routeBadge: "Level",
     skills: "Skills",
     addAllSkills: "Add all topic skills",
     clearSkills: "Clear topic",
@@ -227,6 +256,8 @@ const copy = {
     summaryTotal: "Total tasks",
     summaryBySkills: "Skill distribution",
     summaryByThemes: "By topics",
+    summaryByBands: "By difficulty",
+    routeWarnings: "Coverage warnings",
     emptySummary: "Select skills and add at least one task.",
     emptyThemeWarning: "Some topics are still empty (0 tasks). You can continue or remove them.",
     validationSelectTopic: "Select a topic to continue.",
@@ -255,6 +286,9 @@ const copy = {
       custom: "Custom",
     },
     breadcrumbsManyBranches: "Subtopics",
+    planNeed: "need",
+    planAvailable: "available",
+    planSelected: "will select",
   },
   de: {
     title: "Varianten-Baukasten",
@@ -291,6 +325,9 @@ const copy = {
     selectAllBranches: "Alle wählen",
     clearBranches: "Alle abwählen",
     branchCounter: "Gewählte Unterthemen",
+    routeLabel: "Route/Niveau",
+    routeNone: "Ohne Route",
+    routeBadge: "Niveau",
     skills: "Skills",
     addAllSkills: "Alle Skills des Themas hinzufügen",
     clearSkills: "Thema leeren",
@@ -307,6 +344,8 @@ const copy = {
     summaryTotal: "Gesamtaufgaben",
     summaryBySkills: "Skill-Verteilung",
     summaryByThemes: "Nach Themen",
+    summaryByBands: "Nach Schwierigkeit",
+    routeWarnings: "Abdeckungswarnungen",
     emptySummary: "Wählen Sie Skills und fügen Sie mindestens eine Aufgabe hinzu.",
     emptyThemeWarning: "Einige Themen sind noch leer (0 Aufgaben). Sie können fortfahren oder diese entfernen.",
     validationSelectTopic: "Wählen Sie ein Thema.",
@@ -335,6 +374,9 @@ const copy = {
       custom: "Eigene",
     },
     breadcrumbsManyBranches: "Unterthemen",
+    planNeed: "benötigt",
+    planAvailable: "verfügbar",
+    planSelected: "wird gewählt",
   },
 } as const;
 
@@ -398,6 +440,12 @@ function branchLabel(locale: Locale, branchId: string) {
   return slugToTitle(part);
 }
 
+function formatBands(bands: DifficultyBand[]) {
+  const unique = [...new Set(bands)];
+  if (unique.length <= 1) return unique[0] ?? "";
+  return unique.join(",");
+}
+
 function reducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
     case "setStep":
@@ -411,6 +459,7 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
         activeModuleId: null,
         selectedBranchIdsByModule: {},
         skillCountsByModule: {},
+        routeIdByModule: {},
       };
     case "setGradeTag":
       return { ...state, gradeTag: action.gradeTag };
@@ -457,6 +506,14 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
         },
       };
     }
+    case "setRouteForModule":
+      return {
+        ...state,
+        routeIdByModule: {
+          ...state.routeIdByModule,
+          [action.moduleId]: action.routeId,
+        },
+      };
     case "setWorkMeta":
       return { ...state, workMeta: { ...state.workMeta, ...action.patch } };
     case "resetModeSelections":
@@ -467,6 +524,7 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
         activeModuleId: null,
         selectedBranchIdsByModule: {},
         skillCountsByModule: {},
+        routeIdByModule: {},
       };
     default:
       return state;
@@ -482,6 +540,7 @@ const initialState: WizardState = {
   activeModuleId: null,
   selectedBranchIdsByModule: {},
   skillCountsByModule: {},
+  routeIdByModule: {},
   workMeta: {
     workType: "quiz",
     customTypeLabel: "",
@@ -669,6 +728,21 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
   const activeModuleId = state.activeModuleId ?? state.selectedModuleIds[0] ?? null;
 
+  const activeRouteByModule = useMemo(() => {
+    const map = new Map<string, TopicRoute | null>();
+    for (const moduleId of state.selectedModuleIds) {
+      const routeId = state.routeIdByModule[moduleId];
+      if (!routeId) {
+        map.set(moduleId, null);
+        continue;
+      }
+      const topic = topicDataById[moduleId];
+      const route = topic?.routes?.find((item) => item.routeId === routeId) ?? null;
+      map.set(moduleId, route);
+    }
+    return map;
+  }, [state.routeIdByModule, state.selectedModuleIds, topicDataById]);
+
   const branchGroupsByModule = useMemo(() => {
     const map: Record<string, BranchGroup[]> = {};
     for (const moduleId of state.selectedModuleIds) {
@@ -677,8 +751,14 @@ export function TeacherToolsPageClient({ locale }: Props) {
         map[moduleId] = [];
         continue;
       }
+      const activeRoute = activeRouteByModule.get(moduleId) ?? null;
+      const routeSkillSet = activeRoute
+        ? new Set(activeRoute.steps.map((step) => step.skill_id))
+        : null;
       const grouped = new Map<string, TopicSkill[]>();
-      for (const skill of topic.skills) {
+      for (const skill of topic.skills.filter((entry) =>
+        routeSkillSet ? routeSkillSet.has(entry.id) : true,
+      )) {
         const branchId = skill.branchId ?? "default";
         const existing = grouped.get(branchId) ?? [];
         existing.push(skill);
@@ -691,7 +771,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
       }));
     }
     return map;
-  }, [locale, state.selectedModuleIds, t.branches, topicDataById]);
+  }, [activeRouteByModule, locale, state.selectedModuleIds, t.branches, topicDataById]);
 
   const activeBranchGroups = useMemo(
     () => (activeModuleId ? branchGroupsByModule[activeModuleId] ?? [] : []),
@@ -709,6 +789,18 @@ export function TeacherToolsPageClient({ locale }: Props) {
       .flatMap((branch) => branch.skills);
   }, [activeBranchGroups, activeSelectedBranchSet]);
 
+  const routeBandsBySkillForActive = useMemo(() => {
+    if (!activeModuleId) return new Map<string, DifficultyBand[]>();
+    const route = activeRouteByModule.get(activeModuleId);
+    if (!route) return new Map<string, DifficultyBand[]>();
+    const map = new Map<string, DifficultyBand[]>();
+    for (const step of route.steps) {
+      const current = map.get(step.skill_id) ?? [];
+      map.set(step.skill_id, [...new Set([...current, ...step.allowed_bands])]);
+    }
+    return map;
+  }, [activeModuleId, activeRouteByModule]);
+
   const moduleStatus = useMemo(() => {
     const status = new Map<string, { total: number; ok: boolean }>();
     for (const moduleId of state.selectedModuleIds) {
@@ -720,12 +812,60 @@ export function TeacherToolsPageClient({ locale }: Props) {
   }, [state.selectedModuleIds, state.skillCountsByModule]);
 
   const summary = useMemo(() => {
+    const warnings: Array<{
+      moduleId: string;
+      moduleTitle: string;
+      skillId: string;
+      skillTitle: string;
+      need: number;
+      available: number;
+      selected: number;
+      bands: DifficultyBand[];
+    }> = [];
+    const byBands: Record<DifficultyBand, number> = { A: 0, B: 0, C: 0 };
+
     const byModule = state.selectedModuleIds.map((moduleId) => {
       const topic = topicDataById[moduleId];
       const counts = state.skillCountsByModule[moduleId] ?? {};
+      const route = activeRouteByModule.get(moduleId) ?? null;
+      const routeBandsBySkill = new Map<string, DifficultyBand[]>();
+      for (const step of route?.steps ?? []) {
+        const current = routeBandsBySkill.get(step.skill_id) ?? [];
+        routeBandsBySkill.set(step.skill_id, [...new Set([...current, ...step.allowed_bands])]);
+      }
+
       const selectedSkills = (topic?.skills ?? [])
-        .map((skill) => ({ skill, count: counts[skill.id] ?? 0 }))
-        .filter((item) => item.count > 0);
+        .map((skill) => {
+          const need = counts[skill.id] ?? 0;
+          const routeBands = routeBandsBySkill.get(skill.id) ?? [];
+          const isIncludedInRoute = !route || routeBands.length > 0;
+          if (!isIncludedInRoute || need <= 0) return null;
+          const available = route
+            ? routeBands.reduce((sum, band) => sum + (skill.availableByBand?.[band] ?? 0), 0)
+            : (skill.availableCount ?? 0);
+          const selected = Math.min(need, available);
+          if (selected < need) {
+            warnings.push({
+              moduleId,
+              moduleTitle:
+                topic?.title[locale] ?? topic?.title.ru ?? topicTitleById.get(moduleId) ?? moduleId,
+              skillId: skill.id,
+              skillTitle: skill.title,
+              need,
+              available,
+              selected,
+              bands: routeBands,
+            });
+          }
+          if (route && routeBands.length > 0) {
+            byBands[routeBands[0]!] += selected;
+          } else {
+            byBands.A += selected;
+          }
+          return { skill, count: selected, requested: need, available, routeBands };
+        })
+        .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
       const total = selectedSkills.reduce((sum, item) => sum + item.count, 0);
       return {
         moduleId,
@@ -735,8 +875,15 @@ export function TeacherToolsPageClient({ locale }: Props) {
       };
     });
     const total = byModule.reduce((sum, item) => sum + item.total, 0);
-    return { total, byModule };
-  }, [locale, state.selectedModuleIds, state.skillCountsByModule, topicDataById, topicTitleById]);
+    return { total, byModule, byBands, warnings };
+  }, [
+    activeRouteByModule,
+    locale,
+    state.selectedModuleIds,
+    state.skillCountsByModule,
+    topicDataById,
+    topicTitleById,
+  ]);
 
   const breadcrumb = useMemo(() => {
     if (!activeModuleId) return null;
@@ -792,6 +939,25 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
   function setBranchSelectionForActive(branchIds: string[]) {
     if (!activeModuleId) return;
+    dispatch({ type: "setBranchIdsForModule", moduleId: activeModuleId, branchIds });
+    setInlineValidation(null);
+  }
+
+  function setRouteForActive(routeId: string | null) {
+    if (!activeModuleId) return;
+    dispatch({ type: "setRouteForModule", moduleId: activeModuleId, routeId });
+    const topic = topicDataById[activeModuleId];
+    if (!topic) return;
+    const route = topic.routes?.find((item) => item.routeId === routeId) ?? null;
+    const routeSkillSet = route ? new Set(route.steps.map((step) => step.skill_id)) : null;
+    const branchIds = Array.from(
+      new Set(
+        topic.skills
+          .filter((skill) => (routeSkillSet ? routeSkillSet.has(skill.id) : true))
+          .map((skill) => skill.branchId)
+          .filter((value): value is string => Boolean(value)),
+      ),
+    );
     dispatch({ type: "setBranchIdsForModule", moduleId: activeModuleId, branchIds });
     setInlineValidation(null);
   }
@@ -907,14 +1073,34 @@ export function TeacherToolsPageClient({ locale }: Props) {
       const plan = state.selectedModuleIds.flatMap((moduleId) => {
         const topic = topicDataById[moduleId];
         const counts = state.skillCountsByModule[moduleId] ?? {};
+        const routeId = state.routeIdByModule[moduleId] ?? null;
+        const route = activeRouteByModule.get(moduleId) ?? null;
+        const routeBandsBySkill = new Map<string, DifficultyBand[]>();
+        for (const step of route?.steps ?? []) {
+          const current = routeBandsBySkill.get(step.skill_id) ?? [];
+          routeBandsBySkill.set(step.skill_id, [...new Set([...current, ...step.allowed_bands])]);
+        }
         if (!topic) return [];
         return topic.skills
-          .map((skill) => ({
-            topicId: moduleId,
-            skillId: skill.id,
-            count: Math.trunc(counts[skill.id] ?? 0),
-          }))
-          .filter((item) => item.count > 0);
+          .map((skill) => {
+            const need = Math.trunc(counts[skill.id] ?? 0);
+            if (need <= 0) return null;
+            const routeBands = routeBandsBySkill.get(skill.id) ?? [];
+            if (route && routeBands.length === 0) return null;
+            const available = route
+              ? routeBands.reduce((sum, band) => sum + (skill.availableByBand?.[band] ?? 0), 0)
+              : (skill.availableCount ?? 0);
+            const count = Math.min(need, available);
+            if (count <= 0) return null;
+            return {
+              topicId: moduleId,
+              skillId: skill.id,
+              count,
+              ...(routeId ? { routeId } : {}),
+              ...(routeBands.length > 0 ? { allowedBands: routeBands } : {}),
+            };
+          })
+          .filter((item): item is NonNullable<typeof item> => Boolean(item));
       });
 
       const primaryTopicId = state.selectedModuleIds[0] ?? null;
@@ -992,6 +1178,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
         })}
       </div>
     ) : null;
+
+  const activeTopicRoutes = activeModuleId ? topicDataById[activeModuleId]?.routes ?? [] : [];
+  const activeRouteId = activeModuleId ? (state.routeIdByModule[activeModuleId] ?? null) : null;
 
   return (
     <main className="space-y-6">
@@ -1241,6 +1430,24 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
             {!activeModuleId ? null : (
               <div className="space-y-3">
+                {activeTopicRoutes.length > 0 ? (
+                  <label className="space-y-1">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.routeLabel}</span>
+                    <select
+                      value={activeRouteId ?? ""}
+                      onChange={(event) => setRouteForActive(event.target.value || null)}
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                    >
+                      <option value="">{t.routeNone}</option>
+                      {activeTopicRoutes.map((route) => (
+                        <option key={route.routeId} value={route.routeId}>
+                          {route.title}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                ) : null}
+
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
@@ -1350,16 +1557,33 @@ export function TeacherToolsPageClient({ locale }: Props) {
                           const moduleCounts = state.skillCountsByModule[activeModuleId] ?? {};
                           const value = moduleCounts[skill.id] ?? 0;
                           const disabled = skill.status === "soon";
+                          const routeBands = routeBandsBySkillForActive.get(skill.id) ?? [];
+                          const hasRoute = routeBands.length > 0;
                           const levels = skill.availableByDifficulty ?? { 1: 0, 2: 0, 3: 0 };
                           const levelsText = [1, 2, 3]
                             .map((level) => `L${level}: ${formatNumber(locale, levels[level as 1 | 2 | 3])}`)
                             .join(", ");
+                          const availableFromRoute = routeBands.reduce(
+                            (sum, band) => sum + (skill.availableByBand?.[band] ?? 0),
+                            0,
+                          );
+                          const availableCount = hasRoute ? availableFromRoute : (skill.availableCount ?? 0);
+                          const bandsText = hasRoute
+                            ? routeBands.map((band) => `${band}: ${formatNumber(locale, skill.availableByBand?.[band] ?? 0)}`).join(", ")
+                            : "";
 
                           return (
                             <div key={skill.id} className="rounded-lg border border-slate-200 bg-white p-3">
                               <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                                 <div className="min-w-0">
-                                  <p className="font-medium text-slate-950">{skill.title}</p>
+                                  <p className="font-medium text-slate-950">
+                                    {skill.title}{" "}
+                                    {hasRoute ? (
+                                      <span className="rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">
+                                        {t.routeBadge} {formatBands(routeBands)}
+                                      </span>
+                                    ) : null}
+                                  </p>
                                   {skill.summary ? <p className="mt-1 text-sm text-slate-600">{skill.summary}</p> : null}
                                   {skill.example ? (
                                     <p className="mt-1 text-sm text-slate-700">
@@ -1367,11 +1591,17 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                     </p>
                                   ) : null}
                                   <p className="mt-1 text-xs text-slate-500">
-                                    {t.available}: {formatNumber(locale, skill.availableCount ?? 0)}
+                                    {t.available}: {formatNumber(locale, availableCount)}
                                   </p>
-                                  <p className="mt-1 text-xs text-slate-500">
-                                    {t.levelsAvailability}: {levelsText}
-                                  </p>
+                                  {hasRoute ? (
+                                    <p className="mt-1 text-xs text-slate-500">
+                                      {t.levelsAvailability}: {bandsText}
+                                    </p>
+                                  ) : (
+                                    <p className="mt-1 text-xs text-slate-500">
+                                      {t.levelsAvailability}: {levelsText}
+                                    </p>
+                                  )}
                                 </div>
                                 <div className="flex shrink-0 items-center gap-2">
                                   <button
@@ -1505,6 +1735,31 @@ export function TeacherToolsPageClient({ locale }: Props) {
                   )}
                 </ul>
               )}
+
+              <p className="mt-4 text-sm font-semibold text-slate-900">{t.summaryByBands}</p>
+              <ul className="mt-2 space-y-1 text-sm text-slate-700">
+                {(["A", "B", "C"] as const).map((band) => (
+                  <li key={band} className="flex items-center justify-between gap-2">
+                    <span>{band}</span>
+                    <span className="font-semibold text-slate-900">{formatNumber(locale, summary.byBands[band])}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {summary.warnings.length > 0 ? (
+                <>
+                  <p className="mt-4 text-sm font-semibold text-amber-900">{t.routeWarnings}</p>
+                  <ul className="mt-2 space-y-1 text-sm text-amber-900">
+                    {summary.warnings.map((warning) => (
+                      <li key={`${warning.moduleId}:${warning.skillId}`}>
+                        {warning.moduleTitle}: {warning.skillTitle} ({t.planNeed} {warning.need}, {t.planAvailable} {warning.available},{" "}
+                        {t.planSelected} {warning.selected}
+                        {warning.bands.length > 0 ? `, ${formatBands(warning.bands)}` : ""})
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
             </div>
 
             {hasAnyEmptyTheme ? (

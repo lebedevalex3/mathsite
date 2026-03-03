@@ -1,10 +1,12 @@
 import path from "node:path";
 
+import { normalizeDifficultyBand } from "@/lib/tasks/difficulty-band";
 import { getTasksForTopic } from "@/lib/tasks/query";
 import { parseTaxonomyMarkdownDetails } from "@/lib/tasks/taxonomy";
 import { proportionSkills } from "@/src/lib/topics/proportion/module-data";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 
+import { getRoutesForTopic } from "./routes";
 import type { TeacherToolsSkill, TeacherToolsTopicConfig } from "./types";
 
 const proportionSkillCards: Record<
@@ -318,8 +320,20 @@ export async function getTeacherToolsTopicSkills(topicId: string) {
       3: number;
     }
   >();
+  const countsByBand = new Map<
+    string,
+    {
+      A: number;
+      B: number;
+      C: number;
+    }
+  >();
   for (const task of tasks) {
     counts.set(task.skill_id, (counts.get(task.skill_id) ?? 0) + 1);
+    const band = normalizeDifficultyBand(task);
+    const byBand = countsByBand.get(task.skill_id) ?? { A: 0, B: 0, C: 0 };
+    byBand[band] += 1;
+    countsByBand.set(task.skill_id, byBand);
     if (task.difficulty >= 1 && task.difficulty <= 3) {
       const next = countsByDifficulty.get(task.skill_id) ?? { 1: 0, 2: 0, 3: 0 };
       next[task.difficulty as 1 | 2 | 3] += 1;
@@ -327,16 +341,20 @@ export async function getTeacherToolsTopicSkills(topicId: string) {
     }
   }
 
+  const routes = getRoutesForTopic(topicId, taxonomy.allowedSkillIds);
+
   return {
     ...topic,
     sectionId: taxonomy.sectionId,
     moduleId: taxonomy.moduleId,
     gradeTags: taxonomy.gradeTags,
+    routes,
     skills: topic.skills.map((skill): TeacherToolsSkill => ({
       ...skill,
       branchId: taxonomy.skillToBranchId.get(skill.id),
       availableCount: counts.get(skill.id) ?? 0,
       availableByDifficulty: countsByDifficulty.get(skill.id) ?? { 1: 0, 2: 0, 3: 0 },
+      availableByBand: countsByBand.get(skill.id) ?? { A: 0, B: 0, C: 0 },
     })),
   };
 }

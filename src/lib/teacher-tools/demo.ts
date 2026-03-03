@@ -1,4 +1,5 @@
 import { getTasksForTopic } from "@/lib/tasks/query";
+import { isDifficultyBand, type DifficultyBand } from "@/lib/tasks/difficulty-band";
 import { prisma } from "@/src/lib/db/prisma";
 import {
   analyzeVariantPrintFit,
@@ -109,11 +110,23 @@ export function validateDemoPlan(plan: DemoPlanItem[], variantsCount: number) {
     .filter((item) => Number.isFinite(item.count) && item.count > 0)
     .map((item) => {
       const parsedDifficulty = parseDemoDifficulty(item.difficulty);
+      const parsedAllowedBands = Array.isArray(item.allowedBands)
+        ? [...new Set(item.allowedBands.filter((band): band is DifficultyBand => isDifficultyBand(band)))]
+        : [];
+      const rawRouteId =
+        typeof item.routeId === "string"
+          ? item.routeId
+          : typeof item.route_id === "string"
+            ? item.route_id
+            : "";
+      const normalizedRouteId = rawRouteId.trim();
       return {
         ...(typeof item.topicId === "string" && item.topicId.length > 0 ? { topicId: item.topicId } : {}),
         skillId: item.skillId,
         count: Math.trunc(item.count),
         ...(parsedDifficulty ? { difficulty: parsedDifficulty } : {}),
+        ...(parsedAllowedBands.length > 0 ? { allowedBands: parsedAllowedBands } : {}),
+        ...(normalizedRouteId.length > 0 ? { routeId: normalizedRouteId } : {}),
       };
     });
 
@@ -155,6 +168,9 @@ export function buildDemoTemplate({
     },
     sections: plan.map((item) => {
       const parsedDifficulty = parseDemoDifficulty(item.difficulty);
+      const allowedBands = Array.isArray(item.allowedBands)
+        ? [...new Set(item.allowedBands.filter((band): band is DifficultyBand => isDifficultyBand(band)))]
+        : [];
       return {
         label: skillsById.get(item.skillId)?.title ?? item.skillId,
         skillIds: [item.skillId],
@@ -162,6 +178,10 @@ export function buildDemoTemplate({
         difficulty: parsedDifficulty
           ? ([parsedDifficulty, parsedDifficulty] as [number, number])
           : ([1, 5] as [number, number]),
+        ...(allowedBands.length > 0 ? { allowedBands } : {}),
+        ...(typeof item.routeId === "string" && item.routeId.trim().length > 0
+          ? { routeId: item.routeId.trim() }
+          : {}),
       };
     }),
   };
@@ -261,11 +281,13 @@ function taskMatchesSection(
   section: VariantTemplate["sections"][number],
 ) {
   const [minDifficulty, maxDifficulty] = section.difficulty;
-  return (
+  const inDifficultyRange =
     section.skillIds.includes(task.skill_id) &&
     task.difficulty >= minDifficulty &&
-    task.difficulty <= maxDifficulty
-  );
+    task.difficulty <= maxDifficulty;
+  if (!inDifficultyRange) return false;
+  if (!section.allowedBands || section.allowedBands.length === 0) return true;
+  return section.allowedBands.includes(task.difficulty_band);
 }
 
 export function buildDemoVariantDrafts(params: {
@@ -283,13 +305,7 @@ export function buildDemoVariantDrafts(params: {
   const hasFixedDifficultySections = fixedDifficultySections.length > 0;
 
   for (const section of template.sections) {
-    const [minDifficulty, maxDifficulty] = section.difficulty;
-    const availableCount = tasks.filter(
-      (task) =>
-        section.skillIds.includes(task.skill_id) &&
-        task.difficulty >= minDifficulty &&
-        task.difficulty <= maxDifficulty,
-    ).length;
+    const availableCount = tasks.filter((task) => taskMatchesSection(task, section)).length;
     const requiredCount = isFixedDifficultyLevel(section.difficulty)
       ? section.count * variantsCount
       : section.count;
@@ -483,6 +499,10 @@ export async function generateDemoWorkWithVariants(params: {
                   skillId,
                   count: section.count,
                   ...(parsedDifficulty ? { difficulty: parsedDifficulty } : {}),
+                  ...(section.allowedBands && section.allowedBands.length > 0
+                    ? { allowedBands: section.allowedBands }
+                    : {}),
+                  ...(section.routeId ? { routeId: section.routeId } : {}),
                 };
               }),
             ),

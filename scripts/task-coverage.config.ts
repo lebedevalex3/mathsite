@@ -1,5 +1,7 @@
+import type { DifficultyBand } from "../lib/tasks/difficulty-band";
+
 export type CoverageRule = {
-  requiredDifficulties: number[];
+  requiredBands: DifficultyBand[];
   minTasksPerCell: number;
 };
 
@@ -8,42 +10,41 @@ export type ResolvedCoverageRule = CoverageRule & {
 };
 
 const DEFAULT_RULE: CoverageRule = {
-  requiredDifficulties: [1, 2, 3, 4, 5],
+  requiredBands: ["A", "B", "C"],
   minTasksPerCell: 1,
 };
 
 const TOPIC_RULES: Record<string, CoverageRule> = {
   "math.proportion": {
-    requiredDifficulties: [1, 2],
+    requiredBands: ["A"],
     minTasksPerCell: 1,
   },
 };
 
 const SKILL_RULES: Record<string, CoverageRule> = {
   "math.proportion.understand_ratio_as_quotient": {
-    requiredDifficulties: [1, 2],
+    requiredBands: ["A"],
     minTasksPerCell: 1,
   },
 };
 
-function normalizeDifficulties(values: number[]) {
-  return [...new Set(values)]
-    .filter((value) => Number.isInteger(value) && value >= 1 && value <= 5)
-    .sort((a, b) => a - b);
+function normalizeBands(values: DifficultyBand[]) {
+  const order: Record<DifficultyBand, number> = { A: 1, B: 2, C: 3 };
+  return [...new Set(values)].filter((value): value is DifficultyBand => value === "A" || value === "B" || value === "C").sort((a, b) => order[a] - order[b]);
 }
 
 function validateAndNormalizeRule(rawRule: CoverageRule, key: string): CoverageRule {
-  const requiredDifficulties = normalizeDifficulties(rawRule.requiredDifficulties);
+  const requiredBands = normalizeBands(rawRule.requiredBands);
 
-  if (requiredDifficulties.length === 0) {
-    throw new Error(`Invalid coverage config for "${key}": requiredDifficulties is empty`);
+  if (requiredBands.length === 0) {
+    throw new Error(`Invalid coverage config for "${key}": requiredBands is empty`);
   }
   if (!Number.isInteger(rawRule.minTasksPerCell) || rawRule.minTasksPerCell < 1) {
     throw new Error(`Invalid coverage config for "${key}": minTasksPerCell must be >= 1`);
   }
 
   return {
-    requiredDifficulties,
+    requiredBands,
     minTasksPerCell: rawRule.minTasksPerCell,
   };
 }

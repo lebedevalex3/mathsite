@@ -2,6 +2,7 @@ import path from "node:path";
 import { promises as fs } from "node:fs";
 
 import { loadTaskBanks } from "../lib/tasks/load";
+import { normalizeDifficultyBand, type DifficultyBand } from "../lib/tasks/difficulty-band";
 import { parseTaxonomyMarkdownDetails } from "../lib/tasks/taxonomy";
 import { analyzeLatexTaskMarkdownCompatibility } from "../src/lib/latex/task-latex-compat";
 import { resolveCoverageRule } from "./task-coverage.config";
@@ -61,7 +62,7 @@ async function loadTaxonomies() {
 }
 
 type CoverageCell = {
-  difficulty: number;
+  band: DifficultyBand;
   count: number;
   minRequired: number;
   ok: boolean;
@@ -70,7 +71,7 @@ type CoverageCell = {
 type CoverageSkill = {
   skillId: string;
   ruleSource: "skill" | "topic" | "default";
-  requiredDifficulties: number[];
+  requiredBands: DifficultyBand[];
   minTasksPerCell: number;
   total: number;
   cells: CoverageCell[];
@@ -86,7 +87,7 @@ type CoverageTopic = {
 type CoverageDeficit = {
   topicId: string;
   skillId: string;
-  difficulty: number;
+  band: DifficultyBand;
   actual: number;
   required: number;
 };
@@ -104,15 +105,19 @@ type CoverageReport = {
 };
 
 function buildCoverageReport(params: {
-  allTasks: { filePath: string; task: { topic_id: string; skill_id: string; difficulty: number } }[];
+  allTasks: {
+    filePath: string;
+    task: { topic_id: string; skill_id: string; difficulty: number; difficulty_band: DifficultyBand };
+  }[];
   taxonomiesByTopicId: Map<string, { filePath: string; skillIds: string[] }>;
 }): CoverageReport {
-  const countsByTopicSkillDifficulty = new Map<string, number>();
+  const countsByTopicSkillBand = new Map<string, number>();
   const totalByTopic = new Map<string, number>();
 
   for (const { task } of params.allTasks) {
-    const key = `${task.topic_id}|${task.skill_id}|${task.difficulty}`;
-    countsByTopicSkillDifficulty.set(key, (countsByTopicSkillDifficulty.get(key) ?? 0) + 1);
+    const band = normalizeDifficultyBand(task);
+    const key = `${task.topic_id}|${task.skill_id}|${band}`;
+    countsByTopicSkillBand.set(key, (countsByTopicSkillBand.get(key) ?? 0) + 1);
     totalByTopic.set(task.topic_id, (totalByTopic.get(task.topic_id) ?? 0) + 1);
   }
 
@@ -130,21 +135,21 @@ function buildCoverageReport(params: {
       const cells: CoverageCell[] = [];
       let total = 0;
 
-      for (const difficulty of rule.requiredDifficulties) {
-        const key = `${topicId}|${skillId}|${difficulty}`;
-        const count = countsByTopicSkillDifficulty.get(key) ?? 0;
+      for (const band of rule.requiredBands) {
+        const key = `${topicId}|${skillId}|${band}`;
+        const count = countsByTopicSkillBand.get(key) ?? 0;
         const ok = count >= rule.minTasksPerCell;
         if (!ok) {
           deficits.push({
             topicId,
             skillId,
-            difficulty,
+            band,
             actual: count,
             required: rule.minTasksPerCell,
           });
         }
         cells.push({
-          difficulty,
+          band,
           count,
           minRequired: rule.minTasksPerCell,
           ok,
@@ -155,7 +160,7 @@ function buildCoverageReport(params: {
       skills.push({
         skillId,
         ruleSource: rule.source,
-        requiredDifficulties: rule.requiredDifficulties,
+        requiredBands: rule.requiredBands,
         minTasksPerCell: rule.minTasksPerCell,
         total,
         cells,
@@ -210,29 +215,27 @@ async function writeCoverageReports(report: CoverageReport) {
     lines.push(`- Total tasks in topic: \`${topic.totalTasks}\``);
     lines.push("");
 
-    const topicDifficulties = [...new Set(topic.skills.flatMap((skill) => skill.requiredDifficulties))].sort(
-      (a, b) => a - b,
-    );
+    const topicBands = [...new Set(topic.skills.flatMap((skill) => skill.requiredBands))];
     const headers = [
       "skill_id",
       "rule_source",
-      "required_difficulties",
+      "required_bands",
       "min_per_cell",
-      ...topicDifficulties.map((value) => `d${value}`),
+      ...topicBands.map((value) => `band_${value}`),
       "total",
     ];
     lines.push(`| ${headers.join(" | ")} |`);
-    lines.push(`| ${headers.map(() => "---").join(" | ")} |`);
+      lines.push(`| ${headers.map(() => "---").join(" | ")} |`);
 
     for (const skill of topic.skills) {
-      const cellByDifficulty = new Map(skill.cells.map((cell) => [cell.difficulty, cell]));
-      const difficultyCells = topicDifficulties.map((difficulty) => {
-        const cell = cellByDifficulty.get(difficulty);
+      const cellByBand = new Map(skill.cells.map((cell) => [cell.band, cell]));
+      const bandCells = topicBands.map((band) => {
+        const cell = cellByBand.get(band);
         if (!cell) return "—";
         return cell.ok ? `${cell.count}` : `${cell.count} ⚠`;
       });
       lines.push(
-        `| ${skill.skillId} | ${skill.ruleSource} | ${skill.requiredDifficulties.join(",")} | ${skill.minTasksPerCell} | ${difficultyCells.join(" | ")} | ${skill.total} |`,
+        `| ${skill.skillId} | ${skill.ruleSource} | ${skill.requiredBands.join(",")} | ${skill.minTasksPerCell} | ${bandCells.join(" | ")} | ${skill.total} |`,
       );
     }
     lines.push("");
@@ -245,7 +248,7 @@ async function writeCoverageReports(report: CoverageReport) {
   } else {
     for (const deficit of report.deficits) {
       lines.push(
-        `- ${deficit.topicId} | ${deficit.skillId} | difficulty=${deficit.difficulty} | actual=${deficit.actual} | required=${deficit.required}`,
+        `- ${deficit.topicId} | ${deficit.skillId} | band=${deficit.band} | actual=${deficit.actual} | required=${deficit.required}`,
       );
     }
   }
@@ -383,7 +386,7 @@ async function main() {
   });
   for (const deficit of coverageReport.deficits) {
     validationErrors.push(
-      `coverage deficit | topic=${deficit.topicId} | skill=${deficit.skillId} | difficulty=${deficit.difficulty} | actual=${deficit.actual} | required>=${deficit.required}`,
+      `coverage deficit | topic=${deficit.topicId} | skill=${deficit.skillId} | band=${deficit.band} | actual=${deficit.actual} | required>=${deficit.required}`,
     );
   }
   const coveragePaths = await writeCoverageReports(coverageReport);

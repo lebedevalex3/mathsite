@@ -67,6 +67,7 @@ test("buildPrintableWorkDocument normalizes print profile and assembles printabl
           statement_md: text,
           answer: { type: "number", value: 5 },
           difficulty: 2,
+          difficulty_band: "A",
         },
       },
     ],

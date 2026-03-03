@@ -49,6 +49,29 @@ test('validateDemoPlan keeps fixed difficulty when payload uses L1/L2/L3', () =>
   ]);
 });
 
+test('validateDemoPlan preserves routeId and allowedBands (camelCase/snake_case)', () => {
+  const rawPlan = [
+    {
+      topicId: 'math.proportion',
+      skillId: 'math.proportion.check_proportion',
+      count: 4,
+      route_id: 'mul_fractions:B',
+      allowedBands: ['B'],
+    },
+  ] as unknown as Parameters<typeof validateDemoPlan>[0];
+
+  const result = validateDemoPlan(rawPlan, 1);
+  assert.deepEqual(result.normalized, [
+    {
+      topicId: 'math.proportion',
+      skillId: 'math.proportion.check_proportion',
+      count: 4,
+      routeId: 'mul_fractions:B',
+      allowedBands: ['B'],
+    },
+  ]);
+});
+
 test('shouldEnforceDemoRateLimit is enabled by default and supports override', () => {
   assert.equal(shouldEnforceDemoRateLimit({ NODE_ENV: 'production' } as NodeJS.ProcessEnv), true);
   assert.equal(shouldEnforceDemoRateLimit({ NODE_ENV: 'development' } as NodeJS.ProcessEnv), true);
@@ -158,12 +181,35 @@ test('buildDemoTemplate supports fixed per-skill difficulty', () => {
   assert.deepEqual(template.sections[0]?.difficulty, [3, 3]);
 });
 
+test('buildDemoTemplate carries route metadata to sections', () => {
+  const template = buildDemoTemplate({
+    topicId: 'math.proportion',
+    plan: [
+      {
+        topicId: 'math.proportion',
+        skillId: 'math.proportion.solve_hidden_linear_fraction',
+        count: 2,
+        routeId: 'mul_fractions:C',
+        allowedBands: ['C'],
+      },
+    ],
+    skillsById: new Map([
+      ['math.proportion.solve_hidden_linear_fraction', { title: 'Скрытые дробные пропорции' }],
+    ]),
+    mode: 'custom',
+  });
+
+  assert.deepEqual(template.sections[0]?.allowedBands, ['C']);
+  assert.equal(template.sections[0]?.routeId, 'mul_fractions:C');
+});
+
 test('buildDemoVariantDrafts allows task reuse between variants', () => {
   const tasks: Task[] = Array.from({ length: 10 }, (_, index) => ({
     id: `math.proportion.check_proportion.${String(index + 1).padStart(6, '0')}`,
     topic_id: 'math.proportion',
     skill_id: 'math.proportion.check_proportion',
     difficulty: index < 5 ? 1 : 2,
+    difficulty_band: 'A',
     statement_md: `Задача #${index + 1}`,
     answer: { type: 'number', value: index + 1 },
   }));
@@ -196,6 +242,7 @@ test('buildDemoVariantDrafts requires enough unique tasks for fixed level across
     topic_id: 'math.proportion',
     skill_id: 'math.proportion.check_proportion',
     difficulty: index < 5 ? 1 : 2,
+    difficulty_band: 'A',
     statement_md: `Задача #${index + 1}`,
     answer: { type: 'number', value: index + 1 },
   }));
@@ -226,4 +273,54 @@ test('buildDemoVariantDrafts requires enough unique tasks for fixed level across
       return true;
     },
   );
+});
+
+test('buildDemoVariantDrafts filters by allowed route bands', () => {
+  const tasks: Task[] = [
+    {
+      id: 'math.proportion.check_proportion.000001',
+      topic_id: 'math.proportion',
+      skill_id: 'math.proportion.check_proportion',
+      difficulty: 2,
+      difficulty_band: 'A',
+      statement_md: 'A task',
+      answer: { type: 'number', value: 1 },
+    },
+    {
+      id: 'math.proportion.check_proportion.000002',
+      topic_id: 'math.proportion',
+      skill_id: 'math.proportion.check_proportion',
+      difficulty: 3,
+      difficulty_band: 'B',
+      statement_md: 'B task',
+      answer: { type: 'number', value: 2 },
+    },
+  ];
+
+  const template = buildDemoTemplate({
+    topicId: 'math.proportion',
+    plan: [
+      {
+        skillId: 'math.proportion.check_proportion',
+        count: 1,
+        routeId: 'mul_fractions:B',
+        allowedBands: ['B'],
+      },
+    ],
+    skillsById: new Map([
+      ['math.proportion.check_proportion', { title: 'Проверить пропорцию' }],
+    ]),
+    mode: 'custom',
+  });
+
+  const drafts = buildDemoVariantDrafts({
+    tasks,
+    template,
+    variantsCount: 1,
+    topicId: 'math.proportion',
+    seed: 1,
+  });
+
+  assert.equal(drafts.length, 1);
+  assert.equal(drafts[0]?.ordered[0]?.task.id, 'math.proportion.check_proportion.000002');
 });
