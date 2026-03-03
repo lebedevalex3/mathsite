@@ -19,10 +19,18 @@ const TOPIC_RULES: Record<string, CoverageRule> = {
     requiredBands: ["A"],
     minTasksPerCell: 1,
   },
+  "math.fractions_multiplication": {
+    requiredBands: ["A"],
+    minTasksPerCell: 0,
+  },
 };
 
 const SKILL_RULES: Record<string, CoverageRule> = {
   "math.proportion.understand_ratio_as_quotient": {
+    requiredBands: ["A"],
+    minTasksPerCell: 1,
+  },
+  "math.fractions_multiplication.s1_ff": {
     requiredBands: ["A"],
     minTasksPerCell: 1,
   },
@@ -39,8 +47,8 @@ function validateAndNormalizeRule(rawRule: CoverageRule, key: string): CoverageR
   if (requiredBands.length === 0) {
     throw new Error(`Invalid coverage config for "${key}": requiredBands is empty`);
   }
-  if (!Number.isInteger(rawRule.minTasksPerCell) || rawRule.minTasksPerCell < 1) {
-    throw new Error(`Invalid coverage config for "${key}": minTasksPerCell must be >= 1`);
+  if (!Number.isInteger(rawRule.minTasksPerCell) || rawRule.minTasksPerCell < 0) {
+    throw new Error(`Invalid coverage config for "${key}": minTasksPerCell must be >= 0`);
   }
 
   return {

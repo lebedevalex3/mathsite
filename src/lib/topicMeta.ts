@@ -66,6 +66,30 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canTrain: false,
   },
   {
+    id: "math.fractions_multiplication",
+    slug: "topics/fractions-multiplication",
+    domain: "arithmetic",
+    levels: [4, 5, 6, 7],
+    status: "ready",
+    title: {
+      ru: "Умножение дробей",
+      en: "Multiplying Fractions",
+      de: "Brueche multiplizieren",
+    },
+    description: {
+      ru: "Операции, применение, выражения, уравнения и задачи на умножение дробей.",
+      en: "Operations, applications, expressions, equations, and word problems with fractions multiplication.",
+      de: "Operationen, Anwendungen, Ausdruecke, Gleichungen und Sachaufgaben zur Bruchmultiplikation.",
+    },
+    searchTerms: {
+      ru: ["умножение дробей", "дробь на дробь", "часть от числа", "проценты"],
+      en: ["multiplying fractions", "fraction times fraction", "fraction of a number"],
+      de: ["bruchmultiplikation", "bruch mal bruch", "anteil einer zahl"],
+    },
+    canRead: false,
+    canTrain: false,
+  },
+  {
     id: "math.equations",
     slug: "topics/equations",
     domain: "algebra",

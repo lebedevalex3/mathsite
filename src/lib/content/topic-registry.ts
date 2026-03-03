@@ -42,6 +42,17 @@ const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {
       de: "Negative Zahlen",
     },
   },
+  "fractions-multiplication": {
+    topicSlug: "fractions-multiplication",
+    domain: "arithmetic",
+    routePathSegments: ["topics", "fractions-multiplication"],
+    defaultLocale: "ru",
+    titles: {
+      ru: "Умножение дробей",
+      en: "Multiplying Fractions",
+      de: "Brueche multiplizieren",
+    },
+  },
 };
 
 export function getContentTopicConfig(topicSlug: string): ContentTopicRegistryItem | null {

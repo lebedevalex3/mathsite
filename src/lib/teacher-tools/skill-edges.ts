@@ -5,7 +5,10 @@ import {
 } from "./prereqs";
 import { fractionsMultiplicationSkillIdByKey } from "@/src/lib/topics/fractions-multiplication/module-data";
 
-export const MODERN_TOPICS = new Set<string>(["math.proportion"]);
+export const MODERN_TOPICS = new Set<string>([
+  "math.proportion",
+  "math.fractions_multiplication",
+]);
 
 const PROPORTION_SKILL_EDGES: SkillPrereqEdge[] = [
   {

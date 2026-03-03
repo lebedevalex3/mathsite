@@ -4,6 +4,7 @@ import { normalizeDifficultyBand } from "@/lib/tasks/difficulty-band";
 import { getTasksForTopic } from "@/lib/tasks/query";
 import { parseTaxonomyMarkdownDetails } from "@/lib/tasks/taxonomy";
 import { getSkillKind } from "@/src/lib/skills/kind";
+import { fractionsMultiplicationSkills } from "@/src/lib/topics/fractions-multiplication/module-data";
 import { proportionSkills } from "@/src/lib/topics/proportion/module-data";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 
@@ -287,6 +288,24 @@ export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
         skills: otricatelnyeChislaSkills,
       });
     }
+
+    if (cfg.topicSlug === "fractions-multiplication") {
+      topics.push({
+        topicId: "math.fractions_multiplication",
+        title: {
+          ru: cfg.titles?.ru ?? "Умножение дробей",
+          en: cfg.titles?.en ?? "Multiplying Fractions",
+          de: cfg.titles?.de ?? "Brueche multiplizieren",
+        },
+        skills: fractionsMultiplicationSkills.map((skill) => ({
+          id: skill.id,
+          title: skill.title,
+          summary: skill.summary,
+          kind: skill.kind,
+          status: "ready" as const,
+        })),
+      });
+    }
   }
   return topics;
 }
@@ -295,6 +314,11 @@ const taxonomyPathByTopicId: Record<string, string> = {
   "math.proportion": path.join(process.cwd(), "docs", "TAXONOMY.md"),
   "math.equations": path.join(process.cwd(), "docs", "TAXONOMY_URAVNENIYA.md"),
   "math.negative_numbers": path.join(process.cwd(), "docs", "TAXONOMY_OTRICATELNYE_CHISLA.md"),
+  "math.fractions_multiplication": path.join(
+    process.cwd(),
+    "docs",
+    "TAXONOMY_FRACTIONS_MULTIPLICATION.md",
+  ),
 };
 
 async function loadTopicTaxonomy(topicId: string) {
