@@ -3,6 +3,7 @@ import {
   type SkillPrereqEdge,
   validateSkillEdges,
 } from "./prereqs";
+import { fractionsMultiplicationSkillIdByKey } from "@/src/lib/topics/fractions-multiplication/module-data";
 
 export const MODERN_TOPICS = new Set<string>(["math.proportion"]);
 
@@ -102,8 +103,52 @@ const PROPORTION_SKILL_EDGES: SkillPrereqEdge[] = [
   },
 ];
 
+const FRACTIONS_MULTIPLICATION_TOPIC_ID = "math.fractions_multiplication";
+
+function fmSkill(key: string) {
+  const skillId = fractionsMultiplicationSkillIdByKey.get(key);
+  if (!skillId) {
+    throw new Error(`Unknown fractions multiplication skill key: ${key}`);
+  }
+  return skillId;
+}
+
+const FRACTIONS_MULTIPLICATION_SKILL_EDGES: SkillPrereqEdge[] = [
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s1.ff"), relation: "required", prereq: { prereq_skill_id: fmSkill("s0.reduce") }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s1.fi"), relation: "required", prereq: { prereq_skill_id: fmSkill("s1.ff") }, priority: 2 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s1.precancel"), relation: "required", prereq: { any_of: [fmSkill("s1.ff"), fmSkill("s0.reduce")] }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s1.mf"), relation: "required", prereq: { any_of: [fmSkill("s1.precancel"), fmSkill("s0.mixed")] }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s1.mm"), relation: "required", prereq: { any_of: [fmSkill("s1.mf"), fmSkill("s0.mixed")] }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s1.dec_mul"), relation: "required", prereq: { any_of: [fmSkill("s1.precancel"), fmSkill("s0.decimal")] }, priority: 2 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s1.multi_factor"), relation: "required", prereq: { prereq_skill_id: fmSkill("s1.precancel") }, priority: 2 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s1.order_ops"), relation: "required", prereq: { any_of: [fmSkill("s1.multi_factor"), fmSkill("s0.addsub")] }, priority: 2 },
+
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s2.frac_of"), relation: "required", prereq: { prereq_skill_id: fmSkill("s1.precancel") }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s2.percent_of"), relation: "required", prereq: { any_of: [fmSkill("s2.frac_of"), fmSkill("s0.decimal")] }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s2.dist_law"), relation: "required", prereq: { any_of: [fmSkill("s0.addsub"), fmSkill("s1.precancel"), fmSkill("s1.order_ops")] }, priority: 2 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s2.factor_common"), relation: "required", prereq: { any_of: [fmSkill("s2.dist_law"), fmSkill("s1.precancel")] }, priority: 2 },
+
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s3.lin_coeff"), relation: "required", prereq: { any_of: [fmSkill("s0.like_terms"), fmSkill("s0.addsub")] }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s3.lin_a"), relation: "required", prereq: { any_of: [fmSkill("s3.lin_coeff"), fmSkill("s1.precancel")] }, priority: 2 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s3.parens_a"), relation: "required", prereq: { any_of: [fmSkill("s3.lin_a"), fmSkill("s1.order_ops")] }, priority: 2 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s3.subst_hard"), relation: "required", prereq: { any_of: [fmSkill("s3.parens_a"), fmSkill("s0.decimal"), fmSkill("s0.reduce")] }, priority: 2 },
+
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s4.eq_factor"), relation: "required", prereq: { any_of: [fmSkill("s3.lin_coeff"), fmSkill("s1.order_ops")] }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s4.eq_parens"), relation: "required", prereq: { any_of: [fmSkill("s4.eq_factor"), fmSkill("s3.parens_a")] }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s4.eq_decimal"), relation: "required", prereq: { any_of: [fmSkill("s4.eq_parens"), fmSkill("s0.decimal"), fmSkill("s0.mixed")] }, priority: 2 },
+
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s5.price"), relation: "required", prereq: { prereq_skill_id: fmSkill("s2.frac_of") }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s5.speed"), relation: "required", prereq: { prereq_skill_id: fmSkill("s2.frac_of") }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s5.remain_frac"), relation: "required", prereq: { any_of: [fmSkill("s2.frac_of"), fmSkill("s0.addsub")] }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s5.seq_frac"), relation: "required", prereq: { any_of: [fmSkill("s5.remain_frac"), fmSkill("s2.frac_of")] }, priority: 1 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s5.geometry_basic"), relation: "required", prereq: { any_of: [fmSkill("s2.frac_of"), fmSkill("s0.addsub")] }, priority: 2 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s5.area"), relation: "required", prereq: { any_of: [fmSkill("s5.seq_frac"), fmSkill("s5.geometry_basic")] }, priority: 2 },
+  { topic_id: FRACTIONS_MULTIPLICATION_TOPIC_ID, skill_id: fmSkill("s5.volume"), relation: "required", prereq: { any_of: [fmSkill("s1.multi_factor"), fmSkill("s0.mixed")] }, priority: 2 },
+];
+
 const SKILL_EDGES_BY_TOPIC: Record<string, SkillPrereqEdge[]> = {
   "math.proportion": PROPORTION_SKILL_EDGES,
+  [FRACTIONS_MULTIPLICATION_TOPIC_ID]: FRACTIONS_MULTIPLICATION_SKILL_EDGES,
 };
 
 export function getRawSkillEdgesForTopic(topicId: string): SkillPrereqEdge[] {

@@ -1,4 +1,5 @@
 import type { DifficultyBand } from "@/lib/tasks/difficulty-band";
+import { fractionsMultiplicationSkillIdByKey } from "@/src/lib/topics/fractions-multiplication/module-data";
 
 import type { TeacherToolsRoute, TeacherToolsRouteStep } from "./types";
 
@@ -64,31 +65,7 @@ export function compileRoutes(
 }
 
 const FRACTIONS_MULTIPLICATION_ROUTES: TopicRouteConfig = {
-  skillMap: {
-    "s1.ff": "math.fractions.multiply_fractions",
-    "s1.fi": "math.fractions.multiply_fraction_by_integer",
-    "s1.mf": "math.fractions.multiply_mixed_numbers",
-    "s2.frac_of": "math.fractions.find_fraction_of_number",
-    "s2.percent_of": "math.fractions.find_percent_of_number",
-    "s5.price": "math.fractions.word_price",
-    "s5.speed": "math.fractions.word_speed",
-    "s1.mm": "math.fractions.multiply_mixed_numbers",
-    "s1.dec_mul": "math.fractions.multiply_decimals",
-    "s1.multi_factor": "math.fractions.multiply_many_factors",
-    "s1.order_ops": "math.fractions.order_of_operations",
-    "s2.dist_law": "math.fractions.distributive_property",
-    "s2.factor_common": "math.fractions.factor_common_term",
-    "s3.lin_coeff": "math.fractions.linear_with_coefficient",
-    "s3.lin_a": "math.fractions.linear_isolate_variable",
-    "s5.remain_frac": "math.fractions.word_remaining_fraction",
-    "s5.seq_frac": "math.fractions.word_sequence_fraction",
-    "s3.parens_a": "math.fractions.parens_transform",
-    "s3.subst_hard": "math.fractions.hard_substitution",
-    "s4.eq_factor": "math.fractions.equation_factor_form",
-    "s4.eq_parens": "math.fractions.equation_parens_form",
-    "s4.eq_decimal": "math.fractions.equation_decimal_form",
-    "s5.volume": "math.fractions.word_volume",
-  },
+  skillMap: Object.fromEntries(fractionsMultiplicationSkillIdByKey),
   rawRoutes: [
     {
       routeId: "mul_fractions:A",
