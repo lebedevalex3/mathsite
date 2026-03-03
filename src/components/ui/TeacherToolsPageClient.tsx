@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
@@ -497,6 +497,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
   const [topicDataById, setTopicDataById] = useState<Record<string, TopicPayload>>({});
   const [loadingTopics, setLoadingTopics] = useState<Record<string, boolean>>({});
+  const loadingTopicsRef = useRef<Set<string>>(new Set());
   const [building, setBuilding] = useState(false);
   const [error, setError] = useState<TeacherApiError | null>(null);
   const [inlineValidation, setInlineValidation] = useState<string | null>(null);
@@ -580,11 +581,16 @@ export function TeacherToolsPageClient({ locale }: Props) {
   }, [filteredTopicIds, state.activeModuleId, state.mode, state.selectedModuleIds, t.needReSelectNotice, t.topicResetNotice]);
 
   useEffect(() => {
-    const moduleIdsToLoad = state.selectedModuleIds.filter((moduleId) => !topicDataById[moduleId] && !loadingTopics[moduleId]);
+    const moduleIdsToLoad = state.selectedModuleIds.filter(
+      (moduleId) => !topicDataById[moduleId] && !loadingTopicsRef.current.has(moduleId),
+    );
     if (moduleIdsToLoad.length === 0) return;
 
     let cancelled = false;
     void (async () => {
+      for (const id of moduleIdsToLoad) {
+        loadingTopicsRef.current.add(id);
+      }
       setLoadingTopics((prev) => {
         const next = { ...prev };
         for (const id of moduleIdsToLoad) next[id] = true;
@@ -633,6 +639,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
           setError({ message: "Ошибка сети при загрузке тем." });
         }
       } finally {
+        for (const id of moduleIdsToLoad) {
+          loadingTopicsRef.current.delete(id);
+        }
         if (!cancelled) {
           setLoadingTopics((prev) => {
             const next = { ...prev };
@@ -646,7 +655,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [loadingTopics, state.selectedBranchIdsByModule, state.selectedModuleIds, topicDataById]);
+  }, [state.selectedBranchIdsByModule, state.selectedModuleIds, topicDataById]);
 
   useEffect(() => {
     if (!state.activeModuleId && state.selectedModuleIds.length > 0) {
