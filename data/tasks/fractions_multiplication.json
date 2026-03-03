@@ -293,6 +293,198 @@
       "difficulty_band": "A",
       "statement_md": "Вычисли: $2\\frac{3}{5}\\cdot\\frac{5}{6}$",
       "answer": { "type": "fraction", "numerator": 13, "denominator": 6 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{2}{3}$ от 9.",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{3}{4}$ от 8.",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{5}{6}$ от 12.",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{7}{8}$ от 16.",
+      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{4}{5}$ от 15.",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{9}{10}$ от 20.",
+      "answer": { "type": "fraction", "numerator": 18, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{1}{2}$ от 14.",
+      "answer": { "type": "fraction", "numerator": 7, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{3}{5}$ от 25.",
+      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{5}{9}$ от 18.",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{2}{7}$ от 21.",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{4}{9}$ от 27.",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_frac_of.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_frac_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди $\\frac{3}{8}$ от 32.",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 10% от 50.",
+      "answer": { "type": "fraction", "numerator": 5, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 25% от 40.",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 50% от 18.",
+      "answer": { "type": "fraction", "numerator": 9, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 10% от 90.",
+      "answer": { "type": "fraction", "numerator": 9, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 25% от 28.",
+      "answer": { "type": "fraction", "numerator": 7, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 50% от 64.",
+      "answer": { "type": "fraction", "numerator": 32, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 10% от 120.",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 25% от 36.",
+      "answer": { "type": "fraction", "numerator": 9, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 50% от 22.",
+      "answer": { "type": "fraction", "numerator": 11, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 10% от 70.",
+      "answer": { "type": "fraction", "numerator": 7, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 25% от 16.",
+      "answer": { "type": "fraction", "numerator": 4, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_percent_of.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_percent_of",
+      "difficulty_band": "A",
+      "statement_md": "Найди 50% от 30.",
+      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
     }
   ]
 }
