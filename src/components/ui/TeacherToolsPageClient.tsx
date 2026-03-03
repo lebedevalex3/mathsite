@@ -8,6 +8,7 @@ import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { TeacherErrorState, type TeacherApiError } from "@/src/components/ui/TeacherErrorState";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 import { formatNumber } from "@/src/lib/i18n/format";
+import { analyzePrereqs, type SkillPrereqEdge } from "@/src/lib/teacher-tools/prereqs";
 import { getTopicDomains, topicCatalogEntries, type TopicDomain } from "@/src/lib/topicMeta";
 import type { DifficultyBand } from "@/lib/tasks/difficulty-band";
 import { type WorkType } from "@/src/lib/variants/print-recommendation";
@@ -54,6 +55,7 @@ type TopicPayload = {
   title: Record<Locale, string>;
   skills: TopicSkill[];
   routes?: TopicRoute[];
+  skillEdges?: SkillPrereqEdge[];
 };
 
 type TopicOption = {
@@ -170,6 +172,11 @@ const copy = {
     summaryByThemes: "Разбивка по темам",
     summaryByBands: "По уровню сложности",
     routeWarnings: "Предупреждения по покрытию",
+    prereqTitle: "Предпосылки",
+    prereqRequired: "Обязательные предпосылки",
+    prereqRecommended: "Рекомендуемые предпосылки",
+    prereqUnmetRequired: "Обязательные, но недостаточно освоенные",
+    prereqUnmetRecommended: "Рекомендуемые, но недостаточно освоенные",
     emptySummary: "Выберите навыки и добавьте хотя бы одну задачу.",
     emptyThemeWarning: "Некоторые темы пока пустые (0 задач). Можно продолжить или удалить их.",
     validationSelectTopic: "Выберите тему, чтобы продолжить.",
@@ -258,6 +265,11 @@ const copy = {
     summaryByThemes: "By topics",
     summaryByBands: "By difficulty",
     routeWarnings: "Coverage warnings",
+    prereqTitle: "Prerequisites",
+    prereqRequired: "Required prerequisites",
+    prereqRecommended: "Recommended prerequisites",
+    prereqUnmetRequired: "Required but under mastery threshold",
+    prereqUnmetRecommended: "Recommended but under mastery threshold",
     emptySummary: "Select skills and add at least one task.",
     emptyThemeWarning: "Some topics are still empty (0 tasks). You can continue or remove them.",
     validationSelectTopic: "Select a topic to continue.",
@@ -346,6 +358,11 @@ const copy = {
     summaryByThemes: "Nach Themen",
     summaryByBands: "Nach Schwierigkeit",
     routeWarnings: "Abdeckungswarnungen",
+    prereqTitle: "Voraussetzungen",
+    prereqRequired: "Pflicht-Voraussetzungen",
+    prereqRecommended: "Empfohlene Voraussetzungen",
+    prereqUnmetRequired: "Pflicht, aber noch nicht ausreichend beherrscht",
+    prereqUnmetRecommended: "Empfohlen, aber noch nicht ausreichend beherrscht",
     emptySummary: "Wählen Sie Skills und fügen Sie mindestens eine Aufgabe hinzu.",
     emptyThemeWarning: "Einige Themen sind noch leer (0 Aufgaben). Sie können fortfahren oder diese entfernen.",
     validationSelectTopic: "Wählen Sie ein Thema.",
@@ -904,6 +921,92 @@ export function TeacherToolsPageClient({ locale }: Props) {
     if (state.mode !== "multi") return false;
     return summary.byModule.some((item) => item.total === 0);
   }, [state.mode, summary.byModule]);
+
+  const prereqSummary = useMemo(() => {
+    const combined = {
+      missingRequired: [] as Array<{ title: string; reason?: string; priority: number }>,
+      missingRecommended: [] as Array<{ title: string; reason?: string; priority: number }>,
+      unmetRequired: [] as Array<{ title: string; reason?: string; priority: number }>,
+      unmetRecommended: [] as Array<{ title: string; reason?: string; priority: number }>,
+    };
+
+    for (const moduleId of state.selectedModuleIds) {
+      const topic = topicDataById[moduleId];
+      if (!topic || !topic.skillEdges || topic.skillEdges.length === 0) continue;
+      const counts = state.skillCountsByModule[moduleId] ?? {};
+      const selectedSkillIds = new Set(
+        Object.entries(counts)
+          .filter(([, count]) => Number.isFinite(count) && count > 0)
+          .map(([skillId]) => skillId),
+      );
+      if (selectedSkillIds.size === 0) continue;
+      const titlesById = new Map(topic.skills.map((skill) => [skill.id, skill.title] as const));
+      const analyzed = analyzePrereqs({
+        selectedSkillIds,
+        edges: topic.skillEdges,
+        skillTitlesById: titlesById,
+      });
+      combined.missingRequired.push(
+        ...analyzed.missing_required.map((item) => ({
+          title: item.title,
+          reason: item.reason,
+          priority: item.priority,
+        })),
+      );
+      combined.missingRecommended.push(
+        ...analyzed.missing_recommended.map((item) => ({
+          title: item.title,
+          reason: item.reason,
+          priority: item.priority,
+        })),
+      );
+      combined.unmetRequired.push(
+        ...analyzed.unmet_mastery_required.map((item) => ({
+          title: item.title,
+          reason: item.reason,
+          priority: item.priority,
+        })),
+      );
+      combined.unmetRecommended.push(
+        ...analyzed.unmet_mastery_recommended.map((item) => ({
+          title: item.title,
+          reason: item.reason,
+          priority: item.priority,
+        })),
+      );
+    }
+
+    function dedupe(items: Array<{ title: string; reason?: string; priority: number }>) {
+      const map = new Map<string, { title: string; reason?: string; priority: number }>();
+      for (const item of items) {
+        const key = item.title;
+        const existing = map.get(key);
+        if (!existing) {
+          map.set(key, item);
+          continue;
+        }
+        map.set(key, {
+          title: key,
+          priority: Math.min(existing.priority, item.priority),
+          reason:
+            existing.reason && item.reason && existing.reason !== item.reason
+              ? `${existing.reason}; ${item.reason}`
+              : existing.reason ?? item.reason,
+        });
+      }
+      return [...map.values()].sort((a, b) => {
+        if (a.priority !== b.priority) return a.priority - b.priority;
+        return a.title.localeCompare(b.title, "ru");
+      });
+    }
+
+    return {
+      missingRequired: dedupe(combined.missingRequired),
+      missingRecommended: dedupe(combined.missingRecommended),
+      unmetRequired: dedupe(combined.unmetRequired),
+      unmetRecommended: dedupe(combined.unmetRecommended),
+    };
+  }, [state.selectedModuleIds, state.skillCountsByModule, topicDataById]);
 
   function setSelectedModules(moduleIds: string[]) {
     dispatch({ type: "setSelectedModuleIds", moduleIds });
@@ -1758,6 +1861,59 @@ export function TeacherToolsPageClient({ locale }: Props) {
                       </li>
                     ))}
                   </ul>
+                </>
+              ) : null}
+
+              {prereqSummary.missingRequired.length > 0 ||
+              prereqSummary.missingRecommended.length > 0 ||
+              prereqSummary.unmetRequired.length > 0 ||
+              prereqSummary.unmetRecommended.length > 0 ? (
+                <>
+                  <p className="mt-4 text-sm font-semibold text-slate-900">{t.prereqTitle}</p>
+
+                  {prereqSummary.missingRequired.length > 0 ? (
+                    <>
+                      <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-rose-700">{t.prereqRequired}</p>
+                      <ul className="mt-1 space-y-1 text-sm text-rose-700">
+                        {prereqSummary.missingRequired.map((item) => (
+                          <li key={`pre:req:${item.title}`}>{item.reason ? `${item.title} — ${item.reason}` : item.title}</li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : null}
+
+                  {prereqSummary.missingRecommended.length > 0 ? (
+                    <>
+                      <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-amber-800">{t.prereqRecommended}</p>
+                      <ul className="mt-1 space-y-1 text-sm text-amber-800">
+                        {prereqSummary.missingRecommended.map((item) => (
+                          <li key={`pre:rec:${item.title}`}>{item.reason ? `${item.title} — ${item.reason}` : item.title}</li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : null}
+
+                  {prereqSummary.unmetRequired.length > 0 ? (
+                    <>
+                      <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-rose-700">{t.prereqUnmetRequired}</p>
+                      <ul className="mt-1 space-y-1 text-sm text-rose-700">
+                        {prereqSummary.unmetRequired.map((item) => (
+                          <li key={`pre:unmet:req:${item.title}`}>{item.reason ? `${item.title} — ${item.reason}` : item.title}</li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : null}
+
+                  {prereqSummary.unmetRecommended.length > 0 ? (
+                    <>
+                      <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-amber-800">{t.prereqUnmetRecommended}</p>
+                      <ul className="mt-1 space-y-1 text-sm text-amber-800">
+                        {prereqSummary.unmetRecommended.map((item) => (
+                          <li key={`pre:unmet:rec:${item.title}`}>{item.reason ? `${item.title} — ${item.reason}` : item.title}</li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : null}
                 </>
               ) : null}
             </div>

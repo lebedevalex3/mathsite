@@ -3,9 +3,11 @@ import path from "node:path";
 import { normalizeDifficultyBand } from "@/lib/tasks/difficulty-band";
 import { getTasksForTopic } from "@/lib/tasks/query";
 import { parseTaxonomyMarkdownDetails } from "@/lib/tasks/taxonomy";
+import { getSkillKind } from "@/src/lib/skills/kind";
 import { proportionSkills } from "@/src/lib/topics/proportion/module-data";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 
+import { MODERN_TOPICS, validateTopicSkillEdges } from "./skill-edges";
 import { getRoutesForTopic } from "./routes";
 import type { TeacherToolsSkill, TeacherToolsTopicConfig } from "./types";
 
@@ -250,6 +252,7 @@ export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
           id: skill.id,
           title: skill.title,
           summary: skill.summary,
+          kind: skill.kind,
           cardHref: proportionSkillCards[skill.id]?.cardHref,
           trainerHref: proportionSkillCards[skill.id]?.trainerHref,
           example: proportionSkillCards[skill.id]?.example,
@@ -342,6 +345,20 @@ export async function getTeacherToolsTopicSkills(topicId: string) {
   }
 
   const routes = getRoutesForTopic(topicId, taxonomy.allowedSkillIds);
+  const { edges: skillEdges, errors: skillEdgeErrors } = validateTopicSkillEdges({
+    topicId,
+    taxonomySkillIds: taxonomy.allowedSkillIds,
+  });
+  if (skillEdgeErrors.length > 0 && MODERN_TOPICS.has(topicId)) {
+    throw new Error(`Skill edges validation failed for ${topicId}: ${skillEdgeErrors.join("; ")}`);
+  }
+
+  if (MODERN_TOPICS.has(topicId)) {
+    const missingKinds = topic.skills.filter((skill) => skill.kind == null).map((skill) => skill.id);
+    if (missingKinds.length > 0) {
+      throw new Error(`Missing skill.kind for modern topic ${topicId}: ${missingKinds.join(", ")}`);
+    }
+  }
 
   return {
     ...topic,
@@ -349,8 +366,10 @@ export async function getTeacherToolsTopicSkills(topicId: string) {
     moduleId: taxonomy.moduleId,
     gradeTags: taxonomy.gradeTags,
     routes,
+    skillEdges,
     skills: topic.skills.map((skill): TeacherToolsSkill => ({
       ...skill,
+      kind: getSkillKind(skill),
       branchId: taxonomy.skillToBranchId.get(skill.id),
       availableCount: counts.get(skill.id) ?? 0,
       availableByDifficulty: countsByDifficulty.get(skill.id) ?? { 1: 0, 2: 0, 3: 0 },

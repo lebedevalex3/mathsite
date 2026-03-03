@@ -4,6 +4,8 @@ import { promises as fs } from "node:fs";
 import { loadTaskBanks } from "../lib/tasks/load";
 import { normalizeDifficultyBand, type DifficultyBand } from "../lib/tasks/difficulty-band";
 import { parseTaxonomyMarkdownDetails } from "../lib/tasks/taxonomy";
+import { listTeacherToolsTopics } from "../src/lib/teacher-tools/catalog";
+import { MODERN_TOPICS, validateTopicSkillEdges } from "../src/lib/teacher-tools/skill-edges";
 import { analyzeLatexTaskMarkdownCompatibility } from "../src/lib/latex/task-latex-compat";
 import { resolveCoverageRule } from "./task-coverage.config";
 
@@ -274,8 +276,10 @@ async function main() {
   );
 
   const validationErrors: string[] = [];
+  const validationWarnings: string[] = [];
   const latexWarnings: string[] = [];
   const seenTaskIds = new Map<string, string>();
+  const teacherTopicsById = new Map(listTeacherToolsTopics().map((topic) => [topic.topicId, topic]));
 
   for (const { filePath, task } of allTasks) {
     const previous = seenTaskIds.get(task.id);
@@ -375,6 +379,33 @@ async function main() {
     }
   }
 
+  for (const [topicId, taxonomy] of taxonomies.byTopicId.entries()) {
+    const edgeValidation = validateTopicSkillEdges({
+      topicId,
+      taxonomySkillIds: taxonomy.allowedSkillIds,
+    });
+    for (const warning of edgeValidation.warnings) {
+      validationWarnings.push(`skill edges warning | topic=${topicId} | ${warning}`);
+    }
+    if (edgeValidation.errors.length > 0) {
+      const bucket = MODERN_TOPICS.has(topicId) ? validationErrors : validationWarnings;
+      for (const error of edgeValidation.errors) {
+        bucket.push(`skill edges invalid | topic=${topicId} | ${error}`);
+      }
+    }
+
+    const topicConfig = teacherTopicsById.get(topicId);
+    if (!topicConfig) continue;
+    const missingKinds = topicConfig.skills.filter((skill) => skill.kind == null).map((skill) => skill.id);
+    if (missingKinds.length === 0) continue;
+    const message = `skill.kind missing | topic=${topicId} | skills=${missingKinds.join(",")}`;
+    if (MODERN_TOPICS.has(topicId)) {
+      validationErrors.push(message);
+    } else {
+      validationWarnings.push(message);
+    }
+  }
+
   const coverageReport = buildCoverageReport({
     allTasks,
     taxonomiesByTopicId: new Map(
@@ -407,6 +438,7 @@ async function main() {
   if (latexWarn) {
     console.log(`- LaTeX compatibility warnings: ${latexWarnings.length}`);
   }
+  console.log(`- Validation warnings: ${validationWarnings.length}`);
   console.log(`- Coverage cells checked: ${coverageReport.summary.cells}`);
   console.log(`- Coverage deficits: ${coverageReport.summary.deficits}`);
   console.log(`- Coverage report (json): ${coveragePaths.jsonPath}`);
@@ -422,6 +454,12 @@ async function main() {
   }
 
   console.log("- Errors: 0");
+  if (validationWarnings.length > 0) {
+    console.warn("Validation warnings (non-fatal)");
+    for (const message of validationWarnings) {
+      console.warn(`  - ${message}`);
+    }
+  }
   if (latexWarn && latexWarnings.length > 0) {
     console.warn("LaTeX compatibility warnings (warn-only)");
     for (const message of latexWarnings) {

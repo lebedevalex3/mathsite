@@ -1,3 +1,5 @@
+import type { SkillKind } from "@/src/lib/skills/kind";
+
 export type ProportionSubtopic = {
   id:
     | "math.proportion.rule"
@@ -14,6 +16,7 @@ export type ProportionSkill = {
   id: string;
   title: string;
   summary: string;
+  kind: SkillKind;
   subtopicId: ProportionSubtopic["id"];
   skillSlug: string;
   defaultTrainingCount?: number;
@@ -105,6 +108,7 @@ export const proportionSkills: ProportionSkill[] = [
     id: "math.proportion.understand_ratio_as_quotient",
     title: "Понимать отношение как частное",
     summary: "про a:b и a/b",
+    kind: "compute",
     subtopicId: "math.proportion.direct",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 5,
@@ -113,6 +117,7 @@ export const proportionSkills: ProportionSkill[] = [
     id: "math.proportion.transform_ratio",
     title: "Упрощение отношения",
     summary: "сократить отношение до несократимого вида",
+    kind: "compute",
     subtopicId: "math.proportion.direct",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 8,
@@ -121,6 +126,7 @@ export const proportionSkills: ProportionSkill[] = [
     id: "math.proportion.compare_ratio_multiples",
     title: "Во сколько раз больше/меньше",
     summary: "сравнить величины по кратности",
+    kind: "compute",
     subtopicId: "math.proportion.direct",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 8,
@@ -129,6 +135,7 @@ export const proportionSkills: ProportionSkill[] = [
     id: "math.proportion.part_of_whole_as_ratio",
     title: "Доля от целого как отношение",
     summary: "находить часть от целого в виде дроби",
+    kind: "apply",
     subtopicId: "math.proportion.direct",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 8,
@@ -137,6 +144,7 @@ export const proportionSkills: ProportionSkill[] = [
     id: "math.proportion.recognize_proportion",
     title: "Определение пропорции",
     summary: "распознавать и дополнять пропорции",
+    kind: "compute",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 8,
@@ -145,6 +153,7 @@ export const proportionSkills: ProportionSkill[] = [
     id: "math.proportion.check_proportion",
     title: "Проверка пропорции по определению",
     summary: "проверять равенство отношений a:b = c:d",
+    kind: "compute",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 8,
@@ -153,6 +162,7 @@ export const proportionSkills: ProportionSkill[] = [
     id: "math.proportion.apply_proportion_property",
     title: "Проверка пропорции по основному свойству",
     summary: "проверять пропорции правилом крест-накрест",
+    kind: "equation",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 8,
@@ -161,6 +171,7 @@ export const proportionSkills: ProportionSkill[] = [
     id: "math.proportion.solve_hidden_linear_fraction",
     title: "Пропорции, замаскированные под линейные дроби",
     summary: "решать пропорции в виде линейных дробей",
+    kind: "equation",
     subtopicId: "math.proportion.problems",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 8,
@@ -170,6 +181,7 @@ export const proportionSkills: ProportionSkill[] = [
     title: "Нахождение неизвестного члена пропорции",
     summary:
       "находить неизвестный член пропорции с помощью правила крест-накрест",
+    kind: "equation",
     subtopicId: "math.proportion.rule",
     skillSlug: DEFAULT_SKILL_PAGE_SLUG,
     defaultTrainingCount: 8,

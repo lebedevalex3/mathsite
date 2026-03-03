@@ -1,4 +1,6 @@
 import type { DifficultyBand } from "@/lib/tasks/difficulty-band";
+import type { SkillKind } from "@/src/lib/skills/kind";
+import type { NormalizedSkillPrereqEdge } from "./prereqs";
 
 export type TeacherToolsSkill = {
   id: string;
@@ -18,6 +20,7 @@ export type TeacherToolsSkill = {
   availableByBand?: Record<DifficultyBand, number>;
   defaultTrainingCount?: number;
   status?: "ready" | "soon";
+  kind?: SkillKind;
 };
 
 export type TeacherToolsRouteStep = {
@@ -43,6 +46,7 @@ export type TeacherToolsTopicConfig = {
   title: Record<"ru" | "en" | "de", string>;
   skills: TeacherToolsSkill[];
   routes?: TeacherToolsRoute[];
+  skillEdges?: NormalizedSkillPrereqEdge[];
 };
 
 export type DemoPlanItem = {
