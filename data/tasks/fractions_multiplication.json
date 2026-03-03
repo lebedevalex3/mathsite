@@ -485,6 +485,198 @@
       "difficulty_band": "A",
       "statement_md": "Найди 50% от 30.",
       "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг яблок — $\\frac{3}{4}$ руб. Сколько стоят 8 кг?",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг сахара — $\\frac{5}{6}$ руб. Сколько стоят 12 кг?",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг муки — $\\frac{7}{10}$ руб. Сколько стоят 20 кг?",
+      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг риса — $\\frac{2}{3}$ руб. Сколько стоят 9 кг?",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг картофеля — $\\frac{4}{5}$ руб. Сколько стоят 15 кг?",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг крупы — $\\frac{9}{8}$ руб. Сколько стоят 16 кг?",
+      "answer": { "type": "fraction", "numerator": 18, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг орехов — $\\frac{11}{12}$ руб. Сколько стоят 24 кг?",
+      "answer": { "type": "fraction", "numerator": 22, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг груш — $\\frac{3}{5}$ руб. Сколько стоят 25 кг?",
+      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг ягод — $\\frac{6}{7}$ руб. Сколько стоят 14 кг?",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг сыра — $\\frac{5}{9}$ руб. Сколько стоят 18 кг?",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг масла — $\\frac{8}{11}$ руб. Сколько стоят 22 кг?",
+      "answer": { "type": "fraction", "numerator": 16, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_price.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_price",
+      "difficulty_band": "A",
+      "statement_md": "Цена 1 кг крупы — $\\frac{7}{8}$ руб. Сколько стоят 32 кг?",
+      "answer": { "type": "fraction", "numerator": 28, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{3}{4}$ км/ч. Какой путь пройдёт за 8 ч?",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{5}{6}$ км/ч. Какой путь пройдёт за 12 ч?",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{7}{10}$ км/ч. Какой путь пройдёт за 20 ч?",
+      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{2}{3}$ км/ч. Какой путь пройдёт за 9 ч?",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{4}{5}$ км/ч. Какой путь пройдёт за 15 ч?",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{9}{8}$ км/ч. Какой путь пройдёт за 16 ч?",
+      "answer": { "type": "fraction", "numerator": 18, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{11}{12}$ км/ч. Какой путь пройдёт за 24 ч?",
+      "answer": { "type": "fraction", "numerator": 22, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{3}{5}$ км/ч. Какой путь пройдёт за 25 ч?",
+      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{6}{7}$ км/ч. Какой путь пройдёт за 14 ч?",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{5}{9}$ км/ч. Какой путь пройдёт за 18 ч?",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{8}{11}$ км/ч. Какой путь пройдёт за 22 ч?",
+      "answer": { "type": "fraction", "numerator": 16, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_speed.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_speed",
+      "difficulty_band": "A",
+      "statement_md": "Скорость равна $\\frac{7}{8}$ км/ч. Какой путь пройдёт за 32 ч?",
+      "answer": { "type": "fraction", "numerator": 28, "denominator": 1 }
     }
   ]
 }
