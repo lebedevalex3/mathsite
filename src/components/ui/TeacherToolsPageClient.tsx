@@ -17,6 +17,7 @@ type GradeFilter = number | "all";
 type SubjectFilter = TopicDomain | "all";
 type WizardStep = 1 | 2 | 3 | 4;
 type WorkTypeUi = WorkType | "custom";
+type WizardMode = "single" | "multi";
 
 type TopicSkill = {
   id: string;
@@ -61,24 +62,28 @@ type WorkMeta = {
 
 type WizardState = {
   step: WizardStep;
+  mode: WizardMode;
   gradeTag: GradeFilter;
   subject: SubjectFilter;
-  topicId: string | null;
-  selectedBranchIds: string[];
-  skillCountsById: Record<string, number>;
+  selectedModuleIds: string[];
+  activeModuleId: string | null;
+  selectedBranchIdsByModule: Record<string, string[]>;
+  skillCountsByModule: Record<string, Record<string, number>>;
   workMeta: WorkMeta;
 };
 
 type WizardAction =
   | { type: "setStep"; step: WizardStep }
+  | { type: "setMode"; mode: WizardMode }
   | { type: "setGradeTag"; gradeTag: GradeFilter }
   | { type: "setSubject"; subject: SubjectFilter }
-  | { type: "selectTopic"; topicId: string | null }
-  | { type: "setSelectedBranchIds"; branchIds: string[] }
-  | { type: "setSkillCount"; skillId: string; count: number }
-  | { type: "setManySkillCounts"; updates: Record<string, number> }
+  | { type: "setSelectedModuleIds"; moduleIds: string[] }
+  | { type: "setActiveModuleId"; moduleId: string | null }
+  | { type: "setBranchIdsForModule"; moduleId: string; branchIds: string[] }
+  | { type: "setSkillCount"; moduleId: string; skillId: string; count: number }
+  | { type: "setSkillCountsForModule"; moduleId: string; updates: Record<string, number> }
   | { type: "setWorkMeta"; patch: Partial<WorkMeta> }
-  | { type: "resetTopicFlow" };
+  | { type: "resetModeSelections" };
 
 type GenerateResponse = {
   ok?: boolean;
@@ -87,6 +92,8 @@ type GenerateResponse = {
   message?: string;
   details?: unknown;
 };
+
+const MAX_MULTI_MODULES = 3;
 
 const copy = {
   ru: {
@@ -103,21 +110,30 @@ const copy = {
     back: "Назад",
     build: "Собрать варианты",
     building: "Собираем...",
+    modeLabel: "Режим",
+    modeSingle: "Одна тема",
+    modeMulti: "Смешанная работа (2–3 темы)",
+    modeHint: "Смешанная — для самостоятельных/контрольных, немного дольше.",
+    maxThemesHint: "Максимум 3 темы",
+    selectedThemesCount: "Выбрано тем",
     grade: "Класс",
     allGrades: "Все классы",
     subject: "Предмет",
     allSubjects: "Все предметы",
     topics: "Темы",
     noTopics: "По текущим фильтрам темы не найдены.",
-    topicResetNotice: "Выбранная тема недоступна для этого класса. Выберите тему заново.",
+    topicResetNotice: "Часть выбранных тем недоступна для текущего фильтра и была снята.",
+    needReSelectNotice: "В смешанном режиме нужно выбрать минимум 2 темы.",
+    basket: "Корзина тем",
+    removeTheme: "Удалить тему",
     branches: "Подтемы",
-    branchesHint: "По умолчанию выбраны все подтемы — так быстрее собрать вариант.",
+    branchesHint: "По умолчанию для темы выбраны все подтемы.",
     selectAllBranches: "Выбрать все",
     clearBranches: "Снять все",
     branchCounter: "Выбрано подтем",
     skills: "Навыки",
-    addAllSkills: "Добавить все навыки",
-    clearSkills: "Очистить",
+    addAllSkills: "Добавить все навыки темы",
+    clearSkills: "Очистить тему",
     available: "Доступно задач",
     levelsAvailability: "По уровням",
     example: "Пример",
@@ -130,11 +146,16 @@ const copy = {
     showDateInPdf: "Показывать дату в PDF",
     summaryTotal: "Всего задач",
     summaryBySkills: "Распределение по навыкам",
+    summaryByThemes: "Разбивка по темам",
     emptySummary: "Выберите навыки и добавьте хотя бы одну задачу.",
+    emptyThemeWarning: "Некоторые темы пока пустые (0 задач). Можно продолжить или удалить их.",
     validationSelectTopic: "Выберите тему, чтобы продолжить.",
-    validationSelectBranch: "Выберите хотя бы одну подтему.",
+    validationSelectTwoTopics: "Для смешанной работы выберите минимум 2 темы.",
+    validationSelectBranch: "Выберите хотя бы одну подтему для каждой выбранной темы.",
     validationSelectSkills: "Добавьте хотя бы одну задачу по навыкам.",
     validationCustomType: "Для типа «Своё» укажите название.",
+    configured: "настроено",
+    notConfigured: "пусто",
     demoLimitTitle: "Демо-лимит для гостя исчерпан",
     demoLimitBody:
       "Вы использовали 3 демо-варианта за сутки. Чтобы продолжить генерацию, войдите или зарегистрируйтесь.",
@@ -157,10 +178,10 @@ const copy = {
   },
   en: {
     title: "Skill Variant Builder",
-    subtitle: "Build a worksheet in 4 steps: topic, branches, skills, then generate.",
+    subtitle: "Build a worksheet in 4 steps: topic, subtopics, skills, settings, generate.",
     steps: {
       1: "Topic",
-      2: "Branches",
+      2: "Subtopics",
       3: "Skills",
       4: "Settings",
     },
@@ -169,21 +190,30 @@ const copy = {
     back: "Back",
     build: "Generate variants",
     building: "Generating...",
+    modeLabel: "Mode",
+    modeSingle: "Single topic",
+    modeMulti: "Mixed work (2–3 topics)",
+    modeHint: "Mixed mode fits quizzes/tests and takes a bit longer.",
+    maxThemesHint: "Maximum 3 topics",
+    selectedThemesCount: "Selected topics",
     grade: "Grade",
     allGrades: "All grades",
     subject: "Subject",
     allSubjects: "All subjects",
     topics: "Topics",
     noTopics: "No topics for current filters.",
-    topicResetNotice: "Selected topic is unavailable for this grade. Choose another topic.",
+    topicResetNotice: "Some selected topics are unavailable for current filters and were removed.",
+    needReSelectNotice: "Mixed mode requires at least 2 topics.",
+    basket: "Topic basket",
+    removeTheme: "Remove topic",
     branches: "Subtopics",
-    branchesHint: "All subtopics are selected by default for faster setup.",
+    branchesHint: "All subtopics are selected by default for each topic.",
     selectAllBranches: "Select all",
     clearBranches: "Clear all",
     branchCounter: "Selected subtopics",
     skills: "Skills",
-    addAllSkills: "Add all skills",
-    clearSkills: "Clear",
+    addAllSkills: "Add all topic skills",
+    clearSkills: "Clear topic",
     available: "Available tasks",
     levelsAvailability: "By levels",
     example: "Example",
@@ -195,12 +225,17 @@ const copy = {
     date: "Date",
     showDateInPdf: "Show date in PDF",
     summaryTotal: "Total tasks",
-    summaryBySkills: "Distribution by skills",
+    summaryBySkills: "Skill distribution",
+    summaryByThemes: "By topics",
     emptySummary: "Select skills and add at least one task.",
+    emptyThemeWarning: "Some topics are still empty (0 tasks). You can continue or remove them.",
     validationSelectTopic: "Select a topic to continue.",
-    validationSelectBranch: "Select at least one subtopic.",
+    validationSelectTwoTopics: "Mixed mode requires at least 2 topics.",
+    validationSelectBranch: "Select at least one subtopic for each selected topic.",
     validationSelectSkills: "Add at least one skill task.",
     validationCustomType: "Provide a custom type label.",
+    configured: "configured",
+    notConfigured: "empty",
     demoLimitTitle: "Guest demo limit reached",
     demoLimitBody:
       "You have used 3 demo variants for today. Sign in or register to continue generating variants.",
@@ -223,7 +258,7 @@ const copy = {
   },
   de: {
     title: "Varianten-Baukasten",
-    subtitle: "Arbeitsblatt in 4 Schritten: Thema, Unterthemen, Skills, Parameter.",
+    subtitle: "Arbeitsblatt in 4 Schritten: Thema, Unterthemen, Skills, Parameter, Erstellung.",
     steps: {
       1: "Thema",
       2: "Unterthemen",
@@ -235,21 +270,30 @@ const copy = {
     back: "Zurück",
     build: "Varianten erstellen",
     building: "Wird erstellt...",
+    modeLabel: "Modus",
+    modeSingle: "Ein Thema",
+    modeMulti: "Gemischte Arbeit (2–3 Themen)",
+    modeHint: "Gemischt passt für Tests/Arbeiten und dauert etwas länger.",
+    maxThemesHint: "Maximal 3 Themen",
+    selectedThemesCount: "Gewählte Themen",
     grade: "Klasse",
     allGrades: "Alle Klassen",
     subject: "Fach",
     allSubjects: "Alle Fächer",
     topics: "Themen",
     noTopics: "Keine Themen für aktuelle Filter.",
-    topicResetNotice: "Gewähltes Thema ist für diese Klasse nicht verfügbar. Bitte neu wählen.",
+    topicResetNotice: "Einige gewählte Themen sind für aktuelle Filter nicht verfügbar und wurden entfernt.",
+    needReSelectNotice: "Gemischter Modus erfordert mindestens 2 Themen.",
+    basket: "Themenkorb",
+    removeTheme: "Thema entfernen",
     branches: "Unterthemen",
-    branchesHint: "Standardmäßig sind alle Unterthemen gewählt für schnellere Erstellung.",
+    branchesHint: "Standardmäßig sind für jedes Thema alle Unterthemen gewählt.",
     selectAllBranches: "Alle wählen",
     clearBranches: "Alle abwählen",
     branchCounter: "Gewählte Unterthemen",
     skills: "Skills",
-    addAllSkills: "Alle Skills hinzufügen",
-    clearSkills: "Leeren",
+    addAllSkills: "Alle Skills des Themas hinzufügen",
+    clearSkills: "Thema leeren",
     available: "Verfügbare Aufgaben",
     levelsAvailability: "Nach Stufen",
     example: "Beispiel",
@@ -261,12 +305,17 @@ const copy = {
     date: "Datum",
     showDateInPdf: "Datum im PDF anzeigen",
     summaryTotal: "Gesamtaufgaben",
-    summaryBySkills: "Verteilung nach Skills",
+    summaryBySkills: "Skill-Verteilung",
+    summaryByThemes: "Nach Themen",
     emptySummary: "Wählen Sie Skills und fügen Sie mindestens eine Aufgabe hinzu.",
+    emptyThemeWarning: "Einige Themen sind noch leer (0 Aufgaben). Sie können fortfahren oder diese entfernen.",
     validationSelectTopic: "Wählen Sie ein Thema.",
-    validationSelectBranch: "Wählen Sie mindestens ein Unterthema.",
+    validationSelectTwoTopics: "Gemischter Modus erfordert mindestens 2 Themen.",
+    validationSelectBranch: "Wählen Sie für jedes Thema mindestens ein Unterthema.",
     validationSelectSkills: "Fügen Sie mindestens eine Skill-Aufgabe hinzu.",
     validationCustomType: "Bitte benennen Sie den eigenen Typ.",
+    configured: "konfiguriert",
+    notConfigured: "leer",
     demoLimitTitle: "Gast-Demo-Limit erreicht",
     demoLimitBody:
       "Sie haben heute 3 Demo-Varianten genutzt. Melden Sie sich an oder registrieren Sie sich, um weiter zu generieren.",
@@ -353,45 +402,71 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
     case "setStep":
       return { ...state, step: action.step };
+    case "setMode":
+      return {
+        ...state,
+        mode: action.mode,
+        step: 1,
+        selectedModuleIds: [],
+        activeModuleId: null,
+        selectedBranchIdsByModule: {},
+        skillCountsByModule: {},
+      };
     case "setGradeTag":
       return { ...state, gradeTag: action.gradeTag };
     case "setSubject":
       return { ...state, subject: action.subject };
-    case "selectTopic":
+    case "setSelectedModuleIds":
       return {
         ...state,
-        topicId: action.topicId,
-        step: action.topicId ? 2 : 1,
-        selectedBranchIds: [],
-        skillCountsById: {},
+        selectedModuleIds: action.moduleIds,
       };
-    case "setSelectedBranchIds":
-      return { ...state, selectedBranchIds: action.branchIds };
-    case "setSkillCount":
+    case "setActiveModuleId":
+      return { ...state, activeModuleId: action.moduleId };
+    case "setBranchIdsForModule":
       return {
         ...state,
-        skillCountsById: {
-          ...state.skillCountsById,
-          [action.skillId]: clamp(Math.trunc(action.count), 0, 30),
+        selectedBranchIdsByModule: {
+          ...state.selectedBranchIdsByModule,
+          [action.moduleId]: action.branchIds,
         },
       };
-    case "setManySkillCounts":
+    case "setSkillCount": {
+      const moduleCounts = state.skillCountsByModule[action.moduleId] ?? {};
       return {
         ...state,
-        skillCountsById: {
-          ...state.skillCountsById,
-          ...action.updates,
+        skillCountsByModule: {
+          ...state.skillCountsByModule,
+          [action.moduleId]: {
+            ...moduleCounts,
+            [action.skillId]: clamp(Math.trunc(action.count), 0, 30),
+          },
         },
       };
+    }
+    case "setSkillCountsForModule": {
+      const moduleCounts = state.skillCountsByModule[action.moduleId] ?? {};
+      return {
+        ...state,
+        skillCountsByModule: {
+          ...state.skillCountsByModule,
+          [action.moduleId]: {
+            ...moduleCounts,
+            ...action.updates,
+          },
+        },
+      };
+    }
     case "setWorkMeta":
       return { ...state, workMeta: { ...state.workMeta, ...action.patch } };
-    case "resetTopicFlow":
+    case "resetModeSelections":
       return {
         ...state,
         step: 1,
-        topicId: null,
-        selectedBranchIds: [],
-        skillCountsById: {},
+        selectedModuleIds: [],
+        activeModuleId: null,
+        selectedBranchIdsByModule: {},
+        skillCountsByModule: {},
       };
     default:
       return state;
@@ -400,11 +475,13 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
 
 const initialState: WizardState = {
   step: 1,
+  mode: "single",
   gradeTag: "all",
   subject: "all",
-  topicId: null,
-  selectedBranchIds: [],
-  skillCountsById: {},
+  selectedModuleIds: [],
+  activeModuleId: null,
+  selectedBranchIdsByModule: {},
+  skillCountsByModule: {},
   workMeta: {
     workType: "quiz",
     customTypeLabel: "",
@@ -417,8 +494,9 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const t = copy[locale];
   const router = useRouter();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [selectedTopic, setSelectedTopic] = useState<TopicPayload | null>(null);
-  const [loadingTopic, setLoadingTopic] = useState(false);
+
+  const [topicDataById, setTopicDataById] = useState<Record<string, TopicPayload>>({});
+  const [loadingTopics, setLoadingTopics] = useState<Record<string, boolean>>({});
   const [building, setBuilding] = useState(false);
   const [error, setError] = useState<TeacherApiError | null>(null);
   const [inlineValidation, setInlineValidation] = useState<string | null>(null);
@@ -444,6 +522,10 @@ export function TeacherToolsPageClient({ locale }: Props) {
       })
       .filter((item): item is TopicOption => Boolean(item));
   }, [locale, topicConfigs]);
+
+  const topicTitleById = useMemo(() => {
+    return new Map(allTopics.map((topic) => [topic.topicId, topic.title] as const));
+  }, [allTopics]);
 
   const gradeOptions = useMemo(
     () => Array.from(new Set(allTopics.flatMap((item) => item.gradeTags))).sort((a, b) => a - b),
@@ -472,148 +554,299 @@ export function TeacherToolsPageClient({ locale }: Props) {
     [allTopics, state.gradeTag, state.subject],
   );
 
+  const filteredTopicIds = useMemo(() => new Set(filteredTopics.map((topic) => topic.topicId)), [filteredTopics]);
+
   useEffect(() => {
-    if (!state.topicId) return;
-    if (filteredTopics.some((topic) => topic.topicId === state.topicId)) return;
-    dispatch({ type: "resetTopicFlow" });
-    setSelectedTopic(null);
+    const nextSelected = state.selectedModuleIds.filter((id) => filteredTopicIds.has(id));
+    if (nextSelected.length === state.selectedModuleIds.length) return;
+
+    dispatch({ type: "setSelectedModuleIds", moduleIds: nextSelected });
+
+    const nextActive = nextSelected.includes(state.activeModuleId ?? "")
+      ? state.activeModuleId
+      : nextSelected[0] ?? null;
+    dispatch({ type: "setActiveModuleId", moduleId: nextActive });
+
     setNotice(t.topicResetNotice);
-  }, [filteredTopics, state.topicId, t.topicResetNotice]);
+
+    if (state.mode === "single" && nextSelected.length === 0) {
+      dispatch({ type: "setStep", step: 1 });
+      return;
+    }
+    if (state.mode === "multi" && nextSelected.length < 2) {
+      dispatch({ type: "setStep", step: 1 });
+      setNotice(t.needReSelectNotice);
+    }
+  }, [filteredTopicIds, state.activeModuleId, state.mode, state.selectedModuleIds, t.needReSelectNotice, t.topicResetNotice]);
 
   useEffect(() => {
-    if (!state.topicId) return;
-    let cancelled = false;
+    const moduleIdsToLoad = state.selectedModuleIds.filter((moduleId) => !topicDataById[moduleId] && !loadingTopics[moduleId]);
+    if (moduleIdsToLoad.length === 0) return;
 
-    async function loadTopic() {
-      setLoadingTopic(true);
-      setError(null);
+    let cancelled = false;
+    void (async () => {
+      setLoadingTopics((prev) => {
+        const next = { ...prev };
+        for (const id of moduleIdsToLoad) next[id] = true;
+        return next;
+      });
+
       try {
-        const response = await fetch(`/api/teacher/demo/topic?topicId=${encodeURIComponent(state.topicId!)}`);
-        const payload = (await response.json()) as { ok?: boolean; topic?: TopicPayload };
-        if (!response.ok || !payload.ok || !payload.topic) {
-          if (!cancelled) {
-            setError(parseTeacherError(payload, "Не удалось загрузить тему."));
-            setSelectedTopic(null);
-          }
-          return;
+        const results = await Promise.all(
+          moduleIdsToLoad.map(async (moduleId) => {
+            const response = await fetch(`/api/teacher/demo/topic?topicId=${encodeURIComponent(moduleId)}`);
+            const payload = (await response.json()) as { ok?: boolean; topic?: TopicPayload };
+            return { moduleId, response, payload };
+          }),
+        );
+
+        if (cancelled) return;
+
+        const failed = results.find((item) => !item.response.ok || !item.payload.ok || !item.payload.topic);
+        if (failed) {
+          setError(parseTeacherError(failed.payload, "Не удалось загрузить тему."));
         }
-        if (!cancelled) {
-          setSelectedTopic(payload.topic);
-          const branchIds = Array.from(
-            new Set(payload.topic.skills.map((skill) => skill.branchId).filter((value): value is string => Boolean(value))),
-          );
-          dispatch({
-            type: "setSelectedBranchIds",
-            branchIds: branchIds.length > 0 ? branchIds : [],
+
+        const loaded = results.filter((item) => item.response.ok && item.payload.ok && item.payload.topic);
+        if (loaded.length > 0) {
+          setTopicDataById((prev) => {
+            const next = { ...prev };
+            for (const item of loaded) {
+              next[item.moduleId] = item.payload.topic as TopicPayload;
+            }
+            return next;
           });
+
+          for (const item of loaded) {
+            const topic = item.payload.topic as TopicPayload;
+            const defaultBranchIds = Array.from(
+              new Set(topic.skills.map((skill) => skill.branchId).filter((value): value is string => Boolean(value))),
+            );
+            const hasExisting = (state.selectedBranchIdsByModule[item.moduleId] ?? []).length > 0;
+            if (!hasExisting && defaultBranchIds.length > 0) {
+              dispatch({ type: "setBranchIdsForModule", moduleId: item.moduleId, branchIds: defaultBranchIds });
+            }
+          }
         }
       } catch {
         if (!cancelled) {
-          setError({ message: "Ошибка сети при загрузке темы." });
-          setSelectedTopic(null);
+          setError({ message: "Ошибка сети при загрузке тем." });
         }
       } finally {
-        if (!cancelled) setLoadingTopic(false);
+        if (!cancelled) {
+          setLoadingTopics((prev) => {
+            const next = { ...prev };
+            for (const id of moduleIdsToLoad) delete next[id];
+            return next;
+          });
+        }
       }
-    }
+    })();
 
-    void loadTopic();
     return () => {
       cancelled = true;
     };
-  }, [state.topicId]);
+  }, [loadingTopics, state.selectedBranchIdsByModule, state.selectedModuleIds, topicDataById]);
 
-  const branchGroups = useMemo<BranchGroup[]>(() => {
-    if (!selectedTopic) return [];
-    const grouped = new Map<string, TopicSkill[]>();
-    for (const skill of selectedTopic.skills) {
-      const branchId = skill.branchId ?? "default";
-      const existing = grouped.get(branchId) ?? [];
-      existing.push(skill);
-      grouped.set(branchId, existing);
+  useEffect(() => {
+    if (!state.activeModuleId && state.selectedModuleIds.length > 0) {
+      dispatch({ type: "setActiveModuleId", moduleId: state.selectedModuleIds[0]! });
+      return;
     }
-    return [...grouped.entries()].map(([id, skills]) => ({
-      id,
-      label: id === "default" ? t.branches : branchLabel(locale, id),
-      skills,
-    }));
-  }, [locale, selectedTopic, t.branches]);
+    if (state.activeModuleId && !state.selectedModuleIds.includes(state.activeModuleId)) {
+      dispatch({ type: "setActiveModuleId", moduleId: state.selectedModuleIds[0] ?? null });
+    }
+  }, [state.activeModuleId, state.selectedModuleIds]);
 
-  const selectedBranchSet = useMemo(() => new Set(state.selectedBranchIds), [state.selectedBranchIds]);
+  const activeModuleId = state.activeModuleId ?? state.selectedModuleIds[0] ?? null;
 
-  const skillsForSelectedBranches = useMemo(() => {
-    return branchGroups
-      .filter((branch) => selectedBranchSet.has(branch.id))
-      .flatMap((branch) => branch.skills);
-  }, [branchGroups, selectedBranchSet]);
+  const branchGroupsByModule = useMemo(() => {
+    const map: Record<string, BranchGroup[]> = {};
+    for (const moduleId of state.selectedModuleIds) {
+      const topic = topicDataById[moduleId];
+      if (!topic) {
+        map[moduleId] = [];
+        continue;
+      }
+      const grouped = new Map<string, TopicSkill[]>();
+      for (const skill of topic.skills) {
+        const branchId = skill.branchId ?? "default";
+        const existing = grouped.get(branchId) ?? [];
+        existing.push(skill);
+        grouped.set(branchId, existing);
+      }
+      map[moduleId] = [...grouped.entries()].map(([id, skills]) => ({
+        id,
+        label: id === "default" ? t.branches : branchLabel(locale, id),
+        skills,
+      }));
+    }
+    return map;
+  }, [locale, state.selectedModuleIds, t.branches, topicDataById]);
 
-  const summary = useMemo(() => {
-    const selectedSkills = skillsForSelectedBranches
-      .map((skill) => ({ skill, count: state.skillCountsById[skill.id] ?? 0 }))
-      .filter((item) => item.count > 0);
-    const total = selectedSkills.reduce((sum, item) => sum + item.count, 0);
-    return { total, selectedSkills };
-  }, [skillsForSelectedBranches, state.skillCountsById]);
-
-  const selectedTopicMeta = useMemo(
-    () => allTopics.find((topic) => topic.topicId === state.topicId) ?? null,
-    [allTopics, state.topicId],
+  const activeBranchGroups = useMemo(
+    () => (activeModuleId ? branchGroupsByModule[activeModuleId] ?? [] : []),
+    [activeModuleId, branchGroupsByModule],
   );
 
+  const activeSelectedBranchSet = useMemo(() => {
+    if (!activeModuleId) return new Set<string>();
+    return new Set(state.selectedBranchIdsByModule[activeModuleId] ?? []);
+  }, [activeModuleId, state.selectedBranchIdsByModule]);
+
+  const activeSkillsForSelectedBranches = useMemo(() => {
+    return activeBranchGroups
+      .filter((branch) => activeSelectedBranchSet.has(branch.id))
+      .flatMap((branch) => branch.skills);
+  }, [activeBranchGroups, activeSelectedBranchSet]);
+
+  const moduleStatus = useMemo(() => {
+    const status = new Map<string, { total: number; ok: boolean }>();
+    for (const moduleId of state.selectedModuleIds) {
+      const counts = state.skillCountsByModule[moduleId] ?? {};
+      const total = Object.values(counts).reduce((sum, value) => sum + (Number.isFinite(value) ? value : 0), 0);
+      status.set(moduleId, { total, ok: total > 0 });
+    }
+    return status;
+  }, [state.selectedModuleIds, state.skillCountsByModule]);
+
+  const summary = useMemo(() => {
+    const byModule = state.selectedModuleIds.map((moduleId) => {
+      const topic = topicDataById[moduleId];
+      const counts = state.skillCountsByModule[moduleId] ?? {};
+      const selectedSkills = (topic?.skills ?? [])
+        .map((skill) => ({ skill, count: counts[skill.id] ?? 0 }))
+        .filter((item) => item.count > 0);
+      const total = selectedSkills.reduce((sum, item) => sum + item.count, 0);
+      return {
+        moduleId,
+        title: topic?.title[locale] ?? topic?.title.ru ?? topicTitleById.get(moduleId) ?? moduleId,
+        total,
+        selectedSkills,
+      };
+    });
+    const total = byModule.reduce((sum, item) => sum + item.total, 0);
+    return { total, byModule };
+  }, [locale, state.selectedModuleIds, state.skillCountsByModule, topicDataById, topicTitleById]);
+
   const breadcrumb = useMemo(() => {
-    if (!selectedTopicMeta || !selectedTopic) return null;
-    const subject = selectedTopicMeta.domains[0] ?? "arithmetic";
+    if (!activeModuleId) return null;
+    const topicMeta = allTopics.find((topic) => topic.topicId === activeModuleId);
+    const topicData = topicDataById[activeModuleId];
+    if (!topicMeta || !topicData) return null;
+    const subject = topicMeta.domains[0] ?? "arithmetic";
     const subjectLabel = t.domains[subject];
-    const topicLabel = selectedTopic.title[locale] ?? selectedTopic.title.ru ?? selectedTopicMeta.title;
-    const selectedBranches = branchGroups.filter((branch) => selectedBranchSet.has(branch.id));
+    const topicLabel = topicData.title[locale] ?? topicData.title.ru ?? topicMeta.title;
+    const selectedBranches = activeBranchGroups.filter((branch) => activeSelectedBranchSet.has(branch.id));
     if (selectedBranches.length === 1) {
       return `${subjectLabel} -> ${topicLabel} -> ${selectedBranches[0]!.label}`;
     }
     return `${subjectLabel} -> ${topicLabel} -> ${t.breadcrumbsManyBranches}: ${selectedBranches.length}`;
-  }, [branchGroups, locale, selectedBranchSet, selectedTopic, selectedTopicMeta, t.breadcrumbsManyBranches, t.domains]);
+  }, [activeBranchGroups, activeModuleId, activeSelectedBranchSet, allTopics, locale, t.breadcrumbsManyBranches, t.domains, topicDataById]);
 
-  function setBranchSelection(ids: string[]) {
-    dispatch({ type: "setSelectedBranchIds", branchIds: ids });
-    setInlineValidation(null);
+  const hasAnyEmptyTheme = useMemo(() => {
+    if (state.mode !== "multi") return false;
+    return summary.byModule.some((item) => item.total === 0);
+  }, [state.mode, summary.byModule]);
+
+  function setSelectedModules(moduleIds: string[]) {
+    dispatch({ type: "setSelectedModuleIds", moduleIds });
+    const nextActive = moduleIds.includes(activeModuleId ?? "") ? activeModuleId : moduleIds[0] ?? null;
+    dispatch({ type: "setActiveModuleId", moduleId: nextActive });
   }
 
-  function updateSkillCount(skillId: string, count: number) {
-    dispatch({ type: "setSkillCount", skillId, count });
-    setInlineValidation(null);
-  }
+  function toggleModule(moduleId: string) {
+    const isSelected = state.selectedModuleIds.includes(moduleId);
 
-  function addAllVisibleSkills() {
-    const updates: Record<string, number> = {};
-    for (const skill of skillsForSelectedBranches) {
-      updates[skill.id] = Math.max(1, state.skillCountsById[skill.id] ?? 0);
+    if (state.mode === "single") {
+      setSelectedModules([moduleId]);
+      setInlineValidation(null);
+      setNotice(null);
+      return;
     }
-    dispatch({ type: "setManySkillCounts", updates });
+
+    if (isSelected) {
+      setSelectedModules(state.selectedModuleIds.filter((id) => id !== moduleId));
+      setInlineValidation(null);
+      return;
+    }
+
+    if (state.selectedModuleIds.length >= MAX_MULTI_MODULES) return;
+    setSelectedModules([...state.selectedModuleIds, moduleId]);
+    setInlineValidation(null);
+    setNotice(null);
+  }
+
+  function removeModule(moduleId: string) {
+    setSelectedModules(state.selectedModuleIds.filter((id) => id !== moduleId));
+  }
+
+  function setBranchSelectionForActive(branchIds: string[]) {
+    if (!activeModuleId) return;
+    dispatch({ type: "setBranchIdsForModule", moduleId: activeModuleId, branchIds });
     setInlineValidation(null);
   }
 
-  function clearVisibleSkills() {
+  function updateSkillCount(moduleId: string, skillId: string, count: number) {
+    dispatch({ type: "setSkillCount", moduleId, skillId, count });
+    setInlineValidation(null);
+  }
+
+  function addAllSkillsForActive() {
+    if (!activeModuleId) return;
     const updates: Record<string, number> = {};
-    for (const skill of skillsForSelectedBranches) {
+    const moduleCounts = state.skillCountsByModule[activeModuleId] ?? {};
+    for (const skill of activeSkillsForSelectedBranches) {
+      updates[skill.id] = Math.max(1, moduleCounts[skill.id] ?? 0);
+    }
+    dispatch({ type: "setSkillCountsForModule", moduleId: activeModuleId, updates });
+    setInlineValidation(null);
+  }
+
+  function clearSkillsForActive() {
+    if (!activeModuleId) return;
+    const topic = topicDataById[activeModuleId];
+    if (!topic) return;
+    const updates: Record<string, number> = {};
+    for (const skill of topic.skills) {
       updates[skill.id] = 0;
     }
-    dispatch({ type: "setManySkillCounts", updates });
+    dispatch({ type: "setSkillCountsForModule", moduleId: activeModuleId, updates });
   }
 
   function isStepValid(step: WizardStep) {
-    if (step === 1) return Boolean(state.topicId);
-    if (step === 2) return state.selectedBranchIds.length > 0;
+    if (step === 1) {
+      if (state.mode === "single") return state.selectedModuleIds.length === 1;
+      return state.selectedModuleIds.length >= 2 && state.selectedModuleIds.length <= MAX_MULTI_MODULES;
+    }
+
+    if (step === 2) {
+      if (state.selectedModuleIds.length === 0) return false;
+      return state.selectedModuleIds.every((moduleId) => {
+        const branchGroups = branchGroupsByModule[moduleId] ?? [];
+        if (branchGroups.length === 0) return false;
+        const selected = state.selectedBranchIdsByModule[moduleId] ?? [];
+        return selected.length > 0;
+      });
+    }
+
     if (step === 3) return summary.total > 0;
+
     if (step === 4) {
       if (summary.total < 1) return false;
       if (state.workMeta.workType === "custom" && state.workMeta.customTypeLabel.trim().length === 0) return false;
       return true;
     }
+
     return false;
   }
 
   function getFirstValidationMessage(step: WizardStep) {
-    if (step === 1 && !state.topicId) return t.validationSelectTopic;
-    if (step === 2 && state.selectedBranchIds.length === 0) return t.validationSelectBranch;
+    if (step === 1) {
+      if (state.mode === "single" && state.selectedModuleIds.length !== 1) return t.validationSelectTopic;
+      if (state.mode === "multi" && state.selectedModuleIds.length < 2) return t.validationSelectTwoTopics;
+    }
+    if (step === 2 && !isStepValid(2)) return t.validationSelectBranch;
     if (step === 3 && summary.total < 1) return t.validationSelectSkills;
     if (step === 4 && state.workMeta.workType === "custom" && state.workMeta.customTypeLabel.trim().length === 0) {
       return t.validationCustomType;
@@ -653,17 +886,34 @@ export function TeacherToolsPageClient({ locale }: Props) {
     setBuilding(true);
     setError(null);
     setInlineValidation(null);
+
     try {
-      const workTypeForApi: WorkType =
-        state.workMeta.workType === "custom" ? "quiz" : state.workMeta.workType;
-      const customTitle =
-        state.workMeta.workType === "custom"
-          ? state.workMeta.customTypeLabel.trim().slice(0, 80)
-          : null;
+      const workTypeForApi: WorkType = state.workMeta.workType === "custom" ? "quiz" : state.workMeta.workType;
+      const customTitle = state.workMeta.workType === "custom" ? state.workMeta.customTypeLabel.trim().slice(0, 80) : null;
       const titleTemplate = {
         customTitle,
         date: state.workMeta.showDateInPdf ? state.workMeta.date || null : null,
       };
+
+      const plan = state.selectedModuleIds.flatMap((moduleId) => {
+        const topic = topicDataById[moduleId];
+        const counts = state.skillCountsByModule[moduleId] ?? {};
+        if (!topic) return [];
+        return topic.skills
+          .map((skill) => ({
+            topicId: moduleId,
+            skillId: skill.id,
+            count: Math.trunc(counts[skill.id] ?? 0),
+          }))
+          .filter((item) => item.count > 0);
+      });
+
+      const primaryTopicId = state.selectedModuleIds[0] ?? null;
+      if (!primaryTopicId) {
+        setInlineValidation(t.validationSelectTopic);
+        setBuilding(false);
+        return;
+      }
 
       const response = await fetch("/api/teacher/demo/generate", {
         method: "POST",
@@ -671,22 +921,17 @@ export function TeacherToolsPageClient({ locale }: Props) {
         credentials: "same-origin",
         body: JSON.stringify({
           locale,
-          topicId: state.topicId,
-          topics: state.topicId ? [state.topicId] : [],
+          topicId: primaryTopicId,
+          topics: state.selectedModuleIds,
           variantsCount: 2,
           workType: workTypeForApi,
           printLayout: "single",
           shuffleOrder: false,
           titleTemplate,
-          plan: skillsForSelectedBranches
-            .map((skill) => ({
-              topicId: state.topicId ?? undefined,
-              skillId: skill.id,
-              count: Math.trunc(state.skillCountsById[skill.id] ?? 0),
-            }))
-            .filter((item) => item.count > 0),
+          plan,
         }),
       });
+
       const payload = (await response.json()) as GenerateResponse;
       if (!response.ok || !payload.ok) {
         const parsedError = parseTeacherError(payload, "Не удалось собрать варианты.");
@@ -696,12 +941,14 @@ export function TeacherToolsPageClient({ locale }: Props) {
         setError(parsedError);
         return;
       }
+
       setRequiresGuestRegistration(false);
       const nextWorkId = typeof payload.workId === "string" ? payload.workId : null;
       if (nextWorkId) {
         router.push(`/${locale}/teacher-tools/works/${nextWorkId}`);
         return;
       }
+
       setError({ message: "Работа собрана, но не удалось открыть страницу работы." });
     } catch {
       setError({ message: "Ошибка сети при сборке вариантов." });
@@ -709,6 +956,33 @@ export function TeacherToolsPageClient({ locale }: Props) {
       setBuilding(false);
     }
   }
+
+  const moduleTabs =
+    state.mode === "multi" ? (
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {state.selectedModuleIds.map((moduleId) => {
+          const isActive = moduleId === activeModuleId;
+          const status = moduleStatus.get(moduleId);
+          const label = topicTitleById.get(moduleId) ?? moduleId;
+          return (
+            <button
+              key={moduleId}
+              type="button"
+              onClick={() => dispatch({ type: "setActiveModuleId", moduleId })}
+              className={[
+                "inline-flex items-center gap-2 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold",
+                isActive
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+              ].join(" ")}
+            >
+              <span>{label}</span>
+              <span>{status?.ok ? "✅" : "⚠️"}</span>
+            </button>
+          );
+        })}
+      </div>
+    ) : null;
 
   return (
     <main className="space-y-6">
@@ -790,6 +1064,43 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
         {state.step === 1 ? (
           <section className="space-y-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.modeLabel}</span>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    dispatch({ type: "setMode", mode: "single" });
+                    setNotice(null);
+                  }}
+                  className={[
+                    "rounded-full border px-3 py-1.5 text-xs font-semibold",
+                    state.mode === "single"
+                      ? "border-slate-900 bg-slate-900 text-white"
+                      : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+                  ].join(" ")}
+                >
+                  {t.modeSingle}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    dispatch({ type: "setMode", mode: "multi" });
+                    setNotice(null);
+                  }}
+                  className={[
+                    "rounded-full border px-3 py-1.5 text-xs font-semibold",
+                    state.mode === "multi"
+                      ? "border-slate-900 bg-slate-900 text-white"
+                      : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+                  ].join(" ")}
+                >
+                  {t.modeMulti}
+                </button>
+              </div>
+              <p className="mt-2 text-xs text-slate-500">{t.modeHint}</p>
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="space-y-1">
                 <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.grade}</span>
@@ -834,6 +1145,37 @@ export function TeacherToolsPageClient({ locale }: Props) {
               </div>
             </div>
 
+            <div className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+              <span>
+                {t.selectedThemesCount}: {formatNumber(locale, state.selectedModuleIds.length)}
+              </span>
+              {state.mode === "multi" ? <span>{t.maxThemesHint}</span> : null}
+            </div>
+
+            {state.mode === "multi" && state.selectedModuleIds.length > 0 ? (
+              <div className="space-y-2">
+                <h2 className="text-sm font-semibold text-slate-900">{t.basket}</h2>
+                <div className="flex flex-wrap gap-2">
+                  {state.selectedModuleIds.map((moduleId) => (
+                    <span
+                      key={moduleId}
+                      className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1 text-xs text-slate-700"
+                    >
+                      {topicTitleById.get(moduleId) ?? moduleId}
+                      <button
+                        type="button"
+                        aria-label={t.removeTheme}
+                        onClick={() => removeModule(moduleId)}
+                        className="rounded-full px-1 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
             <div className="space-y-2">
               <h2 className="text-base font-semibold text-slate-900">{t.topics}</h2>
               {filteredTopics.length === 0 ? (
@@ -843,14 +1185,19 @@ export function TeacherToolsPageClient({ locale }: Props) {
               ) : (
                 <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                   {filteredTopics.map((topic) => {
-                    const selected = state.topicId === topic.topicId;
+                    const selected = state.selectedModuleIds.includes(topic.topicId);
+                    const disabled =
+                      state.mode === "multi" &&
+                      !selected &&
+                      state.selectedModuleIds.length >= MAX_MULTI_MODULES;
+
                     return (
                       <button
                         key={topic.topicId}
                         type="button"
+                        disabled={disabled}
                         onClick={() => {
-                          dispatch({ type: "selectTopic", topicId: topic.topicId });
-                          setNotice(null);
+                          toggleModule(topic.topicId);
                           setInlineValidation(null);
                         }}
                         className={[
@@ -858,6 +1205,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
                           selected
                             ? "border-slate-900 bg-slate-900 text-white"
                             : "border-slate-300 bg-white text-slate-900 hover:bg-slate-50",
+                          disabled ? "cursor-not-allowed opacity-50" : "",
                         ].join(" ")}
                       >
                         <p className="font-semibold">{topic.title}</p>
@@ -872,37 +1220,50 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
         {state.step === 2 ? (
           <section className="space-y-4">
+            {moduleTabs}
             <div>
               <h2 className="text-base font-semibold text-slate-900">{t.branches}</h2>
               <p className="mt-1 text-sm text-slate-600">{t.branchesHint}</p>
             </div>
-            {loadingTopic ? <p className="text-sm text-slate-500">Loading...</p> : null}
 
-            {!loadingTopic ? (
+            {activeModuleId && loadingTopics[activeModuleId] ? (
+              <p className="text-sm text-slate-500">Loading...</p>
+            ) : null}
+
+            {!activeModuleId ? null : (
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setBranchSelection(branchGroups.map((branch) => branch.id))}
+                    onClick={() => setBranchSelectionForActive(activeBranchGroups.map((branch) => branch.id))}
                     className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
                   >
                     {t.selectAllBranches}
                   </button>
                   <button
                     type="button"
-                    onClick={() => setBranchSelection([])}
+                    onClick={() => setBranchSelectionForActive([])}
                     className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
                   >
                     {t.clearBranches}
                   </button>
                   <span className="text-xs text-slate-500">
-                    {t.branchCounter}: {formatNumber(locale, state.selectedBranchIds.length)}
+                    {t.branchCounter}: {formatNumber(locale, (state.selectedBranchIdsByModule[activeModuleId] ?? []).length)}
                   </span>
+                  {state.mode === "multi" ? (
+                    <button
+                      type="button"
+                      onClick={() => removeModule(activeModuleId)}
+                      className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                    >
+                      {t.removeTheme}
+                    </button>
+                  ) : null}
                 </div>
 
                 <div className="space-y-2">
-                  {branchGroups.map((branch) => {
-                    const checked = selectedBranchSet.has(branch.id);
+                  {activeBranchGroups.map((branch) => {
+                    const checked = activeSelectedBranchSet.has(branch.id);
                     return (
                       <label
                         key={branch.id}
@@ -912,10 +1273,11 @@ export function TeacherToolsPageClient({ locale }: Props) {
                           type="checkbox"
                           checked={checked}
                           onChange={(event) => {
+                            const current = state.selectedBranchIdsByModule[activeModuleId] ?? [];
                             if (event.target.checked) {
-                              setBranchSelection([...state.selectedBranchIds, branch.id]);
+                              setBranchSelectionForActive([...current, branch.id]);
                             } else {
-                              setBranchSelection(state.selectedBranchIds.filter((id) => id !== branch.id));
+                              setBranchSelectionForActive(current.filter((id) => id !== branch.id));
                             }
                           }}
                           className="h-4 w-4 rounded border-slate-300"
@@ -926,46 +1288,58 @@ export function TeacherToolsPageClient({ locale }: Props) {
                   })}
                 </div>
               </div>
-            ) : null}
+            )}
           </section>
         ) : null}
 
         {state.step === 3 ? (
           <section className="space-y-4">
+            {moduleTabs}
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-base font-semibold text-slate-900">{t.skills}</h2>
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
-                  onClick={addAllVisibleSkills}
+                  onClick={addAllSkillsForActive}
                   className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
                 >
                   {t.addAllSkills}
                 </button>
                 <button
                   type="button"
-                  onClick={clearVisibleSkills}
+                  onClick={clearSkillsForActive}
                   className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
                 >
                   {t.clearSkills}
                 </button>
+                {state.mode === "multi" && activeModuleId ? (
+                  <button
+                    type="button"
+                    onClick={() => removeModule(activeModuleId)}
+                    className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                  >
+                    {t.removeTheme}
+                  </button>
+                ) : null}
               </div>
             </div>
 
-            {branchGroups.filter((branch) => selectedBranchSet.has(branch.id)).length === 0 ? (
+            {activeBranchGroups.filter((branch) => activeSelectedBranchSet.has(branch.id)).length === 0 ? (
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
                 {t.noSkillsForBranches}
               </div>
             ) : (
               <div className="space-y-3">
-                {branchGroups
-                  .filter((branch) => selectedBranchSet.has(branch.id))
+                {activeBranchGroups
+                  .filter((branch) => activeSelectedBranchSet.has(branch.id))
                   .map((branch) => (
                     <details key={branch.id} open className="rounded-xl border border-slate-200 bg-slate-50 p-3">
                       <summary className="cursor-pointer text-sm font-semibold text-slate-900">{branch.label}</summary>
                       <div className="mt-3 space-y-2">
                         {branch.skills.map((skill) => {
-                          const value = state.skillCountsById[skill.id] ?? 0;
+                          if (!activeModuleId) return null;
+                          const moduleCounts = state.skillCountsByModule[activeModuleId] ?? {};
+                          const value = moduleCounts[skill.id] ?? 0;
                           const disabled = skill.status === "soon";
                           const levels = skill.availableByDifficulty ?? { 1: 0, 2: 0, 3: 0 };
                           const levelsText = [1, 2, 3]
@@ -983,16 +1357,6 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                       <span className="font-medium text-slate-900">{t.example}:</span> {skill.example}
                                     </p>
                                   ) : null}
-                                  {skill.cardHref ? (
-                                    <p className="mt-1">
-                                      <Link
-                                        href={`/${locale}${skill.cardHref}`}
-                                        className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
-                                      >
-                                        Skill card
-                                      </Link>
-                                    </p>
-                                  ) : null}
                                   <p className="mt-1 text-xs text-slate-500">
                                     {t.available}: {formatNumber(locale, skill.availableCount ?? 0)}
                                   </p>
@@ -1005,7 +1369,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                     type="button"
                                     disabled={disabled}
                                     aria-label={`Decrease ${skill.title}`}
-                                    onClick={() => updateSkillCount(skill.id, value - 1)}
+                                    onClick={() => updateSkillCount(activeModuleId, skill.id, value - 1)}
                                     className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
                                   >
                                     -
@@ -1017,14 +1381,14 @@ export function TeacherToolsPageClient({ locale }: Props) {
                                     max={30}
                                     disabled={disabled}
                                     value={value}
-                                    onChange={(event) => updateSkillCount(skill.id, Number(event.target.value || 0))}
+                                    onChange={(event) => updateSkillCount(activeModuleId, skill.id, Number(event.target.value || 0))}
                                     className="w-16 rounded-lg border border-slate-300 px-2 py-1 text-center text-sm"
                                   />
                                   <button
                                     type="button"
                                     disabled={disabled}
                                     aria-label={`Increase ${skill.title}`}
-                                    onClick={() => updateSkillCount(skill.id, value + 1)}
+                                    onClick={() => updateSkillCount(activeModuleId, skill.id, value + 1)}
                                     className="h-8 w-8 rounded-lg border border-slate-300 text-sm text-slate-800 disabled:opacity-40"
                                   >
                                     +
@@ -1095,9 +1459,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
               <input
                 type="checkbox"
                 checked={state.workMeta.showDateInPdf}
-                onChange={(event) =>
-                  dispatch({ type: "setWorkMeta", patch: { showDateInPdf: event.target.checked } })
-                }
+                onChange={(event) => dispatch({ type: "setWorkMeta", patch: { showDateInPdf: event.target.checked } })}
                 className="h-4 w-4 rounded border-slate-300"
               />
               {t.showDateInPdf}
@@ -1106,20 +1468,41 @@ export function TeacherToolsPageClient({ locale }: Props) {
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-sm font-semibold text-slate-900">{t.summaryTotal}</p>
               <p className="mt-1 text-2xl font-bold text-slate-950">{formatNumber(locale, summary.total)}</p>
+
+              <p className="mt-4 text-sm font-semibold text-slate-900">{t.summaryByThemes}</p>
+              <ul className="mt-2 space-y-1 text-sm text-slate-700">
+                {summary.byModule.map((item) => (
+                  <li key={item.moduleId} className="flex items-center justify-between gap-2">
+                    <span>{item.title}</span>
+                    <span className="font-semibold text-slate-900">{item.total}</span>
+                  </li>
+                ))}
+              </ul>
+
               <p className="mt-4 text-sm font-semibold text-slate-900">{t.summaryBySkills}</p>
-              {summary.selectedSkills.length === 0 ? (
+              {summary.byModule.flatMap((item) => item.selectedSkills).length === 0 ? (
                 <p className="mt-1 text-sm text-slate-500">{t.emptySummary}</p>
               ) : (
                 <ul className="mt-2 space-y-1">
-                  {summary.selectedSkills.map(({ skill, count }) => (
-                    <li key={skill.id} className="flex items-center justify-between gap-2 text-sm text-slate-700">
-                      <span className="min-w-0">{skill.title}</span>
-                      <span className="font-semibold text-slate-900">{count}</span>
-                    </li>
-                  ))}
+                  {summary.byModule.flatMap((item) =>
+                    item.selectedSkills.map(({ skill, count }) => (
+                      <li key={`${item.moduleId}:${skill.id}`} className="flex items-center justify-between gap-2 text-sm text-slate-700">
+                        <span className="min-w-0">
+                          {state.mode === "multi" ? `${item.title}: ${skill.title}` : skill.title}
+                        </span>
+                        <span className="font-semibold text-slate-900">{count}</span>
+                      </li>
+                    )),
+                  )}
                 </ul>
               )}
             </div>
+
+            {hasAnyEmptyTheme ? (
+              <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                {t.emptyThemeWarning}
+              </div>
+            ) : null}
 
             <button
               type="button"
