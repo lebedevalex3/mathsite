@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { badRequest, toApiError } from "@/src/lib/api/errors";
+import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 import { getTeacherToolsTopicSkills } from "@/src/lib/teacher-tools/catalog";
 import {
@@ -85,6 +86,11 @@ export async function POST(request: Request) {
 
   try {
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequestIfAuthenticated(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const { userId, visitorId } = await getOrCreateVisitorUser(cookieStore);
     if (visitorId) {
       await enforceDemoRateLimit(userId);

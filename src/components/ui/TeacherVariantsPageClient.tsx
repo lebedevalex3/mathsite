@@ -47,6 +47,7 @@ export function TeacherVariantsPageClient({
   const [clearingVariants, setClearingVariants] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<TeacherApiError | null>(null);
+  const [csrfToken, setCsrfToken] = useState("");
 
   const isTeacher = role === "teacher" || role === "admin";
 
@@ -118,16 +119,35 @@ export function TeacherVariantsPageClient({
   }
 
   useEffect(() => {
+    void (async () => {
+      try {
+        const response = await fetch("/api/auth/session", { credentials: "same-origin" });
+        const payload = (await response.json()) as { csrfToken?: unknown };
+        if (typeof payload.csrfToken === "string" && payload.csrfToken) {
+          setCsrfToken(payload.csrfToken);
+        }
+      } catch {
+        // optional block: auth screen can recover on next action
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     void loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTeacher]);
 
   async function handleBecomeTeacher() {
+    if (!csrfToken) {
+      setError({ message: "Не удалось получить CSRF-токен." });
+      return;
+    }
     setNotice(null);
     setError(null);
     try {
       const response = await fetch("/api/teacher/become", {
         method: "POST",
+        headers: { "x-csrf-token": csrfToken },
         credentials: "same-origin",
       });
       const payload = (await response.json()) as {
@@ -150,13 +170,17 @@ export function TeacherVariantsPageClient({
   }
 
   async function handleGenerate(templateId: string) {
+    if (!csrfToken) {
+      setError({ message: "Не удалось получить CSRF-токен." });
+      return;
+    }
     setBusyTemplateId(templateId);
     setNotice(null);
     setError(null);
     try {
       const response = await fetch("/api/teacher/variants", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
         credentials: "same-origin",
         body: JSON.stringify({ topicId: "math.proportion", templateId }),
       });
@@ -182,6 +206,10 @@ export function TeacherVariantsPageClient({
   }
 
   async function handleClearVariants() {
+    if (!csrfToken) {
+      setError({ message: "Не удалось получить CSRF-токен." });
+      return;
+    }
     if (variants.length === 0 || clearingVariants) return;
     const confirmed = window.confirm(
       `Удалить все сгенерированные варианты (${variants.length})? Это действие нельзя отменить.`,
@@ -194,6 +222,7 @@ export function TeacherVariantsPageClient({
     try {
       const response = await fetch("/api/teacher/variants", {
         method: "DELETE",
+        headers: { "x-csrf-token": csrfToken },
         credentials: "same-origin",
       });
       const payload = (await response.json()) as {

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { badRequest, notFound, toApiError } from "@/src/lib/api/errors";
+import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 import { buildWorkDisplayTitle } from "@/src/lib/teacher-tools/demo";
 import {
@@ -62,6 +63,11 @@ export async function PATCH(request: Request, { params }: RouteProps) {
   try {
     const { id } = await params;
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequestIfAuthenticated(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const { userId } = await getOrCreateVisitorUser(cookieStore);
 
     const body = (await request.json()) as {

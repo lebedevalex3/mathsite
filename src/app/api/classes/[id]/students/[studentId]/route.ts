@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { forbidden, notFound, toApiError, unauthorized } from "@/src/lib/api/errors";
+import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { isTeacherRole } from "@/src/lib/auth/access";
 import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 import { prisma } from "@/src/lib/db/prisma";
@@ -13,10 +14,15 @@ type RouteProps = {
   params: Promise<{ id: string; studentId: string }>;
 };
 
-export async function DELETE(_: Request, { params }: RouteProps) {
+export async function DELETE(request: Request, { params }: RouteProps) {
   try {
     const { id: classId, studentId } = await params;
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequestIfAuthenticated(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const user = await getAuthenticatedUserFromCookie(cookieStore);
     if (!user) {
       const { status, body } = unauthorized("Sign-in required to remove class student.");

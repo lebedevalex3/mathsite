@@ -3,12 +3,13 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/src/lib/db/prisma";
 import { toApiError } from "@/src/lib/api/errors";
+import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { getCurrentUserWithRole } from "@/src/lib/variants/auth";
 import { writeAuditLog } from "@/src/lib/audit/log";
 
 export const runtime = "nodejs";
 
-export async function POST() {
+export async function POST(request: Request) {
   if (process.env.ALLOW_DEV_BECOME_TEACHER !== "1") {
     return NextResponse.json(
       { ok: false, code: "DISABLED", message: "Endpoint disabled in production." },
@@ -18,6 +19,11 @@ export async function POST() {
 
   try {
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequestIfAuthenticated(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const user = await getCurrentUserWithRole(cookieStore);
 
     if (user.role === "teacher" || user.role === "admin") {

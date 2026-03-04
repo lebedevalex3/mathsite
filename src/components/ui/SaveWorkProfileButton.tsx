@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { getCsrfTokenClient } from "@/src/lib/auth/csrf-client";
+
 type Props = {
   locale: "ru" | "en" | "de";
   workId: string;
@@ -49,9 +51,13 @@ export function SaveWorkProfileButton(props: Props) {
           setStatusText(null);
           startTransition(async () => {
             try {
+              const csrfToken = await getCsrfTokenClient();
               const res = await fetch(`/api/teacher/demo/works/${workId}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                  "Content-Type": "application/json",
+                  ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+                },
                 body: JSON.stringify({
                   locale,
                   workType,

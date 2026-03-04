@@ -5,6 +5,7 @@ import {
   CSRF_COOKIE_NAME,
   getOrCreateCsrfToken,
   verifyCsrfRequest,
+  verifyCsrfRequestIfAuthenticated,
 } from "@/src/lib/auth/csrf";
 
 function makeCookieStore(initial: Record<string, string> = {}) {
@@ -89,5 +90,50 @@ test("verifyCsrfRequest accepts matching token and origin", () => {
     },
   });
   const error = verifyCsrfRequest(request, store);
+  assert.equal(error, null);
+});
+
+test("verifyCsrfRequestIfAuthenticated skips CSRF when auth session is missing", () => {
+  const { store } = makeCookieStore({ [CSRF_COOKIE_NAME]: "token-1" });
+  const request = new Request("http://localhost:3000/api/classes", {
+    method: "POST",
+    headers: {
+      origin: "http://localhost:3000",
+    },
+  });
+  const error = verifyCsrfRequestIfAuthenticated(request, store);
+  assert.equal(error, null);
+});
+
+test("verifyCsrfRequestIfAuthenticated rejects when auth session exists and token is missing", () => {
+  const { store } = makeCookieStore({
+    auth_session: "session-token",
+    [CSRF_COOKIE_NAME]: "token-1",
+  });
+  const request = new Request("http://localhost:3000/api/classes", {
+    method: "POST",
+    headers: {
+      origin: "http://localhost:3000",
+    },
+  });
+  const error = verifyCsrfRequestIfAuthenticated(request, store);
+  assert.ok(error);
+  assert.equal(error?.status, 403);
+  assert.equal(error?.body.code, "CSRF_INVALID");
+});
+
+test("verifyCsrfRequestIfAuthenticated accepts matching token with auth session", () => {
+  const { store } = makeCookieStore({
+    auth_session: "session-token",
+    [CSRF_COOKIE_NAME]: "token-1",
+  });
+  const request = new Request("http://localhost:3000/api/classes", {
+    method: "POST",
+    headers: {
+      origin: "http://localhost:3000",
+      "x-csrf-token": "token-1",
+    },
+  });
+  const error = verifyCsrfRequestIfAuthenticated(request, store);
   assert.equal(error, null);
 });

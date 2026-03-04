@@ -489,11 +489,16 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }
 
   async function becomeTeacherDev() {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     setPromotingTeacher(true);
     setError(null);
     try {
       const response = await fetch("/api/teacher/become", {
         method: "POST",
+        headers: { "x-csrf-token": csrfToken },
         credentials: "same-origin",
       });
       const payload = (await response.json()) as { ok?: boolean; user?: SessionUser; message?: string };
@@ -510,11 +515,16 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }
 
   async function becomeAdminDev() {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     setPromotingAdmin(true);
     setError(null);
     try {
       const response = await fetch("/api/admin/become", {
         method: "POST",
+        headers: { "x-csrf-token": csrfToken },
         credentials: "same-origin",
       });
       const payload = (await response.json()) as { ok?: boolean; user?: SessionUser; message?: string };
@@ -622,6 +632,10 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }, [loadStudents, selectedClassId]);
 
   async function createClass() {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     const name = newClassName.trim();
     if (!name) return;
     setBusy(true);
@@ -630,7 +644,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
       const response = await fetch("/api/classes", {
         method: "POST",
         credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
         body: JSON.stringify({ name }),
       });
       const payload = (await response.json()) as { ok?: boolean; message?: string; class?: ClassItem };
@@ -649,6 +663,10 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }
 
   async function createStudent() {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     if (!selectedClassId) return;
     setCreatingStudent(true);
     setError(null);
@@ -658,7 +676,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
       const response = await fetch(`/api/classes/${selectedClassId}/students`, {
         method: "POST",
         credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
         body: JSON.stringify({ username: newStudentUsername.trim() || undefined }),
       });
       const payload = (await response.json()) as {
@@ -686,12 +704,17 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }
 
   async function removeStudent(studentId: string) {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     if (!selectedClassId) return;
     setRemovingStudentId(studentId);
     setError(null);
     try {
       const response = await fetch(`/api/classes/${selectedClassId}/students/${studentId}`, {
         method: "DELETE",
+        headers: { "x-csrf-token": csrfToken },
         credentials: "same-origin",
       });
       const payload = (await response.json().catch(() => ({}))) as { ok?: boolean; message?: string };
@@ -709,12 +732,17 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }
 
   async function resetStudentPassword(studentId: string) {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     setResettingStudentId(studentId);
     setError(null);
     setLastResetCredentials(null);
     try {
       const response = await fetch(`/api/students/${studentId}/reset-password`, {
         method: "POST",
+        headers: { "x-csrf-token": csrfToken },
         credentials: "same-origin",
       });
       const payload = (await response.json()) as {
@@ -742,12 +770,16 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
   }
 
   async function handleDuplicateWork(workId: string) {
+    if (!csrfToken) {
+      setError(t.authError);
+      return;
+    }
     setDuplicateWorkId(workId);
     try {
       const response = await fetch(`/api/teacher/demo/works/${workId}/duplicate`, {
         method: "POST",
         credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
         body: JSON.stringify({ locale }),
       });
       const payload = (await response.json()) as { ok?: boolean };

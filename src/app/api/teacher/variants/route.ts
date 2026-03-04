@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { badRequest, notFound, toApiError } from "@/src/lib/api/errors";
+import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { requireTeacherFromCookies } from "@/src/lib/variants/auth";
 import { generateAndSaveVariant } from "@/src/lib/variants/generator";
 import { deleteAllVariantsForOwner, listVariantsForOwner } from "@/src/lib/variants/repository";
@@ -50,6 +51,11 @@ export async function POST(request: Request) {
 
   try {
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequestIfAuthenticated(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const user = await requireTeacherFromCookies(cookieStore);
     const template = await getVariantTemplateById(payload.topicId, payload.templateId);
     if (!template) {
@@ -70,9 +76,14 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
   try {
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequestIfAuthenticated(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const user = await requireTeacherFromCookies(cookieStore);
     const result = await deleteAllVariantsForOwner(user.id);
 

@@ -3,6 +3,7 @@ import { randomBytes } from "node:crypto";
 import { forbidden, type ApiErrorResult } from "@/src/lib/api/errors";
 
 export const CSRF_COOKIE_NAME = "csrf_token";
+const AUTH_SESSION_COOKIE_NAME = "auth_session";
 
 type CookieStoreLike = {
   get(name: string): { value: string } | undefined;
@@ -67,4 +68,13 @@ export function verifyCsrfRequest(
     return forbidden("CSRF validation failed (token mismatch).", "CSRF_INVALID");
   }
   return null;
+}
+
+export function verifyCsrfRequestIfAuthenticated(
+  request: Request,
+  cookieStore: Pick<CookieStoreLike, "get">,
+): ApiErrorResult | null {
+  const sessionToken = cookieStore.get(AUTH_SESSION_COOKIE_NAME)?.value ?? "";
+  if (!sessionToken) return null;
+  return verifyCsrfRequest(request, cookieStore);
 }

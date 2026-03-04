@@ -66,10 +66,17 @@ export async function consumePasswordResetToken(rawToken: string) {
     return null;
   }
 
-  await prisma.passwordResetToken.update({
-    where: { id: token.id },
+  const consumed = await prisma.passwordResetToken.updateMany({
+    where: {
+      id: token.id,
+      usedAt: null,
+      expiresAt: { gt: now },
+    },
     data: { usedAt: now },
   });
+  if (consumed.count !== 1) {
+    return null;
+  }
 
   return {
     userId: token.userId,

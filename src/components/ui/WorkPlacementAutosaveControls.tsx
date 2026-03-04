@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { defaultOrientationForLayout } from "@/src/lib/variants/print-profile";
 import type { PrintLayoutMode } from "@/src/lib/variants/print-layout";
 import { publishWorkEditorStatus } from "@/src/lib/teacher-tools/work-editor-status";
+import { getCsrfTokenClient } from "@/src/lib/auth/csrf-client";
 
 type WorkType = "lesson" | "quiz" | "homework" | "test";
 
@@ -66,9 +67,13 @@ export function WorkPlacementAutosaveControls({
     const nextOrientation = defaultOrientationForLayout(nextLayout);
 
     try {
+      const csrfToken = await getCsrfTokenClient();
       const res = await fetch(`/api/teacher/demo/works/${workId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+        },
         signal: controller.signal,
         body: JSON.stringify({
           locale,

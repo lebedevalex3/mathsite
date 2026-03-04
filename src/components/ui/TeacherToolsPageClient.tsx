@@ -600,8 +600,23 @@ export function TeacherToolsPageClient({ locale }: Props) {
   const [inlineValidation, setInlineValidation] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [requiresGuestRegistration, setRequiresGuestRegistration] = useState(false);
+  const [csrfToken, setCsrfToken] = useState("");
 
   const topicConfigs = useMemo(() => listContentTopicConfigs(), []);
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        const response = await fetch("/api/auth/session", { credentials: "same-origin" });
+        const payload = (await response.json()) as { csrfToken?: unknown };
+        if (typeof payload.csrfToken === "string" && payload.csrfToken) {
+          setCsrfToken(payload.csrfToken);
+        }
+      } catch {
+        // optional block: fallback handled by action-level validation
+      }
+    })();
+  }, []);
 
   const allTopics = useMemo<TopicOption[]>(() => {
     return topicConfigs
@@ -1176,6 +1191,10 @@ export function TeacherToolsPageClient({ locale }: Props) {
   }
 
   async function handleGenerate() {
+    if (!csrfToken) {
+      setError({ message: "Не удалось получить CSRF-токен." });
+      return;
+    }
     const validation = getFirstValidationMessage(4) ?? (summary.total < 1 ? t.validationSelectSkills : null);
     if (validation) {
       setInlineValidation(validation);
@@ -1236,7 +1255,7 @@ export function TeacherToolsPageClient({ locale }: Props) {
 
       const response = await fetch("/api/teacher/demo/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
         credentials: "same-origin",
         body: JSON.stringify({
           locale,

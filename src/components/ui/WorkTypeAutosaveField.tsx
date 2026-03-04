@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { publishWorkEditorStatus } from "@/src/lib/teacher-tools/work-editor-status";
+import { getCsrfTokenClient } from "@/src/lib/auth/csrf-client";
 
 type WorkType = "lesson" | "quiz" | "homework" | "test";
 type PrintLayout = "single" | "two" | "two_cut" | "two_dup";
@@ -111,9 +112,13 @@ export function WorkTypeAutosaveField({
     const timer = window.setTimeout(async () => {
       setSaveState("saving");
       try {
+        const csrfToken = await getCsrfTokenClient();
         const res = await fetch(`/api/teacher/demo/works/${workId}`, {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+          },
           signal: controller.signal,
           body: JSON.stringify({
             locale,

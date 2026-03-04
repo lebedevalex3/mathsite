@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { badRequest, forbidden, notFound, toApiError, unauthorized } from "@/src/lib/api/errors";
+import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { getAuthenticatedUserFromCookie, hashPassword } from "@/src/lib/auth/provider";
 import { validateStudentId } from "@/src/lib/auth/validation";
 import { isTeacherRole } from "@/src/lib/auth/access";
@@ -33,7 +34,7 @@ async function canResetStudentPassword(actor: { id: string; role: "student" | "t
   return Boolean(membership);
 }
 
-export async function POST(_: Request, { params }: RouteProps) {
+export async function POST(request: Request, { params }: RouteProps) {
   try {
     const { id } = await params;
     const studentIdInput = validateStudentId(id);
@@ -43,6 +44,11 @@ export async function POST(_: Request, { params }: RouteProps) {
     }
     const { studentId } = studentIdInput.value;
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequestIfAuthenticated(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const actor = await getAuthenticatedUserFromCookie(cookieStore);
     if (!actor) {
       const { status, body } = unauthorized("Sign-in required to reset student password.");

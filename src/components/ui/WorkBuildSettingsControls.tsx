@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { getCsrfTokenClient } from "@/src/lib/auth/csrf-client";
+
 type Locale = "ru" | "en" | "de";
 
 type Props = {
@@ -48,9 +50,13 @@ export function WorkBuildSettingsControls({
     setSaving(true);
     setError(null);
     try {
+      const csrfToken = await getCsrfTokenClient();
       const response = await fetch(`/api/teacher/demo/works/${workId}/rebuild`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+        },
         body: JSON.stringify({
           locale,
           variantsCount: clamp(Math.trunc(variantsCount), 1, 6),

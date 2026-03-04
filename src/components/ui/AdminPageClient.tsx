@@ -9,10 +9,11 @@ import { formatDateTime } from "@/src/lib/i18n/format";
 type Locale = "ru" | "en" | "de";
 
 type SessionResponse =
-  | { ok: true; authenticated: false }
+  | { ok: true; authenticated: false; csrfToken?: string }
   | {
       ok: true;
       authenticated: true;
+      csrfToken?: string;
       user: {
         id: string;
         role: "student" | "teacher" | "admin";
@@ -198,6 +199,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const t = copy[locale];
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [csrfToken, setCsrfToken] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [students, setStudents] = useState<StudentItem[]>([]);
   const [studentsQuery, setStudentsQuery] = useState("");
@@ -296,6 +298,9 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       try {
         const sessionResponse = await fetch("/api/auth/session", { credentials: "same-origin" });
         const sessionPayload = (await sessionResponse.json()) as SessionResponse;
+        if (sessionPayload.ok && typeof sessionPayload.csrfToken === "string" && sessionPayload.csrfToken) {
+          setCsrfToken(sessionPayload.csrfToken);
+        }
         const admin = Boolean(
           sessionResponse.ok && sessionPayload.ok && sessionPayload.authenticated && sessionPayload.user.role === "admin",
         );
@@ -311,12 +316,17 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   }, [loadContent, loadLogs, loadStudents, t.errorFallback]);
 
   async function handleResetStudent(studentId: string) {
+    if (!csrfToken) {
+      setError(t.errorFallback);
+      return;
+    }
     setResettingStudentId(studentId);
     setError(null);
     setLastReset(null);
     try {
       const response = await fetch(`/api/students/${studentId}/reset-password`, {
         method: "POST",
+        headers: { "x-csrf-token": csrfToken },
         credentials: "same-origin",
       });
       const payload = (await response.json()) as {

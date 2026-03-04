@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { badRequest, forbidden, toApiError, unauthorized } from "@/src/lib/api/errors";
+import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 import { isTeacherRole } from "@/src/lib/auth/access";
 import { prisma } from "@/src/lib/db/prisma";
@@ -74,6 +75,11 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
+    const csrfError = verifyCsrfRequestIfAuthenticated(request, cookieStore);
+    if (csrfError) {
+      const { status, body } = csrfError;
+      return NextResponse.json(body, { status });
+    }
     const user = await getAuthenticatedUserFromCookie(cookieStore);
     if (!user) {
       const { status, body } = unauthorized("Sign-in required to create class.");
