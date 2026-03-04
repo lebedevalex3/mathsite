@@ -430,6 +430,12 @@ function branchLabel(locale: Locale, branchId: string) {
     "math.equations.word": "Текстовые уравнения",
     "math.negative_numbers.compare_and_absolute": "Сравнение и модуль",
     "math.negative_numbers.operations": "Действия с целыми",
+    "math.fractions_multiplication.s0": "База (пререквизиты)",
+    "math.fractions_multiplication.s1": "Операция умножения дробей",
+    "math.fractions_multiplication.s2": "Применение умножения дробей",
+    "math.fractions_multiplication.s3": "Алгебра на дробях",
+    "math.fractions_multiplication.s4": "Уравнения с дробными коэффициентами",
+    "math.fractions_multiplication.s5": "Прикладные задачи и геометрия",
   };
   const en: Record<string, string> = {
     "math.proportion.direct": "Direct Proportion",
@@ -440,6 +446,12 @@ function branchLabel(locale: Locale, branchId: string) {
     "math.equations.word": "Word Equations",
     "math.negative_numbers.compare_and_absolute": "Compare and Absolute Value",
     "math.negative_numbers.operations": "Integer Operations",
+    "math.fractions_multiplication.s0": "Foundation (Prerequisites)",
+    "math.fractions_multiplication.s1": "Fractions Multiplication Operations",
+    "math.fractions_multiplication.s2": "Applying Fractions Multiplication",
+    "math.fractions_multiplication.s3": "Algebra with Fractions",
+    "math.fractions_multiplication.s4": "Equations with Fraction Coefficients",
+    "math.fractions_multiplication.s5": "Word Problems and Geometry",
   };
   const de: Record<string, string> = {
     "math.proportion.direct": "Direkte Proportion",
@@ -450,6 +462,12 @@ function branchLabel(locale: Locale, branchId: string) {
     "math.equations.word": "Textgleichungen",
     "math.negative_numbers.compare_and_absolute": "Vergleich und Betrag",
     "math.negative_numbers.operations": "Rechnen mit ganzen Zahlen",
+    "math.fractions_multiplication.s0": "Basis (Voraussetzungen)",
+    "math.fractions_multiplication.s1": "Operation Bruchmultiplikation",
+    "math.fractions_multiplication.s2": "Anwendung der Bruchmultiplikation",
+    "math.fractions_multiplication.s3": "Algebra mit Brüchen",
+    "math.fractions_multiplication.s4": "Gleichungen mit Bruchkoeffizienten",
+    "math.fractions_multiplication.s5": "Sachaufgaben und Geometrie",
   };
   const map = locale === "ru" ? ru : locale === "de" ? de : en;
   if (map[key]) return map[key];
