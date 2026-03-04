@@ -3,7 +3,12 @@
   "topic_id": "math.fractions_multiplication",
   "section_id": "math.arithmetic",
   "module_id": "math.arithmetic.fractions_multiplication",
-  "grade_tags": [4, 5, 6, 7],
+  "grade_tags": [
+    4,
+    5,
+    6,
+    7
+  ],
   "title": "Умножение дробей: стартовый банк",
   "tasks": [
     {
@@ -12,7 +17,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{2}{3}\\cdot\\frac{9}{10}$",
-      "answer": { "type": "fraction", "numerator": 3, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000002",
@@ -20,7 +29,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{4}{7}\\cdot\\frac{14}{15}$",
-      "answer": { "type": "fraction", "numerator": 8, "denominator": 15 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 8,
+        "denominator": 15
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000003",
@@ -28,7 +41,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{5}{12}\\cdot\\frac{18}{25}$",
-      "answer": { "type": "fraction", "numerator": 3, "denominator": 10 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 10
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000004",
@@ -36,7 +53,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{3}{8}\\cdot\\frac{20}{21}$",
-      "answer": { "type": "fraction", "numerator": 5, "denominator": 14 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 5,
+        "denominator": 14
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000005",
@@ -44,7 +65,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{7}{9}\\cdot\\frac{27}{28}$",
-      "answer": { "type": "fraction", "numerator": 3, "denominator": 4 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 4
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000006",
@@ -52,7 +77,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{6}{11}\\cdot\\frac{22}{15}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000007",
@@ -60,7 +89,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{8}{15}\\cdot\\frac{25}{24}$",
-      "answer": { "type": "fraction", "numerator": 5, "denominator": 9 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 5,
+        "denominator": 9
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000008",
@@ -68,7 +101,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{9}{16}\\cdot\\frac{8}{27}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 6 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 6
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000009",
@@ -76,7 +113,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{10}{21}\\cdot\\frac{14}{25}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 15 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 15
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000010",
@@ -84,7 +125,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{12}{35}\\cdot\\frac{10}{18}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 21 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 21
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000011",
@@ -92,7 +137,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{15}{22}\\cdot\\frac{11}{30}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 4 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 4
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_ff.000012",
@@ -100,7 +149,11 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{14}{27}\\cdot\\frac{9}{28}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 6 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 6
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000001",
@@ -108,7 +161,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{3}{5}\\cdot 10$",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000002",
@@ -116,7 +173,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $14\\cdot\\frac{2}{7}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000003",
@@ -124,7 +185,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{7}{12}\\cdot 18$",
-      "answer": { "type": "fraction", "numerator": 21, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 21,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000004",
@@ -132,7 +197,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $15\\cdot\\frac{4}{9}$",
-      "answer": { "type": "fraction", "numerator": 20, "denominator": 3 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 20,
+        "denominator": 3
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000005",
@@ -140,7 +209,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{5}{8}\\cdot 24$",
-      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 15,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000006",
@@ -148,7 +221,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $21\\cdot\\frac{3}{14}$",
-      "answer": { "type": "fraction", "numerator": 9, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000007",
@@ -156,7 +233,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{11}{15}\\cdot 30$",
-      "answer": { "type": "fraction", "numerator": 22, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 22,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000008",
@@ -164,7 +245,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $16\\cdot\\frac{5}{8}$",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000009",
@@ -172,7 +257,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{9}{20}\\cdot 40$",
-      "answer": { "type": "fraction", "numerator": 18, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 18,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000010",
@@ -180,7 +269,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $27\\cdot\\frac{2}{9}$",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000011",
@@ -188,7 +281,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $\\frac{13}{18}\\cdot 12$",
-      "answer": { "type": "fraction", "numerator": 26, "denominator": 3 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 26,
+        "denominator": 3
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_fi.000012",
@@ -196,7 +293,11 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $25\\cdot\\frac{6}{10}$",
-      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 15,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000001",
@@ -204,7 +305,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $1\\frac{1}{2}\\cdot\\frac{4}{5}$",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000002",
@@ -212,7 +317,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $2\\frac{1}{3}\\cdot\\frac{3}{7}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000003",
@@ -220,7 +329,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $3\\frac{1}{4}\\cdot\\frac{2}{3}$",
-      "answer": { "type": "fraction", "numerator": 13, "denominator": 6 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 13,
+        "denominator": 6
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000004",
@@ -228,7 +341,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $1\\frac{3}{5}\\cdot\\frac{5}{8}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000005",
@@ -236,7 +353,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $2\\frac{2}{3}\\cdot\\frac{9}{10}$",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000006",
@@ -244,7 +365,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $4\\frac{1}{2}\\cdot\\frac{2}{9}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000007",
@@ -252,7 +377,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $1\\frac{2}{7}\\cdot\\frac{7}{4}$",
-      "answer": { "type": "fraction", "numerator": 9, "denominator": 4 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 4
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000008",
@@ -260,7 +389,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $3\\frac{3}{4}\\cdot\\frac{4}{5}$",
-      "answer": { "type": "fraction", "numerator": 3, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000009",
@@ -268,7 +401,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $2\\frac{1}{6}\\cdot\\frac{6}{11}$",
-      "answer": { "type": "fraction", "numerator": 13, "denominator": 11 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 13,
+        "denominator": 11
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000010",
@@ -276,7 +413,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $5\\frac{1}{3}\\cdot\\frac{3}{8}$",
-      "answer": { "type": "fraction", "numerator": 2, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000011",
@@ -284,7 +425,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $1\\frac{4}{9}\\cdot\\frac{9}{10}$",
-      "answer": { "type": "fraction", "numerator": 13, "denominator": 10 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 13,
+        "denominator": 10
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mf.000012",
@@ -292,7 +437,11 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty_band": "A",
       "statement_md": "Вычисли: $2\\frac{3}{5}\\cdot\\frac{5}{6}$",
-      "answer": { "type": "fraction", "numerator": 13, "denominator": 6 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 13,
+        "denominator": 6
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000001",
@@ -300,7 +449,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{2}{3}$ от 9.",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000002",
@@ -308,7 +461,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{3}{4}$ от 8.",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000003",
@@ -316,7 +473,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{5}{6}$ от 12.",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000004",
@@ -324,7 +485,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{7}{8}$ от 16.",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000005",
@@ -332,7 +497,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{4}{5}$ от 15.",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000006",
@@ -340,7 +509,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{9}{10}$ от 20.",
-      "answer": { "type": "fraction", "numerator": 18, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 18,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000007",
@@ -348,7 +521,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{1}{2}$ от 14.",
-      "answer": { "type": "fraction", "numerator": 7, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 7,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000008",
@@ -356,7 +533,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{3}{5}$ от 25.",
-      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 15,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000009",
@@ -364,7 +545,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{5}{9}$ от 18.",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000010",
@@ -372,7 +557,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{2}{7}$ от 21.",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000011",
@@ -380,7 +569,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{4}{9}$ от 27.",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_frac_of.000012",
@@ -388,7 +581,11 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty_band": "A",
       "statement_md": "Найди $\\frac{3}{8}$ от 32.",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000001",
@@ -396,7 +593,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 10% от 50.",
-      "answer": { "type": "fraction", "numerator": 5, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 5,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000002",
@@ -404,7 +605,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 25% от 40.",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000003",
@@ -412,7 +617,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 50% от 18.",
-      "answer": { "type": "fraction", "numerator": 9, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000004",
@@ -420,7 +629,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 10% от 90.",
-      "answer": { "type": "fraction", "numerator": 9, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000005",
@@ -428,7 +641,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 25% от 28.",
-      "answer": { "type": "fraction", "numerator": 7, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 7,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000006",
@@ -436,7 +653,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 50% от 64.",
-      "answer": { "type": "fraction", "numerator": 32, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 32,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000007",
@@ -444,7 +665,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 10% от 120.",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000008",
@@ -452,7 +677,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 25% от 36.",
-      "answer": { "type": "fraction", "numerator": 9, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000009",
@@ -460,7 +689,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 50% от 22.",
-      "answer": { "type": "fraction", "numerator": 11, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 11,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000010",
@@ -468,7 +701,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 10% от 70.",
-      "answer": { "type": "fraction", "numerator": 7, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 7,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000011",
@@ -476,7 +713,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 25% от 16.",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000012",
@@ -484,7 +725,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "A",
       "statement_md": "Найди 50% от 30.",
-      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 15,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000001",
@@ -492,7 +737,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг яблок — $\\frac{3}{4}$ руб. Сколько стоят 8 кг?",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000002",
@@ -500,7 +749,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг сахара — $\\frac{5}{6}$ руб. Сколько стоят 12 кг?",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000003",
@@ -508,7 +761,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг муки — $\\frac{7}{10}$ руб. Сколько стоят 20 кг?",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000004",
@@ -516,7 +773,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг риса — $\\frac{2}{3}$ руб. Сколько стоят 9 кг?",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000005",
@@ -524,7 +785,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг картофеля — $\\frac{4}{5}$ руб. Сколько стоят 15 кг?",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000006",
@@ -532,7 +797,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг крупы — $\\frac{9}{8}$ руб. Сколько стоят 16 кг?",
-      "answer": { "type": "fraction", "numerator": 18, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 18,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000007",
@@ -540,7 +809,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг орехов — $\\frac{11}{12}$ руб. Сколько стоят 24 кг?",
-      "answer": { "type": "fraction", "numerator": 22, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 22,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000008",
@@ -548,7 +821,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг груш — $\\frac{3}{5}$ руб. Сколько стоят 25 кг?",
-      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 15,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000009",
@@ -556,7 +833,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг ягод — $\\frac{6}{7}$ руб. Сколько стоят 14 кг?",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000010",
@@ -564,7 +845,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг сыра — $\\frac{5}{9}$ руб. Сколько стоят 18 кг?",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000011",
@@ -572,7 +857,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг масла — $\\frac{8}{11}$ руб. Сколько стоят 22 кг?",
-      "answer": { "type": "fraction", "numerator": 16, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 16,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_price.000012",
@@ -580,7 +869,11 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty_band": "A",
       "statement_md": "Цена 1 кг крупы — $\\frac{7}{8}$ руб. Сколько стоят 32 кг?",
-      "answer": { "type": "fraction", "numerator": 28, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 28,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000001",
@@ -588,7 +881,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{3}{4}$ км/ч. Какой путь пройдёт за 8 ч?",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000002",
@@ -596,7 +893,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{5}{6}$ км/ч. Какой путь пройдёт за 12 ч?",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000003",
@@ -604,7 +905,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{7}{10}$ км/ч. Какой путь пройдёт за 20 ч?",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000004",
@@ -612,7 +917,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{2}{3}$ км/ч. Какой путь пройдёт за 9 ч?",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000005",
@@ -620,7 +929,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{4}{5}$ км/ч. Какой путь пройдёт за 15 ч?",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000006",
@@ -628,7 +941,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{9}{8}$ км/ч. Какой путь пройдёт за 16 ч?",
-      "answer": { "type": "fraction", "numerator": 18, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 18,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000007",
@@ -636,7 +953,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{11}{12}$ км/ч. Какой путь пройдёт за 24 ч?",
-      "answer": { "type": "fraction", "numerator": 22, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 22,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000008",
@@ -644,7 +965,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{3}{5}$ км/ч. Какой путь пройдёт за 25 ч?",
-      "answer": { "type": "fraction", "numerator": 15, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 15,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000009",
@@ -652,7 +977,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{6}{7}$ км/ч. Какой путь пройдёт за 14 ч?",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000010",
@@ -660,7 +989,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{5}{9}$ км/ч. Какой путь пройдёт за 18 ч?",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000011",
@@ -668,7 +1001,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{8}{11}$ км/ч. Какой путь пройдёт за 22 ч?",
-      "answer": { "type": "fraction", "numerator": 16, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 16,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_speed.000012",
@@ -676,7 +1013,11 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty_band": "A",
       "statement_md": "Скорость равна $\\frac{7}{8}$ км/ч. Какой путь пройдёт за 32 ч?",
-      "answer": { "type": "fraction", "numerator": 28, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 28,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000001",
@@ -684,7 +1025,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $1\\frac{1}{2}\\cdot2\\frac{2}{3}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000002",
@@ -692,7 +1037,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $2\\frac{1}{4}\\cdot1\\frac{1}{2}$",
-      "answer": { "type": "fraction", "numerator": 27, "denominator": 8 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 27,
+        "denominator": 8
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000003",
@@ -700,7 +1049,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $3\\frac{1}{3}\\cdot1\\frac{1}{4}$",
-      "answer": { "type": "fraction", "numerator": 25, "denominator": 6 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 25,
+        "denominator": 6
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000004",
@@ -708,7 +1061,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $1\\frac{3}{5}\\cdot2\\frac{1}{2}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000005",
@@ -716,7 +1073,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $4\\frac{1}{2}\\cdot1\\frac{2}{3}$",
-      "answer": { "type": "fraction", "numerator": 15, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 15,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000006",
@@ -724,7 +1085,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $2\\frac{3}{4}\\cdot3\\frac{1}{5}$",
-      "answer": { "type": "fraction", "numerator": 44, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 44,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000007",
@@ -732,7 +1097,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $1\\frac{5}{6}\\cdot2\\frac{1}{3}$",
-      "answer": { "type": "fraction", "numerator": 77, "denominator": 18 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 77,
+        "denominator": 18
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000008",
@@ -740,7 +1109,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $3\\frac{1}{2}\\cdot2\\frac{3}{7}$",
-      "answer": { "type": "fraction", "numerator": 75, "denominator": 14 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 75,
+        "denominator": 14
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000009",
@@ -748,7 +1121,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $2\\frac{2}{5}\\cdot1\\frac{4}{9}$",
-      "answer": { "type": "fraction", "numerator": 104, "denominator": 45 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 104,
+        "denominator": 45
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000010",
@@ -756,7 +1133,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $5\\frac{1}{4}\\cdot1\\frac{1}{2}$",
-      "answer": { "type": "fraction", "numerator": 63, "denominator": 8 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 63,
+        "denominator": 8
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000011",
@@ -764,7 +1145,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $3\\frac{2}{3}\\cdot2\\frac{1}{6}$",
-      "answer": { "type": "fraction", "numerator": 143, "denominator": 18 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 143,
+        "denominator": 18
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_mm.000012",
@@ -772,7 +1157,11 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $1\\frac{7}{8}\\cdot2\\frac{2}{5}$",
-      "answer": { "type": "fraction", "numerator": 9, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000001",
@@ -780,7 +1169,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{3}{4}\\cdot0{,}8$",
-      "answer": { "type": "fraction", "numerator": 3, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000002",
@@ -788,7 +1181,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $1\\frac{1}{2}\\cdot0{,}6$",
-      "answer": { "type": "fraction", "numerator": 9, "denominator": 10 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 10
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000003",
@@ -796,7 +1193,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{5}{6}\\cdot1{,}2$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000004",
@@ -804,7 +1205,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $2\\frac{1}{4}\\cdot0{,}4$",
-      "answer": { "type": "fraction", "numerator": 9, "denominator": 10 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 10
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000005",
@@ -812,7 +1217,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{7}{8}\\cdot0{,}5$",
-      "answer": { "type": "fraction", "numerator": 7, "denominator": 16 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 7,
+        "denominator": 16
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000006",
@@ -820,7 +1229,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $1\\frac{2}{3}\\cdot0{,}9$",
-      "answer": { "type": "fraction", "numerator": 3, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000007",
@@ -828,7 +1241,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{4}{5}\\cdot1{,}5$",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000008",
@@ -836,7 +1253,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $2\\frac{3}{4}\\cdot0{,}2$",
-      "answer": { "type": "fraction", "numerator": 11, "denominator": 20 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 11,
+        "denominator": 20
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000009",
@@ -844,7 +1265,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{9}{10}\\cdot0{,}3$",
-      "answer": { "type": "fraction", "numerator": 27, "denominator": 100 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 27,
+        "denominator": 100
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000010",
@@ -852,7 +1277,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $1\\frac{1}{4}\\cdot0{,}8$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000011",
@@ -860,7 +1289,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{2}{3}\\cdot1{,}5$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_dec_mul.000012",
@@ -868,7 +1301,11 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $1\\frac{3}{5}\\cdot0{,}25$",
-      "answer": { "type": "fraction", "numerator": 2, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000001",
@@ -876,7 +1313,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{2}{3}\\cdot\\frac{9}{10}\\cdot\\frac{5}{6}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000002",
@@ -884,7 +1325,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{4}{5}\\cdot\\frac{15}{16}\\cdot\\frac{2}{3}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000003",
@@ -892,7 +1337,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{7}{9}\\cdot\\frac{3}{14}\\cdot\\frac{6}{5}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000004",
@@ -900,7 +1349,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{5}{8}\\cdot\\frac{16}{25}\\cdot\\frac{3}{2}$",
-      "answer": { "type": "fraction", "numerator": 3, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000005",
@@ -908,7 +1361,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{6}{7}\\cdot\\frac{14}{15}\\cdot\\frac{5}{12}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 3 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 3
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000006",
@@ -916,7 +1373,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{8}{9}\\cdot\\frac{27}{32}\\cdot\\frac{4}{5}$",
-      "answer": { "type": "fraction", "numerator": 3, "denominator": 5 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 5
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000007",
@@ -924,7 +1385,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{3}{4}\\cdot\\frac{20}{21}\\cdot\\frac{7}{10}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000008",
@@ -932,7 +1397,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{9}{11}\\cdot\\frac{22}{27}\\cdot\\frac{3}{8}$",
-      "answer": { "type": "fraction", "numerator": 3, "denominator": 4 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 4
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000009",
@@ -940,7 +1409,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{10}{21}\\cdot\\frac{7}{25}\\cdot\\frac{6}{5}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 25 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 25
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000010",
@@ -948,7 +1421,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{12}{13}\\cdot\\frac{26}{15}\\cdot\\frac{5}{8}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000011",
@@ -956,7 +1433,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{14}{17}\\cdot\\frac{34}{21}\\cdot\\frac{3}{7}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 7 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 7
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_multi_factor.000012",
@@ -964,7 +1445,11 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{15}{16}\\cdot\\frac{8}{9}\\cdot\\frac{3}{5}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000001",
@@ -972,7 +1457,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{2}{3}+\\frac{3}{4}\\cdot\\frac{8}{9}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 3 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 3
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000002",
@@ -980,7 +1469,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{5}{6}-\\frac{1}{2}\\cdot\\frac{3}{5}$",
-      "answer": { "type": "fraction", "numerator": 8, "denominator": 15 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 8,
+        "denominator": 15
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000003",
@@ -988,7 +1481,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{7}{8}+\\frac{2}{3}\\cdot\\frac{9}{14}$",
-      "answer": { "type": "fraction", "numerator": 11, "denominator": 8 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 11,
+        "denominator": 8
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000004",
@@ -996,7 +1493,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{4}{5}-\\frac{3}{10}\\cdot\\frac{5}{6}$",
-      "answer": { "type": "fraction", "numerator": 11, "denominator": 20 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 11,
+        "denominator": 20
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000005",
@@ -1004,7 +1505,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{3}{4}+\\frac{5}{12}\\cdot\\frac{6}{7}$",
-      "answer": { "type": "fraction", "numerator": 31, "denominator": 28 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 31,
+        "denominator": 28
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000006",
@@ -1012,7 +1517,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{9}{10}-\\frac{4}{5}\\cdot\\frac{1}{2}$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000007",
@@ -1020,7 +1529,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{2}{9}+\\frac{3}{4}\\cdot\\frac{8}{5}$",
-      "answer": { "type": "fraction", "numerator": 64, "denominator": 45 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 64,
+        "denominator": 45
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000008",
@@ -1028,7 +1541,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{5}{7}-\\frac{2}{3}\\cdot\\frac{9}{10}$",
-      "answer": { "type": "fraction", "numerator": 4, "denominator": 35 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 35
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000009",
@@ -1036,7 +1553,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{6}{11}+\\frac{5}{8}\\cdot\\frac{4}{3}$",
-      "answer": { "type": "fraction", "numerator": 23, "denominator": 22 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 23,
+        "denominator": 22
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000010",
@@ -1044,7 +1565,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{8}{9}-\\frac{7}{12}\\cdot\\frac{6}{5}$",
-      "answer": { "type": "fraction", "numerator": 17, "denominator": 90 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 17,
+        "denominator": 90
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000011",
@@ -1052,7 +1577,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{1}{2}+\\frac{3}{5}\\cdot\\frac{10}{9}$",
-      "answer": { "type": "fraction", "numerator": 7, "denominator": 6 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 7,
+        "denominator": 6
+      }
     },
     {
       "id": "math.fractions_multiplication.s1_order_ops.000012",
@@ -1060,7 +1589,11 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{3}{5}-\\frac{4}{9}\\cdot\\frac{3}{2}$",
-      "answer": { "type": "fraction", "numerator": -1, "denominator": 15 }
+      "answer": {
+        "type": "fraction",
+        "numerator": -1,
+        "denominator": 15
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000013",
@@ -1068,7 +1601,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $28\\%$ от 50.",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000014",
@@ -1076,7 +1613,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $32\\%$ от 25.",
-      "answer": { "type": "fraction", "numerator": 8, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 8,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000015",
@@ -1084,7 +1625,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $70\\%$ от 30.",
-      "answer": { "type": "fraction", "numerator": 21, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 21,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000016",
@@ -1092,7 +1637,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $28\\%$ от 125.",
-      "answer": { "type": "fraction", "numerator": 35, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 35,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000017",
@@ -1100,7 +1649,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $32\\%$ от 125.",
-      "answer": { "type": "fraction", "numerator": 40, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 40,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000018",
@@ -1108,7 +1661,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $70\\%$ от 90.",
-      "answer": { "type": "fraction", "numerator": 63, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 63,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000019",
@@ -1116,7 +1673,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $28\\%$ от 75.",
-      "answer": { "type": "fraction", "numerator": 21, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 21,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000020",
@@ -1124,7 +1685,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $32\\%$ от 75.",
-      "answer": { "type": "fraction", "numerator": 24, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 24,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000021",
@@ -1132,7 +1697,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $70\\%$ от 140.",
-      "answer": { "type": "fraction", "numerator": 98, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 98,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000022",
@@ -1140,7 +1709,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $28\\%$ от 200.",
-      "answer": { "type": "fraction", "numerator": 56, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 56,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000023",
@@ -1148,7 +1721,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $32\\%$ от 200.",
-      "answer": { "type": "fraction", "numerator": 64, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 64,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_percent_of.000024",
@@ -1156,7 +1733,11 @@
       "skill_id": "math.fractions_multiplication.s2_percent_of",
       "difficulty_band": "B",
       "statement_md": "Найди $70\\%$ от 60.",
-      "answer": { "type": "fraction", "numerator": 42, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 42,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000001",
@@ -1164,7 +1745,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{1}{2}+\\frac{1}{3}\\right)\\cdot 12$",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000002",
@@ -1172,7 +1757,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{3}{4}-\\frac{1}{6}\\right)\\cdot 24$",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000003",
@@ -1180,7 +1769,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{5}{8}+\\frac{3}{4}\\right)\\cdot 16$",
-      "answer": { "type": "fraction", "numerator": 22, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 22,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000004",
@@ -1188,7 +1781,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{7}{10}-\\frac{1}{5}\\right)\\cdot 50$",
-      "answer": { "type": "fraction", "numerator": 25, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 25,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000005",
@@ -1196,7 +1793,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{2}{3}+\\frac{1}{9}\\right)\\cdot 27$",
-      "answer": { "type": "fraction", "numerator": 21, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 21,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000006",
@@ -1204,7 +1805,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{4}{5}-\\frac{1}{4}\\right)\\cdot 40$",
-      "answer": { "type": "fraction", "numerator": 22, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 22,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000007",
@@ -1212,7 +1817,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{1}{6}+\\frac{5}{12}\\right)\\cdot 24$",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000008",
@@ -1220,7 +1829,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{9}{8}-\\frac{3}{16}\\right)\\cdot 32$",
-      "answer": { "type": "fraction", "numerator": 30, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 30,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000009",
@@ -1228,7 +1841,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{5}{7}+\\frac{2}{7}\\right)\\cdot 14$",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000010",
@@ -1236,7 +1853,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{11}{12}-\\frac{1}{3}\\right)\\cdot 36$",
-      "answer": { "type": "fraction", "numerator": 21, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 21,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000011",
@@ -1244,7 +1865,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{3}{5}+\\frac{1}{10}\\right)\\cdot 20$",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_dist_law.000012",
@@ -1252,7 +1877,11 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\left(\\frac{7}{9}-\\frac{1}{27}\\right)\\cdot 27$",
-      "answer": { "type": "fraction", "numerator": 20, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 20,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000001",
@@ -1260,7 +1889,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{2}{3}\\cdot 12+\\frac{1}{6}\\cdot 12$",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000002",
@@ -1268,7 +1901,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{3}{4}\\cdot 16+\\frac{1}{8}\\cdot 16$",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000003",
@@ -1276,7 +1913,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{5}{9}\\cdot 27+\\frac{1}{3}\\cdot 27$",
-      "answer": { "type": "fraction", "numerator": 24, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 24,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000004",
@@ -1284,7 +1925,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{7}{10}\\cdot 50+\\frac{1}{5}\\cdot 50$",
-      "answer": { "type": "fraction", "numerator": 45, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 45,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000005",
@@ -1292,7 +1937,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{4}{7}\\cdot 14+\\frac{3}{7}\\cdot 14$",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000006",
@@ -1300,7 +1949,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{1}{2}\\cdot 18+\\frac{1}{6}\\cdot 18$",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000007",
@@ -1308,7 +1961,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{5}{8}\\cdot 32+\\frac{3}{16}\\cdot 32$",
-      "answer": { "type": "fraction", "numerator": 26, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 26,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000008",
@@ -1316,7 +1973,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{2}{5}\\cdot 20+\\frac{1}{10}\\cdot 20$",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000009",
@@ -1324,7 +1985,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{9}{11}\\cdot 22+\\frac{2}{11}\\cdot 22$",
-      "answer": { "type": "fraction", "numerator": 22, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 22,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000010",
@@ -1332,7 +1997,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{3}{8}\\cdot 24+\\frac{1}{12}\\cdot 24$",
-      "answer": { "type": "fraction", "numerator": 11, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 11,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000011",
@@ -1340,7 +2009,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{7}{9}\\cdot 36+\\frac{2}{9}\\cdot 36$",
-      "answer": { "type": "fraction", "numerator": 36, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 36,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s2_factor_common.000012",
@@ -1348,7 +2021,11 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{11}{12}\\cdot 48+\\frac{1}{6}\\cdot 48$",
-      "answer": { "type": "fraction", "numerator": 52, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 52,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000001",
@@ -1356,7 +2033,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{7}{8}x+\\frac{1}{4}x-x$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 8 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 8
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000002",
@@ -1364,7 +2045,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{3}{5}x+\\frac{2}{5}x-x$",
-      "answer": { "type": "fraction", "numerator": 0, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 0,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000003",
@@ -1372,7 +2057,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{5}{6}x+\\frac{1}{3}x-x$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 6 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 6
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000004",
@@ -1380,7 +2069,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{9}{10}x+\\frac{1}{5}x-x$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 10 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 10
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000005",
@@ -1388,7 +2081,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{4}{7}x+\\frac{2}{7}x-x$",
-      "answer": { "type": "fraction", "numerator": -1, "denominator": 7 }
+      "answer": {
+        "type": "fraction",
+        "numerator": -1,
+        "denominator": 7
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000006",
@@ -1396,7 +2093,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{11}{12}x+\\frac{1}{6}x-x$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 12 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 12
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000007",
@@ -1404,7 +2105,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{5}{9}x+\\frac{2}{3}x-x$",
-      "answer": { "type": "fraction", "numerator": 2, "denominator": 9 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 9
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000008",
@@ -1412,7 +2117,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{3}{4}x+\\frac{1}{8}x-x$",
-      "answer": { "type": "fraction", "numerator": -1, "denominator": 8 }
+      "answer": {
+        "type": "fraction",
+        "numerator": -1,
+        "denominator": 8
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000009",
@@ -1420,7 +2129,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{8}{15}x+\\frac{1}{3}x-x$",
-      "answer": { "type": "fraction", "numerator": -2, "denominator": 15 }
+      "answer": {
+        "type": "fraction",
+        "numerator": -2,
+        "denominator": 15
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000010",
@@ -1428,7 +2141,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{13}{14}x+\\frac{1}{7}x-x$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 14 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 14
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000011",
@@ -1436,7 +2153,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{2}{3}x+\\frac{5}{6}x-x$",
-      "answer": { "type": "fraction", "numerator": 1, "denominator": 2 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_coeff.000012",
@@ -1444,7 +2165,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty_band": "B",
       "statement_md": "Упрости: $\\frac{7}{9}x+\\frac{4}{9}x-x$",
-      "answer": { "type": "fraction", "numerator": 2, "denominator": 9 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 9
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000001",
@@ -1452,7 +2177,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{5}{6}a-\\frac{1}{3}a$, если $a=12$.",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000002",
@@ -1460,7 +2189,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{7}{8}a-\\frac{1}{4}a$, если $a=16$.",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000003",
@@ -1468,7 +2201,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{9}{10}a-\\frac{2}{5}a$, если $a=50$.",
-      "answer": { "type": "fraction", "numerator": 25, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 25,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000004",
@@ -1476,7 +2213,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{11}{12}a-\\frac{1}{6}a$, если $a=24$.",
-      "answer": { "type": "fraction", "numerator": 18, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 18,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000005",
@@ -1484,7 +2225,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{4}{5}a-\\frac{1}{10}a$, если $a=20$.",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000006",
@@ -1492,7 +2237,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{3}{7}a-\\frac{1}{14}a$, если $a=28$.",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000007",
@@ -1500,7 +2249,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{13}{15}a-\\frac{2}{5}a$, если $a=75$.",
-      "answer": { "type": "fraction", "numerator": 35, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 35,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000008",
@@ -1508,7 +2261,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{5}{9}a-\\frac{1}{3}a$, если $a=27$.",
-      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000009",
@@ -1516,7 +2273,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{8}{11}a-\\frac{3}{11}a$, если $a=22$.",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000010",
@@ -1524,7 +2285,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{7}{12}a-\\frac{1}{4}a$, если $a=36$.",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000011",
@@ -1532,7 +2297,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{6}{13}a-\\frac{2}{13}a$, если $a=39$.",
-      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s3_lin_a.000012",
@@ -1540,7 +2309,11 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty_band": "B",
       "statement_md": "Найди значение выражения $\\frac{9}{16}a-\\frac{1}{8}a$, если $a=32$.",
-      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 14,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000001",
@@ -1548,7 +2321,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 200 кг зерна. Продали $\\frac{3}{10}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 140, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 140,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000002",
@@ -1556,7 +2333,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 150 м ткани. Использовали $\\frac{2}{5}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 90, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 90,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000003",
@@ -1564,7 +2345,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 120 л воды. Израсходовали $\\frac{1}{4}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 90, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 90,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000004",
@@ -1572,7 +2357,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 80 книг. Продали $\\frac{3}{8}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 50, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 50,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000005",
@@ -1580,7 +2369,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 300 руб. Потратили $\\frac{2}{3}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 100, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 100,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000006",
@@ -1588,7 +2381,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 250 деталей. Использовали $\\frac{4}{5}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 50, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 50,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000007",
@@ -1596,7 +2393,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 90 м провода. Израсходовали $\\frac{1}{3}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 60, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 60,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000008",
@@ -1604,7 +2405,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 60 л топлива. Потратили $\\frac{5}{6}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 10,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000009",
@@ -1612,7 +2417,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 500 кг муки. Продали $\\frac{1}{5}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 400, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 400,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000010",
@@ -1620,7 +2429,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 240 руб. Потратили $\\frac{3}{4}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 60, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 60,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000011",
@@ -1628,7 +2441,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 360 м дороги. Отремонтировали $\\frac{2}{9}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 280, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 280,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_remain_frac.000012",
@@ -1636,7 +2453,11 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty_band": "B",
       "statement_md": "Было 420 кг песка. Использовали $\\frac{3}{7}$ всего. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 240, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 240,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000001",
@@ -1644,7 +2465,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 200 кг зерна. Продали $\\frac{1}{4}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 75, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 75,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000002",
@@ -1652,7 +2477,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 120 м ткани. Использовали $\\frac{1}{3}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 40, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 40,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000003",
@@ -1660,7 +2489,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 90 л воды. Израсходовали $\\frac{2}{5}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 36, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 36,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000004",
@@ -1668,7 +2501,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 80 книг. Продали $\\frac{1}{4}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 30, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 30,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000005",
@@ -1676,7 +2513,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 150 руб. Потратили $\\frac{1}{3}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 50, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 50,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000006",
@@ -1684,7 +2525,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 300 деталей. Использовали $\\frac{1}{5}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 120, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 120,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000007",
@@ -1692,7 +2537,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 100 л топлива. Потратили $\\frac{2}{5}$ всего, затем $\\frac{1}{4}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 45, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 45,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000008",
@@ -1700,7 +2549,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 240 м дороги. Отремонтировали $\\frac{1}{6}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 120, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 120,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000009",
@@ -1708,7 +2561,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 180 кг муки. Продали $\\frac{1}{3}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 60, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 60,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000010",
@@ -1716,7 +2573,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 96 книг. Продали $\\frac{1}{4}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 48, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 48,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000011",
@@ -1724,7 +2585,11 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 210 руб. Потратили $\\frac{2}{7}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 100, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 100,
+        "denominator": 1
+      }
     },
     {
       "id": "math.fractions_multiplication.s5_seq_frac.000012",
@@ -1732,7 +2597,731 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty_band": "B",
       "statement_md": "Было 160 м ткани. Использовали $\\frac{1}{4}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
-      "answer": { "type": "fraction", "numerator": 60, "denominator": 1 }
+      "answer": {
+        "type": "fraction",
+        "numerator": 60,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000013",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\frac{3}{4}+\\frac{2}{3}\\cdot\\frac{9}{8}-\\frac{1}{2}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000014",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $1\\frac{1}{2}-\\frac{3}{5}\\cdot\\frac{5}{6}+\\frac{1}{3}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 4,
+        "denominator": 3
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000015",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\frac{7}{9}\\cdot\\frac{3}{14}+\\frac{5}{6}-\\frac{1}{3}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 5,
+        "denominator": 12
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000016",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $2-\\frac{4}{5}\\cdot\\frac{5}{8}+\\frac{1}{4}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 7,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000017",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\frac{5}{6}+1\\frac{1}{3}\\cdot\\frac{3}{4}-\\frac{2}{3}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 7,
+        "denominator": 6
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000018",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\frac{9}{10}-\\frac{2}{5}\\cdot\\frac{5}{6}+\\frac{1}{3}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 11,
+        "denominator": 15
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000019",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $1\\frac{3}{4}+\\frac{1}{2}\\cdot\\frac{4}{7}-\\frac{3}{8}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 7
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000020",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\frac{8}{9}-\\frac{1}{3}\\cdot\\frac{9}{16}+\\frac{5}{12}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 13,
+        "denominator": 18
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000021",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\frac{4}{7}+\\frac{2}{5}\\cdot\\frac{5}{6}-\\frac{3}{14}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000022",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $3\\frac{1}{2}-\\frac{7}{8}\\cdot\\frac{4}{7}+\\frac{1}{4}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 13,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000023",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\frac{11}{12}+\\frac{3}{4}\\cdot\\frac{8}{11}-\\frac{1}{6}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000024",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $2\\frac{1}{4}-\\frac{5}{6}\\cdot\\frac{3}{5}+\\frac{1}{12}$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 11,
+        "denominator": 6
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000025",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{3}{4}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 9,
+        "denominator": 16
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000026",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{5}{6}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 25,
+        "denominator": 36
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000027",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{7}{8}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 49,
+        "denominator": 64
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000028",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{9}{10}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 81,
+        "denominator": 100
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000029",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{4}{3}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 16,
+        "denominator": 9
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000030",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{11}{12}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 121,
+        "denominator": 144
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000031",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{2}{5}\\right)^3$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 8,
+        "denominator": 125
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000032",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{3}{7}\\right)^3$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 27,
+        "denominator": 343
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000033",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{5}{4}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 25,
+        "denominator": 16
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000034",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{6}{5}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 36,
+        "denominator": 25
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000035",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{8}{9}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 64,
+        "denominator": 81
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s1_order_ops.000036",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s1_order_ops",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли: $\\left(\\frac{10}{7}\\right)^2$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 100,
+        "denominator": 49
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000013",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{2}{3}\\cdot 15+\\frac{1}{3}\\cdot 15$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 15,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000014",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{3}{4}\\cdot 20+\\frac{1}{4}\\cdot 20$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 20,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000015",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{5}{8}\\cdot 32+\\frac{3}{8}\\cdot 32$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 32,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000016",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{7}{9}\\cdot 45+\\frac{2}{9}\\cdot 45$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 45,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000017",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{4}{5}\\cdot 25+\\frac{1}{5}\\cdot 25$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 25,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000018",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{6}{7}\\cdot 21+\\frac{1}{7}\\cdot 21$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 21,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000019",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{9}{10}\\cdot 40+\\frac{1}{10}\\cdot 40$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 40,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000020",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{11}{12}\\cdot 36+\\frac{1}{12}\\cdot 36$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 36,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000021",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{2}{5}\\cdot 50+\\frac{3}{5}\\cdot 50$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 50,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000022",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{3}{8}\\cdot 64+\\frac{5}{8}\\cdot 64$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 64,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000023",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{1}{6}\\cdot 30+\\frac{5}{6}\\cdot 30$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 30,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s2_factor_common.000024",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s2_factor_common",
+      "difficulty_band": "C",
+      "statement_md": "Вычисли удобным способом: $\\frac{4}{9}\\cdot 81+\\frac{5}{9}\\cdot 81$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 81,
+        "denominator": 1
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{5}{6}a-(\\frac{1}{3}a-\\frac{1}{6}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 3
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{7}{8}a-(\\frac{1}{4}a-\\frac{1}{8}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{9}{10}a-(\\frac{2}{5}a-\\frac{1}{10}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{4}{5}a-(\\frac{1}{2}a-\\frac{1}{10}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{3}{4}a-(\\frac{1}{2}a-\\frac{1}{4}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{11}{12}a-(\\frac{1}{3}a-\\frac{1}{4}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 2,
+        "denominator": 3
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{5}{9}a-(\\frac{1}{3}a-\\frac{1}{9}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 3
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{8}{11}a-(\\frac{3}{11}a-\\frac{1}{11}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 11
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{6}{7}a-(\\frac{2}{7}a-\\frac{1}{7}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 5,
+        "denominator": 7
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{13}{14}a-(\\frac{1}{7}a-\\frac{1}{14}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 7
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{2}{3}a-(\\frac{1}{6}a-\\frac{1}{3}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 5,
+        "denominator": 6
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_parens_a.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_parens_a",
+      "difficulty_band": "C",
+      "statement_md": "Упрости: $\\frac{9}{16}a-(\\frac{1}{8}a-\\frac{1}{16}a)$",
+      "answer": {
+        "type": "fraction",
+        "numerator": 3,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{5}{6}a-(\\frac{1}{3}a-\\frac{1}{6}a)$ при $a=1{,}44$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 24,
+        "denominator": 25
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{3}{4}a-(\\frac{1}{2}a-\\frac{1}{4}a)$ при $a=-\\frac{12}{27}$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": -2,
+        "denominator": 9
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{7}{8}a-(\\frac{1}{4}a-\\frac{1}{8}a)$ при $a=1{,}6$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 6,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{4}{5}a-(\\frac{1}{2}a-\\frac{1}{10}a)$ при $a=-1{,}2$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": -12,
+        "denominator": 25
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{11}{12}a-(\\frac{1}{3}a-\\frac{1}{4}a)$ при $a=0{,}75$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 1,
+        "denominator": 2
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{5}{9}a-(\\frac{1}{3}a-\\frac{1}{9}a)$ при $a=-0{,}9$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": -3,
+        "denominator": 10
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{8}{11}a-(\\frac{3}{11}a-\\frac{1}{11}a)$ при $a=\\frac{27}{12}$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 27,
+        "denominator": 22
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{6}{7}a-(\\frac{2}{7}a-\\frac{1}{7}a)$ при $a=-\\frac{21}{14}$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": -15,
+        "denominator": 14
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{13}{14}a-(\\frac{1}{7}a-\\frac{1}{14}a)$ при $a=2{,}8$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 12,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{2}{3}a-(\\frac{1}{6}a-\\frac{1}{3}a)$ при $a=-1{,}5$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": -5,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{9}{16}a-(\\frac{1}{8}a-\\frac{1}{16}a)$ при $a=\\frac{32}{9}$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": 8,
+        "denominator": 3
+      }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_subst_hard.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_subst_hard",
+      "difficulty_band": "C",
+      "statement_md": "Найди значение $\\frac{4}{3}a-(\\frac{1}{6}a-\\frac{1}{3}a)$ при $a=-0{,}6$.",
+      "answer": {
+        "type": "fraction",
+        "numerator": -1,
+        "denominator": 1
+      }
     }
   ]
 }
