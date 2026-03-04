@@ -44,6 +44,33 @@ type AuditItem = {
   } | null;
 };
 
+type ContentTopicItem = {
+  topicId: string;
+  title: {
+    ru: string;
+    en: string;
+    de: string;
+  };
+  domain: string | null;
+  status: "ready" | "soon" | null;
+  levels: number[];
+  gradeTags: number[];
+  skillsTotal: number;
+  skillsWithTasks: number;
+  tasksTotal: number;
+  routesTotal: number;
+  prereqEdgesTotal: number;
+  skills: Array<{
+    id: string;
+    title: string;
+    branchId: string | null;
+    availableCount: number;
+    status: "ready" | "soon";
+    kind: string | null;
+  }>;
+  warnings: string[];
+};
+
 const copy = {
   ru: {
     title: "Админ-панель",
@@ -66,6 +93,22 @@ const copy = {
     auditFilterBlocked: "Блокировки",
     noLogs: "События не найдены.",
     refresh: "Обновить",
+    contentTitle: "Реестр контента",
+    contentSubtitle: "Темы, навыки, покрытие задач, маршруты и предпосылки.",
+    contentSearch: "Поиск по topic_id / названию навыка",
+    contentDomainAll: "Все домены",
+    contentStatusAll: "Все статусы",
+    contentStatusReady: "Только ready",
+    contentStatusSoon: "Только soon",
+    contentNoItems: "Темы не найдены.",
+    contentSkillsCoverage: "Навыков с задачами",
+    contentRoutes: "Маршрутов",
+    contentEdges: "Связей prereq",
+    contentTasks: "Задач",
+    contentLevels: "Классы",
+    contentGradeTags: "Теги классов",
+    contentWarnings: "Предупреждения",
+    contentSkillList: "Навыки",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -90,6 +133,22 @@ const copy = {
     auditFilterBlocked: "Blocked",
     noLogs: "No events found.",
     refresh: "Refresh",
+    contentTitle: "Content registry",
+    contentSubtitle: "Topics, skills, task coverage, routes, and prerequisites.",
+    contentSearch: "Search by topic_id / skill title",
+    contentDomainAll: "All domains",
+    contentStatusAll: "All statuses",
+    contentStatusReady: "Ready only",
+    contentStatusSoon: "Soon only",
+    contentNoItems: "No topics found.",
+    contentSkillsCoverage: "Skills with tasks",
+    contentRoutes: "Routes",
+    contentEdges: "Prereq edges",
+    contentTasks: "Tasks",
+    contentLevels: "Grades",
+    contentGradeTags: "Grade tags",
+    contentWarnings: "Warnings",
+    contentSkillList: "Skills",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -114,6 +173,22 @@ const copy = {
     auditFilterBlocked: "Blockiert",
     noLogs: "Keine Ereignisse gefunden.",
     refresh: "Aktualisieren",
+    contentTitle: "Content-Register",
+    contentSubtitle: "Themen, Skills, Aufgabenabdeckung, Routen und Voraussetzungen.",
+    contentSearch: "Suche nach topic_id / Skill-Titel",
+    contentDomainAll: "Alle Domänen",
+    contentStatusAll: "Alle Status",
+    contentStatusReady: "Nur ready",
+    contentStatusSoon: "Nur soon",
+    contentNoItems: "Keine Themen gefunden.",
+    contentSkillsCoverage: "Skills mit Aufgaben",
+    contentRoutes: "Routen",
+    contentEdges: "Prereq-Kanten",
+    contentTasks: "Aufgaben",
+    contentLevels: "Klassen",
+    contentGradeTags: "Klassen-Tags",
+    contentWarnings: "Warnungen",
+    contentSkillList: "Skills",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -133,6 +208,10 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   >("all");
   const [resettingStudentId, setResettingStudentId] = useState<string | null>(null);
   const [lastReset, setLastReset] = useState<{ username: string | null; temporaryPassword: string } | null>(null);
+  const [contentTopics, setContentTopics] = useState<ContentTopicItem[]>([]);
+  const [contentQuery, setContentQuery] = useState("");
+  const [contentDomain, setContentDomain] = useState<"all" | "arithmetic" | "algebra" | "geometry" | "data">("all");
+  const [contentStatus, setContentStatus] = useState<"all" | "ready" | "soon">("all");
 
   const filteredStudents = useMemo(() => {
     const q = studentsQuery.trim().toLowerCase();
@@ -162,6 +241,25 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       });
   }, [logs, logsActionFilter, logsQuery]);
 
+  const filteredContentTopics = useMemo(() => {
+    const q = contentQuery.trim().toLowerCase();
+    return contentTopics
+      .filter((item) => {
+        if (contentDomain === "all") return true;
+        return item.domain === contentDomain;
+      })
+      .filter((item) => {
+        if (contentStatus === "all") return true;
+        return item.status === contentStatus;
+      })
+      .filter((item) => {
+        if (!q) return true;
+        const skillTitles = item.skills.map((skill) => skill.title).join(" ");
+        const title = item.title[locale] ?? item.title.ru ?? "";
+        return [item.topicId, title, skillTitles].join(" ").toLowerCase().includes(q);
+      });
+  }, [contentDomain, contentQuery, contentStatus, contentTopics, locale]);
+
   const loadStudents = useCallback(async () => {
     const response = await fetch("/api/admin/students", { credentials: "same-origin" });
     const payload = (await response.json()) as { ok?: boolean; students?: StudentItem[]; message?: string };
@@ -180,6 +278,19 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     setLogs(Array.isArray(payload.logs) ? payload.logs : []);
   }, [t.errorFallback]);
 
+  const loadContent = useCallback(async () => {
+    const response = await fetch("/api/admin/content", { credentials: "same-origin" });
+    const payload = (await response.json()) as {
+      ok?: boolean;
+      topics?: ContentTopicItem[];
+      message?: string;
+    };
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.message ?? t.errorFallback);
+    }
+    setContentTopics(Array.isArray(payload.topics) ? payload.topics : []);
+  }, [t.errorFallback]);
+
   useEffect(() => {
     void (async () => {
       try {
@@ -190,14 +301,14 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         );
         setIsAdmin(admin);
         if (!admin) return;
-        await Promise.all([loadStudents(), loadLogs()]);
+        await Promise.all([loadStudents(), loadLogs(), loadContent()]);
       } catch (err) {
         setError(err instanceof Error ? err.message : t.errorFallback);
       } finally {
         setLoading(false);
       }
     })();
-  }, [loadLogs, loadStudents, t.errorFallback]);
+  }, [loadContent, loadLogs, loadStudents, t.errorFallback]);
 
   async function handleResetStudent(studentId: string) {
     setResettingStudentId(studentId);
@@ -261,7 +372,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.studentsTitle}</h2>
           <button
             type="button"
-            onClick={() => void Promise.all([loadStudents(), loadLogs()])}
+            onClick={() => void Promise.all([loadStudents(), loadLogs(), loadContent()])}
             className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
           >
             {t.refresh}
@@ -307,6 +418,106 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                   {resettingStudentId === student.id ? "..." : t.resetPassword}
                 </button>
               </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.contentTitle}</h2>
+        <p className="text-sm text-slate-600">{t.contentSubtitle}</p>
+        <div className="grid gap-3 md:grid-cols-3">
+          <input
+            type="text"
+            value={contentQuery}
+            onChange={(event) => setContentQuery(event.target.value)}
+            placeholder={t.contentSearch}
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          />
+          <select
+            value={contentDomain}
+            onChange={(event) =>
+              setContentDomain(event.target.value as "all" | "arithmetic" | "algebra" | "geometry" | "data")
+            }
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          >
+            <option value="all">{t.contentDomainAll}</option>
+            <option value="arithmetic">arithmetic</option>
+            <option value="algebra">algebra</option>
+            <option value="geometry">geometry</option>
+            <option value="data">data</option>
+          </select>
+          <select
+            value={contentStatus}
+            onChange={(event) => setContentStatus(event.target.value as "all" | "ready" | "soon")}
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          >
+            <option value="all">{t.contentStatusAll}</option>
+            <option value="ready">{t.contentStatusReady}</option>
+            <option value="soon">{t.contentStatusSoon}</option>
+          </select>
+        </div>
+        {filteredContentTopics.length === 0 ? (
+          <p className="text-sm text-slate-600">{t.contentNoItems}</p>
+        ) : (
+          <div className="space-y-3">
+            {filteredContentTopics.map((topic) => (
+              <details key={topic.topicId} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <summary className="cursor-pointer list-none">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-950">
+                        {topic.title[locale] || topic.title.ru} <span className="text-slate-500">({topic.topicId})</span>
+                      </p>
+                      <p className="text-xs text-slate-600">
+                        {topic.domain ?? "—"} • status: {topic.status ?? "—"} • {t.contentLevels}:{" "}
+                        {topic.levels.length > 0 ? topic.levels.join(", ") : "—"} • {t.contentGradeTags}:{" "}
+                        {topic.gradeTags.length > 0 ? topic.gradeTags.join(", ") : "—"}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      <span className="rounded-full border border-slate-300 bg-white px-2 py-1">
+                        {t.contentSkillsCoverage}: {topic.skillsWithTasks}/{topic.skillsTotal}
+                      </span>
+                      <span className="rounded-full border border-slate-300 bg-white px-2 py-1">
+                        {t.contentTasks}: {topic.tasksTotal}
+                      </span>
+                      <span className="rounded-full border border-slate-300 bg-white px-2 py-1">
+                        {t.contentRoutes}: {topic.routesTotal}
+                      </span>
+                      <span className="rounded-full border border-slate-300 bg-white px-2 py-1">
+                        {t.contentEdges}: {topic.prereqEdgesTotal}
+                      </span>
+                    </div>
+                  </div>
+                </summary>
+                {topic.warnings.length > 0 ? (
+                  <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                    <p className="font-semibold">{t.contentWarnings}</p>
+                    <ul className="mt-1 list-disc pl-4">
+                      {topic.warnings.map((warning) => (
+                        <li key={`${topic.topicId}-${warning}`}>{warning}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+                <div className="mt-3">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">{t.contentSkillList}</p>
+                  <div className="space-y-1">
+                    {topic.skills.map((skill) => (
+                      <div key={skill.id} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs">
+                        <span className="font-semibold text-slate-900">{skill.title}</span>
+                        <span className="text-slate-600"> • {skill.id}</span>
+                        <span className="text-slate-600">
+                          {" "}
+                          • branch: {skill.branchId ?? "—"} • tasks: {skill.availableCount} • kind:{" "}
+                          {skill.kind ?? "—"} • status: {skill.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </details>
             ))}
           </div>
         )}
