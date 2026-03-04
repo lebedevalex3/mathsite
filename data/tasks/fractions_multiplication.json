@@ -1349,6 +1349,390 @@
       "difficulty_band": "B",
       "statement_md": "Вычисли: $\\frac{11}{12}\\cdot 48+\\frac{1}{6}\\cdot 48$",
       "answer": { "type": "fraction", "numerator": 52, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{7}{8}x+\\frac{1}{4}x-x$",
+      "answer": { "type": "fraction", "numerator": 1, "denominator": 8 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{3}{5}x+\\frac{2}{5}x-x$",
+      "answer": { "type": "fraction", "numerator": 0, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{5}{6}x+\\frac{1}{3}x-x$",
+      "answer": { "type": "fraction", "numerator": 1, "denominator": 6 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{9}{10}x+\\frac{1}{5}x-x$",
+      "answer": { "type": "fraction", "numerator": 1, "denominator": 10 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{4}{7}x+\\frac{2}{7}x-x$",
+      "answer": { "type": "fraction", "numerator": -1, "denominator": 7 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{11}{12}x+\\frac{1}{6}x-x$",
+      "answer": { "type": "fraction", "numerator": 1, "denominator": 12 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{5}{9}x+\\frac{2}{3}x-x$",
+      "answer": { "type": "fraction", "numerator": 2, "denominator": 9 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{3}{4}x+\\frac{1}{8}x-x$",
+      "answer": { "type": "fraction", "numerator": -1, "denominator": 8 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{8}{15}x+\\frac{1}{3}x-x$",
+      "answer": { "type": "fraction", "numerator": -2, "denominator": 15 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{13}{14}x+\\frac{1}{7}x-x$",
+      "answer": { "type": "fraction", "numerator": 1, "denominator": 14 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{2}{3}x+\\frac{5}{6}x-x$",
+      "answer": { "type": "fraction", "numerator": 1, "denominator": 2 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_coeff.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_coeff",
+      "difficulty_band": "B",
+      "statement_md": "Упрости: $\\frac{7}{9}x+\\frac{4}{9}x-x$",
+      "answer": { "type": "fraction", "numerator": 2, "denominator": 9 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{5}{6}a-\\frac{1}{3}a$, если $a=12$.",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{7}{8}a-\\frac{1}{4}a$, если $a=16$.",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{9}{10}a-\\frac{2}{5}a$, если $a=50$.",
+      "answer": { "type": "fraction", "numerator": 25, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{11}{12}a-\\frac{1}{6}a$, если $a=24$.",
+      "answer": { "type": "fraction", "numerator": 18, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{4}{5}a-\\frac{1}{10}a$, если $a=20$.",
+      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{3}{7}a-\\frac{1}{14}a$, если $a=28$.",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{13}{15}a-\\frac{2}{5}a$, если $a=75$.",
+      "answer": { "type": "fraction", "numerator": 35, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{5}{9}a-\\frac{1}{3}a$, если $a=27$.",
+      "answer": { "type": "fraction", "numerator": 6, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{8}{11}a-\\frac{3}{11}a$, если $a=22$.",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{7}{12}a-\\frac{1}{4}a$, если $a=36$.",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{6}{13}a-\\frac{2}{13}a$, если $a=39$.",
+      "answer": { "type": "fraction", "numerator": 12, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s3_lin_a.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s3_lin_a",
+      "difficulty_band": "B",
+      "statement_md": "Найди значение выражения $\\frac{9}{16}a-\\frac{1}{8}a$, если $a=32$.",
+      "answer": { "type": "fraction", "numerator": 14, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 200 кг зерна. Продали $\\frac{3}{10}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 140, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 150 м ткани. Использовали $\\frac{2}{5}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 90, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 120 л воды. Израсходовали $\\frac{1}{4}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 90, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 80 книг. Продали $\\frac{3}{8}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 50, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 300 руб. Потратили $\\frac{2}{3}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 100, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 250 деталей. Использовали $\\frac{4}{5}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 50, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 90 м провода. Израсходовали $\\frac{1}{3}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 60, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 60 л топлива. Потратили $\\frac{5}{6}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 10, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 500 кг муки. Продали $\\frac{1}{5}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 400, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 240 руб. Потратили $\\frac{3}{4}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 60, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 360 м дороги. Отремонтировали $\\frac{2}{9}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 280, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_remain_frac.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_remain_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 420 кг песка. Использовали $\\frac{3}{7}$ всего. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 240, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000001",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 200 кг зерна. Продали $\\frac{1}{4}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 75, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000002",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 120 м ткани. Использовали $\\frac{1}{3}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 40, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000003",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 90 л воды. Израсходовали $\\frac{2}{5}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 36, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000004",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 80 книг. Продали $\\frac{1}{4}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 30, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000005",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 150 руб. Потратили $\\frac{1}{3}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 50, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000006",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 300 деталей. Использовали $\\frac{1}{5}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 120, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000007",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 100 л топлива. Потратили $\\frac{2}{5}$ всего, затем $\\frac{1}{4}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 45, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000008",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 240 м дороги. Отремонтировали $\\frac{1}{6}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 120, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000009",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 180 кг муки. Продали $\\frac{1}{3}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 60, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000010",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 96 книг. Продали $\\frac{1}{4}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 48, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000011",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 210 руб. Потратили $\\frac{2}{7}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 100, "denominator": 1 }
+    },
+    {
+      "id": "math.fractions_multiplication.s5_seq_frac.000012",
+      "topic_id": "math.fractions_multiplication",
+      "skill_id": "math.fractions_multiplication.s5_seq_frac",
+      "difficulty_band": "B",
+      "statement_md": "Было 160 м ткани. Использовали $\\frac{1}{4}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "answer": { "type": "fraction", "numerator": 60, "denominator": 1 }
     }
   ]
 }
