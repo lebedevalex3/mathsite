@@ -53,6 +53,17 @@ const CONTENT_TOPIC_REGISTRY: Record<string, ContentTopicRegistryItem> = {
       de: "Brueche multiplizieren",
     },
   },
+  "rectangular-prism": {
+    topicSlug: "rectangular-prism",
+    domain: "geometry",
+    routePathSegments: ["topics", "rectangular-prism"],
+    defaultLocale: "ru",
+    titles: {
+      ru: "Прямоугольный параллелепипед",
+      en: "Rectangular Prism",
+      de: "Quader",
+    },
+  },
 };
 
 export function getContentTopicConfig(topicSlug: string): ContentTopicRegistryItem | null {

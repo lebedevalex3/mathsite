@@ -5,6 +5,7 @@ import { getTasksForTopic } from "@/lib/tasks/query";
 import { parseTaxonomyMarkdownDetails } from "@/lib/tasks/taxonomy";
 import { getSkillKind } from "@/src/lib/skills/kind";
 import { fractionsMultiplicationSkills } from "@/src/lib/topics/fractions-multiplication/module-data";
+import { rectangularPrismSkills } from "@/src/lib/topics/rectangular-prism/module-data";
 import { proportionSkills } from "@/src/lib/topics/proportion/module-data";
 import { listContentTopicConfigs } from "@/src/lib/content/topic-registry";
 
@@ -306,6 +307,24 @@ export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
         })),
       });
     }
+
+    if (cfg.topicSlug === "rectangular-prism") {
+      topics.push({
+        topicId: "math.rectangular_prism",
+        title: {
+          ru: cfg.titles?.ru ?? "Прямоугольный параллелепипед",
+          en: cfg.titles?.en ?? "Rectangular Prism",
+          de: cfg.titles?.de ?? "Quader",
+        },
+        skills: rectangularPrismSkills.map((skill) => ({
+          id: skill.id,
+          title: skill.title,
+          summary: skill.summary,
+          kind: skill.kind,
+          status: "ready" as const,
+        })),
+      });
+    }
   }
   return topics;
 }
@@ -318,6 +337,11 @@ const taxonomyPathByTopicId: Record<string, string> = {
     process.cwd(),
     "docs",
     "TAXONOMY_FRACTIONS_MULTIPLICATION.md",
+  ),
+  "math.rectangular_prism": path.join(
+    process.cwd(),
+    "docs",
+    "TAXONOMY_RECTANGULAR_PRISM.md",
   ),
 };
 

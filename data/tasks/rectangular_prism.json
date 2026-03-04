@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "topic_id": "math.rectangular_prism",
+  "section_id": "math.geometry",
+  "module_id": "math.geometry.rectangular_prism",
+  "grade_tags": [5, 6, 7],
+  "title": "Прямоугольный параллелепипед: связи измерений",
+  "tasks": [
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000001",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Длина прямоугольного параллелепипеда равна $4\\frac{1}{2}$ см, что на $\\frac{1}{2}$ см меньше его ширины и в $1\\frac{1}{2}$ раза меньше высоты. Найдите объём параллелепипеда.",
+      "answer": { "type": "fraction", "numerator": 180, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000002",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Ширина равна $5\\frac{1}{3}$ см, что на $\\frac{2}{3}$ см больше длины и в $2$ раза меньше высоты. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 256, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000003",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Высота равна $6\\frac{1}{4}$ см, что на $1\\frac{1}{4}$ см больше длины и в $2\\frac{1}{2}$ раза больше ширины. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 250, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000004",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Длина равна $3\\frac{3}{4}$ см, что на $\\frac{1}{4}$ см меньше ширины и в $1\\frac{1}{2}$ раза меньше высоты. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 135, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000005",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Ширина равна $4\\frac{1}{5}$ см, что на $\\frac{1}{5}$ см больше длины и в $2$ раза меньше высоты. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 176, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000006",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Высота равна $7\\frac{1}{2}$ см, что на $2\\frac{1}{2}$ см больше длины и в $3$ раза больше ширины. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 125, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000007",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Длина равна $2\\frac{2}{3}$ см, что на $\\frac{1}{3}$ см меньше ширины и в $2$ раза меньше высоты. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 96, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000008",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Ширина равна $6\\frac{3}{5}$ см, что на $\\frac{3}{5}$ см больше длины и в $3$ раза меньше высоты. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 384, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000009",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Высота равна $8\\frac{1}{4}$ см, что на $\\frac{1}{4}$ см больше длины и в $3$ раза больше ширины. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 216, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000010",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Длина равна $5\\frac{1}{2}$ см, что на $\\frac{1}{2}$ см меньше ширины и в $2$ раза меньше высоты. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 330, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000011",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Ширина равна $3\\frac{3}{4}$ см, что на $\\frac{3}{4}$ см больше длины и в $2$ раза меньше высоты. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 180, "denominator": 1 }
+    },
+    {
+      "id": "math.rectangular_prism.s_volume_relations.000012",
+      "topic_id": "math.rectangular_prism",
+      "skill_id": "math.rectangular_prism.s_volume_relations",
+      "difficulty_band": "C",
+      "statement_md": "Высота равна $9\\frac{1}{3}$ см, что на $1\\frac{1}{3}$ см больше длины и в $4$ раза больше ширины. Найдите объём.",
+      "answer": { "type": "fraction", "numerator": 192, "denominator": 1 }
+    }
+  ]
+}

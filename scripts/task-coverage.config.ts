@@ -34,6 +34,10 @@ const SKILL_RULES: Record<string, CoverageRule> = {
     requiredBands: ["A"],
     minTasksPerCell: 1,
   },
+  "math.rectangular_prism.s_volume_relations": {
+    requiredBands: ["C"],
+    minTasksPerCell: 1,
+  },
 };
 
 function normalizeBands(values: DifficultyBand[]) {

@@ -436,6 +436,7 @@ function branchLabel(locale: Locale, branchId: string) {
     "math.fractions_multiplication.s3": "Алгебра на дробях",
     "math.fractions_multiplication.s4": "Уравнения с дробными коэффициентами",
     "math.fractions_multiplication.s5": "Прикладные задачи и геометрия",
+    "math.rectangular_prism.volume_relations": "Связи измерений и объем",
   };
   const en: Record<string, string> = {
     "math.proportion.direct": "Direct Proportion",
@@ -452,6 +453,7 @@ function branchLabel(locale: Locale, branchId: string) {
     "math.fractions_multiplication.s3": "Algebra with Fractions",
     "math.fractions_multiplication.s4": "Equations with Fraction Coefficients",
     "math.fractions_multiplication.s5": "Word Problems and Geometry",
+    "math.rectangular_prism.volume_relations": "Dimension Relations and Volume",
   };
   const de: Record<string, string> = {
     "math.proportion.direct": "Direkte Proportion",
@@ -468,6 +470,7 @@ function branchLabel(locale: Locale, branchId: string) {
     "math.fractions_multiplication.s3": "Algebra mit Brüchen",
     "math.fractions_multiplication.s4": "Gleichungen mit Bruchkoeffizienten",
     "math.fractions_multiplication.s5": "Sachaufgaben und Geometrie",
+    "math.rectangular_prism.volume_relations": "Kantenbeziehungen und Volumen",
   };
   const map = locale === "ru" ? ru : locale === "de" ? de : en;
   if (map[key]) return map[key];

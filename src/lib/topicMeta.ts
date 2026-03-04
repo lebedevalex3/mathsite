@@ -90,6 +90,30 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
     canTrain: false,
   },
   {
+    id: "math.rectangular_prism",
+    slug: "topics/rectangular-prism",
+    domain: "geometry",
+    levels: [5, 6, 7],
+    status: "ready",
+    title: {
+      ru: "Прямоугольный параллелепипед",
+      en: "Rectangular Prism",
+      de: "Quader",
+    },
+    description: {
+      ru: "Задачи на объем прямоугольного параллелепипеда по связям между измерениями.",
+      en: "Volume problems for a rectangular prism using dimension relations.",
+      de: "Volumenaufgaben zum Quader mit Beziehungen zwischen den Kanten.",
+    },
+    searchTerms: {
+      ru: ["прямоугольный параллелепипед", "объем", "геометрия"],
+      en: ["rectangular prism", "volume", "geometry"],
+      de: ["quader", "volumen", "geometrie"],
+    },
+    canRead: false,
+    canTrain: false,
+  },
+  {
     id: "math.equations",
     slug: "topics/equations",
     domain: "algebra",
