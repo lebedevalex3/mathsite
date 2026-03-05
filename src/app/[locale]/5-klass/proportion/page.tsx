@@ -1,16 +1,11 @@
 import Link from "next/link";
 
 import { TopicLeaderboardPanel } from "@/src/components/topic/TopicLeaderboardPanel";
-import { TopicSkillMap } from "@/src/components/topic/TopicSkillMap";
 import { TopicMotivationPanel } from "@/src/components/topic/TopicMotivationPanel";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
-import { topicMastery } from "@/src/lib/topicMastery";
 
-import {
-  proportionSkills,
-  proportionSubtopics,
-} from "@/src/lib/topics/proportion/module-data";
+import { proportionSubtopics } from "@/src/lib/topics/proportion/module-data";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -25,28 +20,12 @@ const copy = {
     topic: "Пропорции",
     sectionLabel: "Тема",
     heroBody:
-      "Тема представлена как карта навыков: двигайся по шагам, тренируй конкретные умения и закрывай слабые места.",
+      "Изучи правило, перейди к подтемам и тренируй нужные навыки в тренажёре.",
     train: "Тренировать",
     theory: "Короткая теория",
     subtopics: "Подтемы",
     subtopicsHint: "Если нужен краткий разбор идеи перед тренировкой, открой нужную подтему.",
     openSubtopic: "Открыть подтему",
-    levelTitleById: {
-      base: "База",
-      calculation: "Пропорция",
-      application: "Применение",
-    },
-    levelHintById: {
-      base: "Отношения, сокращение и доля от целого.",
-      calculation: "Распознавание и проверка пропорций, поиск неизвестного члена.",
-      application: "Решение пропорций в скрытой дробной форме.",
-    },
-    skillLabels: {
-      "math.proportion.understand_ratio_as_quotient": {
-        title: "Понимать отношение как частное",
-        summary: "про a:b и a/b",
-      },
-    },
     subtopicsBySlug: {
       rule: {
         title: "Основное правило пропорции",
@@ -72,28 +51,12 @@ const copy = {
     topic: "Proportions",
     sectionLabel: "Topic",
     heroBody:
-      "The topic is presented as a skill map: move step by step, train specific skills, and close weak spots.",
+      "Review the key rule, open subtopics, and train the required skills in the trainer.",
     train: "Train",
     theory: "Quick theory",
     subtopics: "Subtopics",
     subtopicsHint: "If you need a short concept refresher before training, open a subtopic.",
     openSubtopic: "Open subtopic",
-    levelTitleById: {
-      base: "Core",
-      calculation: "Proportion",
-      application: "Application",
-    },
-    levelHintById: {
-      base: "Ratios, simplification, and part-of-whole.",
-      calculation: "Recognizing and checking proportions, finding unknown terms.",
-      application: "Solving proportions in hidden fraction form.",
-    },
-    skillLabels: {
-      "math.proportion.understand_ratio_as_quotient": {
-        title: "Understand ratio as quotient",
-        summary: "about a:b and a/b",
-      },
-    },
     subtopicsBySlug: {
       rule: {
         title: "Core proportion rule",
@@ -119,29 +82,13 @@ const copy = {
     topic: "Proportionen",
     sectionLabel: "Thema",
     heroBody:
-      "Das Thema wird als Kompetenzkarte dargestellt: schrittweise lernen, gezielt trainieren und Lücken schließen.",
+      "Regel verstehen, Unterthemen öffnen und die passenden Fähigkeiten im Trainer üben.",
     train: "Trainieren",
     theory: "Kurze Theorie",
     subtopics: "Unterthemen",
     subtopicsHint:
       "Wenn Sie vor dem Training eine kurze Wiederholung brauchen, öffnen Sie ein Unterthema.",
     openSubtopic: "Unterthema öffnen",
-    levelTitleById: {
-      base: "Basis",
-      calculation: "Proportion",
-      application: "Anwendung",
-    },
-    levelHintById: {
-      base: "Verhaeltnisse, Kuerzen und Anteile.",
-      calculation: "Proportionen erkennen, pruefen und Unbekannte finden.",
-      application: "Proportionen in versteckter Bruchform loesen.",
-    },
-    skillLabels: {
-      "math.proportion.understand_ratio_as_quotient": {
-        title: "Verhältnis als Quotient verstehen",
-        summary: "zu a:b und a/b",
-      },
-    },
     subtopicsBySlug: {
       rule: {
         title: "Grundregel der Proportion",
@@ -172,28 +119,7 @@ export default async function ProportionTopicPage({ params }: PageProps) {
   const { locale } = await params;
   const typedLocale = toLocale(locale);
   const t = copy[typedLocale];
-  const mastery = topicMastery["math.proportion"];
   const readConspetsHref = `/${locale}/topics/proportion/rule`;
-  const skillById = new Map(proportionSkills.map((skill) => [skill.id, skill]));
-  const masteryLevels = (mastery?.masteryLevels ?? [])
-    .map((level) => ({
-      id: level.id,
-      title: t.levelTitleById[level.id as keyof typeof t.levelTitleById] ?? level.title,
-      hint: t.levelHintById[level.id as keyof typeof t.levelHintById] ?? level.hint,
-      skills: level.skillIds
-        .map((skillId) => skillById.get(skillId))
-        .filter((skill): skill is (typeof proportionSkills)[number] => Boolean(skill))
-        .map((skill) => ({
-          id: skill.id,
-          title: t.skillLabels[skill.id as keyof typeof t.skillLabels]?.title ?? skill.title,
-          summary: t.skillLabels[skill.id as keyof typeof t.skillLabels]?.summary ?? skill.summary,
-          trainHref:
-            skill.id === "math.proportion.recognize_proportion"
-              ? undefined
-              : `/${locale}/topics/proportion/train?skill=${encodeURIComponent(skill.id)}`,
-        })),
-    }))
-    .filter((level) => level.skills.length > 0);
 
   return (
     <main className="space-y-6">
@@ -253,8 +179,6 @@ export default async function ProportionTopicPage({ params }: PageProps) {
         />
         <TopicLeaderboardPanel locale={locale as "ru" | "en" | "de"} topicId="math.proportion" />
       </section>
-
-      <TopicSkillMap locale={locale as "ru" | "en" | "de"} topicId="math.proportion" levels={masteryLevels} />
 
       <section className="space-y-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
