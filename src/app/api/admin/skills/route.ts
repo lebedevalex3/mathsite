@@ -10,7 +10,9 @@ import {
   filterAdminSkillRegistry,
   isSkillStatus,
 } from "@/src/lib/admin/skills-registry";
+import { collectSkillReadyDeficits } from "@/src/lib/admin/quality-gates";
 import { SKILL_KINDS } from "@/src/lib/skills/kind";
+import { loadTaskBank } from "@/lib/taskbank";
 
 export const runtime = "nodejs";
 
@@ -60,6 +62,17 @@ export async function GET(request: Request) {
       status: (statusFilterRaw as "all" | "ready" | "soon" | null) ?? "all",
       withoutTasksOnly,
     });
+    const { banks } = await loadTaskBank();
+    const allTasks = banks.flatMap((item) => item.bank.tasks);
+    const deficits = collectSkillReadyDeficits({
+      tasks: allTasks,
+      skills: filtered.map((item) => ({
+        topicId: item.topicId,
+        skillId: item.skillId,
+        title: item.title,
+        status: item.status,
+      })),
+    });
 
     const topics = [...new Set(items.map((item) => item.topicId))].sort();
     const summary = {
@@ -80,6 +93,7 @@ export async function GET(request: Request) {
         withoutTasksOnly,
       },
       summary,
+      deficits,
       dictionaries: {
         kinds: SKILL_KINDS,
         statuses: ["ready", "soon"] as const,

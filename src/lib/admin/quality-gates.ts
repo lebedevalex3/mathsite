@@ -13,6 +13,15 @@ export type SkillReadyCoverage = {
   };
 };
 
+export type SkillReadyDeficit = {
+  topicId: string;
+  skillId: string;
+  title: string;
+  status: "ready" | "soon";
+  coverage: SkillReadyCoverage;
+  reasons: string[];
+};
+
 export function buildSkillReadyCoverage(tasks: Task[], skillId: string): SkillReadyCoverage {
   const readyByBand = { A: 0, B: 0, C: 0 };
 
@@ -71,4 +80,32 @@ export async function checkSkillReadyGate(params: {
     ...result,
     coverage,
   };
+}
+
+export function collectSkillReadyDeficits(params: {
+  tasks: Task[];
+  skills: Array<{
+    topicId: string;
+    skillId: string;
+    title: string;
+    status: "ready" | "soon";
+  }>;
+}) {
+  const deficits: SkillReadyDeficit[] = [];
+  for (const skill of params.skills) {
+    const scopedTasks = params.tasks.filter((task) => task.topic_id === skill.topicId);
+    const coverage = buildSkillReadyCoverage(scopedTasks, skill.skillId);
+    const gate = checkSkillReadyGateFromCoverage(coverage);
+    if (!gate.ok) {
+      deficits.push({
+        topicId: skill.topicId,
+        skillId: skill.skillId,
+        title: skill.title,
+        status: skill.status,
+        coverage,
+        reasons: gate.reasons,
+      });
+    }
+  }
+  return deficits.sort((a, b) => a.skillId.localeCompare(b.skillId));
 }

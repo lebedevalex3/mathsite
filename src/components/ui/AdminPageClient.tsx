@@ -96,6 +96,22 @@ type SkillRegistryItem = {
   updatedAt: string | null;
 };
 
+type SkillReadyDeficitItem = {
+  topicId: string;
+  skillId: string;
+  title: string;
+  status: "ready" | "soon";
+  coverage: {
+    readyTotal: number;
+    readyByBand: {
+      A: number;
+      B: number;
+      C: number;
+    };
+  };
+  reasons: string[];
+};
+
 type AdminTaskItem = {
   id: string;
   topic_id: string;
@@ -165,6 +181,9 @@ const copy = {
     skillsStatus: "Статус",
     skillsTopic: "Тема",
     skillsOverride: "Override",
+    skillsDeficitsTitle: "Дефициты качества",
+    skillsDeficitsHint: "Навыки, которые не проходят порог для ready.",
+    skillsOpenTasks: "Открыть задачи навыка",
     tasksTitle: "Банк задач",
     tasksSubtitle: "CRUD задач по выбранной теме/навыку с проверкой схемы.",
     tasksTopic: "Тема",
@@ -245,6 +264,9 @@ const copy = {
     skillsStatus: "Status",
     skillsTopic: "Topic",
     skillsOverride: "Override",
+    skillsDeficitsTitle: "Quality deficits",
+    skillsDeficitsHint: "Skills that do not pass ready threshold.",
+    skillsOpenTasks: "Open skill tasks",
     tasksTitle: "Task bank",
     tasksSubtitle: "CRUD tasks for selected topic/skill with schema validation.",
     tasksTopic: "Topic",
@@ -325,6 +347,9 @@ const copy = {
     skillsStatus: "Status",
     skillsTopic: "Thema",
     skillsOverride: "Override",
+    skillsDeficitsTitle: "Qualitaetsdefizite",
+    skillsDeficitsHint: "Skills, die die Ready-Schwelle nicht erfuellen.",
+    skillsOpenTasks: "Skill-Aufgaben oeffnen",
     tasksTitle: "Aufgabenbank",
     tasksSubtitle: "CRUD-Aufgaben fuer ausgewaehltes Thema/Skill mit Schema-Pruefung.",
     tasksTopic: "Thema",
@@ -370,6 +395,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [contentTopics, setContentTopics] = useState<ContentTopicItem[]>([]);
   const [contentGlobalWarnings, setContentGlobalWarnings] = useState<string[]>([]);
   const [skillItems, setSkillItems] = useState<SkillRegistryItem[]>([]);
+  const [skillDeficits, setSkillDeficits] = useState<SkillReadyDeficitItem[]>([]);
   const [sectionErrors, setSectionErrors] = useState<{
     students: string | null;
     logs: string | null;
@@ -650,12 +676,14 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     const payload = (await response.json()) as {
       ok?: boolean;
       items?: SkillRegistryItem[];
+      deficits?: SkillReadyDeficitItem[];
       message?: string;
     };
     if (!response.ok || !payload.ok) {
       throw new Error(payload.message ?? t.errorFallback);
     }
     setSkillItems(Array.isArray(payload.items) ? payload.items : []);
+    setSkillDeficits(Array.isArray(payload.deficits) ? payload.deficits : []);
   }, [t.errorFallback]);
 
   const refreshAdminData = useCallback(async () => {
@@ -1213,6 +1241,38 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           </label>
         </div>
         {sectionErrors.skills ? <p className="text-sm text-red-700">{sectionErrors.skills}</p> : null}
+        {skillDeficits.length > 0 ? (
+          <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
+            <p className="font-semibold">{t.skillsDeficitsTitle}</p>
+            <p className="mt-1">{t.skillsDeficitsHint}</p>
+            <div className="mt-2 space-y-2">
+              {skillDeficits.map((deficit) => (
+                <div key={deficit.skillId} className="rounded-lg border border-amber-200 bg-white px-3 py-2">
+                  <p className="font-semibold text-slate-900">
+                    {deficit.title} <span className="text-slate-500">({deficit.skillId})</span>
+                  </p>
+                  <p className="text-slate-600">
+                    ready: {deficit.coverage.readyTotal} • A:{deficit.coverage.readyByBand.A} B:
+                    {deficit.coverage.readyByBand.B} C:{deficit.coverage.readyByBand.C}
+                  </p>
+                  <p className="text-slate-600">{deficit.reasons.join(", ")}</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTaskTopicFilter(deficit.topicId);
+                      setTaskSkillFilter(deficit.skillId);
+                      setTaskStatusFilter("all");
+                      void loadTasks({ topicId: deficit.topicId, skillId: deficit.skillId, q: "" });
+                    }}
+                    className="mt-2 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
+                  >
+                    {t.skillsOpenTasks}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
         {filteredSkillItems.length === 0 ? (
           <p className="text-sm text-slate-600">{t.skillsNoItems}</p>
         ) : (

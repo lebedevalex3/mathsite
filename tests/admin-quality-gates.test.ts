@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   buildSkillReadyCoverage,
   checkSkillReadyGateFromCoverage,
+  collectSkillReadyDeficits,
   SKILL_READY_MIN_TASKS,
 } from "@/src/lib/admin/quality-gates";
 import type { Task } from "@/lib/tasks/schema";
@@ -75,4 +76,46 @@ test("checkSkillReadyGateFromCoverage passes when thresholds are met", () => {
 
   assert.equal(result.ok, true);
   assert.deepEqual(result.reasons, []);
+});
+
+test("collectSkillReadyDeficits returns failing skills with coverage and reasons", () => {
+  const tasks = [
+    {
+      id: "math.proportion.find_unknown_term.000001",
+      topic_id: "math.proportion",
+      skill_id: "math.proportion.find_unknown_term",
+      difficulty: 1,
+      difficulty_band: "A",
+      status: "ready",
+      statement_md: "A",
+      answer: { type: "number", value: 1 },
+    },
+    {
+      id: "math.proportion.find_unknown_term.000002",
+      topic_id: "math.proportion",
+      skill_id: "math.proportion.find_unknown_term",
+      difficulty: 2,
+      difficulty_band: "B",
+      status: "ready",
+      statement_md: "B",
+      answer: { type: "number", value: 2 },
+    },
+  ] as Task[];
+
+  const deficits = collectSkillReadyDeficits({
+    tasks,
+    skills: [
+      {
+        topicId: "math.proportion",
+        skillId: "math.proportion.find_unknown_term",
+        title: "Find unknown term",
+        status: "ready",
+      },
+    ],
+  });
+
+  assert.equal(deficits.length, 1);
+  assert.equal(deficits[0]?.skillId, "math.proportion.find_unknown_term");
+  assert.ok(deficits[0]?.reasons.some((reason) => reason.includes("need_at_least_")));
+  assert.ok(deficits[0]?.reasons.some((reason) => reason.includes("band_C")));
 });
