@@ -4,7 +4,7 @@ import test from "node:test";
 import {
   buildAdminContentPayload,
   type ContentTopicSummary,
-} from "@/src/app/api/admin/content/route";
+} from "@/src/lib/admin/content-registry";
 
 test("buildAdminContentPayload includes global warnings and unconfigured count", () => {
   const summaries: ContentTopicSummary[] = [

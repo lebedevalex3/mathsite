@@ -13,10 +13,37 @@ type RouteProps = {
   params: Promise<{ taskId: string }>;
 };
 
+type TaskActionFilter = "all" | "create" | "update" | "delete";
+
 function parseLimit(raw: string | null) {
   const value = Number(raw ?? 20);
   if (!Number.isFinite(value)) return 20;
   return Math.min(100, Math.max(1, Math.trunc(value)));
+}
+
+function parseActionFilter(raw: string | null): TaskActionFilter {
+  if (raw === "create" || raw === "update" || raw === "delete") return raw;
+  return "all";
+}
+
+function parseDateStart(raw: string | null): Date | null {
+  if (!raw) return null;
+  const text = raw.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return null;
+  const value = new Date(`${text}T00:00:00.000Z`);
+  return Number.isNaN(value.getTime()) ? null : value;
+}
+
+function parseDateEnd(raw: string | null): Date | null {
+  if (!raw) return null;
+  const text = raw.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return null;
+  const value = new Date(`${text}T23:59:59.999Z`);
+  return Number.isNaN(value.getTime()) ? null : value;
+}
+
+function parseBooleanFlag(raw: string | null) {
+  return raw === "1" || raw === "true";
 }
 
 export async function GET(request: Request, { params }: RouteProps) {
@@ -35,17 +62,23 @@ export async function GET(request: Request, { params }: RouteProps) {
 
     const { searchParams } = new URL(request.url);
     const limit = parseLimit(searchParams.get("limit"));
+    const actionFilter = parseActionFilter(searchParams.get("action"));
+    const actorQuery = (searchParams.get("actor") ?? "").trim().toLowerCase();
+    const fromDate = parseDateStart(searchParams.get("from"));
+    const toDate = parseDateEnd(searchParams.get("to"));
+    const statusOnly = parseBooleanFlag(searchParams.get("statusOnly"));
+    const readyOnly = parseBooleanFlag(searchParams.get("readyOnly"));
 
     const rows = await prisma.auditLog.findMany({
       where: {
         entityType: "task",
         entityId: taskId,
         action: {
-          startsWith: "admin.task.",
+          startsWith: actionFilter === "all" ? "admin.task." : `admin.task.${actionFilter}`,
         },
       },
       orderBy: { createdAt: "desc" },
-      take: limit,
+      take: Math.max(limit * 5, 120),
       select: {
         id: true,
         action: true,
@@ -62,30 +95,57 @@ export async function GET(request: Request, { params }: RouteProps) {
       },
     });
 
-    return NextResponse.json({
-      ok: true,
-      taskId,
-      logs: rows.map((item) => {
+    const logs = rows
+      .map((item) => {
         const payload = normalizeTaskAuditPayload(item.payloadJson);
+        const actor = item.actorUser
+          ? {
+              id: item.actorUser.id,
+              role: item.actorUser.role,
+              email: item.actorUser.email,
+              username: item.actorUser.username,
+            }
+          : null;
         return {
           id: item.id,
           action: item.action,
           createdAt: item.createdAt.toISOString(),
-          actor: item.actorUser
-            ? {
-                id: item.actorUser.id,
-                role: item.actorUser.role,
-                email: item.actorUser.email,
-                username: item.actorUser.username,
-              }
-            : null,
+          actor,
           topicId: payload.topicId,
           skillId: payload.skillId,
           changedFields: payload.changedFields,
           before: payload.before,
           after: payload.after,
         };
-      }),
+      })
+      .filter((item) => {
+        if (!actorQuery) return true;
+        const actorText = [item.actor?.id ?? "", item.actor?.username ?? "", item.actor?.email ?? ""]
+          .join(" ")
+          .toLowerCase();
+        return actorText.includes(actorQuery);
+      })
+      .filter((item) => {
+        if (!fromDate && !toDate) return true;
+        const createdAt = new Date(item.createdAt);
+        if (fromDate && createdAt < fromDate) return false;
+        if (toDate && createdAt > toDate) return false;
+        return true;
+      })
+      .filter((item) => {
+        if (!statusOnly) return true;
+        return item.changedFields.includes("status");
+      })
+      .filter((item) => {
+        if (!readyOnly) return true;
+        return item.after?.status === "ready";
+      })
+      .slice(0, limit);
+
+    return NextResponse.json({
+      ok: true,
+      taskId,
+      logs,
     });
   } catch (error) {
     const { status, body } = toApiError(error, {

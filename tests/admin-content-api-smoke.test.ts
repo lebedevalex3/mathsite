@@ -4,7 +4,7 @@ import test from "node:test";
 import {
   buildAdminContentPayload,
   buildAdminContentSummaries,
-} from "@/src/app/api/admin/content/route";
+} from "@/src/lib/admin/content-registry";
 import type { TeacherToolsTopicConfig } from "@/src/lib/teacher-tools/types";
 
 test("admin content summaries keep healthy topic data when one topic loader fails", async () => {

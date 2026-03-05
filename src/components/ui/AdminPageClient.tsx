@@ -49,6 +49,7 @@ type AuditItem = {
 };
 
 type TaskAuditField = "statement_md" | "answer" | "difficulty" | "difficulty_band" | "status";
+type TaskAuditActionFilter = "all" | "create" | "update" | "delete";
 
 type TaskAuditSnapshot = {
   statement_md: string;
@@ -238,6 +239,19 @@ const copy = {
     tasksHistoryReload: "Обновить историю",
     tasksHistoryEmpty: "История изменений пуста.",
     tasksHistoryChanged: "Изменено",
+    tasksHistoryAction: "Действие",
+    tasksHistoryActionAll: "Все",
+    tasksHistoryActionCreate: "Создание",
+    tasksHistoryActionUpdate: "Обновление",
+    tasksHistoryActionDelete: "Удаление",
+    tasksHistoryActor: "Пользователь",
+    tasksHistoryFrom: "С",
+    tasksHistoryTo: "По",
+    tasksHistoryPresetToday: "Сегодня",
+    tasksHistoryPresetWeek: "7 дней",
+    tasksHistoryPresetClear: "Сброс",
+    tasksHistoryStatusOnly: "Только изменения статуса",
+    tasksHistoryReadyOnly: "Только переходы в ready",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -326,6 +340,19 @@ const copy = {
     tasksHistoryReload: "Refresh history",
     tasksHistoryEmpty: "No history yet.",
     tasksHistoryChanged: "Changed",
+    tasksHistoryAction: "Action",
+    tasksHistoryActionAll: "All",
+    tasksHistoryActionCreate: "Create",
+    tasksHistoryActionUpdate: "Update",
+    tasksHistoryActionDelete: "Delete",
+    tasksHistoryActor: "User",
+    tasksHistoryFrom: "From",
+    tasksHistoryTo: "To",
+    tasksHistoryPresetToday: "Today",
+    tasksHistoryPresetWeek: "7 days",
+    tasksHistoryPresetClear: "Clear",
+    tasksHistoryStatusOnly: "Status changes only",
+    tasksHistoryReadyOnly: "Transitions to ready only",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -414,6 +441,19 @@ const copy = {
     tasksHistoryReload: "Verlauf aktualisieren",
     tasksHistoryEmpty: "Noch kein Verlauf.",
     tasksHistoryChanged: "Geaendert",
+    tasksHistoryAction: "Aktion",
+    tasksHistoryActionAll: "Alle",
+    tasksHistoryActionCreate: "Erstellen",
+    tasksHistoryActionUpdate: "Aktualisieren",
+    tasksHistoryActionDelete: "Loeschen",
+    tasksHistoryActor: "Nutzer",
+    tasksHistoryFrom: "Von",
+    tasksHistoryTo: "Bis",
+    tasksHistoryPresetToday: "Heute",
+    tasksHistoryPresetWeek: "7 Tage",
+    tasksHistoryPresetClear: "Zuruecksetzen",
+    tasksHistoryStatusOnly: "Nur Statusaenderungen",
+    tasksHistoryReadyOnly: "Nur Wechsel zu ready",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -484,6 +524,12 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskAuditById, setTaskAuditById] = useState<Record<string, TaskAuditItem[]>>({});
   const [taskAuditLoadingId, setTaskAuditLoadingId] = useState<string | null>(null);
   const [taskAuditErrorById, setTaskAuditErrorById] = useState<Record<string, string>>({});
+  const [taskAuditActionFilter, setTaskAuditActionFilter] = useState<TaskAuditActionFilter>("all");
+  const [taskAuditActorFilter, setTaskAuditActorFilter] = useState("");
+  const [taskAuditFromDate, setTaskAuditFromDate] = useState("");
+  const [taskAuditToDate, setTaskAuditToDate] = useState("");
+  const [taskAuditStatusOnly, setTaskAuditStatusOnly] = useState(false);
+  const [taskAuditReadyOnly, setTaskAuditReadyOnly] = useState(false);
 
   const formatSectionError = useCallback(
     (label: string, reason: unknown) => {
@@ -652,6 +698,33 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     return "—";
   }
 
+  function formatDateInputValue(date: Date) {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, "0");
+    const day = `${date.getDate()}`.padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  function applyTaskAuditDatePreset(preset: "today" | "week" | "clear") {
+    if (preset === "clear") {
+      setTaskAuditFromDate("");
+      setTaskAuditToDate("");
+      return;
+    }
+
+    const now = new Date();
+    const to = formatDateInputValue(now);
+    if (preset === "today") {
+      setTaskAuditFromDate(to);
+      setTaskAuditToDate(to);
+      return;
+    }
+    const fromDate = new Date(now);
+    fromDate.setDate(fromDate.getDate() - 6);
+    setTaskAuditFromDate(formatDateInputValue(fromDate));
+    setTaskAuditToDate(to);
+  }
+
   const loadTasks = useCallback(
     async (params?: { topicId?: string; skillId?: string; q?: string }) => {
       const topicId = params?.topicId ?? taskTopicFilter;
@@ -692,11 +765,29 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   );
 
   const loadTaskAudit = useCallback(
-    async (taskId: string, options?: { force?: boolean }) => {
-      if (!options?.force && taskAuditById[taskId]) return;
+    async (taskId: string) => {
       setTaskAuditLoadingId(taskId);
       try {
-        const response = await fetch(`/api/admin/tasks/${encodeURIComponent(taskId)}/audit`, {
+        const url = new URL(`/api/admin/tasks/${encodeURIComponent(taskId)}/audit`, window.location.origin);
+        if (taskAuditActionFilter !== "all") {
+          url.searchParams.set("action", taskAuditActionFilter);
+        }
+        if (taskAuditActorFilter.trim()) {
+          url.searchParams.set("actor", taskAuditActorFilter.trim());
+        }
+        if (taskAuditFromDate) {
+          url.searchParams.set("from", taskAuditFromDate);
+        }
+        if (taskAuditToDate) {
+          url.searchParams.set("to", taskAuditToDate);
+        }
+        if (taskAuditStatusOnly) {
+          url.searchParams.set("statusOnly", "1");
+        }
+        if (taskAuditReadyOnly) {
+          url.searchParams.set("readyOnly", "1");
+        }
+        const response = await fetch(url.toString(), {
           credentials: "same-origin",
         });
         const payload = (await response.json()) as { ok?: boolean; logs?: TaskAuditItem[]; message?: string };
@@ -719,7 +810,15 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         setTaskAuditLoadingId((current) => (current === taskId ? null : current));
       }
     },
-    [t.errorFallback, taskAuditById],
+    [
+      t.errorFallback,
+      taskAuditActionFilter,
+      taskAuditActorFilter,
+      taskAuditFromDate,
+      taskAuditReadyOnly,
+      taskAuditStatusOnly,
+      taskAuditToDate,
+    ],
   );
 
   const loadStudents = useCallback(async () => {
@@ -834,6 +933,22 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     if (taskTopicFilter === "all") return;
     void loadTasks({ topicId: taskTopicFilter });
   }, [loadTasks, taskTopicFilter]);
+
+  useEffect(() => {
+    setTaskAuditById({});
+    setTaskAuditErrorById({});
+    if (!editingTaskId) return;
+    void loadTaskAudit(editingTaskId);
+  }, [
+    editingTaskId,
+    loadTaskAudit,
+    taskAuditActionFilter,
+    taskAuditActorFilter,
+    taskAuditFromDate,
+    taskAuditReadyOnly,
+    taskAuditStatusOnly,
+    taskAuditToDate,
+  ]);
 
   async function handleResetStudent(studentId: string) {
     if (!csrfToken) {
@@ -1664,7 +1779,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => void loadTaskAudit(task.id, { force: true })}
+                    onClick={() => void loadTaskAudit(task.id)}
                     className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
                   >
                     {taskAudit.length > 0 ? t.tasksHistoryReload : t.tasksHistoryLoad}
@@ -1680,6 +1795,94 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                 </div>
                 <div className="mt-3 space-y-2 rounded-lg border border-slate-200 bg-white p-3">
                   <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.tasksHistory}</p>
+                  <div className="grid gap-2 md:grid-cols-3">
+                    <select
+                      value={taskAuditActionFilter}
+                      onChange={(event) =>
+                        setTaskAuditActionFilter(event.target.value as TaskAuditActionFilter)
+                      }
+                      className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-900"
+                    >
+                      <option value="all">{t.tasksHistoryActionAll}</option>
+                      <option value="create">{t.tasksHistoryActionCreate}</option>
+                      <option value="update">{t.tasksHistoryActionUpdate}</option>
+                      <option value="delete">{t.tasksHistoryActionDelete}</option>
+                    </select>
+                    <input
+                      type="text"
+                      value={taskAuditActorFilter}
+                      onChange={(event) => setTaskAuditActorFilter(event.target.value)}
+                      placeholder={t.tasksHistoryActor}
+                      className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-900"
+                    />
+                    <div className="flex flex-wrap gap-1">
+                      <button
+                        type="button"
+                        onClick={() => applyTaskAuditDatePreset("today")}
+                        className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-700 hover:bg-slate-100"
+                      >
+                        {t.tasksHistoryPresetToday}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applyTaskAuditDatePreset("week")}
+                        className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-700 hover:bg-slate-100"
+                      >
+                        {t.tasksHistoryPresetWeek}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applyTaskAuditDatePreset("clear")}
+                        className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-700 hover:bg-slate-100"
+                      >
+                        {t.tasksHistoryPresetClear}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="grid gap-2 md:grid-cols-2">
+                    <label className="flex items-center gap-2 text-xs text-slate-700">
+                      <span>{t.tasksHistoryFrom}</span>
+                      <input
+                        type="date"
+                        value={taskAuditFromDate}
+                        onChange={(event) => setTaskAuditFromDate(event.target.value)}
+                        className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-900"
+                      />
+                    </label>
+                    <label className="flex items-center gap-2 text-xs text-slate-700">
+                      <span>{t.tasksHistoryTo}</span>
+                      <input
+                        type="date"
+                        value={taskAuditToDate}
+                        onChange={(event) => setTaskAuditToDate(event.target.value)}
+                        className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-900"
+                      />
+                    </label>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <label className="inline-flex items-center gap-2 text-xs text-slate-700">
+                      <input
+                        type="checkbox"
+                        checked={taskAuditStatusOnly}
+                        onChange={(event) => setTaskAuditStatusOnly(event.target.checked)}
+                        className="h-3.5 w-3.5 rounded border-slate-300"
+                      />
+                      {t.tasksHistoryStatusOnly}
+                    </label>
+                    <label className="inline-flex items-center gap-2 text-xs text-slate-700">
+                      <input
+                        type="checkbox"
+                        checked={taskAuditReadyOnly}
+                        onChange={(event) => {
+                          const checked = event.target.checked;
+                          setTaskAuditReadyOnly(checked);
+                          if (checked) setTaskAuditStatusOnly(true);
+                        }}
+                        className="h-3.5 w-3.5 rounded border-slate-300"
+                      />
+                      {t.tasksHistoryReadyOnly}
+                    </label>
+                  </div>
                   {isTaskAuditLoading ? <p className="text-xs text-slate-600">{t.loading}</p> : null}
                   {taskAuditError ? <p className="text-xs text-red-700">{taskAuditError}</p> : null}
                   {!isTaskAuditLoading && !taskAuditError && taskAudit.length === 0 ? (

@@ -4,7 +4,7 @@ import test from "node:test";
 import {
   buildAdminContentPayload,
   buildAdminContentTopicSummary,
-} from "@/src/app/api/admin/content/route";
+} from "@/src/lib/admin/content-registry";
 import type { TeacherToolsTopicConfig } from "@/src/lib/teacher-tools/types";
 
 test("buildAdminContentTopicSummary keeps healthy topic metrics when another topic fails", () => {
