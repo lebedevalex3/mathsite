@@ -181,6 +181,12 @@ function parseDateQueryValue(value: string | null) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : "";
 }
 
+function deriveTopicIdFromTaskId(taskId: string) {
+  const parts = taskId.split(".");
+  if (parts.length < 2) return "";
+  return `${parts[0]}.${parts[1]}`;
+}
+
 const copy = {
   ru: {
     title: "Админ-панель",
@@ -576,11 +582,15 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskAuditToDate, setTaskAuditToDate] = useState("");
   const [taskAuditStatusOnly, setTaskAuditStatusOnly] = useState(false);
   const [taskAuditReadyOnly, setTaskAuditReadyOnly] = useState(false);
+  const [taskIdFromUrl, setTaskIdFromUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const readyOnly = parseQueryBoolean(params.get("taskAuditReadyOnly"));
     const statusOnly = parseQueryBoolean(params.get("taskAuditStatusOnly")) || readyOnly;
+    const urlTaskId = (params.get("taskId") ?? "").trim();
+    const urlTaskTopicId = (params.get("taskTopicId") ?? "").trim();
+    const derivedTopicId = urlTaskId ? deriveTopicIdFromTaskId(urlTaskId) : "";
     setTaskAuditActionFilter(parseTaskAuditAction(params.get("taskAuditAction")));
     setTaskAuditChangedFieldFilter(parseTaskAuditChangedField(params.get("taskAuditField")));
     setTaskAuditActorFilter((params.get("taskAuditActor") ?? "").trim());
@@ -588,6 +598,11 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     setTaskAuditToDate(parseDateQueryValue(params.get("taskAuditTo")));
     setTaskAuditStatusOnly(statusOnly);
     setTaskAuditReadyOnly(readyOnly);
+    if (urlTaskId) {
+      setTaskIdFromUrl(urlTaskId);
+      setTaskQuery(urlTaskId);
+      setTaskTopicFilter(urlTaskTopicId || derivedTopicId || "all");
+    }
     taskAuditQueryHydratedRef.current = true;
   }, []);
 
@@ -611,16 +626,23 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     setOrDelete("taskAuditTo", taskAuditToDate || null);
     setOrDelete("taskAuditStatusOnly", taskAuditStatusOnly ? "1" : null);
     setOrDelete("taskAuditReadyOnly", taskAuditReadyOnly ? "1" : null);
+    setOrDelete("taskId", editingTaskId);
+    setOrDelete(
+      "taskTopicId",
+      editingTaskId && taskTopicFilter && taskTopicFilter !== "all" ? taskTopicFilter : null,
+    );
 
     const next = `${url.pathname}${params.toString() ? `?${params.toString()}` : ""}${url.hash}`;
     window.history.replaceState(null, "", next);
   }, [
+    editingTaskId,
     taskAuditActionFilter,
     taskAuditActorFilter,
     taskAuditChangedFieldFilter,
     taskAuditFromDate,
     taskAuditReadyOnly,
     taskAuditStatusOnly,
+    taskTopicFilter,
     taskAuditToDate,
   ]);
 
@@ -918,6 +940,19 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     ],
   );
 
+  const openTaskForEditing = useCallback(
+    (item: AdminTaskItem) => {
+      setEditingTaskId(item.id);
+      setTaskDraftStatement(item.statement_md);
+      setTaskDraftDifficulty(item.difficulty ?? 1);
+      setTaskDraftBand(item.difficulty_band ?? "A");
+      setTaskDraftStatus(item.status ?? "ready");
+      applyDraftAnswer(item.answer);
+      void loadTaskAudit(item.id);
+    },
+    [loadTaskAudit],
+  );
+
   const loadStudents = useCallback(async () => {
     const response = await fetch("/api/admin/students", { credentials: "same-origin" });
     const payload = (await response.json()) as { ok?: boolean; students?: StudentItem[]; message?: string };
@@ -1048,6 +1083,14 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     taskAuditToDate,
   ]);
 
+  useEffect(() => {
+    if (!taskIdFromUrl) return;
+    const target = taskItems.find((item) => item.id === taskIdFromUrl);
+    if (!target) return;
+    openTaskForEditing(target);
+    setTaskIdFromUrl(null);
+  }, [openTaskForEditing, taskIdFromUrl, taskItems]);
+
   async function handleResetStudent(studentId: string) {
     if (!csrfToken) {
       setError(t.errorFallback);
@@ -1166,16 +1209,6 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     } finally {
       setSavingSkillId(null);
     }
-  }
-
-  function startEditTask(item: AdminTaskItem) {
-    setEditingTaskId(item.id);
-    setTaskDraftStatement(item.statement_md);
-    setTaskDraftDifficulty(item.difficulty ?? 1);
-    setTaskDraftBand(item.difficulty_band ?? "A");
-    setTaskDraftStatus(item.status ?? "ready");
-    applyDraftAnswer(item.answer);
-    void loadTaskAudit(item.id);
   }
 
   async function createTask() {
@@ -1872,7 +1905,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => startEditTask(task)}
+                    onClick={() => openTaskForEditing(task)}
                     className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
                   >
                     {t.skillsEdit}
