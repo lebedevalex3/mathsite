@@ -14,6 +14,13 @@ type RouteProps = {
 };
 
 type TaskActionFilter = "all" | "create" | "update" | "delete";
+type TaskChangedFieldFilter =
+  | "all"
+  | "statement_md"
+  | "answer"
+  | "difficulty"
+  | "difficulty_band"
+  | "status";
 
 function parseLimit(raw: string | null) {
   const value = Number(raw ?? 20);
@@ -23,6 +30,19 @@ function parseLimit(raw: string | null) {
 
 function parseActionFilter(raw: string | null): TaskActionFilter {
   if (raw === "create" || raw === "update" || raw === "delete") return raw;
+  return "all";
+}
+
+function parseChangedFieldFilter(raw: string | null): TaskChangedFieldFilter {
+  if (
+    raw === "statement_md" ||
+    raw === "answer" ||
+    raw === "difficulty" ||
+    raw === "difficulty_band" ||
+    raw === "status"
+  ) {
+    return raw;
+  }
   return "all";
 }
 
@@ -63,6 +83,7 @@ export async function GET(request: Request, { params }: RouteProps) {
     const { searchParams } = new URL(request.url);
     const limit = parseLimit(searchParams.get("limit"));
     const actionFilter = parseActionFilter(searchParams.get("action"));
+    const changedFieldFilter = parseChangedFieldFilter(searchParams.get("changedField"));
     const actorQuery = (searchParams.get("actor") ?? "").trim().toLowerCase();
     const fromDate = parseDateStart(searchParams.get("from"));
     const toDate = parseDateEnd(searchParams.get("to"));
@@ -135,6 +156,10 @@ export async function GET(request: Request, { params }: RouteProps) {
       .filter((item) => {
         if (!statusOnly) return true;
         return item.changedFields.includes("status");
+      })
+      .filter((item) => {
+        if (changedFieldFilter === "all") return true;
+        return item.changedFields.includes(changedFieldFilter);
       })
       .filter((item) => {
         if (!readyOnly) return true;

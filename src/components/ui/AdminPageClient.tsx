@@ -50,6 +50,7 @@ type AuditItem = {
 
 type TaskAuditField = "statement_md" | "answer" | "difficulty" | "difficulty_band" | "status";
 type TaskAuditActionFilter = "all" | "create" | "update" | "delete";
+type TaskAuditChangedFieldFilter = "all" | TaskAuditField;
 
 type TaskAuditSnapshot = {
   statement_md: string;
@@ -244,6 +245,8 @@ const copy = {
     tasksHistoryActionCreate: "Создание",
     tasksHistoryActionUpdate: "Обновление",
     tasksHistoryActionDelete: "Удаление",
+    tasksHistoryChangedField: "Поле",
+    tasksHistoryChangedFieldAll: "Все поля",
     tasksHistoryActor: "Пользователь",
     tasksHistoryFrom: "С",
     tasksHistoryTo: "По",
@@ -252,6 +255,9 @@ const copy = {
     tasksHistoryPresetClear: "Сброс",
     tasksHistoryStatusOnly: "Только изменения статуса",
     tasksHistoryReadyOnly: "Только переходы в ready",
+    tasksHistorySummaryTotal: "Событий",
+    tasksHistorySummaryStatus: "Статусных",
+    tasksHistorySummaryReady: "В ready",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -345,6 +351,8 @@ const copy = {
     tasksHistoryActionCreate: "Create",
     tasksHistoryActionUpdate: "Update",
     tasksHistoryActionDelete: "Delete",
+    tasksHistoryChangedField: "Field",
+    tasksHistoryChangedFieldAll: "All fields",
     tasksHistoryActor: "User",
     tasksHistoryFrom: "From",
     tasksHistoryTo: "To",
@@ -353,6 +361,9 @@ const copy = {
     tasksHistoryPresetClear: "Clear",
     tasksHistoryStatusOnly: "Status changes only",
     tasksHistoryReadyOnly: "Transitions to ready only",
+    tasksHistorySummaryTotal: "Events",
+    tasksHistorySummaryStatus: "Status changes",
+    tasksHistorySummaryReady: "To ready",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -446,6 +457,8 @@ const copy = {
     tasksHistoryActionCreate: "Erstellen",
     tasksHistoryActionUpdate: "Aktualisieren",
     tasksHistoryActionDelete: "Loeschen",
+    tasksHistoryChangedField: "Feld",
+    tasksHistoryChangedFieldAll: "Alle Felder",
     tasksHistoryActor: "Nutzer",
     tasksHistoryFrom: "Von",
     tasksHistoryTo: "Bis",
@@ -454,6 +467,9 @@ const copy = {
     tasksHistoryPresetClear: "Zuruecksetzen",
     tasksHistoryStatusOnly: "Nur Statusaenderungen",
     tasksHistoryReadyOnly: "Nur Wechsel zu ready",
+    tasksHistorySummaryTotal: "Ereignisse",
+    tasksHistorySummaryStatus: "Statuswechsel",
+    tasksHistorySummaryReady: "Zu ready",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -525,6 +541,8 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskAuditLoadingId, setTaskAuditLoadingId] = useState<string | null>(null);
   const [taskAuditErrorById, setTaskAuditErrorById] = useState<Record<string, string>>({});
   const [taskAuditActionFilter, setTaskAuditActionFilter] = useState<TaskAuditActionFilter>("all");
+  const [taskAuditChangedFieldFilter, setTaskAuditChangedFieldFilter] =
+    useState<TaskAuditChangedFieldFilter>("all");
   const [taskAuditActorFilter, setTaskAuditActorFilter] = useState("");
   const [taskAuditFromDate, setTaskAuditFromDate] = useState("");
   const [taskAuditToDate, setTaskAuditToDate] = useState("");
@@ -772,6 +790,9 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         if (taskAuditActionFilter !== "all") {
           url.searchParams.set("action", taskAuditActionFilter);
         }
+        if (taskAuditChangedFieldFilter !== "all") {
+          url.searchParams.set("changedField", taskAuditChangedFieldFilter);
+        }
         if (taskAuditActorFilter.trim()) {
           url.searchParams.set("actor", taskAuditActorFilter.trim());
         }
@@ -814,6 +835,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       t.errorFallback,
       taskAuditActionFilter,
       taskAuditActorFilter,
+      taskAuditChangedFieldFilter,
       taskAuditFromDate,
       taskAuditReadyOnly,
       taskAuditStatusOnly,
@@ -944,6 +966,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     loadTaskAudit,
     taskAuditActionFilter,
     taskAuditActorFilter,
+    taskAuditChangedFieldFilter,
     taskAuditFromDate,
     taskAuditReadyOnly,
     taskAuditStatusOnly,
@@ -1759,6 +1782,8 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             const taskAudit = taskAuditById[task.id] ?? [];
             const taskAuditError = taskAuditErrorById[task.id];
             const isTaskAuditLoading = taskAuditLoadingId === task.id;
+            const statusChangesTotal = taskAudit.filter((item) => item.changedFields.includes("status")).length;
+            const readyTransitionsTotal = taskAudit.filter((item) => item.after?.status === "ready").length;
             return (
               <details key={task.id} className="rounded-lg border border-slate-200 bg-slate-50 p-3" open={isEditing}>
                 <summary className="cursor-pointer list-none">
@@ -1795,7 +1820,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                 </div>
                 <div className="mt-3 space-y-2 rounded-lg border border-slate-200 bg-white p-3">
                   <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.tasksHistory}</p>
-                  <div className="grid gap-2 md:grid-cols-3">
+                  <div className="grid gap-2 md:grid-cols-4">
                     <select
                       value={taskAuditActionFilter}
                       onChange={(event) =>
@@ -1807,6 +1832,20 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                       <option value="create">{t.tasksHistoryActionCreate}</option>
                       <option value="update">{t.tasksHistoryActionUpdate}</option>
                       <option value="delete">{t.tasksHistoryActionDelete}</option>
+                    </select>
+                    <select
+                      value={taskAuditChangedFieldFilter}
+                      onChange={(event) =>
+                        setTaskAuditChangedFieldFilter(event.target.value as TaskAuditChangedFieldFilter)
+                      }
+                      className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-900"
+                    >
+                      <option value="all">{t.tasksHistoryChangedFieldAll}</option>
+                      <option value="status">status</option>
+                      <option value="difficulty">difficulty</option>
+                      <option value="difficulty_band">difficulty_band</option>
+                      <option value="answer">answer</option>
+                      <option value="statement_md">statement_md</option>
                     </select>
                     <input
                       type="text"
@@ -1882,6 +1921,17 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                       />
                       {t.tasksHistoryReadyOnly}
                     </label>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] text-slate-700">
+                      {t.tasksHistorySummaryTotal}: {taskAudit.length}
+                    </span>
+                    <span className="rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] text-slate-700">
+                      {t.tasksHistorySummaryStatus}: {statusChangesTotal}
+                    </span>
+                    <span className="rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] text-slate-700">
+                      {t.tasksHistorySummaryReady}: {readyTransitionsTotal}
+                    </span>
                   </div>
                   {isTaskAuditLoading ? <p className="text-xs text-slate-600">{t.loading}</p> : null}
                   {taskAuditError ? <p className="text-xs text-red-700">{taskAuditError}</p> : null}
