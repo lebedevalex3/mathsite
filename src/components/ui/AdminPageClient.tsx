@@ -48,6 +48,33 @@ type AuditItem = {
   } | null;
 };
 
+type TaskAuditField = "statement_md" | "answer" | "difficulty" | "difficulty_band" | "status";
+
+type TaskAuditSnapshot = {
+  statement_md: string;
+  answer: unknown;
+  difficulty: number;
+  difficulty_band?: "A" | "B" | "C";
+  status?: "draft" | "review" | "ready";
+};
+
+type TaskAuditItem = {
+  id: string;
+  action: string;
+  createdAt: string;
+  topicId: string | null;
+  skillId: string | null;
+  changedFields: TaskAuditField[];
+  before: TaskAuditSnapshot | null;
+  after: TaskAuditSnapshot | null;
+  actor: {
+    id: string;
+    role: "student" | "teacher" | "admin";
+    email: string | null;
+    username: string | null;
+  } | null;
+};
+
 type ContentTopicItem = {
   topicId: string;
   title: {
@@ -206,6 +233,11 @@ const copy = {
     tasksNoItems: "Задачи не найдены.",
     tasksPreview: "Предпросмотр",
     tasksStatusFilter: "Фильтр статуса",
+    tasksHistory: "История изменений",
+    tasksHistoryLoad: "Загрузить историю",
+    tasksHistoryReload: "Обновить историю",
+    tasksHistoryEmpty: "История изменений пуста.",
+    tasksHistoryChanged: "Изменено",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -289,6 +321,11 @@ const copy = {
     tasksNoItems: "No tasks found.",
     tasksPreview: "Preview",
     tasksStatusFilter: "Status filter",
+    tasksHistory: "Change history",
+    tasksHistoryLoad: "Load history",
+    tasksHistoryReload: "Refresh history",
+    tasksHistoryEmpty: "No history yet.",
+    tasksHistoryChanged: "Changed",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -372,6 +409,11 @@ const copy = {
     tasksNoItems: "Keine Aufgaben gefunden.",
     tasksPreview: "Vorschau",
     tasksStatusFilter: "Statusfilter",
+    tasksHistory: "Aenderungsverlauf",
+    tasksHistoryLoad: "Verlauf laden",
+    tasksHistoryReload: "Verlauf aktualisieren",
+    tasksHistoryEmpty: "Noch kein Verlauf.",
+    tasksHistoryChanged: "Geaendert",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -439,6 +481,9 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskDraftRatioLeft, setTaskDraftRatioLeft] = useState(1);
   const [taskDraftRatioRight, setTaskDraftRatioRight] = useState(2);
   const [creatingTask, setCreatingTask] = useState(false);
+  const [taskAuditById, setTaskAuditById] = useState<Record<string, TaskAuditItem[]>>({});
+  const [taskAuditLoadingId, setTaskAuditLoadingId] = useState<string | null>(null);
+  const [taskAuditErrorById, setTaskAuditErrorById] = useState<Record<string, string>>({});
 
   const formatSectionError = useCallback(
     (label: string, reason: unknown) => {
@@ -599,6 +644,14 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     return "—";
   }
 
+  function formatTaskAuditFieldValue(snapshot: TaskAuditSnapshot | null, field: TaskAuditField) {
+    if (!snapshot) return "—";
+    if (field === "answer") return formatTaskAnswer(snapshot.answer);
+    const value = snapshot[field];
+    if (typeof value === "string" || typeof value === "number") return `${value}`;
+    return "—";
+  }
+
   const loadTasks = useCallback(
     async (params?: { topicId?: string; skillId?: string; q?: string }) => {
       const topicId = params?.topicId ?? taskTopicFilter;
@@ -636,6 +689,37 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       }
     },
     [t.errorFallback, taskQuery, taskSkillFilter, taskStatusFilter, taskTopicFilter],
+  );
+
+  const loadTaskAudit = useCallback(
+    async (taskId: string, options?: { force?: boolean }) => {
+      if (!options?.force && taskAuditById[taskId]) return;
+      setTaskAuditLoadingId(taskId);
+      try {
+        const response = await fetch(`/api/admin/tasks/${encodeURIComponent(taskId)}/audit`, {
+          credentials: "same-origin",
+        });
+        const payload = (await response.json()) as { ok?: boolean; logs?: TaskAuditItem[]; message?: string };
+        if (!response.ok || !payload.ok) {
+          setTaskAuditErrorById((prev) => ({ ...prev, [taskId]: payload.message ?? t.errorFallback }));
+          return;
+        }
+        setTaskAuditById((prev) => ({
+          ...prev,
+          [taskId]: Array.isArray(payload.logs) ? payload.logs : [],
+        }));
+        setTaskAuditErrorById((prev) => {
+          const next = { ...prev };
+          delete next[taskId];
+          return next;
+        });
+      } catch {
+        setTaskAuditErrorById((prev) => ({ ...prev, [taskId]: t.errorFallback }));
+      } finally {
+        setTaskAuditLoadingId((current) => (current === taskId ? null : current));
+      }
+    },
+    [t.errorFallback, taskAuditById],
   );
 
   const loadStudents = useCallback(async () => {
@@ -878,6 +962,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     setTaskDraftBand(item.difficulty_band ?? "A");
     setTaskDraftStatus(item.status ?? "ready");
     applyDraftAnswer(item.answer);
+    void loadTaskAudit(item.id);
   }
 
   async function createTask() {
@@ -967,6 +1052,16 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         return;
       }
       await loadTasks();
+      setTaskAuditById((prev) => {
+        const next = { ...prev };
+        delete next[taskId];
+        return next;
+      });
+      setTaskAuditErrorById((prev) => {
+        const next = { ...prev };
+        delete next[taskId];
+        return next;
+      });
       setEditingTaskId(null);
       setTasksError(null);
     } catch {
@@ -996,6 +1091,16 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         return;
       }
       await loadTasks();
+      setTaskAuditById((prev) => {
+        const next = { ...prev };
+        delete next[taskId];
+        return next;
+      });
+      setTaskAuditErrorById((prev) => {
+        const next = { ...prev };
+        delete next[taskId];
+        return next;
+      });
       if (editingTaskId === taskId) setEditingTaskId(null);
       setTasksError(null);
     } catch {
@@ -1536,6 +1641,9 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         <div className="space-y-2">
           {taskItems.map((task) => {
             const isEditing = editingTaskId === task.id;
+            const taskAudit = taskAuditById[task.id] ?? [];
+            const taskAuditError = taskAuditErrorById[task.id];
+            const isTaskAuditLoading = taskAuditLoadingId === task.id;
             return (
               <details key={task.id} className="rounded-lg border border-slate-200 bg-slate-50 p-3" open={isEditing}>
                 <summary className="cursor-pointer list-none">
@@ -1556,12 +1664,54 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                   </button>
                   <button
                     type="button"
+                    onClick={() => void loadTaskAudit(task.id, { force: true })}
+                    className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
+                  >
+                    {taskAudit.length > 0 ? t.tasksHistoryReload : t.tasksHistoryLoad}
+                  </button>
+                  <button
+                    type="button"
                     disabled={creatingTask}
                     onClick={() => void deleteTask(task.id)}
                     className="rounded-lg border border-red-300 bg-white px-2.5 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
                   >
                     {t.tasksDelete}
                   </button>
+                </div>
+                <div className="mt-3 space-y-2 rounded-lg border border-slate-200 bg-white p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.tasksHistory}</p>
+                  {isTaskAuditLoading ? <p className="text-xs text-slate-600">{t.loading}</p> : null}
+                  {taskAuditError ? <p className="text-xs text-red-700">{taskAuditError}</p> : null}
+                  {!isTaskAuditLoading && !taskAuditError && taskAudit.length === 0 ? (
+                    <p className="text-xs text-slate-600">{t.tasksHistoryEmpty}</p>
+                  ) : null}
+                  {taskAudit.length > 0 ? (
+                    <div className="space-y-2">
+                      {taskAudit.map((log) => (
+                        <div key={log.id} className="rounded-md border border-slate-200 bg-slate-50 p-2">
+                          <p className="text-xs font-medium text-slate-900">
+                            {log.action} • {formatDateTime(locale, log.createdAt)}
+                          </p>
+                          <p className="text-[11px] text-slate-600">
+                            {log.actor?.username ?? log.actor?.email ?? "system"}
+                          </p>
+                          {log.changedFields.length > 0 ? (
+                            <div className="mt-1 space-y-1">
+                              <p className="text-[11px] font-semibold text-slate-600">{t.tasksHistoryChanged}</p>
+                              <ul className="space-y-1 text-[11px] text-slate-700">
+                                {log.changedFields.map((field) => (
+                                  <li key={field}>
+                                    {field}: {formatTaskAuditFieldValue(log.before, field)} {"->"}{" "}
+                                    {formatTaskAuditFieldValue(log.after, field)}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
                 {isEditing ? (
                   <div className="mt-3 space-y-2 rounded-lg border border-slate-300 bg-white p-3">

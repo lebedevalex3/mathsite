@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildTaskUpdateAuditDiff } from "@/src/lib/admin/task-audit";
+import { buildTaskUpdateAuditDiff, normalizeTaskAuditPayload } from "@/src/lib/admin/task-audit";
 import type { Task } from "@/lib/tasks/schema";
 
 test("buildTaskUpdateAuditDiff returns before/after snapshots and changed fields", () => {
@@ -48,4 +48,32 @@ test("buildTaskUpdateAuditDiff returns before/after snapshots and changed fields
     "statement_md",
     "status",
   ]);
+});
+
+test("normalizeTaskAuditPayload keeps only supported fields", () => {
+  const normalized = normalizeTaskAuditPayload({
+    topicId: "math.proportion",
+    skillId: "math.proportion.find_unknown_term",
+    changedFields: ["status", "answer", "unexpected"],
+    before: {
+      statement_md: "before",
+      answer: { type: "number", value: 4 },
+      difficulty: 1,
+      difficulty_band: "A",
+      status: "draft",
+    },
+    after: {
+      statement_md: "after",
+      answer: { type: "number", value: 5 },
+      difficulty: 2,
+      difficulty_band: "B",
+      status: "review",
+    },
+  });
+
+  assert.equal(normalized.topicId, "math.proportion");
+  assert.equal(normalized.skillId, "math.proportion.find_unknown_term");
+  assert.deepEqual(normalized.changedFields, ["status", "answer"]);
+  assert.equal(normalized.before?.status, "draft");
+  assert.equal(normalized.after?.status, "review");
 });
