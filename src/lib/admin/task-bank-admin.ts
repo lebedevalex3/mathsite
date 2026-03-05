@@ -151,6 +151,15 @@ export async function updateTaskById(params: {
   return null;
 }
 
+export async function readTaskById(taskId: string): Promise<Task | null> {
+  const { banks } = await loadTaskBank();
+  for (const item of banks) {
+    const hit = item.bank.tasks.find((task) => task.id === taskId);
+    if (hit) return hit;
+  }
+  return null;
+}
+
 export async function deleteTaskById(taskId: string): Promise<boolean> {
   const { banks } = await loadTaskBank();
   for (const item of banks) {

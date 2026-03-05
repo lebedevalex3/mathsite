@@ -6,7 +6,8 @@ import { writeAuditLog } from "@/src/lib/audit/log";
 import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { isAdminRole } from "@/src/lib/auth/access";
 import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
-import { deleteTaskById, updateTaskById } from "@/src/lib/admin/task-bank-admin";
+import { deleteTaskById, readTaskById, updateTaskById } from "@/src/lib/admin/task-bank-admin";
+import { buildTaskUpdateAuditDiff } from "@/src/lib/admin/task-audit";
 import type { TaskAnswer, TaskStatus } from "@/lib/tasks/schema";
 
 export const runtime = "nodejs";
@@ -81,6 +82,11 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       const { status, body } = badRequest("Invalid payload.");
       return NextResponse.json(body, { status });
     }
+    const beforeTask = await readTaskById(taskId);
+    if (!beforeTask) {
+      const { status, body } = notFound("Task not found.");
+      return NextResponse.json(body, { status });
+    }
 
     const updated = await updateTaskById({
       taskId,
@@ -91,6 +97,11 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       return NextResponse.json(body, { status });
     }
 
+    const diff = buildTaskUpdateAuditDiff({
+      before: beforeTask,
+      after: updated,
+    });
+
     await writeAuditLog({
       actorUserId: auth.user.id,
       action: "admin.task.update",
@@ -99,6 +110,7 @@ export async function PATCH(request: Request, { params }: RouteProps) {
       payload: {
         topicId: updated.topic_id,
         skillId: updated.skill_id,
+        ...diff,
       },
     });
 
