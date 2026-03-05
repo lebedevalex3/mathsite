@@ -6,6 +6,7 @@ import { taskBankSchema, type TaskBank } from "./schema";
 export type TaskLoadError = {
   filePath: string;
   message: string;
+  topicId?: string;
 };
 
 export type LoadedTaskBank = {
@@ -69,13 +70,20 @@ export async function loadTaskBanks(rootDir: string): Promise<{
 
     const result = taskBankSchema.safeParse(parsed);
     if (!result.success) {
+      const topicId =
+        parsed &&
+        typeof parsed === "object" &&
+        "topic_id" in parsed &&
+        typeof (parsed as { topic_id?: unknown }).topic_id === "string"
+          ? (parsed as { topic_id: string }).topic_id
+          : undefined;
       const issueText = result.error.issues
         .map((issue: { path: (string | number)[]; message: string }) => {
           const issuePath = issue.path.length > 0 ? issue.path.join(".") : "(root)";
           return `${issuePath}: ${issue.message}`;
         })
         .join("; ");
-      errors.push({ filePath, message: `Schema validation failed: ${issueText}` });
+      errors.push({ filePath, message: `Schema validation failed: ${issueText}`, topicId });
       continue;
     }
 

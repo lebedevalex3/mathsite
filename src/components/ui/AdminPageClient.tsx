@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { formatAdminSectionFailures } from "@/src/components/ui/admin-page-client.utils";
 import { formatDateTime } from "@/src/lib/i18n/format";
 
 type Locale = "ru" | "en" | "de";
@@ -109,6 +110,7 @@ const copy = {
     contentLevels: "Классы",
     contentGradeTags: "Теги классов",
     contentWarnings: "Предупреждения",
+    contentGlobalWarnings: "Глобальные предупреждения",
     contentSkillList: "Навыки",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
@@ -149,6 +151,7 @@ const copy = {
     contentLevels: "Grades",
     contentGradeTags: "Grade tags",
     contentWarnings: "Warnings",
+    contentGlobalWarnings: "Global warnings",
     contentSkillList: "Skills",
     loading: "Loading...",
     errorFallback: "Action failed.",
@@ -189,6 +192,7 @@ const copy = {
     contentLevels: "Klassen",
     contentGradeTags: "Klassen-Tags",
     contentWarnings: "Warnungen",
+    contentGlobalWarnings: "Globale Warnungen",
     contentSkillList: "Skills",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
@@ -211,9 +215,18 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [resettingStudentId, setResettingStudentId] = useState<string | null>(null);
   const [lastReset, setLastReset] = useState<{ username: string | null; temporaryPassword: string } | null>(null);
   const [contentTopics, setContentTopics] = useState<ContentTopicItem[]>([]);
+  const [contentGlobalWarnings, setContentGlobalWarnings] = useState<string[]>([]);
   const [contentQuery, setContentQuery] = useState("");
   const [contentDomain, setContentDomain] = useState<"all" | "arithmetic" | "algebra" | "geometry" | "data">("all");
   const [contentStatus, setContentStatus] = useState<"all" | "ready" | "soon">("all");
+
+  const formatSectionError = useCallback(
+    (label: string, reason: unknown) => {
+      const text = reason instanceof Error ? reason.message : t.errorFallback;
+      return `${label}: ${text}`;
+    },
+    [t.errorFallback],
+  );
 
   const filteredStudents = useMemo(() => {
     const q = studentsQuery.trim().toLowerCase();
@@ -285,13 +298,39 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     const payload = (await response.json()) as {
       ok?: boolean;
       topics?: ContentTopicItem[];
+      globalWarnings?: string[];
       message?: string;
     };
     if (!response.ok || !payload.ok) {
       throw new Error(payload.message ?? t.errorFallback);
     }
     setContentTopics(Array.isArray(payload.topics) ? payload.topics : []);
+    setContentGlobalWarnings(Array.isArray(payload.globalWarnings) ? payload.globalWarnings : []);
   }, [t.errorFallback]);
+
+  const refreshAdminData = useCallback(async () => {
+    const results = await Promise.allSettled([loadStudents(), loadLogs(), loadContent()]);
+    const sectionNames = [t.studentsTitle, t.auditTitle, t.contentTitle] as const;
+    const failures = formatAdminSectionFailures({
+      results,
+      sectionNames,
+      formatSectionError,
+    });
+
+    if (failures.length > 0) {
+      setError(failures.join(" | "));
+      return;
+    }
+    setError(null);
+  }, [
+    formatSectionError,
+    loadContent,
+    loadLogs,
+    loadStudents,
+    t.auditTitle,
+    t.contentTitle,
+    t.studentsTitle,
+  ]);
 
   useEffect(() => {
     void (async () => {
@@ -306,14 +345,14 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         );
         setIsAdmin(admin);
         if (!admin) return;
-        await Promise.all([loadStudents(), loadLogs(), loadContent()]);
+        await refreshAdminData();
       } catch (err) {
         setError(err instanceof Error ? err.message : t.errorFallback);
       } finally {
         setLoading(false);
       }
     })();
-  }, [loadContent, loadLogs, loadStudents, t.errorFallback]);
+  }, [refreshAdminData, t.errorFallback]);
 
   async function handleResetStudent(studentId: string) {
     if (!csrfToken) {
@@ -382,7 +421,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.studentsTitle}</h2>
           <button
             type="button"
-            onClick={() => void Promise.all([loadStudents(), loadLogs(), loadContent()])}
+            onClick={() => void refreshAdminData()}
             className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
           >
             {t.refresh}
@@ -467,6 +506,16 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             <option value="soon">{t.contentStatusSoon}</option>
           </select>
         </div>
+        {contentGlobalWarnings.length > 0 ? (
+          <div className="rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            <p className="font-semibold">{t.contentGlobalWarnings}</p>
+            <ul className="mt-1 list-disc pl-4">
+              {contentGlobalWarnings.map((warning) => (
+                <li key={warning}>{warning}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
         {filteredContentTopics.length === 0 ? (
           <p className="text-sm text-slate-600">{t.contentNoItems}</p>
         ) : (

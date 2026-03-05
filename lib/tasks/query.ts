@@ -1,10 +1,19 @@
-import { loadTaskBank } from "@/lib/taskbank";
+import { loadTaskBank, type LoadedTaskBanksResult } from "@/lib/taskbank";
 import { type Task } from "./schema";
 
 export type TopicTasksResult = {
   tasks: Task[];
   errors: string[];
 };
+
+export function filterTaskLoadErrorsByTopic(
+  errors: LoadedTaskBanksResult["errors"],
+  topicId: string,
+) {
+  return errors
+    .filter((error) => error.topicId === topicId)
+    .map((error) => `${error.filePath}: ${error.message}`);
+}
 
 export async function getTasksForTopic(topicId: string): Promise<TopicTasksResult> {
   const { banks, errors } = await loadTaskBank();
@@ -15,6 +24,6 @@ export async function getTasksForTopic(topicId: string): Promise<TopicTasksResul
 
   return {
     tasks,
-    errors: errors.map((error) => `${error.filePath}: ${error.message}`),
+    errors: filterTaskLoadErrorsByTopic(errors, topicId),
   };
 }

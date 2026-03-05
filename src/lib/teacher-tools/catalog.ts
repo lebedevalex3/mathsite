@@ -13,6 +13,9 @@ import { MODERN_TOPICS, validateTopicSkillEdges } from "./skill-edges";
 import { getRoutesForTopic } from "./routes";
 import type { TeacherToolsSkill, TeacherToolsTopicConfig } from "./types";
 
+type ContentTopicConfig = ReturnType<typeof listContentTopicConfigs>[number];
+type TopicBuilder = (cfg: ContentTopicConfig) => TeacherToolsTopicConfig;
+
 const proportionSkillCards: Record<
   string,
   Pick<TeacherToolsSkill, "cardHref" | "trainerHref" | "example" | "algorithm">
@@ -114,6 +117,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     id: "math.equations.understand_equation_and_root",
     title: "Понимать, что такое уравнение и корень",
     summary: "Различать уравнение и находить число, которое делает равенство верным.",
+    kind: "equation",
     example: "Какое число является корнем уравнения x + 4 = 9?",
     cardHref: "/teacher-tools/skills/math.equations.understand_equation_and_root",
     trainerHref: "/topics/equations/train?skill=math.equations.understand_equation_and_root",
@@ -130,6 +134,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     id: "math.equations.check_root",
     title: "Проверять, является ли число корнем уравнения",
     summary: "Подставлять число и определять, верно ли равенство.",
+    kind: "equation",
     example: "Проверь: число 3 является корнем уравнения x + 5 = 8?",
     cardHref: "/teacher-tools/skills/math.equations.check_root",
     trainerHref: "/topics/equations/train?skill=math.equations.check_root",
@@ -146,6 +151,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     id: "math.equations.solve_x_plus_minus_a_equals_b",
     title: "Решать x + a = b и x - a = b",
     summary: "Находить неизвестное при сложении и вычитании, когда x стоит слева.",
+    kind: "equation",
     example: "Реши уравнение: x + 9 = 17",
     cardHref: "/teacher-tools/skills/math.equations.solve_x_plus_minus_a_equals_b",
     trainerHref: "/topics/equations/train?skill=math.equations.solve_x_plus_minus_a_equals_b",
@@ -162,6 +168,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     id: "math.equations.solve_a_plus_minus_x_equals_b",
     title: "Решать a + x = b и a - x = b",
     summary: "Решать уравнения, где неизвестное стоит после числа.",
+    kind: "equation",
     example: "Реши уравнение: 25 - x = 7",
     cardHref: "/teacher-tools/skills/math.equations.solve_a_plus_minus_x_equals_b",
     trainerHref: "/topics/equations/train?skill=math.equations.solve_a_plus_minus_x_equals_b",
@@ -178,6 +185,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     id: "math.equations.solve_multiplication_and_division_equations",
     title: "Решать a·x = b и x : a = b",
     summary: "Решать уравнения на умножение и деление с целыми ответами.",
+    kind: "equation",
     example: "Реши уравнение: 6 · x = 42",
     cardHref: "/teacher-tools/skills/math.equations.solve_multiplication_and_division_equations",
     trainerHref: "/topics/equations/train?skill=math.equations.solve_multiplication_and_division_equations",
@@ -194,6 +202,7 @@ const uravneniyaSkills: TeacherToolsSkill[] = [
     id: "math.equations.solve_basic_word_equations",
     title: "Составлять и решать простые уравнения по условию",
     summary: "Короткие текстовые задачи в 1 шаг на составление уравнения.",
+    kind: "word",
     example: "У Маши было x карандашей. После покупки ещё 6 стало 15. Найди x.",
     cardHref: "/teacher-tools/skills/math.equations.solve_basic_word_equations",
     trainerHref: "/topics/equations/train?skill=math.equations.solve_basic_word_equations",
@@ -213,6 +222,7 @@ const otricatelnyeChislaSkills: TeacherToolsSkill[] = [
     id: "math.negative_numbers.compare_integers",
     title: "Сравнивать целые числа",
     summary: "Сравнивать положительные и отрицательные числа по координатной прямой.",
+    kind: "compute",
     example: "Какое число больше: -3 или -8?",
     status: "ready",
   },
@@ -220,6 +230,7 @@ const otricatelnyeChislaSkills: TeacherToolsSkill[] = [
     id: "math.negative_numbers.find_absolute_value",
     title: "Находить модуль числа",
     summary: "Определять модуль положительных и отрицательных чисел.",
+    kind: "compute",
     example: "Найди модуль числа -12.",
     status: "ready",
   },
@@ -227,6 +238,7 @@ const otricatelnyeChislaSkills: TeacherToolsSkill[] = [
     id: "math.negative_numbers.add_subtract_integers",
     title: "Складывать и вычитать целые числа",
     summary: "Выполнять действия с числами разных знаков без скобок.",
+    kind: "compute",
     example: "Вычисли: -7 + 10.",
     status: "ready",
   },
@@ -234,99 +246,96 @@ const otricatelnyeChislaSkills: TeacherToolsSkill[] = [
     id: "math.negative_numbers.multiply_divide_integers",
     title: "Умножать и делить целые числа",
     summary: "Применять правила знаков при умножении и делении.",
+    kind: "compute",
     example: "Вычисли: -6 · 4.",
     status: "ready",
   },
 ];
 
+const TOPIC_BUILDERS: Record<string, TopicBuilder> = {
+  proportion: (cfg) => ({
+    topicId: "math.proportion",
+    title: {
+      ru: cfg.titles?.ru ?? "Пропорции",
+      en: cfg.titles?.en ?? "Proportions",
+      de: cfg.titles?.de ?? "Proportionen",
+    },
+    skills: proportionSkills.map((skill) => ({
+      id: skill.id,
+      title: skill.title,
+      summary: skill.summary,
+      kind: skill.kind,
+      cardHref: proportionSkillCards[skill.id]?.cardHref,
+      trainerHref: proportionSkillCards[skill.id]?.trainerHref,
+      example: proportionSkillCards[skill.id]?.example,
+      algorithm: proportionSkillCards[skill.id]?.algorithm,
+      defaultTrainingCount: skill.defaultTrainingCount,
+      status: "ready" as const,
+    })),
+  }),
+  equations: (cfg) => ({
+    topicId: "math.equations",
+    title: {
+      ru: cfg.titles?.ru ?? "Уравнения",
+      en: cfg.titles?.en ?? "Equations",
+      de: cfg.titles?.de ?? "Gleichungen",
+    },
+    skills: uravneniyaSkills,
+  }),
+  "negative-numbers": (cfg) => ({
+    topicId: "math.negative_numbers",
+    title: {
+      ru: cfg.titles?.ru ?? "Отрицательные числа",
+      en: cfg.titles?.en ?? "Negative Numbers",
+      de: cfg.titles?.de ?? "Negative Zahlen",
+    },
+    skills: otricatelnyeChislaSkills,
+  }),
+  "fractions-multiplication": (cfg) => ({
+    topicId: "math.fractions_multiplication",
+    title: {
+      ru: cfg.titles?.ru ?? "Умножение дробей",
+      en: cfg.titles?.en ?? "Multiplying Fractions",
+      de: cfg.titles?.de ?? "Brueche multiplizieren",
+    },
+    skills: fractionsMultiplicationSkills.map((skill) => ({
+      id: skill.id,
+      title: skill.title,
+      summary: skill.summary,
+      kind: skill.kind,
+      status: "ready" as const,
+    })),
+  }),
+  "rectangular-prism": (cfg) => ({
+    topicId: "math.rectangular_prism",
+    title: {
+      ru: cfg.titles?.ru ?? "Прямоугольный параллелепипед",
+      en: cfg.titles?.en ?? "Rectangular Prism",
+      de: cfg.titles?.de ?? "Quader",
+    },
+    skills: rectangularPrismSkills.map((skill) => ({
+      id: skill.id,
+      title: skill.title,
+      summary: skill.summary,
+      kind: skill.kind,
+      status: "ready" as const,
+    })),
+  }),
+};
+
+const SUPPORTED_TOPIC_SLUGS = new Set(Object.keys(TOPIC_BUILDERS));
+
 export function listTeacherToolsTopics(): TeacherToolsTopicConfig[] {
-  const topics: TeacherToolsTopicConfig[] = [];
-  for (const cfg of listContentTopicConfigs()) {
-    if (cfg.topicSlug === "proportion") {
-      topics.push({
-        topicId: "math.proportion",
-        title: {
-          ru: cfg.titles?.ru ?? "Пропорции",
-          en: cfg.titles?.en ?? "Proportions",
-          de: cfg.titles?.de ?? "Proportionen",
-        },
-        skills: proportionSkills.map((skill) => ({
-          id: skill.id,
-          title: skill.title,
-          summary: skill.summary,
-          kind: skill.kind,
-          cardHref: proportionSkillCards[skill.id]?.cardHref,
-          trainerHref: proportionSkillCards[skill.id]?.trainerHref,
-          example: proportionSkillCards[skill.id]?.example,
-          algorithm: proportionSkillCards[skill.id]?.algorithm,
-          defaultTrainingCount: skill.defaultTrainingCount,
-          status: "ready" as const,
-        })),
-      });
-      continue;
-    }
+  return listContentTopicConfigs()
+    .map((cfg) => TOPIC_BUILDERS[cfg.topicSlug]?.(cfg))
+    .filter((topic): topic is TeacherToolsTopicConfig => Boolean(topic));
+}
 
-    if (cfg.topicSlug === "equations") {
-      topics.push({
-        topicId: "math.equations",
-        title: {
-          ru: cfg.titles?.ru ?? "Уравнения",
-          en: cfg.titles?.en ?? "Equations",
-          de: cfg.titles?.de ?? "Gleichungen",
-        },
-        skills: uravneniyaSkills,
-      });
-    }
-
-    if (cfg.topicSlug === "negative-numbers") {
-      topics.push({
-        topicId: "math.negative_numbers",
-        title: {
-          ru: cfg.titles?.ru ?? "Отрицательные числа",
-          en: cfg.titles?.en ?? "Negative Numbers",
-          de: cfg.titles?.de ?? "Negative Zahlen",
-        },
-        skills: otricatelnyeChislaSkills,
-      });
-    }
-
-    if (cfg.topicSlug === "fractions-multiplication") {
-      topics.push({
-        topicId: "math.fractions_multiplication",
-        title: {
-          ru: cfg.titles?.ru ?? "Умножение дробей",
-          en: cfg.titles?.en ?? "Multiplying Fractions",
-          de: cfg.titles?.de ?? "Brueche multiplizieren",
-        },
-        skills: fractionsMultiplicationSkills.map((skill) => ({
-          id: skill.id,
-          title: skill.title,
-          summary: skill.summary,
-          kind: skill.kind,
-          status: "ready" as const,
-        })),
-      });
-    }
-
-    if (cfg.topicSlug === "rectangular-prism") {
-      topics.push({
-        topicId: "math.rectangular_prism",
-        title: {
-          ru: cfg.titles?.ru ?? "Прямоугольный параллелепипед",
-          en: cfg.titles?.en ?? "Rectangular Prism",
-          de: cfg.titles?.de ?? "Quader",
-        },
-        skills: rectangularPrismSkills.map((skill) => ({
-          id: skill.id,
-          title: skill.title,
-          summary: skill.summary,
-          kind: skill.kind,
-          status: "ready" as const,
-        })),
-      });
-    }
-  }
-  return topics;
+export function listUnconfiguredTeacherToolsTopicSlugs() {
+  return listContentTopicConfigs()
+    .map((cfg) => cfg.topicSlug)
+    .filter((slug) => !SUPPORTED_TOPIC_SLUGS.has(slug))
+    .sort();
 }
 
 const taxonomyPathByTopicId: Record<string, string> = {
