@@ -95,6 +95,16 @@ type SkillRegistryItem = {
   updatedAt: string | null;
 };
 
+type AdminTaskItem = {
+  id: string;
+  topic_id: string;
+  skill_id: string;
+  difficulty: number;
+  difficulty_band?: "A" | "B" | "C";
+  statement_md: string;
+  answer: unknown;
+};
+
 const copy = {
   ru: {
     title: "Админ-панель",
@@ -151,6 +161,20 @@ const copy = {
     skillsStatus: "Статус",
     skillsTopic: "Тема",
     skillsOverride: "Override",
+    tasksTitle: "Банк задач",
+    tasksSubtitle: "CRUD задач по выбранной теме/навыку с проверкой схемы.",
+    tasksTopic: "Тема",
+    tasksSkill: "Skill ID",
+    tasksSearch: "Поиск по task_id и условию",
+    tasksLoad: "Загрузить",
+    tasksCreate: "Создать задачу",
+    tasksUpdate: "Сохранить задачу",
+    tasksDelete: "Удалить",
+    tasksAnswerJson: "Ответ (JSON)",
+    tasksStatement: "Условие (Markdown + LaTeX)",
+    tasksDifficulty: "Сложность",
+    tasksBand: "Band",
+    tasksNoItems: "Задачи не найдены.",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -209,6 +233,20 @@ const copy = {
     skillsStatus: "Status",
     skillsTopic: "Topic",
     skillsOverride: "Override",
+    tasksTitle: "Task bank",
+    tasksSubtitle: "CRUD tasks for selected topic/skill with schema validation.",
+    tasksTopic: "Topic",
+    tasksSkill: "Skill ID",
+    tasksSearch: "Search by task_id and statement",
+    tasksLoad: "Load",
+    tasksCreate: "Create task",
+    tasksUpdate: "Save task",
+    tasksDelete: "Delete",
+    tasksAnswerJson: "Answer (JSON)",
+    tasksStatement: "Statement (Markdown + LaTeX)",
+    tasksDifficulty: "Difficulty",
+    tasksBand: "Band",
+    tasksNoItems: "No tasks found.",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -267,6 +305,20 @@ const copy = {
     skillsStatus: "Status",
     skillsTopic: "Thema",
     skillsOverride: "Override",
+    tasksTitle: "Aufgabenbank",
+    tasksSubtitle: "CRUD-Aufgaben fuer ausgewaehltes Thema/Skill mit Schema-Pruefung.",
+    tasksTopic: "Thema",
+    tasksSkill: "Skill-ID",
+    tasksSearch: "Suche nach Task-ID und Aufgabe",
+    tasksLoad: "Laden",
+    tasksCreate: "Aufgabe erstellen",
+    tasksUpdate: "Aufgabe speichern",
+    tasksDelete: "Loeschen",
+    tasksAnswerJson: "Antwort (JSON)",
+    tasksStatement: "Aufgabe (Markdown + LaTeX)",
+    tasksDifficulty: "Schwierigkeit",
+    tasksBand: "Band",
+    tasksNoItems: "Keine Aufgaben gefunden.",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -314,6 +366,18 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [skillDraftKind, setSkillDraftKind] = useState<SkillKind>("compute");
   const [skillDraftStatus, setSkillDraftStatus] = useState<"ready" | "soon">("ready");
   const [savingSkillId, setSavingSkillId] = useState<string | null>(null);
+  const [taskTopicFilter, setTaskTopicFilter] = useState("all");
+  const [taskSkillFilter, setTaskSkillFilter] = useState("");
+  const [taskQuery, setTaskQuery] = useState("");
+  const [taskItems, setTaskItems] = useState<AdminTaskItem[]>([]);
+  const [tasksError, setTasksError] = useState<string | null>(null);
+  const [tasksLoading, setTasksLoading] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [taskDraftStatement, setTaskDraftStatement] = useState("");
+  const [taskDraftDifficulty, setTaskDraftDifficulty] = useState(1);
+  const [taskDraftBand, setTaskDraftBand] = useState<"A" | "B" | "C">("A");
+  const [taskDraftAnswerJson, setTaskDraftAnswerJson] = useState('{"type":"number","value":0}');
+  const [creatingTask, setCreatingTask] = useState(false);
 
   const formatSectionError = useCallback(
     (label: string, reason: unknown) => {
@@ -399,6 +463,46 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           .includes(q);
       });
   }, [locale, skillItems, skillsQuery, skillsStatusFilter, skillsTopicFilter, skillsWithoutTasksOnly]);
+
+  function parseAnswerJson(raw: string): unknown {
+    return JSON.parse(raw);
+  }
+
+  const loadTasks = useCallback(
+    async (params?: { topicId?: string; skillId?: string; q?: string }) => {
+      const topicId = params?.topicId ?? taskTopicFilter;
+      if (!topicId || topicId === "all") {
+        setTaskItems([]);
+        return;
+      }
+      setTasksLoading(true);
+      try {
+        const url = new URL("/api/admin/tasks", window.location.origin);
+        url.searchParams.set("topicId", topicId);
+        if (params?.skillId ?? taskSkillFilter.trim()) {
+          url.searchParams.set("skillId", (params?.skillId ?? taskSkillFilter).trim());
+        }
+        if (params?.q ?? taskQuery.trim()) {
+          url.searchParams.set("q", (params?.q ?? taskQuery).trim());
+        }
+        const response = await fetch(url.toString(), { credentials: "same-origin" });
+        const payload = (await response.json()) as {
+          ok?: boolean;
+          tasks?: AdminTaskItem[];
+          message?: string;
+        };
+        if (!response.ok || !payload.ok) {
+          setTasksError(payload.message ?? t.errorFallback);
+          return;
+        }
+        setTaskItems(Array.isArray(payload.tasks) ? payload.tasks : []);
+        setTasksError(null);
+      } finally {
+        setTasksLoading(false);
+      }
+    },
+    [t.errorFallback, taskQuery, taskSkillFilter, taskTopicFilter],
+  );
 
   const loadStudents = useCallback(async () => {
     const response = await fetch("/api/admin/students", { credentials: "same-origin" });
@@ -499,6 +603,17 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       }
     })();
   }, [refreshAdminData, t.errorFallback]);
+
+  useEffect(() => {
+    if (taskTopicFilter === "all" && skillsTopicOptions.length > 0) {
+      setTaskTopicFilter(skillsTopicOptions[0] ?? "all");
+    }
+  }, [skillsTopicOptions, taskTopicFilter]);
+
+  useEffect(() => {
+    if (taskTopicFilter === "all") return;
+    void loadTasks({ topicId: taskTopicFilter });
+  }, [loadTasks, taskTopicFilter]);
 
   async function handleResetStudent(studentId: string) {
     if (!csrfToken) {
@@ -617,6 +732,141 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       setError(t.errorFallback);
     } finally {
       setSavingSkillId(null);
+    }
+  }
+
+  function startEditTask(item: AdminTaskItem) {
+    setEditingTaskId(item.id);
+    setTaskDraftStatement(item.statement_md);
+    setTaskDraftDifficulty(item.difficulty ?? 1);
+    setTaskDraftBand(item.difficulty_band ?? "A");
+    setTaskDraftAnswerJson(JSON.stringify(item.answer, null, 2));
+  }
+
+  async function createTask() {
+    if (!csrfToken) {
+      setError(t.errorFallback);
+      return;
+    }
+    if (!taskTopicFilter || taskTopicFilter === "all") {
+      setTasksError("topicId is required");
+      return;
+    }
+    const skillId = taskSkillFilter.trim();
+    if (!skillId) {
+      setTasksError("skillId is required");
+      return;
+    }
+    let answer: unknown;
+    try {
+      answer = parseAnswerJson(taskDraftAnswerJson);
+    } catch {
+      setTasksError("Invalid answer JSON");
+      return;
+    }
+
+    setCreatingTask(true);
+    try {
+      const response = await fetch("/api/admin/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken,
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          topicId: taskTopicFilter,
+          skillId,
+          statementMd: taskDraftStatement,
+          difficulty: taskDraftDifficulty,
+          difficultyBand: taskDraftBand,
+          answer,
+        }),
+      });
+      const payload = (await response.json()) as { ok?: boolean; message?: string };
+      if (!response.ok || !payload.ok) {
+        setTasksError(payload.message ?? t.errorFallback);
+        return;
+      }
+      await loadTasks();
+      setTasksError(null);
+    } catch {
+      setTasksError(t.errorFallback);
+    } finally {
+      setCreatingTask(false);
+    }
+  }
+
+  async function updateTask(taskId: string) {
+    if (!csrfToken) {
+      setError(t.errorFallback);
+      return;
+    }
+    let answer: unknown;
+    try {
+      answer = parseAnswerJson(taskDraftAnswerJson);
+    } catch {
+      setTasksError("Invalid answer JSON");
+      return;
+    }
+
+    setCreatingTask(true);
+    try {
+      const response = await fetch(`/api/admin/tasks/${encodeURIComponent(taskId)}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken,
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          statementMd: taskDraftStatement,
+          difficulty: taskDraftDifficulty,
+          difficultyBand: taskDraftBand,
+          answer,
+        }),
+      });
+      const payload = (await response.json()) as { ok?: boolean; message?: string };
+      if (!response.ok || !payload.ok) {
+        setTasksError(payload.message ?? t.errorFallback);
+        return;
+      }
+      await loadTasks();
+      setEditingTaskId(null);
+      setTasksError(null);
+    } catch {
+      setTasksError(t.errorFallback);
+    } finally {
+      setCreatingTask(false);
+    }
+  }
+
+  async function deleteTask(taskId: string) {
+    if (!csrfToken) {
+      setError(t.errorFallback);
+      return;
+    }
+    setCreatingTask(true);
+    try {
+      const response = await fetch(`/api/admin/tasks/${encodeURIComponent(taskId)}`, {
+        method: "DELETE",
+        headers: {
+          "x-csrf-token": csrfToken,
+        },
+        credentials: "same-origin",
+      });
+      const payload = (await response.json()) as { ok?: boolean; message?: string };
+      if (!response.ok || !payload.ok) {
+        setTasksError(payload.message ?? t.errorFallback);
+        return;
+      }
+      await loadTasks();
+      if (editingTaskId === taskId) setEditingTaskId(null);
+      setTasksError(null);
+    } catch {
+      setTasksError(t.errorFallback);
+    } finally {
+      setCreatingTask(false);
     }
   }
 
@@ -953,6 +1203,183 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             })}
           </div>
         )}
+      </section>
+
+      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.tasksTitle}</h2>
+        <p className="text-sm text-slate-600">{t.tasksSubtitle}</p>
+        <div className="grid gap-3 md:grid-cols-4">
+          <select
+            value={taskTopicFilter}
+            onChange={(event) => setTaskTopicFilter(event.target.value)}
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          >
+            <option value="all">{t.tasksTopic}</option>
+            {skillsTopicOptions.map((topicId) => (
+              <option key={topicId} value={topicId}>
+                {topicId}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            value={taskSkillFilter}
+            onChange={(event) => setTaskSkillFilter(event.target.value)}
+            placeholder={t.tasksSkill}
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          />
+          <input
+            type="text"
+            value={taskQuery}
+            onChange={(event) => setTaskQuery(event.target.value)}
+            placeholder={t.tasksSearch}
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          />
+          <button
+            type="button"
+            onClick={() => void loadTasks()}
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+          >
+            {t.tasksLoad}
+          </button>
+        </div>
+
+        <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.tasksCreate}</p>
+          <textarea
+            value={taskDraftStatement}
+            onChange={(event) => setTaskDraftStatement(event.target.value)}
+            rows={3}
+            placeholder={t.tasksStatement}
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          />
+          <textarea
+            value={taskDraftAnswerJson}
+            onChange={(event) => setTaskDraftAnswerJson(event.target.value)}
+            rows={3}
+            placeholder={t.tasksAnswerJson}
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-xs text-slate-900"
+          />
+          <div className="grid gap-2 sm:grid-cols-2">
+            <input
+              type="number"
+              min={1}
+              max={5}
+              value={taskDraftDifficulty}
+              onChange={(event) => setTaskDraftDifficulty(Number(event.target.value || 1))}
+              className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"
+            />
+            <select
+              value={taskDraftBand}
+              onChange={(event) => setTaskDraftBand(event.target.value as "A" | "B" | "C")}
+              className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"
+            >
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            disabled={creatingTask}
+            onClick={() => void createTask()}
+            className="rounded-lg border border-slate-300 bg-slate-900 px-3 py-2 text-xs font-medium text-white hover:bg-slate-800 disabled:opacity-60"
+          >
+            {t.tasksCreate}
+          </button>
+        </div>
+
+        {tasksError ? <p className="text-sm text-red-700">{tasksError}</p> : null}
+        {tasksLoading ? <p className="text-sm text-slate-600">{t.loading}</p> : null}
+        {!tasksLoading && taskItems.length === 0 ? <p className="text-sm text-slate-600">{t.tasksNoItems}</p> : null}
+        <div className="space-y-2">
+          {taskItems.map((task) => {
+            const isEditing = editingTaskId === task.id;
+            return (
+              <details key={task.id} className="rounded-lg border border-slate-200 bg-slate-50 p-3" open={isEditing}>
+                <summary className="cursor-pointer list-none">
+                  <p className="text-sm font-semibold text-slate-950">{task.id}</p>
+                  <p className="text-xs text-slate-600">
+                    {task.skill_id} • {t.tasksDifficulty}: {task.difficulty} • {t.tasksBand}: {task.difficulty_band ?? "—"}
+                  </p>
+                </summary>
+                <p className="mt-2 text-sm text-slate-800">{task.statement_md}</p>
+                <pre className="mt-2 overflow-x-auto rounded-lg border border-slate-200 bg-white p-2 text-xs text-slate-700">
+                  {JSON.stringify(task.answer, null, 2)}
+                </pre>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => startEditTask(task)}
+                    className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
+                  >
+                    {t.skillsEdit}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={creatingTask}
+                    onClick={() => void deleteTask(task.id)}
+                    className="rounded-lg border border-red-300 bg-white px-2.5 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
+                  >
+                    {t.tasksDelete}
+                  </button>
+                </div>
+                {isEditing ? (
+                  <div className="mt-3 space-y-2 rounded-lg border border-slate-300 bg-white p-3">
+                    <textarea
+                      value={taskDraftStatement}
+                      onChange={(event) => setTaskDraftStatement(event.target.value)}
+                      rows={3}
+                      className="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                    />
+                    <textarea
+                      value={taskDraftAnswerJson}
+                      onChange={(event) => setTaskDraftAnswerJson(event.target.value)}
+                      rows={4}
+                      className="w-full rounded-lg border border-slate-300 px-2 py-1.5 font-mono text-xs"
+                    />
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <input
+                        type="number"
+                        min={1}
+                        max={5}
+                        value={taskDraftDifficulty}
+                        onChange={(event) => setTaskDraftDifficulty(Number(event.target.value || 1))}
+                        className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                      />
+                      <select
+                        value={taskDraftBand}
+                        onChange={(event) => setTaskDraftBand(event.target.value as "A" | "B" | "C")}
+                        className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                      >
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        disabled={creatingTask}
+                        onClick={() => void updateTask(task.id)}
+                        className="rounded-lg border border-slate-300 bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800 disabled:opacity-60"
+                      >
+                        {t.tasksUpdate}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditingTaskId(null)}
+                        className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                      >
+                        {t.skillsCancel}
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </details>
+            );
+          })}
+        </div>
       </section>
 
       <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
