@@ -61,6 +61,42 @@ type DetailedTopicSnapshot = {
   }>;
 };
 
+export async function buildAdminContentSummaries(params: {
+  topicConfigs: TeacherToolsTopicConfig[];
+  metaByTopicId: ReadonlyMap<
+    string,
+    {
+      domain?: string | null;
+      status?: "ready" | "soon" | null;
+      levels?: number[];
+    }
+  >;
+  getTopicSkills: (topicId: string) => Promise<DetailedTopicSnapshot | null>;
+}): Promise<ContentTopicSummary[]> {
+  return Promise.all(
+    params.topicConfigs.map(async (topic) => {
+      const metaEntry = params.metaByTopicId.get(topic.topicId);
+      const meta = {
+        domain: metaEntry?.domain ?? null,
+        status: metaEntry?.status ?? null,
+        levels: metaEntry?.levels ?? [],
+      };
+
+      try {
+        const detailed = await params.getTopicSkills(topic.topicId);
+        return buildAdminContentTopicSummary({ topic, meta, detailed });
+      } catch (error) {
+        return buildAdminContentTopicSummary({
+          topic,
+          meta,
+          detailed: null,
+          errorMessage: error instanceof Error ? error.message : "topic_load_failed",
+        });
+      }
+    }),
+  );
+}
+
 export function buildAdminContentPayload(params: {
   summaries: ContentTopicSummary[];
   unconfiguredSlugs: string[];
@@ -172,28 +208,11 @@ export async function GET() {
     const unconfiguredSlugs = listUnconfiguredTeacherToolsTopicSlugs();
     const metaByTopicId = new Map(topicCatalogEntries.map((item) => [item.id, item] as const));
 
-    const summaries: ContentTopicSummary[] = await Promise.all(
-      topicConfigs.map(async (topic) => {
-        const metaEntry = metaByTopicId.get(topic.topicId);
-        const meta = {
-          domain: metaEntry?.domain ?? null,
-          status: metaEntry?.status ?? null,
-          levels: metaEntry?.levels ?? [],
-        };
-
-        try {
-          const detailed = await getTeacherToolsTopicSkills(topic.topicId);
-          return buildAdminContentTopicSummary({ topic, meta, detailed });
-        } catch (error) {
-          return buildAdminContentTopicSummary({
-            topic,
-            meta,
-            detailed: null,
-            errorMessage: error instanceof Error ? error.message : "topic_load_failed",
-          });
-        }
-      }),
-    );
+    const summaries = await buildAdminContentSummaries({
+      topicConfigs,
+      metaByTopicId,
+      getTopicSkills: getTeacherToolsTopicSkills,
+    });
 
     return NextResponse.json(
       buildAdminContentPayload({
