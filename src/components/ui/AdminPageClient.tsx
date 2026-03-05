@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
+import { MarkdownMath } from "@/lib/ui/MarkdownMath";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { buildAdminSectionErrors, formatAdminSectionFailures } from "@/src/components/ui/admin-page-client.utils";
 import { formatDateTime } from "@/src/lib/i18n/format";
@@ -175,6 +176,7 @@ const copy = {
     tasksDifficulty: "Сложность",
     tasksBand: "Band",
     tasksNoItems: "Задачи не найдены.",
+    tasksPreview: "Предпросмотр",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -247,6 +249,7 @@ const copy = {
     tasksDifficulty: "Difficulty",
     tasksBand: "Band",
     tasksNoItems: "No tasks found.",
+    tasksPreview: "Preview",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -319,6 +322,7 @@ const copy = {
     tasksDifficulty: "Schwierigkeit",
     tasksBand: "Band",
     tasksNoItems: "Keine Aufgaben gefunden.",
+    tasksPreview: "Vorschau",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -1253,6 +1257,12 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             placeholder={t.tasksStatement}
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
           />
+          <div className="rounded-lg border border-slate-200 bg-white p-3">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">{t.tasksPreview}</p>
+            <MarkdownMath className="prose prose-slate max-w-none text-sm">
+              {taskDraftStatement.trim() || "—"}
+            </MarkdownMath>
+          </div>
           <textarea
             value={taskDraftAnswerJson}
             onChange={(event) => setTaskDraftAnswerJson(event.target.value)}
@@ -1332,6 +1342,12 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                       rows={3}
                       className="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
                     />
+                    <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">{t.tasksPreview}</p>
+                      <MarkdownMath className="prose prose-slate max-w-none text-sm">
+                        {taskDraftStatement.trim() || "—"}
+                      </MarkdownMath>
+                    </div>
                     <textarea
                       value={taskDraftAnswerJson}
                       onChange={(event) => setTaskDraftAnswerJson(event.target.value)}
