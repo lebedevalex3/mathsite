@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
-import { formatAdminSectionFailures } from "@/src/components/ui/admin-page-client.utils";
+import { buildAdminSectionErrors, formatAdminSectionFailures } from "@/src/components/ui/admin-page-client.utils";
 import { formatDateTime } from "@/src/lib/i18n/format";
 
 type Locale = "ru" | "en" | "de";
@@ -216,6 +216,15 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [lastReset, setLastReset] = useState<{ username: string | null; temporaryPassword: string } | null>(null);
   const [contentTopics, setContentTopics] = useState<ContentTopicItem[]>([]);
   const [contentGlobalWarnings, setContentGlobalWarnings] = useState<string[]>([]);
+  const [sectionErrors, setSectionErrors] = useState<{
+    students: string | null;
+    logs: string | null;
+    content: string | null;
+  }>({
+    students: null,
+    logs: null,
+    content: null,
+  });
   const [contentQuery, setContentQuery] = useState("");
   const [contentDomain, setContentDomain] = useState<"all" | "arithmetic" | "algebra" | "geometry" | "data">("all");
   const [contentStatus, setContentStatus] = useState<"all" | "ready" | "soon">("all");
@@ -311,6 +320,12 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const refreshAdminData = useCallback(async () => {
     const results = await Promise.allSettled([loadStudents(), loadLogs(), loadContent()]);
     const sectionNames = [t.studentsTitle, t.auditTitle, t.contentTitle] as const;
+    const nextSectionErrors = buildAdminSectionErrors({
+      results,
+      sectionNames,
+      formatSectionError,
+    });
+    setSectionErrors(nextSectionErrors);
     const failures = formatAdminSectionFailures({
       results,
       sectionNames,
@@ -434,6 +449,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           placeholder={t.studentsSearch}
           className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
         />
+        {sectionErrors.students ? <p className="text-sm text-red-700">{sectionErrors.students}</p> : null}
         {lastReset ? (
           <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
             <p>
@@ -506,6 +522,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             <option value="soon">{t.contentStatusSoon}</option>
           </select>
         </div>
+        {sectionErrors.content ? <p className="text-sm text-red-700">{sectionErrors.content}</p> : null}
         {contentGlobalWarnings.length > 0 ? (
           <div className="rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
             <p className="font-semibold">{t.contentGlobalWarnings}</p>
@@ -614,6 +631,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           placeholder={t.auditSearch}
           className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
         />
+        {sectionErrors.logs ? <p className="text-sm text-red-700">{sectionErrors.logs}</p> : null}
         {filteredLogs.length === 0 ? (
           <p className="text-sm text-slate-600">{t.noLogs}</p>
         ) : (
