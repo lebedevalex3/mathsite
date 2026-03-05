@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 
 import { MarkdownMath } from "@/lib/ui/MarkdownMath";
@@ -153,6 +153,33 @@ type AdminTaskItem = {
 };
 
 type DraftAnswerType = "number" | "fraction" | "ratio";
+
+function parseQueryBoolean(value: string | null) {
+  return value === "1" || value === "true";
+}
+
+function parseTaskAuditAction(value: string | null): TaskAuditActionFilter {
+  if (value === "create" || value === "update" || value === "delete") return value;
+  return "all";
+}
+
+function parseTaskAuditChangedField(value: string | null): TaskAuditChangedFieldFilter {
+  if (
+    value === "status" ||
+    value === "difficulty" ||
+    value === "difficulty_band" ||
+    value === "answer" ||
+    value === "statement_md"
+  ) {
+    return value;
+  }
+  return "all";
+}
+
+function parseDateQueryValue(value: string | null) {
+  if (!value) return "";
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : "";
+}
 
 const copy = {
   ru: {
@@ -477,6 +504,7 @@ const copy = {
 
 export function AdminPageClient({ locale }: { locale: Locale }) {
   const t = copy[locale];
+  const taskAuditQueryHydratedRef = useRef(false);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [csrfToken, setCsrfToken] = useState("");
@@ -548,6 +576,53 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskAuditToDate, setTaskAuditToDate] = useState("");
   const [taskAuditStatusOnly, setTaskAuditStatusOnly] = useState(false);
   const [taskAuditReadyOnly, setTaskAuditReadyOnly] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const readyOnly = parseQueryBoolean(params.get("taskAuditReadyOnly"));
+    const statusOnly = parseQueryBoolean(params.get("taskAuditStatusOnly")) || readyOnly;
+    setTaskAuditActionFilter(parseTaskAuditAction(params.get("taskAuditAction")));
+    setTaskAuditChangedFieldFilter(parseTaskAuditChangedField(params.get("taskAuditField")));
+    setTaskAuditActorFilter((params.get("taskAuditActor") ?? "").trim());
+    setTaskAuditFromDate(parseDateQueryValue(params.get("taskAuditFrom")));
+    setTaskAuditToDate(parseDateQueryValue(params.get("taskAuditTo")));
+    setTaskAuditStatusOnly(statusOnly);
+    setTaskAuditReadyOnly(readyOnly);
+    taskAuditQueryHydratedRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!taskAuditQueryHydratedRef.current) return;
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+
+    const setOrDelete = (key: string, value: string | null) => {
+      if (!value) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    };
+
+    setOrDelete("taskAuditAction", taskAuditActionFilter !== "all" ? taskAuditActionFilter : null);
+    setOrDelete("taskAuditField", taskAuditChangedFieldFilter !== "all" ? taskAuditChangedFieldFilter : null);
+    setOrDelete("taskAuditActor", taskAuditActorFilter.trim() || null);
+    setOrDelete("taskAuditFrom", taskAuditFromDate || null);
+    setOrDelete("taskAuditTo", taskAuditToDate || null);
+    setOrDelete("taskAuditStatusOnly", taskAuditStatusOnly ? "1" : null);
+    setOrDelete("taskAuditReadyOnly", taskAuditReadyOnly ? "1" : null);
+
+    const next = `${url.pathname}${params.toString() ? `?${params.toString()}` : ""}${url.hash}`;
+    window.history.replaceState(null, "", next);
+  }, [
+    taskAuditActionFilter,
+    taskAuditActorFilter,
+    taskAuditChangedFieldFilter,
+    taskAuditFromDate,
+    taskAuditReadyOnly,
+    taskAuditStatusOnly,
+    taskAuditToDate,
+  ]);
 
   const formatSectionError = useCallback(
     (label: string, reason: unknown) => {
