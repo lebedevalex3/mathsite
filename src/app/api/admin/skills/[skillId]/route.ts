@@ -7,6 +7,7 @@ import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { isAdminRole } from "@/src/lib/auth/access";
 import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 import { prisma } from "@/src/lib/db/prisma";
+import { checkSkillReadyGate } from "@/src/lib/admin/quality-gates";
 import {
   applySkillOverrideToSnapshot,
   isSkillStatus,
@@ -91,6 +92,29 @@ export async function PATCH(request: Request, { params }: RouteProps) {
     if (!topic || !baseSkill) {
       const { status, body } = notFound("Skill not found.");
       return NextResponse.json(body, { status });
+    }
+
+    if (payload.status === "ready") {
+      const gate = await checkSkillReadyGate({
+        topicId: topic.topicId,
+        skillId,
+      });
+      if (!gate.ok) {
+        const { status, body } = badRequest(
+          `Quality gate failed for ready status: ${gate.reasons.join(", ")}`,
+          "QUALITY_GATE_FAILED",
+        );
+        return NextResponse.json(
+          {
+            ...body,
+            details: {
+              coverage: gate.coverage,
+              reasons: gate.reasons,
+            },
+          },
+          { status },
+        );
+      }
     }
 
     const before = await prisma.skillOverride.findUnique({
