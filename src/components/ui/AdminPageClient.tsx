@@ -291,6 +291,8 @@ const copy = {
     tasksHistorySummaryTotal: "Событий",
     tasksHistorySummaryStatus: "Статусных",
     tasksHistorySummaryReady: "В ready",
+    tasksCopyLink: "Скопировать ссылку",
+    tasksCopyLinkSuccess: "Ссылка скопирована",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -397,6 +399,8 @@ const copy = {
     tasksHistorySummaryTotal: "Events",
     tasksHistorySummaryStatus: "Status changes",
     tasksHistorySummaryReady: "To ready",
+    tasksCopyLink: "Copy link",
+    tasksCopyLinkSuccess: "Link copied",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -503,6 +507,8 @@ const copy = {
     tasksHistorySummaryTotal: "Ereignisse",
     tasksHistorySummaryStatus: "Statuswechsel",
     tasksHistorySummaryReady: "Zu ready",
+    tasksCopyLink: "Link kopieren",
+    tasksCopyLinkSuccess: "Link kopiert",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -583,6 +589,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskAuditStatusOnly, setTaskAuditStatusOnly] = useState(false);
   const [taskAuditReadyOnly, setTaskAuditReadyOnly] = useState(false);
   const [taskIdFromUrl, setTaskIdFromUrl] = useState<string | null>(null);
+  const [taskLinkCopiedId, setTaskLinkCopiedId] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -1356,6 +1363,24 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     }
   }
 
+  async function copyTaskLink(taskId: string) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("taskId", taskId);
+    if (taskTopicFilter && taskTopicFilter !== "all") {
+      url.searchParams.set("taskTopicId", taskTopicFilter);
+    }
+    const link = url.toString();
+    try {
+      await navigator.clipboard.writeText(link);
+      setTaskLinkCopiedId(taskId);
+      window.setTimeout(() => {
+        setTaskLinkCopiedId((current) => (current === taskId ? null : current));
+      }, 1600);
+    } catch {
+      setTasksError(t.errorFallback);
+    }
+  }
+
   if (loading) {
     return <SurfaceCard className="p-6 text-sm text-slate-600">{t.loading}</SurfaceCard>;
   }
@@ -1916,6 +1941,13 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                     className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
                   >
                     {taskAudit.length > 0 ? t.tasksHistoryReload : t.tasksHistoryLoad}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void copyTaskLink(task.id)}
+                    className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
+                  >
+                    {taskLinkCopiedId === task.id ? t.tasksCopyLinkSuccess : t.tasksCopyLink}
                   </button>
                   <button
                     type="button"
