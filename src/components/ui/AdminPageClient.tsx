@@ -106,6 +106,8 @@ type AdminTaskItem = {
   answer: unknown;
 };
 
+type DraftAnswerType = "number" | "fraction" | "ratio";
+
 const copy = {
   ru: {
     title: "Админ-панель",
@@ -172,6 +174,12 @@ const copy = {
     tasksUpdate: "Сохранить задачу",
     tasksDelete: "Удалить",
     tasksAnswerJson: "Ответ (JSON)",
+    tasksAnswerType: "Тип ответа",
+    tasksAnswerNumber: "Число",
+    tasksAnswerNumerator: "Числитель",
+    tasksAnswerDenominator: "Знаменатель",
+    tasksAnswerLeft: "Левая часть",
+    tasksAnswerRight: "Правая часть",
     tasksStatement: "Условие (Markdown + LaTeX)",
     tasksDifficulty: "Сложность",
     tasksBand: "Band",
@@ -245,6 +253,12 @@ const copy = {
     tasksUpdate: "Save task",
     tasksDelete: "Delete",
     tasksAnswerJson: "Answer (JSON)",
+    tasksAnswerType: "Answer type",
+    tasksAnswerNumber: "Number",
+    tasksAnswerNumerator: "Numerator",
+    tasksAnswerDenominator: "Denominator",
+    tasksAnswerLeft: "Left side",
+    tasksAnswerRight: "Right side",
     tasksStatement: "Statement (Markdown + LaTeX)",
     tasksDifficulty: "Difficulty",
     tasksBand: "Band",
@@ -318,6 +332,12 @@ const copy = {
     tasksUpdate: "Aufgabe speichern",
     tasksDelete: "Loeschen",
     tasksAnswerJson: "Antwort (JSON)",
+    tasksAnswerType: "Antworttyp",
+    tasksAnswerNumber: "Zahl",
+    tasksAnswerNumerator: "Zaehler",
+    tasksAnswerDenominator: "Nenner",
+    tasksAnswerLeft: "Linke Seite",
+    tasksAnswerRight: "Rechte Seite",
     tasksStatement: "Aufgabe (Markdown + LaTeX)",
     tasksDifficulty: "Schwierigkeit",
     tasksBand: "Band",
@@ -380,7 +400,12 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskDraftStatement, setTaskDraftStatement] = useState("");
   const [taskDraftDifficulty, setTaskDraftDifficulty] = useState(1);
   const [taskDraftBand, setTaskDraftBand] = useState<"A" | "B" | "C">("A");
-  const [taskDraftAnswerJson, setTaskDraftAnswerJson] = useState('{"type":"number","value":0}');
+  const [taskDraftAnswerType, setTaskDraftAnswerType] = useState<DraftAnswerType>("number");
+  const [taskDraftNumberValue, setTaskDraftNumberValue] = useState(0);
+  const [taskDraftFractionNumerator, setTaskDraftFractionNumerator] = useState(1);
+  const [taskDraftFractionDenominator, setTaskDraftFractionDenominator] = useState(2);
+  const [taskDraftRatioLeft, setTaskDraftRatioLeft] = useState(1);
+  const [taskDraftRatioRight, setTaskDraftRatioRight] = useState(2);
   const [creatingTask, setCreatingTask] = useState(false);
 
   const formatSectionError = useCallback(
@@ -468,8 +493,78 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       });
   }, [locale, skillItems, skillsQuery, skillsStatusFilter, skillsTopicFilter, skillsWithoutTasksOnly]);
 
-  function parseAnswerJson(raw: string): unknown {
-    return JSON.parse(raw);
+  function applyDraftAnswer(answer: unknown) {
+    if (!answer || typeof answer !== "object") {
+      setTaskDraftAnswerType("number");
+      setTaskDraftNumberValue(0);
+      return;
+    }
+    const source = answer as Record<string, unknown>;
+    if (source.type === "number" && typeof source.value === "number") {
+      setTaskDraftAnswerType("number");
+      setTaskDraftNumberValue(source.value);
+      return;
+    }
+    if (
+      source.type === "fraction" &&
+      typeof source.numerator === "number" &&
+      typeof source.denominator === "number"
+    ) {
+      setTaskDraftAnswerType("fraction");
+      setTaskDraftFractionNumerator(source.numerator);
+      setTaskDraftFractionDenominator(source.denominator);
+      return;
+    }
+    if (source.type === "ratio" && typeof source.left === "number" && typeof source.right === "number") {
+      setTaskDraftAnswerType("ratio");
+      setTaskDraftRatioLeft(source.left);
+      setTaskDraftRatioRight(source.right);
+      return;
+    }
+    setTaskDraftAnswerType("number");
+    setTaskDraftNumberValue(0);
+  }
+
+  function buildTaskAnswer(): unknown | null {
+    if (taskDraftAnswerType === "number") {
+      return {
+        type: "number",
+        value: taskDraftNumberValue,
+      };
+    }
+    if (taskDraftAnswerType === "fraction") {
+      if (taskDraftFractionDenominator === 0) return null;
+      return {
+        type: "fraction",
+        numerator: taskDraftFractionNumerator,
+        denominator: taskDraftFractionDenominator,
+      };
+    }
+    if (taskDraftRatioRight === 0) return null;
+    return {
+      type: "ratio",
+      left: taskDraftRatioLeft,
+      right: taskDraftRatioRight,
+    };
+  }
+
+  function formatTaskAnswer(answer: unknown) {
+    if (!answer || typeof answer !== "object") return "—";
+    const source = answer as Record<string, unknown>;
+    if (source.type === "number" && typeof source.value === "number") {
+      return `${source.value}`;
+    }
+    if (
+      source.type === "fraction" &&
+      typeof source.numerator === "number" &&
+      typeof source.denominator === "number"
+    ) {
+      return `${source.numerator}/${source.denominator}`;
+    }
+    if (source.type === "ratio" && typeof source.left === "number" && typeof source.right === "number") {
+      return `${source.left}:${source.right}`;
+    }
+    return "—";
   }
 
   const loadTasks = useCallback(
@@ -744,7 +839,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     setTaskDraftStatement(item.statement_md);
     setTaskDraftDifficulty(item.difficulty ?? 1);
     setTaskDraftBand(item.difficulty_band ?? "A");
-    setTaskDraftAnswerJson(JSON.stringify(item.answer, null, 2));
+    applyDraftAnswer(item.answer);
   }
 
   async function createTask() {
@@ -761,11 +856,9 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       setTasksError("skillId is required");
       return;
     }
-    let answer: unknown;
-    try {
-      answer = parseAnswerJson(taskDraftAnswerJson);
-    } catch {
-      setTasksError("Invalid answer JSON");
+    const answer = buildTaskAnswer();
+    if (!answer) {
+      setTasksError("Invalid answer values");
       return;
     }
 
@@ -806,11 +899,9 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       setError(t.errorFallback);
       return;
     }
-    let answer: unknown;
-    try {
-      answer = parseAnswerJson(taskDraftAnswerJson);
-    } catch {
-      setTasksError("Invalid answer JSON");
+    const answer = buildTaskAnswer();
+    if (!answer) {
+      setTasksError("Invalid answer values");
       return;
     }
 
@@ -1263,13 +1354,62 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
               {taskDraftStatement.trim() || "—"}
             </MarkdownMath>
           </div>
-          <textarea
-            value={taskDraftAnswerJson}
-            onChange={(event) => setTaskDraftAnswerJson(event.target.value)}
-            rows={3}
-            placeholder={t.tasksAnswerJson}
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-xs text-slate-900"
-          />
+          <div className="grid gap-2 sm:grid-cols-2">
+            <select
+              value={taskDraftAnswerType}
+              onChange={(event) => setTaskDraftAnswerType(event.target.value as DraftAnswerType)}
+              className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"
+            >
+              <option value="number">number</option>
+              <option value="fraction">fraction</option>
+              <option value="ratio">ratio</option>
+            </select>
+            {taskDraftAnswerType === "number" ? (
+              <input
+                type="number"
+                value={taskDraftNumberValue}
+                onChange={(event) => setTaskDraftNumberValue(Number(event.target.value || 0))}
+                placeholder={t.tasksAnswerNumber}
+                className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"
+              />
+            ) : null}
+            {taskDraftAnswerType === "fraction" ? (
+              <>
+                <input
+                  type="number"
+                  value={taskDraftFractionNumerator}
+                  onChange={(event) => setTaskDraftFractionNumerator(Number(event.target.value || 0))}
+                  placeholder={t.tasksAnswerNumerator}
+                  className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"
+                />
+                <input
+                  type="number"
+                  value={taskDraftFractionDenominator}
+                  onChange={(event) => setTaskDraftFractionDenominator(Number(event.target.value || 0))}
+                  placeholder={t.tasksAnswerDenominator}
+                  className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"
+                />
+              </>
+            ) : null}
+            {taskDraftAnswerType === "ratio" ? (
+              <>
+                <input
+                  type="number"
+                  value={taskDraftRatioLeft}
+                  onChange={(event) => setTaskDraftRatioLeft(Number(event.target.value || 0))}
+                  placeholder={t.tasksAnswerLeft}
+                  className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"
+                />
+                <input
+                  type="number"
+                  value={taskDraftRatioRight}
+                  onChange={(event) => setTaskDraftRatioRight(Number(event.target.value || 0))}
+                  placeholder={t.tasksAnswerRight}
+                  className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"
+                />
+              </>
+            ) : null}
+          </div>
           <div className="grid gap-2 sm:grid-cols-2">
             <input
               type="number"
@@ -1314,9 +1454,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                   </p>
                 </summary>
                 <p className="mt-2 text-sm text-slate-800">{task.statement_md}</p>
-                <pre className="mt-2 overflow-x-auto rounded-lg border border-slate-200 bg-white p-2 text-xs text-slate-700">
-                  {JSON.stringify(task.answer, null, 2)}
-                </pre>
+                <p className="mt-2 text-xs text-slate-700">{formatTaskAnswer(task.answer)}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button
                     type="button"
@@ -1348,12 +1486,57 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                         {taskDraftStatement.trim() || "—"}
                       </MarkdownMath>
                     </div>
-                    <textarea
-                      value={taskDraftAnswerJson}
-                      onChange={(event) => setTaskDraftAnswerJson(event.target.value)}
-                      rows={4}
-                      className="w-full rounded-lg border border-slate-300 px-2 py-1.5 font-mono text-xs"
-                    />
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <select
+                        value={taskDraftAnswerType}
+                        onChange={(event) => setTaskDraftAnswerType(event.target.value as DraftAnswerType)}
+                        className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                      >
+                        <option value="number">number</option>
+                        <option value="fraction">fraction</option>
+                        <option value="ratio">ratio</option>
+                      </select>
+                      {taskDraftAnswerType === "number" ? (
+                        <input
+                          type="number"
+                          value={taskDraftNumberValue}
+                          onChange={(event) => setTaskDraftNumberValue(Number(event.target.value || 0))}
+                          className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                        />
+                      ) : null}
+                      {taskDraftAnswerType === "fraction" ? (
+                        <>
+                          <input
+                            type="number"
+                            value={taskDraftFractionNumerator}
+                            onChange={(event) => setTaskDraftFractionNumerator(Number(event.target.value || 0))}
+                            className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                          />
+                          <input
+                            type="number"
+                            value={taskDraftFractionDenominator}
+                            onChange={(event) => setTaskDraftFractionDenominator(Number(event.target.value || 0))}
+                            className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                          />
+                        </>
+                      ) : null}
+                      {taskDraftAnswerType === "ratio" ? (
+                        <>
+                          <input
+                            type="number"
+                            value={taskDraftRatioLeft}
+                            onChange={(event) => setTaskDraftRatioLeft(Number(event.target.value || 0))}
+                            className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                          />
+                          <input
+                            type="number"
+                            value={taskDraftRatioRight}
+                            onChange={(event) => setTaskDraftRatioRight(Number(event.target.value || 0))}
+                            className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                          />
+                        </>
+                      ) : null}
+                    </div>
                     <div className="grid gap-2 sm:grid-cols-2">
                       <input
                         type="number"
