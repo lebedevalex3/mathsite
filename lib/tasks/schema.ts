@@ -65,6 +65,8 @@ export const answerSchema = z.discriminatedUnion("type", [
   ratioAnswerSchema,
 ]);
 
+export const taskStatusSchema = z.enum(["draft", "review", "ready"]);
+
 export const taskSchema = z
   .object({
     id: taskIdSchema,
@@ -72,6 +74,7 @@ export const taskSchema = z
     skill_id: skillIdSchema,
     difficulty: z.number().int().min(1).max(5).optional(),
     difficulty_band: z.enum(["A", "B", "C"]).optional(),
+    status: taskStatusSchema.optional(),
     statement_md: z.string().trim().min(1),
     answer: answerSchema,
   })
@@ -135,6 +138,7 @@ export type NumberAnswer = z.infer<typeof numberAnswerSchema>;
 export type FractionAnswer = z.infer<typeof fractionAnswerSchema>;
 export type RatioAnswer = z.infer<typeof ratioAnswerSchema>;
 export type TaskAnswer = z.infer<typeof answerSchema>;
+export type TaskStatus = z.infer<typeof taskStatusSchema>;
 export type Task = z.infer<typeof taskSchema>;
 export type TaskDifficultyBand = DifficultyBand;
 export type TaskBank = z.infer<typeof taskBankSchema>;

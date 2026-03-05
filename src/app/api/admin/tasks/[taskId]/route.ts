@@ -7,7 +7,7 @@ import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
 import { isAdminRole } from "@/src/lib/auth/access";
 import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 import { deleteTaskById, updateTaskById } from "@/src/lib/admin/task-bank-admin";
-import type { TaskAnswer } from "@/lib/tasks/schema";
+import type { TaskAnswer, TaskStatus } from "@/lib/tasks/schema";
 
 export const runtime = "nodejs";
 
@@ -20,6 +20,7 @@ type UpdatePayload = {
   answer?: TaskAnswer;
   difficulty?: number;
   difficultyBand?: "A" | "B" | "C";
+  status?: TaskStatus;
 };
 
 function parseUpdatePayload(input: unknown): UpdatePayload | null {
@@ -32,12 +33,17 @@ function parseUpdatePayload(input: unknown): UpdatePayload | null {
     src.difficultyBand === "A" || src.difficultyBand === "B" || src.difficultyBand === "C"
       ? src.difficultyBand
       : undefined;
+  const status =
+    src.status === "draft" || src.status === "review" || src.status === "ready"
+      ? src.status
+      : undefined;
 
   return {
     statementMd,
     answer,
     difficulty,
     difficultyBand,
+    status,
   };
 }
 

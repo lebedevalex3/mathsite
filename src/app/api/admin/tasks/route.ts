@@ -11,7 +11,7 @@ import {
   filterTasksForAdmin,
   readTaskBankByTopic,
 } from "@/src/lib/admin/task-bank-admin";
-import type { TaskAnswer } from "@/lib/tasks/schema";
+import type { TaskAnswer, TaskStatus } from "@/lib/tasks/schema";
 
 export const runtime = "nodejs";
 
@@ -22,6 +22,7 @@ type CreatePayload = {
   answer: TaskAnswer;
   difficulty?: number;
   difficultyBand?: "A" | "B" | "C";
+  status?: TaskStatus;
 };
 
 function normalizeText(value: unknown) {
@@ -40,9 +41,13 @@ function parseCreatePayload(input: unknown): CreatePayload | null {
     src.difficultyBand === "A" || src.difficultyBand === "B" || src.difficultyBand === "C"
       ? src.difficultyBand
       : undefined;
+  const status =
+    src.status === "draft" || src.status === "review" || src.status === "ready"
+      ? src.status
+      : undefined;
 
   if (!topicId || !skillId || !statementMd || !answer) return null;
-  return { topicId, skillId, statementMd, answer, difficulty, difficultyBand };
+  return { topicId, skillId, statementMd, answer, difficulty, difficultyBand, status };
 }
 
 export async function GET(request: Request) {
@@ -61,6 +66,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const topicId = normalizeText(searchParams.get("topicId"));
     const skillId = normalizeText(searchParams.get("skillId"));
+    const status = searchParams.get("status");
     const q = searchParams.get("q") ?? "";
     if (!topicId) {
       const { status, body } = badRequest("topicId is required.");
@@ -74,6 +80,7 @@ export async function GET(request: Request) {
 
     const tasks = filterTasksForAdmin(location.bank.tasks, {
       skillId: skillId || undefined,
+      status: status === "draft" || status === "review" || status === "ready" ? status : undefined,
       q,
     });
 

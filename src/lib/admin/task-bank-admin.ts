@@ -1,7 +1,14 @@
 import { promises as fs } from "node:fs";
 
 import { clearTaskBankCache, loadTaskBank } from "@/lib/taskbank";
-import { taskBankSchema, taskSchema, type Task, type TaskAnswer, type TaskBank } from "@/lib/tasks/schema";
+import {
+  taskBankSchema,
+  taskSchema,
+  type Task,
+  type TaskAnswer,
+  type TaskBank,
+  type TaskStatus,
+} from "@/lib/tasks/schema";
 
 export type TaskBankLocation = {
   filePath: string;
@@ -11,6 +18,7 @@ export type TaskBankLocation = {
 export type TaskQueryFilters = {
   skillId?: string;
   q?: string;
+  status?: TaskStatus;
 };
 
 function normalizeQuery(raw: string | undefined) {
@@ -35,6 +43,10 @@ export function filterTasksForAdmin(tasks: Task[], filters: TaskQueryFilters) {
     .filter((task) => {
       if (!filters.skillId) return true;
       return task.skill_id === filters.skillId;
+    })
+    .filter((task) => {
+      if (!filters.status) return true;
+      return (task.status ?? "ready") === filters.status;
     })
     .filter((task) => {
       if (!q) return true;
@@ -64,6 +76,7 @@ export async function createTaskInTopic(params: {
   answer: TaskAnswer;
   difficulty?: number;
   difficultyBand?: "A" | "B" | "C";
+  status?: TaskStatus;
 }): Promise<Task> {
   const location = await readTaskBankByTopic(params.topicId);
   if (!location) {
@@ -81,6 +94,7 @@ export async function createTaskInTopic(params: {
     skill_id: params.skillId,
     difficulty: params.difficulty,
     difficulty_band: params.difficultyBand,
+    status: params.status ?? "draft",
     statement_md: params.statementMd,
     answer: params.answer,
   });
@@ -102,6 +116,7 @@ export async function updateTaskById(params: {
   answer?: TaskAnswer;
   difficulty?: number;
   difficultyBand?: "A" | "B" | "C";
+  status?: TaskStatus;
 }): Promise<Task | null> {
   const { banks } = await loadTaskBank();
   for (const item of banks) {
@@ -117,6 +132,7 @@ export async function updateTaskById(params: {
       answer: params.answer ?? existing.answer,
       difficulty: params.difficulty ?? existing.difficulty,
       difficulty_band: params.difficultyBand ?? existing.difficulty_band,
+      status: params.status ?? existing.status,
     });
     if (!parsed.success) {
       throw new Error(parsed.error.issues.map((issue) => issue.message).join("; "));

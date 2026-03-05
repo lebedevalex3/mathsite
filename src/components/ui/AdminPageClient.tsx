@@ -102,6 +102,7 @@ type AdminTaskItem = {
   skill_id: string;
   difficulty: number;
   difficulty_band?: "A" | "B" | "C";
+  status?: "draft" | "review" | "ready";
   statement_md: string;
   answer: unknown;
 };
@@ -185,6 +186,7 @@ const copy = {
     tasksBand: "Band",
     tasksNoItems: "Задачи не найдены.",
     tasksPreview: "Предпросмотр",
+    tasksStatusFilter: "Фильтр статуса",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -264,6 +266,7 @@ const copy = {
     tasksBand: "Band",
     tasksNoItems: "No tasks found.",
     tasksPreview: "Preview",
+    tasksStatusFilter: "Status filter",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -343,6 +346,7 @@ const copy = {
     tasksBand: "Band",
     tasksNoItems: "Keine Aufgaben gefunden.",
     tasksPreview: "Vorschau",
+    tasksStatusFilter: "Statusfilter",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -393,6 +397,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskTopicFilter, setTaskTopicFilter] = useState("all");
   const [taskSkillFilter, setTaskSkillFilter] = useState("");
   const [taskQuery, setTaskQuery] = useState("");
+  const [taskStatusFilter, setTaskStatusFilter] = useState<"all" | "draft" | "review" | "ready">("all");
   const [taskItems, setTaskItems] = useState<AdminTaskItem[]>([]);
   const [tasksError, setTasksError] = useState<string | null>(null);
   const [tasksLoading, setTasksLoading] = useState(false);
@@ -400,6 +405,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskDraftStatement, setTaskDraftStatement] = useState("");
   const [taskDraftDifficulty, setTaskDraftDifficulty] = useState(1);
   const [taskDraftBand, setTaskDraftBand] = useState<"A" | "B" | "C">("A");
+  const [taskDraftStatus, setTaskDraftStatus] = useState<"draft" | "review" | "ready">("draft");
   const [taskDraftAnswerType, setTaskDraftAnswerType] = useState<DraftAnswerType>("number");
   const [taskDraftNumberValue, setTaskDraftNumberValue] = useState(0);
   const [taskDraftFractionNumerator, setTaskDraftFractionNumerator] = useState(1);
@@ -584,6 +590,9 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         if (params?.q ?? taskQuery.trim()) {
           url.searchParams.set("q", (params?.q ?? taskQuery).trim());
         }
+        if (taskStatusFilter !== "all") {
+          url.searchParams.set("status", taskStatusFilter);
+        }
         const response = await fetch(url.toString(), { credentials: "same-origin" });
         const payload = (await response.json()) as {
           ok?: boolean;
@@ -600,7 +609,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         setTasksLoading(false);
       }
     },
-    [t.errorFallback, taskQuery, taskSkillFilter, taskTopicFilter],
+    [t.errorFallback, taskQuery, taskSkillFilter, taskStatusFilter, taskTopicFilter],
   );
 
   const loadStudents = useCallback(async () => {
@@ -839,6 +848,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     setTaskDraftStatement(item.statement_md);
     setTaskDraftDifficulty(item.difficulty ?? 1);
     setTaskDraftBand(item.difficulty_band ?? "A");
+    setTaskDraftStatus(item.status ?? "ready");
     applyDraftAnswer(item.answer);
   }
 
@@ -877,6 +887,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           statementMd: taskDraftStatement,
           difficulty: taskDraftDifficulty,
           difficultyBand: taskDraftBand,
+          status: taskDraftStatus,
           answer,
         }),
       });
@@ -918,6 +929,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           statementMd: taskDraftStatement,
           difficulty: taskDraftDifficulty,
           difficultyBand: taskDraftBand,
+          status: taskDraftStatus,
           answer,
         }),
       });
@@ -1162,7 +1174,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.skillsTitle}</h2>
         <p className="text-sm text-slate-600">{t.skillsSubtitle}</p>
-        <div className="grid gap-3 md:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-5">
           <input
             type="text"
             value={skillsQuery}
@@ -1330,6 +1342,16 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             placeholder={t.tasksSearch}
             className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
           />
+          <select
+            value={taskStatusFilter}
+            onChange={(event) => setTaskStatusFilter(event.target.value as "all" | "draft" | "review" | "ready")}
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          >
+            <option value="all">{t.tasksStatusFilter}</option>
+            <option value="draft">draft</option>
+            <option value="review">review</option>
+            <option value="ready">ready</option>
+          </select>
           <button
             type="button"
             onClick={() => void loadTasks()}
@@ -1411,6 +1433,15 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             ) : null}
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
+            <select
+              value={taskDraftStatus}
+              onChange={(event) => setTaskDraftStatus(event.target.value as "draft" | "review" | "ready")}
+              className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"
+            >
+              <option value="draft">draft</option>
+              <option value="review">review</option>
+              <option value="ready">ready</option>
+            </select>
             <input
               type="number"
               min={1}
@@ -1450,7 +1481,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                 <summary className="cursor-pointer list-none">
                   <p className="text-sm font-semibold text-slate-950">{task.id}</p>
                   <p className="text-xs text-slate-600">
-                    {task.skill_id} • {t.tasksDifficulty}: {task.difficulty} • {t.tasksBand}: {task.difficulty_band ?? "—"}
+                    {task.skill_id} • status: {task.status ?? "ready"} • {t.tasksDifficulty}: {task.difficulty} • {t.tasksBand}: {task.difficulty_band ?? "—"}
                   </p>
                 </summary>
                 <p className="mt-2 text-sm text-slate-800">{task.statement_md}</p>
@@ -1538,6 +1569,15 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                       ) : null}
                     </div>
                     <div className="grid gap-2 sm:grid-cols-2">
+                      <select
+                        value={taskDraftStatus}
+                        onChange={(event) => setTaskDraftStatus(event.target.value as "draft" | "review" | "ready")}
+                        className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                      >
+                        <option value="draft">draft</option>
+                        <option value="review">review</option>
+                        <option value="ready">ready</option>
+                      </select>
                       <input
                         type="number"
                         min={1}
