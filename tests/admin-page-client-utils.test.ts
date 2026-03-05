@@ -12,8 +12,9 @@ test("formatAdminSectionFailures reports only rejected sections and keeps fulfil
       { status: "fulfilled", value: undefined },
       { status: "rejected", reason: new Error("audit temporarily unavailable") },
       { status: "fulfilled", value: undefined },
+      { status: "fulfilled", value: undefined },
     ],
-    sectionNames: ["Students", "Audit", "Content"],
+    sectionNames: ["Students", "Audit", "Content", "Skills"],
     formatSectionError: (label, reason) => `${label}: ${reason instanceof Error ? reason.message : "fallback"}`,
   });
 
@@ -23,7 +24,7 @@ test("formatAdminSectionFailures reports only rejected sections and keeps fulfil
 test("formatAdminSectionFailures uses fallback formatter for non-Error rejection reasons", () => {
   const failures = formatAdminSectionFailures({
     results: [{ status: "rejected", reason: "bad_gateway" }],
-    sectionNames: ["Students", "Audit", "Content"],
+    sectionNames: ["Students", "Audit", "Content", "Skills"],
     formatSectionError: (label, reason) => `${label}: ${reason instanceof Error ? reason.message : "fallback"}`,
   });
 
@@ -36,8 +37,9 @@ test("buildAdminSectionErrors returns per-section messages for rejected sections
       { status: "rejected", reason: new Error("students failed") },
       { status: "fulfilled", value: undefined },
       { status: "rejected", reason: new Error("content failed") },
+      { status: "fulfilled", value: undefined },
     ],
-    sectionNames: ["Students", "Audit", "Content"],
+    sectionNames: ["Students", "Audit", "Content", "Skills"],
     formatSectionError: (label, reason) => `${label}: ${reason instanceof Error ? reason.message : "fallback"}`,
   });
 
@@ -45,5 +47,6 @@ test("buildAdminSectionErrors returns per-section messages for rejected sections
     students: "Students: students failed",
     logs: null,
     content: "Content: content failed",
+    skills: null,
   });
 });

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { buildAdminSectionErrors, formatAdminSectionFailures } from "@/src/components/ui/admin-page-client.utils";
 import { formatDateTime } from "@/src/lib/i18n/format";
+import { SKILL_KINDS, type SkillKind } from "@/src/lib/skills/kind";
 
 type Locale = "ru" | "en" | "de";
 
@@ -73,6 +74,27 @@ type ContentTopicItem = {
   warnings: string[];
 };
 
+type SkillRegistryItem = {
+  topicId: string;
+  topicTitle: {
+    ru: string;
+    en: string;
+    de: string;
+  };
+  topicDomain: string | null;
+  topicStatus: "ready" | "soon" | null;
+  skillId: string;
+  title: string;
+  summary: string | null;
+  status: "ready" | "soon";
+  kind: SkillKind;
+  branchId: string | null;
+  trainerHref: string | null;
+  tasksTotal: number;
+  hasOverride: boolean;
+  updatedAt: string | null;
+};
+
 const copy = {
   ru: {
     title: "Админ-панель",
@@ -112,6 +134,23 @@ const copy = {
     contentWarnings: "Предупреждения",
     contentGlobalWarnings: "Глобальные предупреждения",
     contentSkillList: "Навыки",
+    skillsTitle: "Реестр навыков",
+    skillsSubtitle: "Все навыки с фильтрами и базовым редактированием (title/summary/kind/status).",
+    skillsSearch: "Поиск по skill_id, названию или теме",
+    skillsTopicAll: "Все темы",
+    skillsStatusAll: "Все статусы",
+    skillsWithoutTasks: "Только без задач",
+    skillsNoItems: "Навыки не найдены.",
+    skillsTasks: "Задач",
+    skillsEdit: "Редактировать",
+    skillsSave: "Сохранить",
+    skillsReset: "Сбросить override",
+    skillsCancel: "Отмена",
+    skillsSummary: "Описание",
+    skillsKind: "Тип",
+    skillsStatus: "Статус",
+    skillsTopic: "Тема",
+    skillsOverride: "Override",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -153,6 +192,23 @@ const copy = {
     contentWarnings: "Warnings",
     contentGlobalWarnings: "Global warnings",
     contentSkillList: "Skills",
+    skillsTitle: "Skills registry",
+    skillsSubtitle: "All skills with filters and basic editing (title/summary/kind/status).",
+    skillsSearch: "Search by skill_id, title, or topic",
+    skillsTopicAll: "All topics",
+    skillsStatusAll: "All statuses",
+    skillsWithoutTasks: "Without tasks only",
+    skillsNoItems: "No skills found.",
+    skillsTasks: "Tasks",
+    skillsEdit: "Edit",
+    skillsSave: "Save",
+    skillsReset: "Reset override",
+    skillsCancel: "Cancel",
+    skillsSummary: "Summary",
+    skillsKind: "Kind",
+    skillsStatus: "Status",
+    skillsTopic: "Topic",
+    skillsOverride: "Override",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -194,6 +250,23 @@ const copy = {
     contentWarnings: "Warnungen",
     contentGlobalWarnings: "Globale Warnungen",
     contentSkillList: "Skills",
+    skillsTitle: "Skill-Register",
+    skillsSubtitle: "Alle Skills mit Filtern und Basisbearbeitung (Titel/Beschreibung/Typ/Status).",
+    skillsSearch: "Suche nach Skill-ID, Titel oder Thema",
+    skillsTopicAll: "Alle Themen",
+    skillsStatusAll: "Alle Status",
+    skillsWithoutTasks: "Nur ohne Aufgaben",
+    skillsNoItems: "Keine Skills gefunden.",
+    skillsTasks: "Aufgaben",
+    skillsEdit: "Bearbeiten",
+    skillsSave: "Speichern",
+    skillsReset: "Override zurücksetzen",
+    skillsCancel: "Abbrechen",
+    skillsSummary: "Beschreibung",
+    skillsKind: "Typ",
+    skillsStatus: "Status",
+    skillsTopic: "Thema",
+    skillsOverride: "Override",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -216,18 +289,31 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [lastReset, setLastReset] = useState<{ username: string | null; temporaryPassword: string } | null>(null);
   const [contentTopics, setContentTopics] = useState<ContentTopicItem[]>([]);
   const [contentGlobalWarnings, setContentGlobalWarnings] = useState<string[]>([]);
+  const [skillItems, setSkillItems] = useState<SkillRegistryItem[]>([]);
   const [sectionErrors, setSectionErrors] = useState<{
     students: string | null;
     logs: string | null;
     content: string | null;
+    skills: string | null;
   }>({
     students: null,
     logs: null,
     content: null,
+    skills: null,
   });
   const [contentQuery, setContentQuery] = useState("");
   const [contentDomain, setContentDomain] = useState<"all" | "arithmetic" | "algebra" | "geometry" | "data">("all");
   const [contentStatus, setContentStatus] = useState<"all" | "ready" | "soon">("all");
+  const [skillsQuery, setSkillsQuery] = useState("");
+  const [skillsTopicFilter, setSkillsTopicFilter] = useState("all");
+  const [skillsStatusFilter, setSkillsStatusFilter] = useState<"all" | "ready" | "soon">("all");
+  const [skillsWithoutTasksOnly, setSkillsWithoutTasksOnly] = useState(false);
+  const [editingSkillId, setEditingSkillId] = useState<string | null>(null);
+  const [skillDraftTitle, setSkillDraftTitle] = useState("");
+  const [skillDraftSummary, setSkillDraftSummary] = useState("");
+  const [skillDraftKind, setSkillDraftKind] = useState<SkillKind>("compute");
+  const [skillDraftStatus, setSkillDraftStatus] = useState<"ready" | "soon">("ready");
+  const [savingSkillId, setSavingSkillId] = useState<string | null>(null);
 
   const formatSectionError = useCallback(
     (label: string, reason: unknown) => {
@@ -284,6 +370,36 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       });
   }, [contentDomain, contentQuery, contentStatus, contentTopics, locale]);
 
+  const skillsTopicOptions = useMemo(
+    () => [...new Set(skillItems.map((item) => item.topicId))].sort(),
+    [skillItems],
+  );
+
+  const filteredSkillItems = useMemo(() => {
+    const q = skillsQuery.trim().toLowerCase();
+
+    return skillItems
+      .filter((item) => {
+        if (skillsTopicFilter === "all") return true;
+        return item.topicId === skillsTopicFilter;
+      })
+      .filter((item) => {
+        if (skillsStatusFilter === "all") return true;
+        return item.status === skillsStatusFilter;
+      })
+      .filter((item) => {
+        if (!skillsWithoutTasksOnly) return true;
+        return item.tasksTotal === 0;
+      })
+      .filter((item) => {
+        if (!q) return true;
+        return [item.skillId, item.title, item.summary ?? "", item.topicId, item.topicTitle[locale]]
+          .join(" ")
+          .toLowerCase()
+          .includes(q);
+      });
+  }, [locale, skillItems, skillsQuery, skillsStatusFilter, skillsTopicFilter, skillsWithoutTasksOnly]);
+
   const loadStudents = useCallback(async () => {
     const response = await fetch("/api/admin/students", { credentials: "same-origin" });
     const payload = (await response.json()) as { ok?: boolean; students?: StudentItem[]; message?: string };
@@ -317,9 +433,22 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     setContentGlobalWarnings(Array.isArray(payload.globalWarnings) ? payload.globalWarnings : []);
   }, [t.errorFallback]);
 
+  const loadSkills = useCallback(async () => {
+    const response = await fetch("/api/admin/skills", { credentials: "same-origin" });
+    const payload = (await response.json()) as {
+      ok?: boolean;
+      items?: SkillRegistryItem[];
+      message?: string;
+    };
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.message ?? t.errorFallback);
+    }
+    setSkillItems(Array.isArray(payload.items) ? payload.items : []);
+  }, [t.errorFallback]);
+
   const refreshAdminData = useCallback(async () => {
-    const results = await Promise.allSettled([loadStudents(), loadLogs(), loadContent()]);
-    const sectionNames = [t.studentsTitle, t.auditTitle, t.contentTitle] as const;
+    const results = await Promise.allSettled([loadStudents(), loadLogs(), loadContent(), loadSkills()]);
+    const sectionNames = [t.studentsTitle, t.auditTitle, t.contentTitle, t.skillsTitle] as const;
     const nextSectionErrors = buildAdminSectionErrors({
       results,
       sectionNames,
@@ -341,9 +470,11 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     formatSectionError,
     loadContent,
     loadLogs,
+    loadSkills,
     loadStudents,
     t.auditTitle,
     t.contentTitle,
+    t.skillsTitle,
     t.studentsTitle,
   ]);
 
@@ -402,6 +533,90 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       setError(t.errorFallback);
     } finally {
       setResettingStudentId(null);
+    }
+  }
+
+  function startEditSkill(item: SkillRegistryItem) {
+    setEditingSkillId(item.skillId);
+    setSkillDraftTitle(item.title);
+    setSkillDraftSummary(item.summary ?? "");
+    setSkillDraftKind(item.kind);
+    setSkillDraftStatus(item.status);
+    setError(null);
+  }
+
+  function stopEditSkill() {
+    setEditingSkillId(null);
+    setSavingSkillId(null);
+  }
+
+  async function saveSkillOverride(skillId: string) {
+    if (!csrfToken) {
+      setError(t.errorFallback);
+      return;
+    }
+    setSavingSkillId(skillId);
+    try {
+      const response = await fetch(`/api/admin/skills/${encodeURIComponent(skillId)}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken,
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          title: skillDraftTitle.trim() || null,
+          summary: skillDraftSummary.trim() || null,
+          kind: skillDraftKind,
+          status: skillDraftStatus,
+        }),
+      });
+      const payload = (await response.json()) as { ok?: boolean; message?: string };
+      if (!response.ok || !payload.ok) {
+        setError(payload.message ?? t.errorFallback);
+        return;
+      }
+      await loadSkills();
+      stopEditSkill();
+    } catch {
+      setError(t.errorFallback);
+    } finally {
+      setSavingSkillId(null);
+    }
+  }
+
+  async function resetSkillOverride(skillId: string) {
+    if (!csrfToken) {
+      setError(t.errorFallback);
+      return;
+    }
+    setSavingSkillId(skillId);
+    try {
+      const response = await fetch(`/api/admin/skills/${encodeURIComponent(skillId)}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken,
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          title: null,
+          summary: null,
+          kind: null,
+          status: null,
+        }),
+      });
+      const payload = (await response.json()) as { ok?: boolean; message?: string };
+      if (!response.ok || !payload.ok) {
+        setError(payload.message ?? t.errorFallback);
+        return;
+      }
+      await loadSkills();
+      stopEditSkill();
+    } catch {
+      setError(t.errorFallback);
+    } finally {
+      setSavingSkillId(null);
     }
   }
 
@@ -595,6 +810,147 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                 </div>
               </details>
             ))}
+          </div>
+        )}
+      </section>
+
+      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.skillsTitle}</h2>
+        <p className="text-sm text-slate-600">{t.skillsSubtitle}</p>
+        <div className="grid gap-3 md:grid-cols-4">
+          <input
+            type="text"
+            value={skillsQuery}
+            onChange={(event) => setSkillsQuery(event.target.value)}
+            placeholder={t.skillsSearch}
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          />
+          <select
+            value={skillsTopicFilter}
+            onChange={(event) => setSkillsTopicFilter(event.target.value)}
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          >
+            <option value="all">{t.skillsTopicAll}</option>
+            {skillsTopicOptions.map((topicId) => (
+              <option key={topicId} value={topicId}>
+                {topicId}
+              </option>
+            ))}
+          </select>
+          <select
+            value={skillsStatusFilter}
+            onChange={(event) => setSkillsStatusFilter(event.target.value as "all" | "ready" | "soon")}
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          >
+            <option value="all">{t.skillsStatusAll}</option>
+            <option value="ready">ready</option>
+            <option value="soon">soon</option>
+          </select>
+          <label className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700">
+            <input
+              type="checkbox"
+              checked={skillsWithoutTasksOnly}
+              onChange={(event) => setSkillsWithoutTasksOnly(event.target.checked)}
+            />
+            {t.skillsWithoutTasks}
+          </label>
+        </div>
+        {sectionErrors.skills ? <p className="text-sm text-red-700">{sectionErrors.skills}</p> : null}
+        {filteredSkillItems.length === 0 ? (
+          <p className="text-sm text-slate-600">{t.skillsNoItems}</p>
+        ) : (
+          <div className="space-y-2">
+            {filteredSkillItems.map((item) => {
+              const isEditing = editingSkillId === item.skillId;
+              const isSaving = savingSkillId === item.skillId;
+              return (
+                <div key={item.skillId} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-950">
+                        {item.title} <span className="text-slate-500">({item.skillId})</span>
+                      </p>
+                      <p className="text-xs text-slate-600">
+                        {t.skillsTopic}: {item.topicId} • {t.skillsKind}: {item.kind} • {t.skillsStatus}: {item.status} •{" "}
+                        {t.skillsTasks}: {item.tasksTotal} • {t.skillsOverride}: {item.hasOverride ? "yes" : "no"}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => startEditSkill(item)}
+                      className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
+                    >
+                      {t.skillsEdit}
+                    </button>
+                  </div>
+                  <p className="mt-2 text-xs text-slate-700">{item.summary ?? "—"}</p>
+
+                  {isEditing ? (
+                    <div className="mt-3 space-y-2 rounded-lg border border-slate-300 bg-white p-3">
+                      <input
+                        type="text"
+                        value={skillDraftTitle}
+                        onChange={(event) => setSkillDraftTitle(event.target.value)}
+                        className="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                      />
+                      <textarea
+                        value={skillDraftSummary}
+                        onChange={(event) => setSkillDraftSummary(event.target.value)}
+                        rows={3}
+                        className="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                      />
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <select
+                          value={skillDraftKind}
+                          onChange={(event) => setSkillDraftKind(event.target.value as SkillKind)}
+                          className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                        >
+                          {SKILL_KINDS.map((kind) => (
+                            <option key={kind} value={kind}>
+                              {kind}
+                            </option>
+                          ))}
+                        </select>
+                        <select
+                          value={skillDraftStatus}
+                          onChange={(event) => setSkillDraftStatus(event.target.value as "ready" | "soon")}
+                          className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                        >
+                          <option value="ready">ready</option>
+                          <option value="soon">soon</option>
+                        </select>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          disabled={isSaving}
+                          onClick={() => void saveSkillOverride(item.skillId)}
+                          className="rounded-lg border border-slate-300 bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800 disabled:opacity-60"
+                        >
+                          {t.skillsSave}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={isSaving}
+                          onClick={() => void resetSkillOverride(item.skillId)}
+                          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
+                        >
+                          {t.skillsReset}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={isSaving}
+                          onClick={stopEditSkill}
+                          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-60"
+                        >
+                          {t.skillsCancel}
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
         )}
       </section>

@@ -2,11 +2,12 @@ export type AdminPageSectionErrors = {
   students: string | null;
   logs: string | null;
   content: string | null;
+  skills: string | null;
 };
 
 export function formatAdminSectionFailures(params: {
   results: PromiseSettledResult<unknown>[];
-  sectionNames: readonly [string, string, string];
+  sectionNames: readonly [string, string, string, string];
   formatSectionError: (label: string, reason: unknown) => string;
 }): string[] {
   return params.results
@@ -17,10 +18,10 @@ export function formatAdminSectionFailures(params: {
 
 export function buildAdminSectionErrors(params: {
   results: PromiseSettledResult<unknown>[];
-  sectionNames: readonly [string, string, string];
+  sectionNames: readonly [string, string, string, string];
   formatSectionError: (label: string, reason: unknown) => string;
 }): AdminPageSectionErrors {
-  const [studentsResult, logsResult, contentResult] = params.results;
+  const [studentsResult, logsResult, contentResult, skillsResult] = params.results;
 
   return {
     students:
@@ -32,6 +33,10 @@ export function buildAdminSectionErrors(params: {
     content:
       contentResult?.status === "rejected"
         ? params.formatSectionError(params.sectionNames[2], contentResult.reason)
+        : null,
+    skills:
+      skillsResult?.status === "rejected"
+        ? params.formatSectionError(params.sectionNames[3], skillsResult.reason)
         : null,
   };
 }
