@@ -12,8 +12,15 @@ async function main() {
   const marker = `E2E admin task ${Date.now()}`;
   const email = `e2e.admin.${Date.now()}@example.com`;
   const password = "e2e-password-123";
+  const browserArgs = (process.env.PUPPETEER_ARGS ?? "")
+    .split(/\s+/)
+    .map((value) => value.trim())
+    .filter(Boolean);
+  if (process.env.CI === "true" && browserArgs.length === 0) {
+    browserArgs.push("--no-sandbox", "--disable-setuid-sandbox");
+  }
 
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: true, args: browserArgs });
   const page = await browser.newPage();
   page.setDefaultTimeout(90_000);
   page.setDefaultNavigationTimeout(120_000);

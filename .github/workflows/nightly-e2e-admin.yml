@@ -1,0 +1,59 @@
+name: Nightly E2E Admin
+
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  admin-create-task:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: mathsite
+          POSTGRES_PASSWORD: mathsite
+          POSTGRES_DB: mathsite
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U mathsite -d mathsite"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      DATABASE_URL: postgresql://mathsite:mathsite@localhost:5433/mathsite?schema=public
+      NODE_ENV: test
+      ALLOW_DEV_BECOME_ADMIN: "1"
+      CI: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prisma generate
+        run: pnpm prisma generate
+
+      - name: Prisma migrate deploy
+        run: pnpm prisma migrate deploy
+
+      - name: Run admin e2e create-task flow
+        run: pnpm e2e:admin:create-task
+
