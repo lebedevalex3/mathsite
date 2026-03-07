@@ -25,7 +25,7 @@ const SKILL_ORDER: SkillRef[] = [
     title: {
       ru: "Проверить пропорцию",
       en: "Check a proportion",
-      de: "Proportion prüfen",
+      de: "Proportion pruefen",
     },
   },
   {
@@ -33,7 +33,7 @@ const SKILL_ORDER: SkillRef[] = [
     title: {
       ru: "Проверить по основному свойству",
       en: "Check with cross multiplication",
-      de: "Mit der Kreuzregel prüfen",
+      de: "Mit der Kreuzregel pruefen",
     },
   },
   {
@@ -49,7 +49,7 @@ const SKILL_ORDER: SkillRef[] = [
     title: {
       ru: "Решить скрытую пропорцию",
       en: "Solve a hidden proportion",
-      de: "Versteckte Proportion lösen",
+      de: "Versteckte Proportion loesen",
     },
   },
 ];
@@ -63,8 +63,6 @@ const copy = {
     progress: "Освоение",
     nextSkill: "Следующий навык",
     continue: "Продолжить навык",
-    start: "Начать с основ",
-    fallbackSkill: "Базовые навыки темы",
   },
   en: {
     title: "Continue",
@@ -74,19 +72,15 @@ const copy = {
     progress: "Mastery",
     nextSkill: "Next skill",
     continue: "Continue skill",
-    start: "Start with basics",
-    fallbackSkill: "Topic basics",
   },
   de: {
     title: "Fortsetzen",
-    subtitle: "Kehre zur nächsten Fähigkeit im Thema Proportionen zurück.",
+    subtitle: "Kehre zur naechsten Faehigkeit im Thema Proportionen zurueck.",
     topic: "Thema",
     topicValue: "Proportionen",
     progress: "Beherrschung",
-    nextSkill: "Nächste Fähigkeit",
-    continue: "Fähigkeit fortsetzen",
-    start: "Mit Grundlagen starten",
-    fallbackSkill: "Grundlagen des Themas",
+    nextSkill: "Naechste Faehigkeit",
+    continue: "Faehigkeit fortsetzen",
   },
 } as const;
 
@@ -130,7 +124,7 @@ export function HomeContinueSkillCard({ locale }: Props) {
           setProgressMap(payload.progress);
         }
       } catch {
-        // fallback renders with empty progress
+        // keep the section hidden without progress data
       } finally {
         if (!cancelled) setLoaded(true);
       }
@@ -149,37 +143,34 @@ export function HomeContinueSkillCard({ locale }: Props) {
     [progressMap],
   );
 
-  const ctaHref = buildTrainHref(locale, hasAnyProgress ? nextSkill?.id : undefined);
-  const ctaLabel = hasAnyProgress ? t.continue : t.start;
+  if (!loaded || !hasAnyProgress) return null;
+
+  const ctaHref = buildTrainHref(locale, nextSkill?.id);
 
   return (
-    <SurfaceCard className="p-6">
+    <SurfaceCard className="border-transparent bg-[var(--surface-soft)]/78 p-6 shadow-none">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight text-[var(--text-strong)]">{t.title}</h2>
+          <h2 className="text-lg font-semibold tracking-tight text-[var(--text-strong)]">{t.title}</h2>
           <p className="mt-1 text-sm text-[var(--text-muted)]">{t.subtitle}</p>
         </div>
-        <ButtonLink href={ctaHref} variant="primary">
-          {ctaLabel}
+        <ButtonLink href={ctaHref} variant="secondary" className="min-h-11 rounded-xl border-transparent bg-[var(--surface)] px-4 py-2.5 text-sm font-medium">
+          {t.continue}
         </ButtonLink>
       </div>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.topic}</p>
+        <div className="rounded-xl bg-[var(--surface)] px-4 py-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">{t.topic}</p>
           <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">{t.topicValue}</p>
         </div>
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.progress}</p>
-          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">
-            {loaded ? `${masteryPercent}%` : "…"}
-          </p>
+        <div className="rounded-xl bg-[var(--surface)] px-4 py-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">{t.progress}</p>
+          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">{masteryPercent}%</p>
         </div>
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{t.nextSkill}</p>
-          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">
-            {hasAnyProgress ? nextSkill?.title[locale] : t.fallbackSkill}
-          </p>
+        <div className="rounded-xl bg-[var(--surface)] px-4 py-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">{t.nextSkill}</p>
+          <p className="mt-1 text-sm font-medium text-[var(--text-strong)]">{nextSkill?.title[locale]}</p>
         </div>
       </div>
     </SurfaceCard>

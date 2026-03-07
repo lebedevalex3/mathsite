@@ -1,11 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Container } from "@/src/components/ui/Container";
-import { HomeContinueSkillCard } from "@/src/components/ui/HomeContinueSkillCard";
-import { HomeMotivationPanel } from "@/src/components/ui/HomeMotivationPanel";
 import { HomeTopicCatalog } from "@/src/components/ui/HomeTopicCatalog";
-import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { TeacherQuickStartWidget } from "@/src/components/ui/TeacherQuickStartWidget";
 
 type PageProps = {
@@ -14,112 +10,52 @@ type PageProps = {
 
 const copy = {
   ru: {
-    heroTitle: "Учебник, тренажёр и варианты по математике",
-    heroSubtitle: "Выберите сценарий и начните за 1 минуту.",
-    studentLabel: "Ученик",
-    studentCta: "Я ученик",
-    studentHint: "Открой тему и начни практику.",
-    teacherLabel: "Учитель",
-    teacherHeroCta: "Я учитель",
-    teacherHint: "Собери вариант и перейди в кабинет.",
-    browseTopics: "Смотреть темы",
-    howTitle: "Как это работает",
-    howSteps: [
-      "Выберите тему для урока или самостоятельной практики.",
-      "Соберите вариант для печати и откройте ответы.",
-      "Тренируйтесь в тренажёре и отслеживайте прогресс по навыкам.",
-    ],
-    teacherTitle: "Учителю / репетитору",
-    teacherBody:
-      "Конструктор вариантов встроен в учебник: собирайте варианты по теме и быстро получайте печать и ответы.",
-    teacherCta: "Перейти в конструктор вариантов",
-    teacherBullets: [
-      "Варианты по теме без повторов",
-      "Ключ ответов",
-      "Печать / PDF",
-      "Сборка по навыкам темы",
-    ],
-    studentTitle: "Ученику",
-    studentBody: "Откройте тренажёр или продолжите практику по теме «Пропорции».",
-    studentProgressLink: "Открыть прогресс",
-    sectionsTitle: "Навигация по материалам",
-    sectionsBody: "Переходите от темы к навыку и обратно без потери контекста.",
-    sectionsLink: "5 класс → Пропорции",
-    practiceTitle: "Практика",
-    practiceBody: "Формулы в заданиях поддерживают LaTeX, ответы проверяются как числа.",
-    practiceLink: "Подробнее о теме и навыках",
+    heroEyebrow: "MathSite • Учителю математики",
+    heroTitle: "Соберите вариант к уроку за несколько минут",
+    heroSubtitle:
+      "Выберите тему, получите структурированный лист заданий, проверьте ответы и отправьте в печать или PDF.",
+    heroProofPoint: "Рабочий лист + ответы + PDF за 1-2 минуты",
+    heroPrimaryCta: "Собрать вариант",
+    heroSecondaryCta: "Открыть темы",
+    heroPoints: ["По темам и навыкам", "С ответами", "Готово к печати и PDF"],
+    previewLabel: "Пример листа",
+    previewTitle: "Вариант по теме «Пропорции»",
+    previewMeta: "5 класс • Пропорции",
+    previewStatus: "Готов к печати",
+    previewChips: ["8 заданий", "Ответы включены", "PDF", "A4"],
+    previewReady: "Ответы и печатная версия готовы",
   },
   en: {
-    heroTitle: "Textbook, Trainer, and Worksheets for Math",
-    heroSubtitle: "Choose your path and start in one minute.",
-    studentLabel: "Student",
-    studentCta: "I am a student",
-    studentHint: "Open a topic and start practicing.",
-    teacherLabel: "Teacher",
-    teacherHeroCta: "I am a teacher",
-    teacherHint: "Build a worksheet and open teacher tools.",
-    browseTopics: "Browse topics",
-    howTitle: "How it works",
-    howSteps: [
-      "Choose a topic for classwork or self-study.",
-      "Assemble a printable variant and open the answer key.",
-      "Practice in the trainer and track progress by skills.",
-    ],
-    teacherTitle: "For teachers / tutors",
-    teacherBody:
-      "The variant builder is part of the textbook workflow: assemble topic-based variants and get print + answers quickly.",
-    teacherCta: "Open variant builder",
-    teacherBullets: [
-      "Topic-based variants without repeats",
-      "Answer key",
-      "Print / PDF",
-      "Skill-based assembly",
-    ],
-    studentTitle: "For students",
-    studentBody: "Open the trainer or continue practice in the Proportions topic.",
-    studentProgressLink: "Open progress",
-    sectionsTitle: "Content navigation",
-    sectionsBody: "Move between topics and skills without losing context.",
-    sectionsLink: "Grade 5 → Proportions",
-    practiceTitle: "Practice",
-    practiceBody: "Task statements support LaTeX formulas, answers are checked as numbers.",
-    practiceLink: "More about topic and skills",
+    heroEyebrow: "MathSite • For math teachers",
+    heroTitle: "Prepare a lesson worksheet in minutes",
+    heroSubtitle:
+      "Pick a topic, get a structured task sheet, review answers, and export to print or PDF.",
+    heroProofPoint: "Worksheet + answer key + PDF in 1-2 minutes",
+    heroPrimaryCta: "Build worksheet",
+    heroSecondaryCta: "Browse topics",
+    heroPoints: ["By topics and skills", "With answers", "Ready for print and PDF"],
+    previewLabel: "Worksheet preview",
+    previewTitle: "Proportions worksheet",
+    previewMeta: "Grade 5 • Proportions",
+    previewStatus: "Ready to print",
+    previewChips: ["8 tasks", "Answers included", "PDF", "A4"],
+    previewReady: "Answer key and printable version are ready",
   },
   de: {
-    heroTitle: "Lehrbuch, Trainer und Arbeitsblätter für Mathematik",
-    heroSubtitle: "Wählen Sie Ihren Weg und starten Sie in einer Minute.",
-    studentLabel: "Schüler/in",
-    studentCta: "Ich bin Schüler/in",
-    studentHint: "Thema öffnen und direkt üben.",
-    teacherLabel: "Lehrkraft",
-    teacherHeroCta: "Ich bin Lehrkraft",
-    teacherHint: "Arbeitsblatt erstellen und Teacher-Tools öffnen.",
-    browseTopics: "Themen ansehen",
-    howTitle: "So funktioniert es",
-    howSteps: [
-      "Thema für Unterricht oder Selbstlernen auswählen.",
-      "Druckbare Variante zusammenstellen und Lösungen öffnen.",
-      "Im Trainer üben und Fortschritt nach Fähigkeiten verfolgen.",
-    ],
-    teacherTitle: "Für Lehrkräfte / Nachhilfe",
-    teacherBody:
-      "Der Varianten-Baukasten ist im Lehrbuch integriert: thematische Varianten mit Druck und Lösungen schnell zusammenstellen.",
-    teacherCta: "Zum Varianten-Baukasten",
-    teacherBullets: [
-      "Varianten ohne Wiederholungen",
-      "Lösungsschlüssel",
-      "Druck / PDF",
-      "Zusammenstellung nach Fähigkeiten",
-    ],
-    studentTitle: "Für Schüler:innen",
-    studentBody: "Trainer öffnen oder die Praxis im Thema Proportionen fortsetzen.",
-    studentProgressLink: "Fortschritt öffnen",
-    sectionsTitle: "Navigation",
-    sectionsBody: "Zwischen Themen und Fähigkeiten wechseln ohne Kontextverlust.",
-    sectionsLink: "Klasse 5 → Proportionen",
-    practiceTitle: "Training",
-    practiceBody: "Aufgaben unterstützen LaTeX-Formeln, Antworten werden als Zahlen geprüft.",
-    practiceLink: "Mehr zum Thema und zu Fähigkeiten",
+    heroEyebrow: "MathSite • Fuer Mathelehrkraefte",
+    heroTitle: "Arbeitsblatt fuer den Unterricht in wenigen Minuten",
+    heroSubtitle:
+      "Thema waehlen, strukturiertes Aufgabenblatt erhalten, Loesungen pruefen und als Druck/PDF ausgeben.",
+    heroProofPoint: "Arbeitsblatt + Loesungen + PDF in 1-2 Minuten",
+    heroPrimaryCta: "Arbeitsblatt erstellen",
+    heroSecondaryCta: "Themen ansehen",
+    heroPoints: ["Nach Themen und Faehigkeiten", "Mit Loesungen", "Fertig fuer Druck und PDF"],
+    previewLabel: "Blattvorschau",
+    previewTitle: "Arbeitsblatt: Proportionen",
+    previewMeta: "Klasse 5 • Proportionen",
+    previewStatus: "Druckbereit",
+    previewChips: ["8 Aufgaben", "Mit Loesungen", "PDF", "A4"],
+    previewReady: "Loesungsschluessel und Druckversion sind bereit",
   },
 } as const;
 
@@ -131,128 +67,87 @@ export default async function LocaleHomePage({ params }: PageProps) {
   const t = copy[locale];
 
   return (
-    <main className="space-y-10">
-      <section className="relative overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_20px_45px_-30px_rgba(11,60,138,0.45)] sm:p-10">
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-r from-[var(--primary-soft)] via-[var(--surface-tint)] to-[var(--accent-soft)]" />
-        <div className="relative">
-          <p className="mb-3 inline-flex rounded-full border border-[var(--border)] bg-[var(--info)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--info-foreground)]">
-            MVP • textbook + trainer + teacher tools
-          </p>
-          <h1 className="text-3xl font-bold tracking-tight text-[var(--text-strong)] sm:text-5xl">
-            {t.heroTitle}
-          </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--text-muted)] sm:text-lg">
-            {t.heroSubtitle}
-          </p>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)]/95 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
-                {t.studentLabel}
-              </p>
-              <p className="mt-1 text-sm text-[var(--text-muted)]">{t.studentHint}</p>
-              <div className="mt-3">
-                <Link
-                  href={`/${locale}#topics-catalog`}
-                  className="inline-flex items-center justify-center rounded-lg border border-[var(--primary)] bg-[var(--primary)] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-hover)]"
-                >
-                  {t.studentCta}
-                </Link>
-              </div>
-            </div>
+    <main className="space-y-7 sm:space-y-9">
+      <section className="relative isolate overflow-hidden rounded-[2rem] border border-[var(--border)] bg-white px-6 py-7 shadow-[0_38px_100px_-44px_rgba(11,60,138,0.46)] sm:px-10 sm:py-11">
+        <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-r from-[var(--primary-soft)]/90 via-[var(--surface-tint)] to-[var(--accent-soft)]/90" />
+        <div className="absolute inset-0 bg-[radial-gradient(900px_300px_at_16%_0%,rgba(29,78,216,0.07),transparent_65%)]" />
+        <div className="absolute -right-16 top-10 h-44 w-44 rounded-full bg-[var(--surface)]/80 blur-3xl" />
+        <div className="relative grid gap-9 lg:grid-cols-[minmax(0,1.03fr)_minmax(0,0.97fr)] lg:items-center">
+          <div>
+            <p className="mb-4 inline-flex rounded-full border border-[var(--border)] bg-[var(--surface)]/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+              {t.heroEyebrow}
+            </p>
+            <h1 className="max-w-3xl text-4xl font-semibold leading-[1.04] tracking-tight text-[var(--text-strong)] sm:text-5xl">
+              {t.heroTitle}
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--text-muted)] sm:text-lg">
+              {t.heroSubtitle}
+            </p>
+            <p className="mt-4 inline-flex rounded-lg border border-[var(--primary)]/25 bg-[var(--primary-soft)]/70 px-3 py-1.5 text-sm font-semibold text-[var(--primary)]">
+              {t.heroProofPoint}
+            </p>
 
-            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-tint)] p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
-                {t.teacherLabel}
-              </p>
-              <p className="mt-1 text-sm text-[var(--text-muted)]">{t.teacherHint}</p>
-              <div className="mt-3">
-                <Link
-                  href={`/${locale}/teacher/variants`}
-                  className="inline-flex items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-[var(--primary)] transition-colors hover:bg-[var(--surface-soft)]"
-                >
-                  {t.teacherHeroCta}
-                </Link>
+            <ul className="mt-6 space-y-2.5">
+              {t.heroPoints.map((item) => (
+                <li key={item} className="flex items-center gap-2.5 text-sm font-medium text-[var(--text)]">
+                  <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-[var(--primary)]/35 bg-[var(--primary-soft)] text-[11px] text-[var(--primary)]">
+                    ✓
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                href={`/${locale}/teacher/variants`}
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--primary)] bg-[var(--primary)] px-6 py-3.5 text-base font-semibold text-white shadow-[0_24px_42px_-22px_rgba(11,60,138,0.62)] transition-all hover:-translate-y-0.5 hover:bg-[var(--primary-hover)]"
+              >
+                {t.heroPrimaryCta}
+              </Link>
+              <Link
+                href={`/${locale}#topics-catalog`}
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm font-medium text-[var(--text)] transition-colors hover:bg-[var(--surface-soft)] hover:text-[var(--text-strong)]"
+              >
+                {t.heroSecondaryCta}
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-[27rem]">
+            <div className="absolute inset-0 rounded-[1.65rem] border border-[var(--border)]/75 bg-[var(--surface-soft)] [background-size:28px_28px] [background-image:linear-gradient(to_right,rgba(100,116,139,0.24)_1px,transparent_1px),linear-gradient(to_bottom,rgba(100,116,139,0.24)_1px,transparent_1px)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]" />
+            <div className="relative m-4 rounded-2xl border border-[var(--border)] bg-white p-4 shadow-[0_26px_56px_-28px_rgba(11,60,138,0.42)] sm:m-6 sm:p-5">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                  {t.previewLabel}
+                </span>
+                <span className="inline-flex items-center rounded-full border border-[var(--primary)]/30 bg-[var(--primary-soft)] px-2.5 py-1 text-[11px] font-semibold text-[var(--primary)]">
+                  {t.previewStatus}
+                </span>
               </div>
+              <h3 className="mt-2 text-base font-semibold text-[var(--text-strong)]">{t.previewTitle}</h3>
+              <p className="mt-1 text-xs text-[var(--text-muted)]">{t.previewMeta}</p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {t.previewChips.map((chip) => (
+                  <span key={chip} className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-[11px] font-medium text-[var(--text)]">
+                    {chip}
+                  </span>
+                ))}
+              </div>
+              <div className="mt-4 space-y-2.5 rounded-xl border border-[var(--border)]/70 bg-[var(--surface)] px-3 py-3">
+                <p className="text-xs text-[var(--text)]">1) 6 : 9 = 2 : x</p>
+                <p className="text-xs text-[var(--text)]">2) 14 / y = 7 / 9</p>
+                <p className="text-xs text-[var(--text)]">3) 3x = 5x - 8</p>
+              </div>
+              <p className="mt-3 text-xs font-medium text-[var(--text-muted)]">{t.previewReady}</p>
             </div>
           </div>
         </div>
       </section>
-
-      <HomeContinueSkillCard locale={locale} />
 
       <TeacherQuickStartWidget locale={locale} />
 
-      <SurfaceCard className="p-6">
-        <h2 className="text-xl font-semibold tracking-tight text-[var(--text-strong)]">{t.howTitle}</h2>
-        <ol className="mt-4 space-y-3">
-          {t.howSteps.map((step, index) => (
-            <li
-              key={step}
-              className="flex items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-3"
-            >
-              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] text-sm font-semibold text-white">
-                {index + 1}
-              </span>
-              <span className="pt-0.5 text-sm leading-6 text-[var(--text)]">{step}</span>
-            </li>
-          ))}
-        </ol>
-      </SurfaceCard>
-
-      <SurfaceCard className="p-6">
-        <h2 className="text-xl font-semibold tracking-tight text-[var(--text-strong)]">{t.teacherTitle}</h2>
-        <p className="mt-3 text-sm leading-6 text-[var(--text-muted)]">{t.teacherBody}</p>
-        <ul className="mt-4 space-y-2 text-sm text-[var(--text)]">
-          {t.teacherBullets.map((item) => (
-            <li key={item} className="rounded-lg border border-[var(--border)] bg-[var(--surface-soft)] px-3 py-2">
-              {item}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-5">
-          <Link
-            href={`/${locale}/teacher-tools`}
-            className="inline-flex items-center justify-center rounded-lg border border-[var(--primary)] bg-[var(--primary)] px-3 py-2 text-sm font-medium text-[var(--primary-foreground)] transition-colors hover:bg-[var(--primary-hover)]"
-          >
-            {t.teacherCta}
-          </Link>
-        </div>
-      </SurfaceCard>
-
       <HomeTopicCatalog locale={locale} />
-
-      <HomeMotivationPanel locale={locale} />
-
-      <section>
-        <Container className="px-0">
-          <div className="grid gap-4 md:grid-cols-2">
-            <SurfaceCard className="p-5">
-              <p className="text-sm font-semibold text-[var(--text-strong)]">{t.sectionsTitle}</p>
-              <p className="mt-2 text-sm text-[var(--text-muted)]">{t.sectionsBody}</p>
-              <div className="mt-4">
-                <Link
-                  href={`/${locale}/topics/proportion`}
-                  className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
-                >
-                  {t.sectionsLink}
-                </Link>
-              </div>
-            </SurfaceCard>
-            <SurfaceCard className="p-5">
-              <p className="text-sm font-semibold text-[var(--text-strong)]">{t.practiceTitle}</p>
-              <p className="mt-2 text-sm text-[var(--text-muted)]">{t.practiceBody}</p>
-              <div className="mt-4">
-                <Link
-                  href={`/${locale}/topics/proportion`}
-                  className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]"
-                >
-                  {t.practiceLink}
-                </Link>
-              </div>
-            </SurfaceCard>
-          </div>
-        </Container>
-      </section>
     </main>
   );
 }

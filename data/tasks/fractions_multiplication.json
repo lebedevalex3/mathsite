@@ -3,12 +3,7 @@
   "topic_id": "math.fractions_multiplication",
   "section_id": "math.arithmetic",
   "module_id": "math.arithmetic.fractions_multiplication",
-  "grade_tags": [
-    4,
-    5,
-    6,
-    7
-  ],
+  "grade_tags": [4, 5, 6, 7],
   "title": "Умножение дробей: стартовый банк",
   "tasks": [
     {
@@ -17,7 +12,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{2}{3}\\cdot\\frac{9}{10}$",
+      "statement_md": "Вычисли: $\\dfrac{2}{3}\\cdot\\dfrac{9}{10}$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -30,7 +25,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{4}{7}\\cdot\\frac{14}{15}$",
+      "statement_md": "Вычисли: $\\dfrac{4}{7}\\cdot\\dfrac{14}{15}$",
       "answer": {
         "type": "fraction",
         "numerator": 8,
@@ -43,7 +38,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{5}{12}\\cdot\\frac{18}{25}$",
+      "statement_md": "Вычисли: $\\dfrac{5}{12}\\cdot\\dfrac{18}{25}$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -56,7 +51,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{3}{8}\\cdot\\frac{20}{21}$",
+      "statement_md": "Вычисли: $\\dfrac{3}{8}\\cdot\\dfrac{20}{21}$",
       "answer": {
         "type": "fraction",
         "numerator": 5,
@@ -69,7 +64,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{7}{9}\\cdot\\frac{27}{28}$",
+      "statement_md": "Вычисли: $\\dfrac{7}{9}\\cdot\\dfrac{27}{28}$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -96,7 +91,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{8}{15}\\cdot\\frac{25}{24}$",
+      "statement_md": "Вычисли: $\\dfrac{8}{15}\\cdot\\dfrac{25}{24}$",
       "answer": {
         "type": "fraction",
         "numerator": 5,
@@ -109,7 +104,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{9}{16}\\cdot\\frac{8}{27}$",
+      "statement_md": "Вычисли: $\\dfrac{9}{16}\\cdot\\dfrac{8}{27}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -122,7 +117,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{10}{21}\\cdot\\frac{14}{25}$",
+      "statement_md": "Вычисли: $\\dfrac{10}{21}\\cdot\\dfrac{14}{25}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -135,7 +130,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{12}{35}\\cdot\\frac{10}{18}$",
+      "statement_md": "Вычисли: $\\dfrac{12}{35}\\cdot\\dfrac{10}{18}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -148,7 +143,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{15}{22}\\cdot\\frac{11}{30}$",
+      "statement_md": "Вычисли: $\\dfrac{15}{22}\\cdot\\dfrac{11}{30}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -161,7 +156,7 @@
       "skill_id": "math.fractions_multiplication.s1_ff",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{14}{27}\\cdot\\frac{9}{28}$",
+      "statement_md": "Вычисли: $\\dfrac{14}{27}\\cdot\\dfrac{9}{28}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -174,7 +169,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{3}{5}\\cdot 10$",
+      "statement_md": "Вычисли: $\\dfrac{3}{5}\\cdot 10$",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -187,7 +182,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $14\\cdot\\frac{2}{7}$",
+      "statement_md": "Вычисли: $14\\cdot\\dfrac{2}{7}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -200,7 +195,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{7}{12}\\cdot 18$",
+      "statement_md": "Вычисли: $\\dfrac{7}{12}\\cdot 18$",
       "answer": {
         "type": "fraction",
         "numerator": 21,
@@ -213,7 +208,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $15\\cdot\\frac{4}{9}$",
+      "statement_md": "Вычисли: $15\\cdot\\dfrac{4}{9}$",
       "answer": {
         "type": "fraction",
         "numerator": 20,
@@ -226,7 +221,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{5}{8}\\cdot 24$",
+      "statement_md": "Вычисли: $\\dfrac{5}{8}\\cdot 24$",
       "answer": {
         "type": "fraction",
         "numerator": 15,
@@ -239,7 +234,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $21\\cdot\\frac{3}{14}$",
+      "statement_md": "Вычисли: $21\\cdot\\dfrac{3}{14}$",
       "answer": {
         "type": "fraction",
         "numerator": 9,
@@ -252,7 +247,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{11}{15}\\cdot 30$",
+      "statement_md": "Вычисли: $\\dfrac{11}{15}\\cdot 30$",
       "answer": {
         "type": "fraction",
         "numerator": 22,
@@ -265,7 +260,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $16\\cdot\\frac{5}{8}$",
+      "statement_md": "Вычисли: $16\\cdot\\dfrac{5}{8}$",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -278,7 +273,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{9}{20}\\cdot 40$",
+      "statement_md": "Вычисли: $\\dfrac{9}{20}\\cdot 40$",
       "answer": {
         "type": "fraction",
         "numerator": 18,
@@ -291,7 +286,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $27\\cdot\\frac{2}{9}$",
+      "statement_md": "Вычисли: $27\\cdot\\dfrac{2}{9}$",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -304,7 +299,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $\\frac{13}{18}\\cdot 12$",
+      "statement_md": "Вычисли: $\\dfrac{13}{18}\\cdot 12$",
       "answer": {
         "type": "fraction",
         "numerator": 26,
@@ -317,7 +312,7 @@
       "skill_id": "math.fractions_multiplication.s1_fi",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $25\\cdot\\frac{6}{10}$",
+      "statement_md": "Вычисли: $25\\cdot\\dfrac{6}{10}$",
       "answer": {
         "type": "fraction",
         "numerator": 15,
@@ -330,7 +325,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $1\\frac{1}{2}\\cdot\\frac{4}{5}$",
+      "statement_md": "Вычисли: $1\\dfrac{1}{2}\\cdot\\dfrac{4}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -343,7 +338,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $2\\frac{1}{3}\\cdot\\frac{3}{7}$",
+      "statement_md": "Вычисли: $2\\dfrac{1}{3}\\cdot\\dfrac{3}{7}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -356,7 +351,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $3\\frac{1}{4}\\cdot\\frac{2}{3}$",
+      "statement_md": "Вычисли: $3\\dfrac{1}{4}\\cdot\\dfrac{2}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 13,
@@ -369,7 +364,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $1\\frac{3}{5}\\cdot\\frac{5}{8}$",
+      "statement_md": "Вычисли: $1\\dfrac{3}{5}\\cdot\\dfrac{5}{8}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -382,7 +377,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $2\\frac{2}{3}\\cdot\\frac{9}{10}$",
+      "statement_md": "Вычисли: $2\\dfrac{2}{3}\\cdot\\dfrac{9}{10}$",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -395,7 +390,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $4\\frac{1}{2}\\cdot\\frac{2}{9}$",
+      "statement_md": "Вычисли: $4\\dfrac{1}{2}\\cdot\\dfrac{2}{9}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -408,7 +403,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $1\\frac{2}{7}\\cdot\\frac{7}{4}$",
+      "statement_md": "Вычисли: $1\\dfrac{2}{7}\\cdot\\dfrac{7}{4}$",
       "answer": {
         "type": "fraction",
         "numerator": 9,
@@ -421,7 +416,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $3\\frac{3}{4}\\cdot\\frac{4}{5}$",
+      "statement_md": "Вычисли: $3\\dfrac{3}{4}\\cdot\\dfrac{4}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -434,7 +429,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $2\\frac{1}{6}\\cdot\\frac{6}{11}$",
+      "statement_md": "Вычисли: $2\\dfrac{1}{6}\\cdot\\dfrac{6}{11}$",
       "answer": {
         "type": "fraction",
         "numerator": 13,
@@ -447,7 +442,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $5\\frac{1}{3}\\cdot\\frac{3}{8}$",
+      "statement_md": "Вычисли: $5\\dfrac{1}{3}\\cdot\\dfrac{3}{8}$",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -460,7 +455,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $1\\frac{4}{9}\\cdot\\frac{9}{10}$",
+      "statement_md": "Вычисли: $1\\dfrac{4}{9}\\cdot\\dfrac{9}{10}$",
       "answer": {
         "type": "fraction",
         "numerator": 13,
@@ -473,7 +468,7 @@
       "skill_id": "math.fractions_multiplication.s1_mf",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Вычисли: $2\\frac{3}{5}\\cdot\\frac{5}{6}$",
+      "statement_md": "Вычисли: $2\\dfrac{3}{5}\\cdot\\dfrac{5}{6}$",
       "answer": {
         "type": "fraction",
         "numerator": 13,
@@ -486,7 +481,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{2}{3}$ от 9.",
+      "statement_md": "Найди $\\dfrac{2}{3}$ от 9.",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -499,7 +494,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{3}{4}$ от 8.",
+      "statement_md": "Найди $\\dfrac{3}{4}$ от 8.",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -512,7 +507,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{5}{6}$ от 12.",
+      "statement_md": "Найди $\\dfrac{5}{6}$ от 12.",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -525,7 +520,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{7}{8}$ от 16.",
+      "statement_md": "Найди $\\dfrac{7}{8}$ от 16.",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -538,7 +533,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{4}{5}$ от 15.",
+      "statement_md": "Найди $\\dfrac{4}{5}$ от 15.",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -551,7 +546,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{9}{10}$ от 20.",
+      "statement_md": "Найди $\\dfrac{9}{10}$ от 20.",
       "answer": {
         "type": "fraction",
         "numerator": 18,
@@ -564,7 +559,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{1}{2}$ от 14.",
+      "statement_md": "Найди $\\dfrac{1}{2}$ от 14.",
       "answer": {
         "type": "fraction",
         "numerator": 7,
@@ -577,7 +572,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{3}{5}$ от 25.",
+      "statement_md": "Найди $\\dfrac{3}{5}$ от 25.",
       "answer": {
         "type": "fraction",
         "numerator": 15,
@@ -590,7 +585,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{5}{9}$ от 18.",
+      "statement_md": "Найди $\\dfrac{5}{9}$ от 18.",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -603,7 +598,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{2}{7}$ от 21.",
+      "statement_md": "Найди $\\dfrac{2}{7}$ от 21.",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -616,7 +611,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{4}{9}$ от 27.",
+      "statement_md": "Найди $\\dfrac{4}{9}$ от 27.",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -629,7 +624,7 @@
       "skill_id": "math.fractions_multiplication.s2_frac_of",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Найди $\\frac{3}{8}$ от 32.",
+      "statement_md": "Найди $\\dfrac{3}{8}$ от 32.",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -798,7 +793,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг яблок — $\\frac{3}{4}$ руб. Сколько стоят 8 кг?",
+      "statement_md": "Цена 1 кг яблок — $\\dfrac{3}{4}$ руб. Сколько стоят 8 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -811,7 +806,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг сахара — $\\frac{5}{6}$ руб. Сколько стоят 12 кг?",
+      "statement_md": "Цена 1 кг сахара — $\\dfrac{5}{6}$ руб. Сколько стоят 12 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -824,7 +819,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг муки — $\\frac{7}{10}$ руб. Сколько стоят 20 кг?",
+      "statement_md": "Цена 1 кг муки — $\\dfrac{7}{10}$ руб. Сколько стоят 20 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -837,7 +832,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг риса — $\\frac{2}{3}$ руб. Сколько стоят 9 кг?",
+      "statement_md": "Цена 1 кг риса — $\\dfrac{2}{3}$ руб. Сколько стоят 9 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -850,7 +845,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг картофеля — $\\frac{4}{5}$ руб. Сколько стоят 15 кг?",
+      "statement_md": "Цена 1 кг картофеля — $\\dfrac{4}{5}$ руб. Сколько стоят 15 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -863,7 +858,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг крупы — $\\frac{9}{8}$ руб. Сколько стоят 16 кг?",
+      "statement_md": "Цена 1 кг крупы — $\\dfrac{9}{8}$ руб. Сколько стоят 16 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 18,
@@ -876,7 +871,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг орехов — $\\frac{11}{12}$ руб. Сколько стоят 24 кг?",
+      "statement_md": "Цена 1 кг орехов — $\\dfrac{11}{12}$ руб. Сколько стоят 24 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 22,
@@ -889,7 +884,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг груш — $\\frac{3}{5}$ руб. Сколько стоят 25 кг?",
+      "statement_md": "Цена 1 кг груш — $\\dfrac{3}{5}$ руб. Сколько стоят 25 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 15,
@@ -902,7 +897,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг ягод — $\\frac{6}{7}$ руб. Сколько стоят 14 кг?",
+      "statement_md": "Цена 1 кг ягод — $\\dfrac{6}{7}$ руб. Сколько стоят 14 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -915,7 +910,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг сыра — $\\frac{5}{9}$ руб. Сколько стоят 18 кг?",
+      "statement_md": "Цена 1 кг сыра — $\\dfrac{5}{9}$ руб. Сколько стоят 18 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -928,7 +923,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг масла — $\\frac{8}{11}$ руб. Сколько стоят 22 кг?",
+      "statement_md": "Цена 1 кг масла — $\\dfrac{8}{11}$ руб. Сколько стоят 22 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 16,
@@ -941,7 +936,7 @@
       "skill_id": "math.fractions_multiplication.s5_price",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Цена 1 кг крупы — $\\frac{7}{8}$ руб. Сколько стоят 32 кг?",
+      "statement_md": "Цена 1 кг крупы — $\\dfrac{7}{8}$ руб. Сколько стоят 32 кг?",
       "answer": {
         "type": "fraction",
         "numerator": 28,
@@ -954,7 +949,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{3}{4}$ км/ч. Какой путь пройдёт за 8 ч?",
+      "statement_md": "Скорость равна $\\dfrac{3}{4}$ км/ч. Какой путь пройдёт за 8 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -967,7 +962,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{5}{6}$ км/ч. Какой путь пройдёт за 12 ч?",
+      "statement_md": "Скорость равна $\\dfrac{5}{6}$ км/ч. Какой путь пройдёт за 12 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -980,7 +975,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{7}{10}$ км/ч. Какой путь пройдёт за 20 ч?",
+      "statement_md": "Скорость равна $\\dfrac{7}{10}$ км/ч. Какой путь пройдёт за 20 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -993,7 +988,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{2}{3}$ км/ч. Какой путь пройдёт за 9 ч?",
+      "statement_md": "Скорость равна $\\dfrac{2}{3}$ км/ч. Какой путь пройдёт за 9 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -1006,7 +1001,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{4}{5}$ км/ч. Какой путь пройдёт за 15 ч?",
+      "statement_md": "Скорость равна $\\dfrac{4}{5}$ км/ч. Какой путь пройдёт за 15 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -1019,7 +1014,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{9}{8}$ км/ч. Какой путь пройдёт за 16 ч?",
+      "statement_md": "Скорость равна $\\dfrac{9}{8}$ км/ч. Какой путь пройдёт за 16 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 18,
@@ -1032,7 +1027,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{11}{12}$ км/ч. Какой путь пройдёт за 24 ч?",
+      "statement_md": "Скорость равна $\\dfrac{11}{12}$ км/ч. Какой путь пройдёт за 24 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 22,
@@ -1045,7 +1040,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{3}{5}$ км/ч. Какой путь пройдёт за 25 ч?",
+      "statement_md": "Скорость равна $\\dfrac{3}{5}$ км/ч. Какой путь пройдёт за 25 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 15,
@@ -1058,7 +1053,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{6}{7}$ км/ч. Какой путь пройдёт за 14 ч?",
+      "statement_md": "Скорость равна $\\dfrac{6}{7}$ км/ч. Какой путь пройдёт за 14 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -1071,7 +1066,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{5}{9}$ км/ч. Какой путь пройдёт за 18 ч?",
+      "statement_md": "Скорость равна $\\dfrac{5}{9}$ км/ч. Какой путь пройдёт за 18 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -1084,7 +1079,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{8}{11}$ км/ч. Какой путь пройдёт за 22 ч?",
+      "statement_md": "Скорость равна $\\dfrac{8}{11}$ км/ч. Какой путь пройдёт за 22 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 16,
@@ -1097,7 +1092,7 @@
       "skill_id": "math.fractions_multiplication.s5_speed",
       "difficulty": 2,
       "difficulty_band": "A",
-      "statement_md": "Скорость равна $\\frac{7}{8}$ км/ч. Какой путь пройдёт за 32 ч?",
+      "statement_md": "Скорость равна $\\dfrac{7}{8}$ км/ч. Какой путь пройдёт за 32 ч?",
       "answer": {
         "type": "fraction",
         "numerator": 28,
@@ -1110,7 +1105,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $1\\frac{1}{2}\\cdot2\\frac{2}{3}$",
+      "statement_md": "Вычисли: $1\\dfrac{1}{2}\\cdot2\\dfrac{2}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -1123,7 +1118,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $2\\frac{1}{4}\\cdot1\\frac{1}{2}$",
+      "statement_md": "Вычисли: $2\\dfrac{1}{4}\\cdot1\\dfrac{1}{2}$",
       "answer": {
         "type": "fraction",
         "numerator": 27,
@@ -1136,7 +1131,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $3\\frac{1}{3}\\cdot1\\frac{1}{4}$",
+      "statement_md": "Вычисли: $3\\dfrac{1}{3}\\cdot1\\dfrac{1}{4}$",
       "answer": {
         "type": "fraction",
         "numerator": 25,
@@ -1149,7 +1144,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $1\\frac{3}{5}\\cdot2\\frac{1}{2}$",
+      "statement_md": "Вычисли: $1\\dfrac{3}{5}\\cdot2\\dfrac{1}{2}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -1162,7 +1157,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $4\\frac{1}{2}\\cdot1\\frac{2}{3}$",
+      "statement_md": "Вычисли: $4\\dfrac{1}{2}\\cdot1\\dfrac{2}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 15,
@@ -1175,7 +1170,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $2\\frac{3}{4}\\cdot3\\frac{1}{5}$",
+      "statement_md": "Вычисли: $2\\dfrac{3}{4}\\cdot3\\dfrac{1}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 44,
@@ -1188,7 +1183,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $1\\frac{5}{6}\\cdot2\\frac{1}{3}$",
+      "statement_md": "Вычисли: $1\\dfrac{5}{6}\\cdot2\\dfrac{1}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 77,
@@ -1201,7 +1196,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $3\\frac{1}{2}\\cdot2\\frac{3}{7}$",
+      "statement_md": "Вычисли: $3\\dfrac{1}{2}\\cdot2\\dfrac{3}{7}$",
       "answer": {
         "type": "fraction",
         "numerator": 75,
@@ -1214,7 +1209,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $2\\frac{2}{5}\\cdot1\\frac{4}{9}$",
+      "statement_md": "Вычисли: $2\\dfrac{2}{5}\\cdot1\\dfrac{4}{9}$",
       "answer": {
         "type": "fraction",
         "numerator": 104,
@@ -1227,7 +1222,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $5\\frac{1}{4}\\cdot1\\frac{1}{2}$",
+      "statement_md": "Вычисли: $5\\dfrac{1}{4}\\cdot1\\dfrac{1}{2}$",
       "answer": {
         "type": "fraction",
         "numerator": 63,
@@ -1240,7 +1235,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $3\\frac{2}{3}\\cdot2\\frac{1}{6}$",
+      "statement_md": "Вычисли: $3\\dfrac{2}{3}\\cdot2\\dfrac{1}{6}$",
       "answer": {
         "type": "fraction",
         "numerator": 143,
@@ -1253,7 +1248,7 @@
       "skill_id": "math.fractions_multiplication.s1_mm",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $1\\frac{7}{8}\\cdot2\\frac{2}{5}$",
+      "statement_md": "Вычисли: $1\\dfrac{7}{8}\\cdot2\\dfrac{2}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 9,
@@ -1266,7 +1261,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{3}{4}\\cdot0{,}8$",
+      "statement_md": "Вычисли: $\\dfrac{3}{4}\\cdot0{,}8$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -1279,7 +1274,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $1\\frac{1}{2}\\cdot0{,}6$",
+      "statement_md": "Вычисли: $1\\dfrac{1}{2}\\cdot0{,}6$",
       "answer": {
         "type": "fraction",
         "numerator": 9,
@@ -1292,7 +1287,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{5}{6}\\cdot1{,}2$",
+      "statement_md": "Вычисли: $\\dfrac{5}{6}\\cdot1{,}2$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1305,7 +1300,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $2\\frac{1}{4}\\cdot0{,}4$",
+      "statement_md": "Вычисли: $2\\dfrac{1}{4}\\cdot0{,}4$",
       "answer": {
         "type": "fraction",
         "numerator": 9,
@@ -1318,7 +1313,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{7}{8}\\cdot0{,}5$",
+      "statement_md": "Вычисли: $\\dfrac{7}{8}\\cdot0{,}5$",
       "answer": {
         "type": "fraction",
         "numerator": 7,
@@ -1331,7 +1326,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $1\\frac{2}{3}\\cdot0{,}9$",
+      "statement_md": "Вычисли: $1\\dfrac{2}{3}\\cdot0{,}9$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -1344,7 +1339,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{4}{5}\\cdot1{,}5$",
+      "statement_md": "Вычисли: $\\dfrac{4}{5}\\cdot1{,}5$",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -1357,7 +1352,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $2\\frac{3}{4}\\cdot0{,}2$",
+      "statement_md": "Вычисли: $2\\dfrac{3}{4}\\cdot0{,}2$",
       "answer": {
         "type": "fraction",
         "numerator": 11,
@@ -1370,7 +1365,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{9}{10}\\cdot0{,}3$",
+      "statement_md": "Вычисли: $\\dfrac{9}{10}\\cdot0{,}3$",
       "answer": {
         "type": "fraction",
         "numerator": 27,
@@ -1383,7 +1378,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $1\\frac{1}{4}\\cdot0{,}8$",
+      "statement_md": "Вычисли: $1\\dfrac{1}{4}\\cdot0{,}8$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1396,7 +1391,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{2}{3}\\cdot1{,}5$",
+      "statement_md": "Вычисли: $\\dfrac{2}{3}\\cdot1{,}5$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1409,7 +1404,7 @@
       "skill_id": "math.fractions_multiplication.s1_dec_mul",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $1\\frac{3}{5}\\cdot0{,}25$",
+      "statement_md": "Вычисли: $1\\dfrac{3}{5}\\cdot0{,}25$",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -1422,7 +1417,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{2}{3}\\cdot\\frac{9}{10}\\cdot\\frac{5}{6}$",
+      "statement_md": "Вычисли: $\\dfrac{2}{3}\\cdot\\dfrac{9}{10}\\cdot\\dfrac{5}{6}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1435,7 +1430,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{4}{5}\\cdot\\frac{15}{16}\\cdot\\frac{2}{3}$",
+      "statement_md": "Вычисли: $\\dfrac{4}{5}\\cdot\\dfrac{15}{16}\\cdot\\dfrac{2}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1448,7 +1443,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{7}{9}\\cdot\\frac{3}{14}\\cdot\\frac{6}{5}$",
+      "statement_md": "Вычисли: $\\dfrac{7}{9}\\cdot\\dfrac{3}{14}\\cdot\\dfrac{6}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1461,7 +1456,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{5}{8}\\cdot\\frac{16}{25}\\cdot\\frac{3}{2}$",
+      "statement_md": "Вычисли: $\\dfrac{5}{8}\\cdot\\dfrac{16}{25}\\cdot\\dfrac{3}{2}$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -1474,7 +1469,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{6}{7}\\cdot\\frac{14}{15}\\cdot\\frac{5}{12}$",
+      "statement_md": "Вычисли: $\\dfrac{6}{7}\\cdot\\dfrac{14}{15}\\cdot\\dfrac{5}{12}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1487,7 +1482,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{8}{9}\\cdot\\frac{27}{32}\\cdot\\frac{4}{5}$",
+      "statement_md": "Вычисли: $\\dfrac{8}{9}\\cdot\\dfrac{27}{32}\\cdot\\dfrac{4}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -1500,7 +1495,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{3}{4}\\cdot\\frac{20}{21}\\cdot\\frac{7}{10}$",
+      "statement_md": "Вычисли: $\\dfrac{3}{4}\\cdot\\dfrac{20}{21}\\cdot\\dfrac{7}{10}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1513,7 +1508,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{9}{11}\\cdot\\frac{22}{27}\\cdot\\frac{3}{8}$",
+      "statement_md": "Вычисли: $\\dfrac{9}{11}\\cdot\\dfrac{22}{27}\\cdot\\dfrac{3}{8}$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -1526,7 +1521,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{10}{21}\\cdot\\frac{7}{25}\\cdot\\frac{6}{5}$",
+      "statement_md": "Вычисли: $\\dfrac{10}{21}\\cdot\\dfrac{7}{25}\\cdot\\dfrac{6}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -1539,7 +1534,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{12}{13}\\cdot\\frac{26}{15}\\cdot\\frac{5}{8}$",
+      "statement_md": "Вычисли: $\\dfrac{12}{13}\\cdot\\dfrac{26}{15}\\cdot\\dfrac{5}{8}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1552,7 +1547,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{14}{17}\\cdot\\frac{34}{21}\\cdot\\frac{3}{7}$",
+      "statement_md": "Вычисли: $\\dfrac{14}{17}\\cdot\\dfrac{34}{21}\\cdot\\dfrac{3}{7}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -1565,7 +1560,7 @@
       "skill_id": "math.fractions_multiplication.s1_multi_factor",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{15}{16}\\cdot\\frac{8}{9}\\cdot\\frac{3}{5}$",
+      "statement_md": "Вычисли: $\\dfrac{15}{16}\\cdot\\dfrac{8}{9}\\cdot\\dfrac{3}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1578,7 +1573,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{2}{3}+\\frac{3}{4}\\cdot\\frac{8}{9}$",
+      "statement_md": "Вычисли: $\\dfrac{2}{3}+\\dfrac{3}{4}\\cdot\\dfrac{8}{9}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -1591,7 +1586,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{5}{6}-\\frac{1}{2}\\cdot\\frac{3}{5}$",
+      "statement_md": "Вычисли: $\\dfrac{5}{6}-\\dfrac{1}{2}\\cdot\\dfrac{3}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 8,
@@ -1604,7 +1599,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{7}{8}+\\frac{2}{3}\\cdot\\frac{9}{14}$",
+      "statement_md": "Вычисли: $\\dfrac{7}{8}+\\dfrac{2}{3}\\cdot\\dfrac{9}{14}$",
       "answer": {
         "type": "fraction",
         "numerator": 11,
@@ -1617,7 +1612,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{4}{5}-\\frac{3}{10}\\cdot\\frac{5}{6}$",
+      "statement_md": "Вычисли: $\\dfrac{4}{5}-\\dfrac{3}{10}\\cdot\\dfrac{5}{6}$",
       "answer": {
         "type": "fraction",
         "numerator": 11,
@@ -1630,7 +1625,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{3}{4}+\\frac{5}{12}\\cdot\\frac{6}{7}$",
+      "statement_md": "Вычисли: $\\dfrac{3}{4}+\\dfrac{5}{12}\\cdot\\dfrac{6}{7}$",
       "answer": {
         "type": "fraction",
         "numerator": 31,
@@ -1643,7 +1638,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{9}{10}-\\frac{4}{5}\\cdot\\frac{1}{2}$",
+      "statement_md": "Вычисли: $\\dfrac{9}{10}-\\dfrac{4}{5}\\cdot\\dfrac{1}{2}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -1656,7 +1651,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{2}{9}+\\frac{3}{4}\\cdot\\frac{8}{5}$",
+      "statement_md": "Вычисли: $\\dfrac{2}{9}+\\dfrac{3}{4}\\cdot\\dfrac{8}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 64,
@@ -1669,7 +1664,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{5}{7}-\\frac{2}{3}\\cdot\\frac{9}{10}$",
+      "statement_md": "Вычисли: $\\dfrac{5}{7}-\\dfrac{2}{3}\\cdot\\dfrac{9}{10}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -1682,7 +1677,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{6}{11}+\\frac{5}{8}\\cdot\\frac{4}{3}$",
+      "statement_md": "Вычисли: $\\dfrac{6}{11}+\\dfrac{5}{8}\\cdot\\dfrac{4}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 23,
@@ -1695,7 +1690,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{8}{9}-\\frac{7}{12}\\cdot\\frac{6}{5}$",
+      "statement_md": "Вычисли: $\\dfrac{8}{9}-\\dfrac{7}{12}\\cdot\\dfrac{6}{5}$",
       "answer": {
         "type": "fraction",
         "numerator": 17,
@@ -1708,7 +1703,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{1}{2}+\\frac{3}{5}\\cdot\\frac{10}{9}$",
+      "statement_md": "Вычисли: $\\dfrac{1}{2}+\\dfrac{3}{5}\\cdot\\dfrac{10}{9}$",
       "answer": {
         "type": "fraction",
         "numerator": 7,
@@ -1721,7 +1716,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{3}{5}-\\frac{4}{9}\\cdot\\frac{3}{2}$",
+      "statement_md": "Вычисли: $\\dfrac{3}{5}-\\dfrac{4}{9}\\cdot\\dfrac{3}{2}$",
       "answer": {
         "type": "fraction",
         "numerator": -1,
@@ -1890,7 +1885,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{1}{2}+\\frac{1}{3}\\right)\\cdot 12$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{1}{2}+\\dfrac{1}{3}\\right)\\cdot 12$",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -1903,7 +1898,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{3}{4}-\\frac{1}{6}\\right)\\cdot 24$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{3}{4}-\\dfrac{1}{6}\\right)\\cdot 24$",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -1916,7 +1911,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{5}{8}+\\frac{3}{4}\\right)\\cdot 16$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{5}{8}+\\dfrac{3}{4}\\right)\\cdot 16$",
       "answer": {
         "type": "fraction",
         "numerator": 22,
@@ -1929,7 +1924,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{7}{10}-\\frac{1}{5}\\right)\\cdot 50$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{7}{10}-\\dfrac{1}{5}\\right)\\cdot 50$",
       "answer": {
         "type": "fraction",
         "numerator": 25,
@@ -1942,7 +1937,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{2}{3}+\\frac{1}{9}\\right)\\cdot 27$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{2}{3}+\\dfrac{1}{9}\\right)\\cdot 27$",
       "answer": {
         "type": "fraction",
         "numerator": 21,
@@ -1955,7 +1950,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{4}{5}-\\frac{1}{4}\\right)\\cdot 40$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{4}{5}-\\dfrac{1}{4}\\right)\\cdot 40$",
       "answer": {
         "type": "fraction",
         "numerator": 22,
@@ -1968,7 +1963,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{1}{6}+\\frac{5}{12}\\right)\\cdot 24$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{1}{6}+\\dfrac{5}{12}\\right)\\cdot 24$",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -1981,7 +1976,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{9}{8}-\\frac{3}{16}\\right)\\cdot 32$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{9}{8}-\\dfrac{3}{16}\\right)\\cdot 32$",
       "answer": {
         "type": "fraction",
         "numerator": 30,
@@ -1994,7 +1989,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{5}{7}+\\frac{2}{7}\\right)\\cdot 14$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{5}{7}+\\dfrac{2}{7}\\right)\\cdot 14$",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -2007,7 +2002,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{11}{12}-\\frac{1}{3}\\right)\\cdot 36$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{11}{12}-\\dfrac{1}{3}\\right)\\cdot 36$",
       "answer": {
         "type": "fraction",
         "numerator": 21,
@@ -2020,7 +2015,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{3}{5}+\\frac{1}{10}\\right)\\cdot 20$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{3}{5}+\\dfrac{1}{10}\\right)\\cdot 20$",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -2033,7 +2028,7 @@
       "skill_id": "math.fractions_multiplication.s2_dist_law",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\left(\\frac{7}{9}-\\frac{1}{27}\\right)\\cdot 27$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{7}{9}-\\dfrac{1}{27}\\right)\\cdot 27$",
       "answer": {
         "type": "fraction",
         "numerator": 20,
@@ -2046,7 +2041,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{2}{3}\\cdot 12+\\frac{1}{6}\\cdot 12$",
+      "statement_md": "Вычисли: $\\dfrac{2}{3}\\cdot 12+\\dfrac{1}{6}\\cdot 12$",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -2059,7 +2054,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{3}{4}\\cdot 16+\\frac{1}{8}\\cdot 16$",
+      "statement_md": "Вычисли: $\\dfrac{3}{4}\\cdot 16+\\dfrac{1}{8}\\cdot 16$",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -2072,7 +2067,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{5}{9}\\cdot 27+\\frac{1}{3}\\cdot 27$",
+      "statement_md": "Вычисли: $\\dfrac{5}{9}\\cdot 27+\\dfrac{1}{3}\\cdot 27$",
       "answer": {
         "type": "fraction",
         "numerator": 24,
@@ -2085,7 +2080,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{7}{10}\\cdot 50+\\frac{1}{5}\\cdot 50$",
+      "statement_md": "Вычисли: $\\dfrac{7}{10}\\cdot 50+\\dfrac{1}{5}\\cdot 50$",
       "answer": {
         "type": "fraction",
         "numerator": 45,
@@ -2098,7 +2093,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{4}{7}\\cdot 14+\\frac{3}{7}\\cdot 14$",
+      "statement_md": "Вычисли: $\\dfrac{4}{7}\\cdot 14+\\dfrac{3}{7}\\cdot 14$",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -2111,7 +2106,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{1}{2}\\cdot 18+\\frac{1}{6}\\cdot 18$",
+      "statement_md": "Вычисли: $\\dfrac{1}{2}\\cdot 18+\\dfrac{1}{6}\\cdot 18$",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -2124,7 +2119,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{5}{8}\\cdot 32+\\frac{3}{16}\\cdot 32$",
+      "statement_md": "Вычисли: $\\dfrac{5}{8}\\cdot 32+\\dfrac{3}{16}\\cdot 32$",
       "answer": {
         "type": "fraction",
         "numerator": 26,
@@ -2137,7 +2132,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{2}{5}\\cdot 20+\\frac{1}{10}\\cdot 20$",
+      "statement_md": "Вычисли: $\\dfrac{2}{5}\\cdot 20+\\dfrac{1}{10}\\cdot 20$",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -2150,7 +2145,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{9}{11}\\cdot 22+\\frac{2}{11}\\cdot 22$",
+      "statement_md": "Вычисли: $\\dfrac{9}{11}\\cdot 22+\\dfrac{2}{11}\\cdot 22$",
       "answer": {
         "type": "fraction",
         "numerator": 22,
@@ -2163,7 +2158,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{3}{8}\\cdot 24+\\frac{1}{12}\\cdot 24$",
+      "statement_md": "Вычисли: $\\dfrac{3}{8}\\cdot 24+\\dfrac{1}{12}\\cdot 24$",
       "answer": {
         "type": "fraction",
         "numerator": 11,
@@ -2176,7 +2171,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{7}{9}\\cdot 36+\\frac{2}{9}\\cdot 36$",
+      "statement_md": "Вычисли: $\\dfrac{7}{9}\\cdot 36+\\dfrac{2}{9}\\cdot 36$",
       "answer": {
         "type": "fraction",
         "numerator": 36,
@@ -2189,7 +2184,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Вычисли: $\\frac{11}{12}\\cdot 48+\\frac{1}{6}\\cdot 48$",
+      "statement_md": "Вычисли: $\\dfrac{11}{12}\\cdot 48+\\dfrac{1}{6}\\cdot 48$",
       "answer": {
         "type": "fraction",
         "numerator": 52,
@@ -2202,7 +2197,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{7}{8}x+\\frac{1}{4}x-x$",
+      "statement_md": "Упрости: $\\dfrac{7}{8}x+\\dfrac{1}{4}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -2215,7 +2210,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{3}{5}x+\\frac{2}{5}x-x$",
+      "statement_md": "Упрости: $\\dfrac{3}{5}x+\\dfrac{2}{5}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": 0,
@@ -2228,7 +2223,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{5}{6}x+\\frac{1}{3}x-x$",
+      "statement_md": "Упрости: $\\dfrac{5}{6}x+\\dfrac{1}{3}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -2241,7 +2236,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{9}{10}x+\\frac{1}{5}x-x$",
+      "statement_md": "Упрости: $\\dfrac{9}{10}x+\\dfrac{1}{5}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -2254,7 +2249,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{4}{7}x+\\frac{2}{7}x-x$",
+      "statement_md": "Упрости: $\\dfrac{4}{7}x+\\dfrac{2}{7}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": -1,
@@ -2267,7 +2262,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{11}{12}x+\\frac{1}{6}x-x$",
+      "statement_md": "Упрости: $\\dfrac{11}{12}x+\\dfrac{1}{6}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -2280,7 +2275,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{5}{9}x+\\frac{2}{3}x-x$",
+      "statement_md": "Упрости: $\\dfrac{5}{9}x+\\dfrac{2}{3}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -2293,7 +2288,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{3}{4}x+\\frac{1}{8}x-x$",
+      "statement_md": "Упрости: $\\dfrac{3}{4}x+\\dfrac{1}{8}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": -1,
@@ -2306,7 +2301,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{8}{15}x+\\frac{1}{3}x-x$",
+      "statement_md": "Упрости: $\\dfrac{8}{15}x+\\dfrac{1}{3}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": -2,
@@ -2319,7 +2314,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{13}{14}x+\\frac{1}{7}x-x$",
+      "statement_md": "Упрости: $\\dfrac{13}{14}x+\\dfrac{1}{7}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -2332,7 +2327,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{2}{3}x+\\frac{5}{6}x-x$",
+      "statement_md": "Упрости: $\\dfrac{2}{3}x+\\dfrac{5}{6}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -2345,7 +2340,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_coeff",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Упрости: $\\frac{7}{9}x+\\frac{4}{9}x-x$",
+      "statement_md": "Упрости: $\\dfrac{7}{9}x+\\dfrac{4}{9}x-x$",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -2358,7 +2353,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{5}{6}a-\\frac{1}{3}a$, если $a=12$.",
+      "statement_md": "Найди значение выражения $\\dfrac{5}{6}a-\\dfrac{1}{3}a$, если $a=12$.",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -2371,7 +2366,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{7}{8}a-\\frac{1}{4}a$, если $a=16$.",
+      "statement_md": "Найди значение выражения $\\dfrac{7}{8}a-\\dfrac{1}{4}a$, если $a=16$.",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -2384,7 +2379,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{9}{10}a-\\frac{2}{5}a$, если $a=50$.",
+      "statement_md": "Найди значение выражения $\\dfrac{9}{10}a-\\dfrac{2}{5}a$, если $a=50$.",
       "answer": {
         "type": "fraction",
         "numerator": 25,
@@ -2397,7 +2392,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{11}{12}a-\\frac{1}{6}a$, если $a=24$.",
+      "statement_md": "Найди значение выражения $\\dfrac{11}{12}a-\\dfrac{1}{6}a$, если $a=24$.",
       "answer": {
         "type": "fraction",
         "numerator": 18,
@@ -2410,7 +2405,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{4}{5}a-\\frac{1}{10}a$, если $a=20$.",
+      "statement_md": "Найди значение выражения $\\dfrac{4}{5}a-\\dfrac{1}{10}a$, если $a=20$.",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -2423,7 +2418,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{3}{7}a-\\frac{1}{14}a$, если $a=28$.",
+      "statement_md": "Найди значение выражения $\\dfrac{3}{7}a-\\dfrac{1}{14}a$, если $a=28$.",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -2436,7 +2431,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{13}{15}a-\\frac{2}{5}a$, если $a=75$.",
+      "statement_md": "Найди значение выражения $\\dfrac{13}{15}a-\\dfrac{2}{5}a$, если $a=75$.",
       "answer": {
         "type": "fraction",
         "numerator": 35,
@@ -2449,7 +2444,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{5}{9}a-\\frac{1}{3}a$, если $a=27$.",
+      "statement_md": "Найди значение выражения $\\dfrac{5}{9}a-\\dfrac{1}{3}a$, если $a=27$.",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -2462,7 +2457,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{8}{11}a-\\frac{3}{11}a$, если $a=22$.",
+      "statement_md": "Найди значение выражения $\\dfrac{8}{11}a-\\dfrac{3}{11}a$, если $a=22$.",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -2475,7 +2470,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{7}{12}a-\\frac{1}{4}a$, если $a=36$.",
+      "statement_md": "Найди значение выражения $\\dfrac{7}{12}a-\\dfrac{1}{4}a$, если $a=36$.",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -2488,7 +2483,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{6}{13}a-\\frac{2}{13}a$, если $a=39$.",
+      "statement_md": "Найди значение выражения $\\dfrac{6}{13}a-\\dfrac{2}{13}a$, если $a=39$.",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -2501,7 +2496,7 @@
       "skill_id": "math.fractions_multiplication.s3_lin_a",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Найди значение выражения $\\frac{9}{16}a-\\frac{1}{8}a$, если $a=32$.",
+      "statement_md": "Найди значение выражения $\\dfrac{9}{16}a-\\dfrac{1}{8}a$, если $a=32$.",
       "answer": {
         "type": "fraction",
         "numerator": 14,
@@ -2514,7 +2509,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 200 кг зерна. Продали $\\frac{3}{10}$ всего. Сколько осталось?",
+      "statement_md": "Было 200 кг зерна. Продали $\\dfrac{3}{10}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 140,
@@ -2527,7 +2522,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 150 м ткани. Использовали $\\frac{2}{5}$ всего. Сколько осталось?",
+      "statement_md": "Было 150 м ткани. Использовали $\\dfrac{2}{5}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 90,
@@ -2540,7 +2535,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 120 л воды. Израсходовали $\\frac{1}{4}$ всего. Сколько осталось?",
+      "statement_md": "Было 120 л воды. Израсходовали $\\dfrac{1}{4}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 90,
@@ -2553,7 +2548,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 80 книг. Продали $\\frac{3}{8}$ всего. Сколько осталось?",
+      "statement_md": "Было 80 книг. Продали $\\dfrac{3}{8}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 50,
@@ -2566,7 +2561,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 300 руб. Потратили $\\frac{2}{3}$ всего. Сколько осталось?",
+      "statement_md": "Было 300 руб. Потратили $\\dfrac{2}{3}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 100,
@@ -2579,7 +2574,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 250 деталей. Использовали $\\frac{4}{5}$ всего. Сколько осталось?",
+      "statement_md": "Было 250 деталей. Использовали $\\dfrac{4}{5}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 50,
@@ -2592,7 +2587,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 90 м провода. Израсходовали $\\frac{1}{3}$ всего. Сколько осталось?",
+      "statement_md": "Было 90 м провода. Израсходовали $\\dfrac{1}{3}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 60,
@@ -2605,7 +2600,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 60 л топлива. Потратили $\\frac{5}{6}$ всего. Сколько осталось?",
+      "statement_md": "Было 60 л топлива. Потратили $\\dfrac{5}{6}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 10,
@@ -2618,7 +2613,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 500 кг муки. Продали $\\frac{1}{5}$ всего. Сколько осталось?",
+      "statement_md": "Было 500 кг муки. Продали $\\dfrac{1}{5}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 400,
@@ -2631,7 +2626,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 240 руб. Потратили $\\frac{3}{4}$ всего. Сколько осталось?",
+      "statement_md": "Было 240 руб. Потратили $\\dfrac{3}{4}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 60,
@@ -2644,7 +2639,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 360 м дороги. Отремонтировали $\\frac{2}{9}$ всего. Сколько осталось?",
+      "statement_md": "Было 360 м дороги. Отремонтировали $\\dfrac{2}{9}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 280,
@@ -2657,7 +2652,7 @@
       "skill_id": "math.fractions_multiplication.s5_remain_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 420 кг песка. Использовали $\\frac{3}{7}$ всего. Сколько осталось?",
+      "statement_md": "Было 420 кг песка. Использовали $\\dfrac{3}{7}$ всего. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 240,
@@ -2670,7 +2665,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 200 кг зерна. Продали $\\frac{1}{4}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 200 кг зерна. Продали $\\dfrac{1}{4}$ всего, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 75,
@@ -2683,7 +2678,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 120 м ткани. Использовали $\\frac{1}{3}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 120 м ткани. Использовали $\\dfrac{1}{3}$ всего, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 40,
@@ -2696,7 +2691,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 90 л воды. Израсходовали $\\frac{2}{5}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 90 л воды. Израсходовали $\\dfrac{2}{5}$ всего, затем $\\dfrac{1}{3}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 36,
@@ -2709,7 +2704,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 80 книг. Продали $\\frac{1}{4}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 80 книг. Продали $\\dfrac{1}{4}$ всего, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 30,
@@ -2722,7 +2717,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 150 руб. Потратили $\\frac{1}{3}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 150 руб. Потратили $\\dfrac{1}{3}$ всего, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 50,
@@ -2735,7 +2730,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 300 деталей. Использовали $\\frac{1}{5}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 300 деталей. Использовали $\\dfrac{1}{5}$ всего, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 120,
@@ -2748,7 +2743,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 100 л топлива. Потратили $\\frac{2}{5}$ всего, затем $\\frac{1}{4}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 100 л топлива. Потратили $\\dfrac{2}{5}$ всего, затем $\\dfrac{1}{4}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 45,
@@ -2761,7 +2756,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 240 м дороги. Отремонтировали $\\frac{1}{6}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 240 м дороги. Отремонтировали $\\dfrac{1}{6}$ всего, затем $\\dfrac{1}{3}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 120,
@@ -2774,7 +2769,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 180 кг муки. Продали $\\frac{1}{3}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 180 кг муки. Продали $\\dfrac{1}{3}$ всего, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 60,
@@ -2787,7 +2782,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 96 книг. Продали $\\frac{1}{4}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 96 книг. Продали $\\dfrac{1}{4}$ всего, затем $\\dfrac{1}{3}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 48,
@@ -2800,7 +2795,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 210 руб. Потратили $\\frac{2}{7}$ всего, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 210 руб. Потратили $\\dfrac{2}{7}$ всего, затем $\\dfrac{1}{3}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 100,
@@ -2813,7 +2808,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 3,
       "difficulty_band": "B",
-      "statement_md": "Было 160 м ткани. Использовали $\\frac{1}{4}$ всего, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 160 м ткани. Использовали $\\dfrac{1}{4}$ всего, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 60,
@@ -2826,7 +2821,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\frac{3}{4}+\\frac{2}{3}\\cdot\\frac{9}{8}-\\frac{1}{2}$",
+      "statement_md": "Вычисли: $\\dfrac{3}{4}+\\dfrac{2}{3}\\cdot\\dfrac{9}{8}-\\dfrac{1}{2}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -2839,7 +2834,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $1\\frac{1}{2}-\\frac{3}{5}\\cdot\\frac{5}{6}+\\frac{1}{3}$",
+      "statement_md": "Вычисли: $1\\dfrac{1}{2}-\\dfrac{3}{5}\\cdot\\dfrac{5}{6}+\\dfrac{1}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 4,
@@ -2852,7 +2847,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\frac{7}{9}\\cdot\\frac{3}{14}+\\frac{5}{6}-\\frac{1}{3}$",
+      "statement_md": "Вычисли: $\\dfrac{7}{9}\\cdot\\dfrac{3}{14}+\\dfrac{5}{6}-\\dfrac{1}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 5,
@@ -2865,7 +2860,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $2-\\frac{4}{5}\\cdot\\frac{5}{8}+\\frac{1}{4}$",
+      "statement_md": "Вычисли: $2-\\dfrac{4}{5}\\cdot\\dfrac{5}{8}+\\dfrac{1}{4}$",
       "answer": {
         "type": "fraction",
         "numerator": 7,
@@ -2878,7 +2873,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\frac{5}{6}+1\\frac{1}{3}\\cdot\\frac{3}{4}-\\frac{2}{3}$",
+      "statement_md": "Вычисли: $\\dfrac{5}{6}+1\\dfrac{1}{3}\\cdot\\dfrac{3}{4}-\\dfrac{2}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 7,
@@ -2891,7 +2886,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\frac{9}{10}-\\frac{2}{5}\\cdot\\frac{5}{6}+\\frac{1}{3}$",
+      "statement_md": "Вычисли: $\\dfrac{9}{10}-\\dfrac{2}{5}\\cdot\\dfrac{5}{6}+\\dfrac{1}{3}$",
       "answer": {
         "type": "fraction",
         "numerator": 11,
@@ -2904,7 +2899,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $1\\frac{3}{4}+\\frac{1}{2}\\cdot\\frac{4}{7}-\\frac{3}{8}$",
+      "statement_md": "Вычисли: $1\\dfrac{3}{4}+\\dfrac{1}{2}\\cdot\\dfrac{4}{7}-\\dfrac{3}{8}$",
       "answer": {
         "type": "fraction",
         "numerator": 9,
@@ -2917,7 +2912,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\frac{8}{9}-\\frac{1}{3}\\cdot\\frac{9}{16}+\\frac{5}{12}$",
+      "statement_md": "Вычисли: $\\dfrac{8}{9}-\\dfrac{1}{3}\\cdot\\dfrac{9}{16}+\\dfrac{5}{12}$",
       "answer": {
         "type": "fraction",
         "numerator": 13,
@@ -2930,7 +2925,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\frac{4}{7}+\\frac{2}{5}\\cdot\\frac{5}{6}-\\frac{3}{14}$",
+      "statement_md": "Вычисли: $\\dfrac{4}{7}+\\dfrac{2}{5}\\cdot\\dfrac{5}{6}-\\dfrac{3}{14}$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -2943,7 +2938,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $3\\frac{1}{2}-\\frac{7}{8}\\cdot\\frac{4}{7}+\\frac{1}{4}$",
+      "statement_md": "Вычисли: $3\\dfrac{1}{2}-\\dfrac{7}{8}\\cdot\\dfrac{4}{7}+\\dfrac{1}{4}$",
       "answer": {
         "type": "fraction",
         "numerator": 13,
@@ -2956,7 +2951,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\frac{11}{12}+\\frac{3}{4}\\cdot\\frac{8}{11}-\\frac{1}{6}$",
+      "statement_md": "Вычисли: $\\dfrac{11}{12}+\\dfrac{3}{4}\\cdot\\dfrac{8}{11}-\\dfrac{1}{6}$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -2969,7 +2964,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $2\\frac{1}{4}-\\frac{5}{6}\\cdot\\frac{3}{5}+\\frac{1}{12}$",
+      "statement_md": "Вычисли: $2\\dfrac{1}{4}-\\dfrac{5}{6}\\cdot\\dfrac{3}{5}+\\dfrac{1}{12}$",
       "answer": {
         "type": "fraction",
         "numerator": 11,
@@ -2982,7 +2977,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{3}{4}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{3}{4}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 9,
@@ -2995,7 +2990,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{5}{6}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{5}{6}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 25,
@@ -3008,7 +3003,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{7}{8}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{7}{8}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 49,
@@ -3021,7 +3016,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{9}{10}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{9}{10}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 81,
@@ -3034,7 +3029,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{4}{3}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{4}{3}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 16,
@@ -3047,7 +3042,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{11}{12}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{11}{12}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 121,
@@ -3060,7 +3055,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{2}{5}\\right)^3$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{2}{5}\\right)^3$",
       "answer": {
         "type": "fraction",
         "numerator": 8,
@@ -3073,7 +3068,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{3}{7}\\right)^3$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{3}{7}\\right)^3$",
       "answer": {
         "type": "fraction",
         "numerator": 27,
@@ -3086,7 +3081,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{5}{4}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{5}{4}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 25,
@@ -3099,7 +3094,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{6}{5}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{6}{5}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 36,
@@ -3112,7 +3107,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{8}{9}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{8}{9}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 64,
@@ -3125,7 +3120,7 @@
       "skill_id": "math.fractions_multiplication.s1_order_ops",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли: $\\left(\\frac{10}{7}\\right)^2$",
+      "statement_md": "Вычисли: $\\left(\\dfrac{10}{7}\\right)^2$",
       "answer": {
         "type": "fraction",
         "numerator": 100,
@@ -3138,7 +3133,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{2}{3}\\cdot 15+\\frac{1}{3}\\cdot 15$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{2}{3}\\cdot 15+\\dfrac{1}{3}\\cdot 15$",
       "answer": {
         "type": "fraction",
         "numerator": 15,
@@ -3151,7 +3146,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{3}{4}\\cdot 20+\\frac{1}{4}\\cdot 20$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{3}{4}\\cdot 20+\\dfrac{1}{4}\\cdot 20$",
       "answer": {
         "type": "fraction",
         "numerator": 20,
@@ -3164,7 +3159,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{5}{8}\\cdot 32+\\frac{3}{8}\\cdot 32$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{5}{8}\\cdot 32+\\dfrac{3}{8}\\cdot 32$",
       "answer": {
         "type": "fraction",
         "numerator": 32,
@@ -3177,7 +3172,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{7}{9}\\cdot 45+\\frac{2}{9}\\cdot 45$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{7}{9}\\cdot 45+\\dfrac{2}{9}\\cdot 45$",
       "answer": {
         "type": "fraction",
         "numerator": 45,
@@ -3190,7 +3185,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{4}{5}\\cdot 25+\\frac{1}{5}\\cdot 25$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{4}{5}\\cdot 25+\\dfrac{1}{5}\\cdot 25$",
       "answer": {
         "type": "fraction",
         "numerator": 25,
@@ -3203,7 +3198,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{6}{7}\\cdot 21+\\frac{1}{7}\\cdot 21$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{6}{7}\\cdot 21+\\dfrac{1}{7}\\cdot 21$",
       "answer": {
         "type": "fraction",
         "numerator": 21,
@@ -3216,7 +3211,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{9}{10}\\cdot 40+\\frac{1}{10}\\cdot 40$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{9}{10}\\cdot 40+\\dfrac{1}{10}\\cdot 40$",
       "answer": {
         "type": "fraction",
         "numerator": 40,
@@ -3229,7 +3224,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{11}{12}\\cdot 36+\\frac{1}{12}\\cdot 36$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{11}{12}\\cdot 36+\\dfrac{1}{12}\\cdot 36$",
       "answer": {
         "type": "fraction",
         "numerator": 36,
@@ -3242,7 +3237,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{2}{5}\\cdot 50+\\frac{3}{5}\\cdot 50$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{2}{5}\\cdot 50+\\dfrac{3}{5}\\cdot 50$",
       "answer": {
         "type": "fraction",
         "numerator": 50,
@@ -3255,7 +3250,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{3}{8}\\cdot 64+\\frac{5}{8}\\cdot 64$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{3}{8}\\cdot 64+\\dfrac{5}{8}\\cdot 64$",
       "answer": {
         "type": "fraction",
         "numerator": 64,
@@ -3268,7 +3263,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{1}{6}\\cdot 30+\\frac{5}{6}\\cdot 30$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{1}{6}\\cdot 30+\\dfrac{5}{6}\\cdot 30$",
       "answer": {
         "type": "fraction",
         "numerator": 30,
@@ -3281,7 +3276,7 @@
       "skill_id": "math.fractions_multiplication.s2_factor_common",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Вычисли удобным способом: $\\frac{4}{9}\\cdot 81+\\frac{5}{9}\\cdot 81$",
+      "statement_md": "Вычисли удобным способом: $\\dfrac{4}{9}\\cdot 81+\\dfrac{5}{9}\\cdot 81$",
       "answer": {
         "type": "fraction",
         "numerator": 81,
@@ -3294,7 +3289,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{5}{6}a-(\\frac{1}{3}a-\\frac{1}{6}a)$",
+      "statement_md": "Упрости: $\\dfrac{5}{6}a-(\\dfrac{1}{3}a-\\dfrac{1}{6}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3307,7 +3302,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{7}{8}a-(\\frac{1}{4}a-\\frac{1}{8}a)$",
+      "statement_md": "Упрости: $\\dfrac{7}{8}a-(\\dfrac{1}{4}a-\\dfrac{1}{8}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -3320,7 +3315,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{9}{10}a-(\\frac{2}{5}a-\\frac{1}{10}a)$",
+      "statement_md": "Упрости: $\\dfrac{9}{10}a-(\\dfrac{2}{5}a-\\dfrac{1}{10}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -3333,7 +3328,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{4}{5}a-(\\frac{1}{2}a-\\frac{1}{10}a)$",
+      "statement_md": "Упрости: $\\dfrac{4}{5}a-(\\dfrac{1}{2}a-\\dfrac{1}{10}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3346,7 +3341,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{3}{4}a-(\\frac{1}{2}a-\\frac{1}{4}a)$",
+      "statement_md": "Упрости: $\\dfrac{3}{4}a-(\\dfrac{1}{2}a-\\dfrac{1}{4}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3359,7 +3354,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{11}{12}a-(\\frac{1}{3}a-\\frac{1}{4}a)$",
+      "statement_md": "Упрости: $\\dfrac{11}{12}a-(\\dfrac{1}{3}a-\\dfrac{1}{4}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3372,7 +3367,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{5}{9}a-(\\frac{1}{3}a-\\frac{1}{9}a)$",
+      "statement_md": "Упрости: $\\dfrac{5}{9}a-(\\dfrac{1}{3}a-\\dfrac{1}{9}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3385,7 +3380,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{8}{11}a-(\\frac{3}{11}a-\\frac{1}{11}a)$",
+      "statement_md": "Упрости: $\\dfrac{8}{11}a-(\\dfrac{3}{11}a-\\dfrac{1}{11}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -3398,7 +3393,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{6}{7}a-(\\frac{2}{7}a-\\frac{1}{7}a)$",
+      "statement_md": "Упрости: $\\dfrac{6}{7}a-(\\dfrac{2}{7}a-\\dfrac{1}{7}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 5,
@@ -3411,7 +3406,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{13}{14}a-(\\frac{1}{7}a-\\frac{1}{14}a)$",
+      "statement_md": "Упрости: $\\dfrac{13}{14}a-(\\dfrac{1}{7}a-\\dfrac{1}{14}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -3424,7 +3419,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{2}{3}a-(\\frac{1}{6}a-\\frac{1}{3}a)$",
+      "statement_md": "Упрости: $\\dfrac{2}{3}a-(\\dfrac{1}{6}a-\\dfrac{1}{3}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 5,
@@ -3437,7 +3432,7 @@
       "skill_id": "math.fractions_multiplication.s3_parens_a",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Упрости: $\\frac{9}{16}a-(\\frac{1}{8}a-\\frac{1}{16}a)$",
+      "statement_md": "Упрости: $\\dfrac{9}{16}a-(\\dfrac{1}{8}a-\\dfrac{1}{16}a)$",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -3450,7 +3445,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{5}{6}a-(\\frac{1}{3}a-\\frac{1}{6}a)$ при $a=1{,}44$.",
+      "statement_md": "Найди значение $\\dfrac{5}{6}a-(\\dfrac{1}{3}a-\\dfrac{1}{6}a)$ при $a=1{,}44$.",
       "answer": {
         "type": "fraction",
         "numerator": 24,
@@ -3463,7 +3458,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{3}{4}a-(\\frac{1}{2}a-\\frac{1}{4}a)$ при $a=-\\frac{12}{27}$.",
+      "statement_md": "Найди значение $\\dfrac{3}{4}a-(\\dfrac{1}{2}a-\\dfrac{1}{4}a)$ при $a=-\\dfrac{12}{27}$.",
       "answer": {
         "type": "fraction",
         "numerator": -2,
@@ -3476,7 +3471,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{7}{8}a-(\\frac{1}{4}a-\\frac{1}{8}a)$ при $a=1{,}6$.",
+      "statement_md": "Найди значение $\\dfrac{7}{8}a-(\\dfrac{1}{4}a-\\dfrac{1}{8}a)$ при $a=1{,}6$.",
       "answer": {
         "type": "fraction",
         "numerator": 6,
@@ -3489,7 +3484,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{4}{5}a-(\\frac{1}{2}a-\\frac{1}{10}a)$ при $a=-1{,}2$.",
+      "statement_md": "Найди значение $\\dfrac{4}{5}a-(\\dfrac{1}{2}a-\\dfrac{1}{10}a)$ при $a=-1{,}2$.",
       "answer": {
         "type": "fraction",
         "numerator": -12,
@@ -3502,7 +3497,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{11}{12}a-(\\frac{1}{3}a-\\frac{1}{4}a)$ при $a=0{,}75$.",
+      "statement_md": "Найди значение $\\dfrac{11}{12}a-(\\dfrac{1}{3}a-\\dfrac{1}{4}a)$ при $a=0{,}75$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3515,7 +3510,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{5}{9}a-(\\frac{1}{3}a-\\frac{1}{9}a)$ при $a=-0{,}9$.",
+      "statement_md": "Найди значение $\\dfrac{5}{9}a-(\\dfrac{1}{3}a-\\dfrac{1}{9}a)$ при $a=-0{,}9$.",
       "answer": {
         "type": "fraction",
         "numerator": -3,
@@ -3528,7 +3523,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{8}{11}a-(\\frac{3}{11}a-\\frac{1}{11}a)$ при $a=\\frac{27}{12}$.",
+      "statement_md": "Найди значение $\\dfrac{8}{11}a-(\\dfrac{3}{11}a-\\dfrac{1}{11}a)$ при $a=\\dfrac{27}{12}$.",
       "answer": {
         "type": "fraction",
         "numerator": 27,
@@ -3541,7 +3536,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{6}{7}a-(\\frac{2}{7}a-\\frac{1}{7}a)$ при $a=-\\frac{21}{14}$.",
+      "statement_md": "Найди значение $\\dfrac{6}{7}a-(\\dfrac{2}{7}a-\\dfrac{1}{7}a)$ при $a=-\\dfrac{21}{14}$.",
       "answer": {
         "type": "fraction",
         "numerator": -15,
@@ -3554,7 +3549,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{13}{14}a-(\\frac{1}{7}a-\\frac{1}{14}a)$ при $a=2{,}8$.",
+      "statement_md": "Найди значение $\\dfrac{13}{14}a-(\\dfrac{1}{7}a-\\dfrac{1}{14}a)$ при $a=2{,}8$.",
       "answer": {
         "type": "fraction",
         "numerator": 12,
@@ -3567,7 +3562,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{2}{3}a-(\\frac{1}{6}a-\\frac{1}{3}a)$ при $a=-1{,}5$.",
+      "statement_md": "Найди значение $\\dfrac{2}{3}a-(\\dfrac{1}{6}a-\\dfrac{1}{3}a)$ при $a=-1{,}5$.",
       "answer": {
         "type": "fraction",
         "numerator": -5,
@@ -3580,7 +3575,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{9}{16}a-(\\frac{1}{8}a-\\frac{1}{16}a)$ при $a=\\frac{32}{9}$.",
+      "statement_md": "Найди значение $\\dfrac{9}{16}a-(\\dfrac{1}{8}a-\\dfrac{1}{16}a)$ при $a=\\dfrac{32}{9}$.",
       "answer": {
         "type": "fraction",
         "numerator": 8,
@@ -3593,7 +3588,7 @@
       "skill_id": "math.fractions_multiplication.s3_subst_hard",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Найди значение $\\frac{4}{3}a-(\\frac{1}{6}a-\\frac{1}{3}a)$ при $a=-0{,}6$.",
+      "statement_md": "Найди значение $\\dfrac{4}{3}a-(\\dfrac{1}{6}a-\\dfrac{1}{3}a)$ при $a=-0{,}6$.",
       "answer": {
         "type": "fraction",
         "numerator": -1,
@@ -3606,7 +3601,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{1}{3}x+\\frac{1}{6}x)\\cdot 18=27$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{1}{3}x+\\dfrac{1}{6}x)\\cdot 18=27$.",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -3619,7 +3614,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{2}{5}x+\\frac{1}{5}x)\\cdot 20=24$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{2}{5}x+\\dfrac{1}{5}x)\\cdot 20=24$.",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3632,7 +3627,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{3}{4}x+\\frac{1}{8}x)\\cdot 16=28$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{3}{4}x+\\dfrac{1}{8}x)\\cdot 16=28$.",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3645,7 +3640,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{5}{6}x+\\frac{1}{3}x)\\cdot 12=24$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{5}{6}x+\\dfrac{1}{3}x)\\cdot 12=24$.",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3658,7 +3653,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{7}{8}x+\\frac{1}{4}x)\\cdot 8=14$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{7}{8}x+\\dfrac{1}{4}x)\\cdot 8=14$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3671,7 +3666,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{4}{9}x+\\frac{2}{3}x)\\cdot 9=27$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{4}{9}x+\\dfrac{2}{3}x)\\cdot 9=27$.",
       "answer": {
         "type": "fraction",
         "numerator": 3,
@@ -3684,7 +3679,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{6}{7}x+\\frac{1}{7}x)\\cdot 14=28$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{6}{7}x+\\dfrac{1}{7}x)\\cdot 14=28$.",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3697,7 +3692,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{9}{10}x+\\frac{1}{5}x)\\cdot 10=15$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{9}{10}x+\\dfrac{1}{5}x)\\cdot 10=15$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3710,7 +3705,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{11}{12}x+\\frac{1}{6}x)\\cdot 6=11$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{11}{12}x+\\dfrac{1}{6}x)\\cdot 6=11$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3723,7 +3718,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{5}{12}x+\\frac{7}{12}x)\\cdot 24=60$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{5}{12}x+\\dfrac{7}{12}x)\\cdot 24=60$.",
       "answer": {
         "type": "fraction",
         "numerator": 5,
@@ -3736,7 +3731,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{8}{11}x+\\frac{3}{11}x)\\cdot 22=44$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{8}{11}x+\\dfrac{3}{11}x)\\cdot 22=44$.",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3749,7 +3744,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_factor",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $(\\frac{2}{3}x+\\frac{1}{9}x)\\cdot 27=27$.",
+      "statement_md": "Реши уравнение: $(\\dfrac{2}{3}x+\\dfrac{1}{9}x)\\cdot 27=27$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3762,7 +3757,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $15\\cdot(\\frac{2}{3}x-\\frac{1}{6}x)=15$.",
+      "statement_md": "Реши уравнение: $15\\cdot(\\dfrac{2}{3}x-\\dfrac{1}{6}x)=15$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3775,7 +3770,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $20\\cdot(\\frac{4}{5}x-\\frac{1}{5}x)=40$.",
+      "statement_md": "Реши уравнение: $20\\cdot(\\dfrac{4}{5}x-\\dfrac{1}{5}x)=40$.",
       "answer": {
         "type": "fraction",
         "numerator": 5,
@@ -3788,7 +3783,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $18\\cdot(\\frac{5}{6}x-\\frac{1}{3}x)=18$.",
+      "statement_md": "Реши уравнение: $18\\cdot(\\dfrac{5}{6}x-\\dfrac{1}{3}x)=18$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3801,7 +3796,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $12\\cdot(\\frac{3}{4}x-\\frac{1}{4}x)=9$.",
+      "statement_md": "Реши уравнение: $12\\cdot(\\dfrac{3}{4}x-\\dfrac{1}{4}x)=9$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3814,7 +3809,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $24\\cdot(\\frac{7}{8}x-\\frac{3}{8}x)=24$.",
+      "statement_md": "Реши уравнение: $24\\cdot(\\dfrac{7}{8}x-\\dfrac{3}{8}x)=24$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3827,7 +3822,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $21\\cdot(\\frac{4}{7}x-\\frac{1}{7}x)=21$.",
+      "statement_md": "Реши уравнение: $21\\cdot(\\dfrac{4}{7}x-\\dfrac{1}{7}x)=21$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3840,7 +3835,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $30\\cdot(\\frac{3}{5}x-\\frac{1}{5}x)=24$.",
+      "statement_md": "Реши уравнение: $30\\cdot(\\dfrac{3}{5}x-\\dfrac{1}{5}x)=24$.",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3853,7 +3848,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $14\\cdot(\\frac{6}{7}x-\\frac{2}{7}x)=28$.",
+      "statement_md": "Реши уравнение: $14\\cdot(\\dfrac{6}{7}x-\\dfrac{2}{7}x)=28$.",
       "answer": {
         "type": "fraction",
         "numerator": 2,
@@ -3866,7 +3861,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $16\\cdot(\\frac{5}{8}x-\\frac{1}{8}x)=8$.",
+      "statement_md": "Реши уравнение: $16\\cdot(\\dfrac{5}{8}x-\\dfrac{1}{8}x)=8$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3879,7 +3874,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $27\\cdot(\\frac{5}{9}x-\\frac{2}{9}x)=27$.",
+      "statement_md": "Реши уравнение: $27\\cdot(\\dfrac{5}{9}x-\\dfrac{2}{9}x)=27$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -3892,7 +3887,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $40\\cdot(\\frac{7}{10}x-\\frac{3}{10}x)=40$.",
+      "statement_md": "Реши уравнение: $40\\cdot(\\dfrac{7}{10}x-\\dfrac{3}{10}x)=40$.",
       "answer": {
         "type": "fraction",
         "numerator": 5,
@@ -3905,7 +3900,7 @@
       "skill_id": "math.fractions_multiplication.s4_eq_parens",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Реши уравнение: $36\\cdot(\\frac{11}{12}x-\\frac{1}{6}x)=18$.",
+      "statement_md": "Реши уравнение: $36\\cdot(\\dfrac{11}{12}x-\\dfrac{1}{6}x)=18$.",
       "answer": {
         "type": "fraction",
         "numerator": 1,
@@ -4074,7 +4069,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 240 м ленты. Использовали $\\frac{1}{4}$, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 240 м ленты. Использовали $\\dfrac{1}{4}$, затем $\\dfrac{1}{3}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 120,
@@ -4087,7 +4082,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 180 кг зерна. Продали $\\frac{2}{5}$, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 180 кг зерна. Продали $\\dfrac{2}{5}$, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 54,
@@ -4100,7 +4095,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 300 руб. Потратили $\\frac{1}{3}$, затем $\\frac{1}{4}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 300 руб. Потратили $\\dfrac{1}{3}$, затем $\\dfrac{1}{4}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 150,
@@ -4113,7 +4108,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 200 деталей. Использовали $\\frac{1}{5}$, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 200 деталей. Использовали $\\dfrac{1}{5}$, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 80,
@@ -4126,7 +4121,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 150 м ткани. Использовали $\\frac{2}{3}$, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 150 м ткани. Использовали $\\dfrac{2}{3}$, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 25,
@@ -4139,7 +4134,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 96 книг. Продали $\\frac{1}{4}$, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 96 книг. Продали $\\dfrac{1}{4}$, затем $\\dfrac{1}{3}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 48,
@@ -4152,7 +4147,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 210 руб. Потратили $\\frac{2}{7}$, затем $\\frac{1}{3}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 210 руб. Потратили $\\dfrac{2}{7}$, затем $\\dfrac{1}{3}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 100,
@@ -4165,7 +4160,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 360 кг песка. Использовали $\\frac{1}{6}$, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 360 кг песка. Использовали $\\dfrac{1}{6}$, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 150,
@@ -4178,7 +4173,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 400 м дороги. Отремонтировали $\\frac{1}{5}$, затем $\\frac{1}{4}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 400 м дороги. Отремонтировали $\\dfrac{1}{5}$, затем $\\dfrac{1}{4}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 240,
@@ -4191,7 +4186,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 120 л топлива. Потратили $\\frac{1}{3}$, затем $\\frac{1}{4}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 120 л топлива. Потратили $\\dfrac{1}{3}$, затем $\\dfrac{1}{4}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 60,
@@ -4204,7 +4199,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 500 кг муки. Продали $\\frac{2}{5}$, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 500 кг муки. Продали $\\dfrac{2}{5}$, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 150,
@@ -4217,7 +4212,7 @@
       "skill_id": "math.fractions_multiplication.s5_seq_frac",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Было 270 м ленты. Использовали $\\frac{1}{3}$, затем $\\frac{1}{2}$ оставшегося. Сколько осталось?",
+      "statement_md": "Было 270 м ленты. Использовали $\\dfrac{1}{3}$, затем $\\dfrac{1}{2}$ оставшегося. Сколько осталось?",
       "answer": {
         "type": "fraction",
         "numerator": 90,
@@ -4230,7 +4225,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Длина прямоугольника 12 м, ширина составляет $\\frac{2}{3}$ длины. Найди площадь.",
+      "statement_md": "Длина прямоугольника 12 м, ширина составляет $\\dfrac{2}{3}$ длины. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 96,
@@ -4243,7 +4238,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Основание треугольника 12 м, высота составляет $\\frac{3}{4}$ основания. Найди площадь.",
+      "statement_md": "Основание треугольника 12 м, высота составляет $\\dfrac{3}{4}$ основания. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 54,
@@ -4256,7 +4251,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Длина комнаты 15 м, ширина составляет $\\frac{2}{5}$ длины. Найди площадь.",
+      "statement_md": "Длина комнаты 15 м, ширина составляет $\\dfrac{2}{5}$ длины. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 90,
@@ -4269,7 +4264,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Длина участка 20 м, ширина $\\frac{3}{5}$ длины. Найди площадь.",
+      "statement_md": "Длина участка 20 м, ширина $\\dfrac{3}{5}$ длины. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 240,
@@ -4282,7 +4277,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Сторона прямоугольника 18 м, вторая сторона $\\frac{1}{3}$ первой. Найди площадь.",
+      "statement_md": "Сторона прямоугольника 18 м, вторая сторона $\\dfrac{1}{3}$ первой. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 108,
@@ -4295,7 +4290,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Основание треугольника 16 м, высота $\\frac{1}{2}$ основания. Найди площадь.",
+      "statement_md": "Основание треугольника 16 м, высота $\\dfrac{1}{2}$ основания. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 64,
@@ -4308,7 +4303,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Длина прямоугольника 24 м, ширина $\\frac{1}{4}$ длины. Найди площадь.",
+      "statement_md": "Длина прямоугольника 24 м, ширина $\\dfrac{1}{4}$ длины. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 144,
@@ -4321,7 +4316,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Высота параллелепипеда 12 м, основание 5 м и $\\frac{2}{3}$ м. Найди объём.",
+      "statement_md": "Высота параллелепипеда 12 м, основание 5 м и $\\dfrac{2}{3}$ м. Найди объём.",
       "answer": {
         "type": "fraction",
         "numerator": 40,
@@ -4334,7 +4329,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Сторона квадрата 6 м. Найди площадь, если увеличили сторону в $\\frac{3}{2}$ раза.",
+      "statement_md": "Сторона квадрата 6 м. Найди площадь, если увеличили сторону в $\\dfrac{3}{2}$ раза.",
       "answer": {
         "type": "fraction",
         "numerator": 81,
@@ -4347,7 +4342,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Длина прямоугольника 10 м, ширина $\\frac{4}{5}$ длины. Найди площадь.",
+      "statement_md": "Длина прямоугольника 10 м, ширина $\\dfrac{4}{5}$ длины. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 80,
@@ -4360,7 +4355,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Основание треугольника 20 м, высота $\\frac{1}{5}$ основания. Найди площадь.",
+      "statement_md": "Основание треугольника 20 м, высота $\\dfrac{1}{5}$ основания. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 40,
@@ -4373,7 +4368,7 @@
       "skill_id": "math.fractions_multiplication.s5_volume",
       "difficulty": 5,
       "difficulty_band": "C",
-      "statement_md": "Длина комнаты 18 м, ширина $\\frac{2}{3}$ длины. Найди площадь.",
+      "statement_md": "Длина комнаты 18 м, ширина $\\dfrac{2}{3}$ длины. Найди площадь.",
       "answer": {
         "type": "fraction",
         "numerator": 216,
