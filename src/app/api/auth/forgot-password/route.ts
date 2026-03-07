@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     const { email } = input.value;
     const locale = parseLocale(body.locale);
 
-    const rateLimit = consumeAuthRateLimit({
+    const rateLimit = await consumeAuthRateLimit({
       scope: "forgot-password",
       headers: request.headers,
       identifier: email,

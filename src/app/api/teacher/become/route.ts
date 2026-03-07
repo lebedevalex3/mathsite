@@ -4,15 +4,16 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/src/lib/db/prisma";
 import { toApiError } from "@/src/lib/api/errors";
 import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
+import { isLocalDevRoleEscalationEnabled } from "@/src/lib/auth/access";
 import { getCurrentUserWithRole } from "@/src/lib/variants/auth";
 import { writeAuditLog } from "@/src/lib/audit/log";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  if (process.env.ALLOW_DEV_BECOME_TEACHER !== "1") {
+  if (!isLocalDevRoleEscalationEnabled(process.env.ALLOW_DEV_BECOME_TEACHER)) {
     return NextResponse.json(
-      { ok: false, code: "DISABLED", message: "Endpoint disabled in production." },
+      { ok: false, code: "DISABLED", message: "Endpoint disabled outside local development." },
       { status: 404 },
     );
   }

@@ -12,7 +12,11 @@ import type { VariantTemplate } from "@/src/lib/variants/types";
 import { buildVariantPlan, InsufficientTasksError } from "@/src/lib/variants/plan";
 import type { WorkType } from "@/src/lib/variants/print-recommendation";
 import { createSeededRng } from "@/src/lib/variants/rng";
-import { GUEST_DEMO_VARIANTS_PER_DAY, GUEST_DEMO_WINDOW_MS } from "@/src/lib/auth/policy";
+import {
+  DEMO_WORK_TTL_MS,
+  GUEST_DEMO_VARIANTS_PER_DAY,
+  GUEST_DEMO_WINDOW_MS,
+} from "@/src/lib/auth/policy";
 
 import type { DemoPlanItem } from "./types";
 
@@ -24,7 +28,7 @@ const DEMO_RATE_WINDOW_MS = GUEST_DEMO_WINDOW_MS;
 export class DemoRateLimitError extends Error {
   status = 429;
   code = "RATE_LIMITED";
-  constructor() {
+  constructor(public readonly retryAfterSeconds?: number) {
     super("Too many demo generation requests. Please try again later.");
   }
 }
@@ -419,7 +423,7 @@ export async function generateDemoWorkWithVariants(params: {
 
   const variantFits = drafts.map((draft) => draft.fit);
   const now = new Date();
-  const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const expiresAt = new Date(now.getTime() + DEMO_WORK_TTL_MS);
   const title = buildWorkDisplayTitle({
     locale: params.locale,
     workType,

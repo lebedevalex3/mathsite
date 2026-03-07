@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     }
     const { email, password } = input.value;
 
-    const rateLimit = consumeAuthRateLimit({
+    const rateLimit = await consumeAuthRateLimit({
       scope: "sign-up",
       headers: request.headers,
       identifier: email,

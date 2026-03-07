@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     }
     const { identifier, password } = input.value;
 
-    const rateLimit = consumeAuthRateLimit({
+    const rateLimit = await consumeAuthRateLimit({
       scope: "sign-in",
       headers: request.headers,
       identifier,

@@ -7,12 +7,13 @@ import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { aggregateSkillProgress } from "@/src/lib/progress/aggregate";
 import { getMasteryMinAttemptsBySkill } from "@/src/lib/progress/mastery-thresholds";
 import {
-  aggregateCompare,
+  aggregateCompareFromUserSummaries,
   compareWindowCutoff,
   DEFAULT_COMPARE_COHORT_MIN_ATTEMPTS,
   DEFAULT_COMPARE_WINDOW_DAYS,
 } from "@/src/lib/progress/compare";
-import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
+import { fetchTopicUserTotals } from "@/src/lib/progress/query";
+import { getExistingViewerUser } from "@/src/lib/session/visitor";
 
 export const runtime = "nodejs";
 
@@ -33,35 +34,28 @@ export async function GET(request: Request) {
   }
 
   const cookieStore = await cookies();
-  const { userId } = await getOrCreateVisitorUser(cookieStore);
+  const { userId } = await getExistingViewerUser(cookieStore);
   const cutoff = compareWindowCutoff(new Date(), DEFAULT_COMPARE_WINDOW_DAYS);
-  const [userAttempts, compareAttempts] = await Promise.all([
-    prisma.attempt.findMany({
-      where: { topicId, userId },
-      select: {
-        skillId: true,
-        isCorrect: true,
-      },
-    }),
-    prisma.attempt.findMany({
-      where: { topicId, createdAt: { gte: cutoff } },
-      select: {
-        userId: true,
-        topicId: true,
-        isCorrect: true,
-        createdAt: true,
-      },
-    }),
+  const [userAttempts, compareRows] = await Promise.all([
+    userId
+      ? prisma.attempt.findMany({
+          where: { topicId, userId },
+          select: {
+            skillId: true,
+            isCorrect: true,
+          },
+        })
+      : Promise.resolve([]),
+    fetchTopicUserTotals({ topicId, cutoff }),
   ]);
 
   const userProgress = aggregateSkillProgress(userAttempts, {
     masteryMinAttemptsBySkill: getMasteryMinAttemptsBySkill(topicId),
   });
 
-  const compare = aggregateCompare({
-    topicId,
+  const compare = aggregateCompareFromUserSummaries({
     currentUserId: userId,
-    attempts: compareAttempts,
+    rows: compareRows,
     cohortMinAttempts: DEFAULT_COMPARE_COHORT_MIN_ATTEMPTS,
     windowDays: DEFAULT_COMPARE_WINDOW_DAYS,
   });

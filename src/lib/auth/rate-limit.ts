@@ -1,3 +1,5 @@
+import { prisma } from "@/src/lib/db/prisma";
+
 type RateLimitRule = {
   windowMs: number;
   maxAttempts: number;
@@ -14,7 +16,20 @@ declare global {
   var __mathsiteRateLimitStore: RateLimitStore | undefined;
 }
 
-function getStore() {
+type ConsumeBucketResult = {
+  limited: boolean;
+  retryAfterSeconds: number;
+};
+
+type AuthRateLimitBackend = {
+  consumeBucket(params: {
+    key: string;
+    rule: RateLimitRule;
+    nowMs: number;
+  }): Promise<ConsumeBucketResult>;
+};
+
+function getMemoryStore() {
   if (!globalThis.__mathsiteRateLimitStore) {
     globalThis.__mathsiteRateLimitStore = new Map<string, RateLimitBucket>();
   }
@@ -39,12 +54,12 @@ function getOrCreateBucket(
   return existing;
 }
 
-function consume(
+function consumeMemoryBucket(
   store: RateLimitStore,
   key: string,
   rule: RateLimitRule,
   nowMs: number,
-) {
+): ConsumeBucketResult {
   const bucket = getOrCreateBucket(store, key, rule.windowMs, nowMs);
   bucket.count += 1;
 
@@ -57,7 +72,52 @@ function consume(
   };
 }
 
-export type AuthRateLimitScope = "sign-in" | "sign-up" | "forgot-password";
+export function createMemoryAuthRateLimitBackend(
+  store: RateLimitStore = getMemoryStore(),
+): AuthRateLimitBackend {
+  return {
+    async consumeBucket({ key, rule, nowMs }) {
+      return consumeMemoryBucket(store, key, rule, nowMs);
+    },
+  };
+}
+
+function createDbAuthRateLimitBackend(): AuthRateLimitBackend {
+  return {
+    async consumeBucket({ key, rule, nowMs }) {
+      const now = new Date(nowMs);
+      const nextReset = new Date(nowMs + rule.windowMs);
+      const rows = await prisma.$queryRaw<Array<{ count: number; resetAt: Date }>>`
+        INSERT INTO "AuthRateLimitBucket" ("key", "count", "resetAt", "createdAt", "updatedAt")
+        VALUES (${key}, 1, ${nextReset}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        ON CONFLICT ("key") DO UPDATE
+        SET
+          "count" = CASE
+            WHEN "AuthRateLimitBucket"."resetAt" <= ${now} THEN 1
+            ELSE "AuthRateLimitBucket"."count" + 1
+          END,
+          "resetAt" = CASE
+            WHEN "AuthRateLimitBucket"."resetAt" <= ${now} THEN ${nextReset}
+            ELSE "AuthRateLimitBucket"."resetAt"
+          END,
+          "updatedAt" = CURRENT_TIMESTAMP
+        RETURNING "count", "resetAt"
+      `;
+      const row = rows[0];
+      if (!row) {
+        throw new Error("Auth rate limit backend returned no rows");
+      }
+
+      const retryAfterMs = Math.max(row.resetAt.getTime() - nowMs, 0);
+      return {
+        limited: row.count > rule.maxAttempts,
+        retryAfterSeconds: Math.max(Math.ceil(retryAfterMs / 1000), 1),
+      };
+    },
+  };
+}
+
+export type AuthRateLimitScope = "sign-in" | "sign-up" | "forgot-password" | "demo-generate";
 
 const RULES: Record<AuthRateLimitScope, { ip: RateLimitRule; identifier: RateLimitRule; pair: RateLimitRule }> = {
   "sign-in": {
@@ -74,6 +134,11 @@ const RULES: Record<AuthRateLimitScope, { ip: RateLimitRule; identifier: RateLim
     ip: { windowMs: 10 * 60 * 1000, maxAttempts: 10 },
     identifier: { windowMs: 10 * 60 * 1000, maxAttempts: 6 },
     pair: { windowMs: 10 * 60 * 1000, maxAttempts: 4 },
+  },
+  "demo-generate": {
+    ip: { windowMs: 60 * 60 * 1000, maxAttempts: 24 },
+    identifier: { windowMs: 60 * 60 * 1000, maxAttempts: 12 },
+    pair: { windowMs: 60 * 60 * 1000, maxAttempts: 8 },
   },
 };
 
@@ -95,52 +160,87 @@ export function getClientIpFromHeaders(headers: Headers) {
   return "unknown";
 }
 
-export function consumeAuthRateLimit(params: {
-  scope: AuthRateLimitScope;
-  headers: Headers;
-  identifier: string;
-  nowMs?: number;
-}) {
+type ConsumeAuthRateLimitDeps = {
+  backend?: AuthRateLimitBackend;
+  fallbackBackend?: AuthRateLimitBackend;
+};
+
+export async function consumeAuthRateLimit(
+  params: {
+    scope: AuthRateLimitScope;
+    headers: Headers;
+    identifier: string;
+    nowMs?: number;
+  },
+  deps: ConsumeAuthRateLimitDeps = {},
+) {
   const rules = RULES[params.scope];
   const nowMs = params.nowMs ?? Date.now();
-  const store = getStore();
+  const backend = deps.backend ?? createDbAuthRateLimitBackend();
+  const fallbackBackend = deps.fallbackBackend ?? createMemoryAuthRateLimitBackend();
   const ip = getClientIpFromHeaders(params.headers);
   const normalizedIdentifier = params.identifier.trim().toLowerCase();
 
-  const ipResult = consume(store, `${params.scope}:ip:${ip}`, rules.ip, nowMs);
-  const identifierResult = consume(
-    store,
-    `${params.scope}:identifier:${normalizedIdentifier}`,
-    rules.identifier,
-    nowMs,
-  );
-  const pairResult = consume(
-    store,
-    `${params.scope}:pair:${ip}:${normalizedIdentifier}`,
-    rules.pair,
-    nowMs,
-  );
+  const keys = {
+    ip: `${params.scope}:ip:${ip}`,
+    identifier: `${params.scope}:identifier:${normalizedIdentifier}`,
+    pair: `${params.scope}:pair:${ip}:${normalizedIdentifier}`,
+  } as const;
+
+  let degraded = false;
+  let results: {
+    ip: ConsumeBucketResult;
+    identifier: ConsumeBucketResult;
+    pair: ConsumeBucketResult;
+  };
+
+  try {
+    const [ipResult, identifierResult, pairResult] = await Promise.all([
+      backend.consumeBucket({ key: keys.ip, rule: rules.ip, nowMs }),
+      backend.consumeBucket({ key: keys.identifier, rule: rules.identifier, nowMs }),
+      backend.consumeBucket({ key: keys.pair, rule: rules.pair, nowMs }),
+    ]);
+    results = {
+      ip: ipResult,
+      identifier: identifierResult,
+      pair: pairResult,
+    };
+  } catch {
+    degraded = true;
+    const [ipResult, identifierResult, pairResult] = await Promise.all([
+      fallbackBackend.consumeBucket({ key: keys.ip, rule: rules.ip, nowMs }),
+      fallbackBackend.consumeBucket({ key: keys.identifier, rule: rules.identifier, nowMs }),
+      fallbackBackend.consumeBucket({ key: keys.pair, rule: rules.pair, nowMs }),
+    ]);
+    results = {
+      ip: ipResult,
+      identifier: identifierResult,
+      pair: pairResult,
+    };
+  }
 
   const reasons: Array<"ip" | "identifier" | "pair"> = [];
-  if (ipResult.limited) reasons.push("ip");
-  if (identifierResult.limited) reasons.push("identifier");
-  if (pairResult.limited) reasons.push("pair");
+  if (results.ip.limited) reasons.push("ip");
+  if (results.identifier.limited) reasons.push("identifier");
+  if (results.pair.limited) reasons.push("pair");
 
   if (reasons.length === 0) {
     return {
       limited: false,
       retryAfterSeconds: 0,
       reasons,
+      degraded,
     } as const;
   }
 
   return {
     limited: true,
     retryAfterSeconds: Math.max(
-      ipResult.retryAfterSeconds,
-      identifierResult.retryAfterSeconds,
-      pairResult.retryAfterSeconds,
+      results.ip.retryAfterSeconds,
+      results.identifier.retryAfterSeconds,
+      results.pair.retryAfterSeconds,
     ),
     reasons,
+    degraded,
   } as const;
 }

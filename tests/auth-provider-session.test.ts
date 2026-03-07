@@ -8,6 +8,7 @@ import {
   destroyAllAuthSessions,
   destroyAuthSession,
   getAuthenticatedUserFromCookie,
+  revokeAllAuthSessionsForUser,
   verifyPassword,
 } from "@/src/lib/auth/provider";
 import { AUTH_MAX_ACTIVE_SESSIONS } from "@/src/lib/auth/policy";
@@ -248,6 +249,26 @@ test("destroyAllAuthSessions deletes by user id and clears cookie", async () => 
     assert.equal(setCalls[0].name, "auth_session");
     assert.equal(setCalls[0].value, "");
     assert.equal(setCalls[0].maxAge, 0);
+  } finally {
+    authSession.deleteMany = originalDeleteMany;
+  }
+});
+
+test("revokeAllAuthSessionsForUser deletes by user id without touching cookies", async () => {
+  const authSession = prisma.authSession as unknown as {
+    deleteMany(args: { where: { userId: string } }): Promise<{ count: number }>;
+  };
+  const originalDeleteMany = authSession.deleteMany;
+  const deletedUserIds: string[] = [];
+
+  authSession.deleteMany = async (args) => {
+    deletedUserIds.push(args.where.userId);
+    return { count: 2 };
+  };
+
+  try {
+    await revokeAllAuthSessionsForUser("u-server-revoke");
+    assert.deepEqual(deletedUserIds, ["u-server-revoke"]);
   } finally {
     authSession.deleteMany = originalDeleteMany;
   }

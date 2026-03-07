@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { getTeacherToolsRedirectReason, isTeacherRole } from "@/src/lib/auth/access";
+import {
+  getTeacherToolsRedirectReason,
+  isLocalDevRoleEscalationEnabled,
+  isTeacherRole,
+} from "@/src/lib/auth/access";
 import { forbidden } from "@/src/lib/api/errors";
 
 test("isTeacherRole returns false for student and true for teacher/admin", () => {
@@ -49,4 +53,31 @@ test("forbidden helper returns 403 API payload", () => {
   assert.equal(result.status, 403);
   assert.equal(result.body.code, "FORBIDDEN");
   assert.equal(result.body.message, "Teacher role required");
+});
+
+test("isLocalDevRoleEscalationEnabled only allows flagged local development", () => {
+  assert.equal(
+    isLocalDevRoleEscalationEnabled("1", { NODE_ENV: "development", VERCEL: undefined, CI: undefined }),
+    true,
+  );
+  assert.equal(
+    isLocalDevRoleEscalationEnabled("1", { NODE_ENV: "production", VERCEL: undefined, CI: undefined }),
+    false,
+  );
+  assert.equal(
+    isLocalDevRoleEscalationEnabled("1", { NODE_ENV: "development", VERCEL: "1", CI: undefined }),
+    false,
+  );
+  assert.equal(
+    isLocalDevRoleEscalationEnabled("1", { NODE_ENV: "development", VERCEL: undefined, CI: "true" }),
+    false,
+  );
+  assert.equal(
+    isLocalDevRoleEscalationEnabled("1", { NODE_ENV: "test", VERCEL: undefined, CI: "true" }),
+    true,
+  );
+  assert.equal(
+    isLocalDevRoleEscalationEnabled("0", { NODE_ENV: "development", VERCEL: undefined, CI: undefined }),
+    false,
+  );
 });

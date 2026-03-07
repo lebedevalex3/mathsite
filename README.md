@@ -42,6 +42,7 @@ pnpm dev
 ```
 
 Detailed local setup and troubleshooting: [LOCAL_DEV.md](./LOCAL_DEV.md).
+Production operations checklist: [docs/PRODUCTION_OPERATIONS.md](./docs/PRODUCTION_OPERATIONS.md).
 
 ## Main Paths
 

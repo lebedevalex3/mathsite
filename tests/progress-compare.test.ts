@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { aggregateSkillProgress } from "@/src/lib/progress/aggregate";
-import { aggregateCompare } from "@/src/lib/progress/compare";
+import { aggregateCompare, aggregateCompareFromUserSummaries } from "@/src/lib/progress/compare";
 
 import { compareAttemptsCurrentUserBelowThresholdFixture, compareAttemptsFixture } from "./fixtures/attempts.compare";
 import { progressAttemptsFixture } from "./fixtures/attempts.progress";
@@ -144,4 +144,43 @@ test("aggregateCompare returns null percentile/platform values when no cohort us
   assert.equal(result.percentile, null);
   assert.equal(result.rank.cohortSize, 0);
   assert.equal(result.rank.position, null);
+});
+
+test("aggregateCompare handles missing current user identity without creating totals from other users", () => {
+  const now = new Date("2026-02-24T12:00:00.000Z");
+  const result = aggregateCompare({
+    topicId: "math.proportion",
+    currentUserId: null,
+    attempts: compareAttemptsFixture(now),
+    now,
+  });
+
+  assert.equal(result.currentUser.total, 0);
+  assert.equal(result.currentUser.correct, 0);
+  assert.equal(result.currentUser.accuracy, 0);
+  assert.equal(result.rank.position, null);
+});
+
+test("aggregateCompareFromUserSummaries matches compare metrics from pre-aggregated rows", () => {
+  const rows = [
+    { userId: "user-a", total: 12, correct: 9 },
+    { userId: "user-b", total: 10, correct: 5 },
+    { userId: "user-c", total: 14, correct: 8 },
+    { userId: "user-d", total: 16, correct: 11 },
+    { userId: "user-e", total: 12, correct: 9 },
+    { userId: "user-f", total: 20, correct: 18 },
+  ];
+
+  const result = aggregateCompareFromUserSummaries({
+    currentUserId: "user-a",
+    rows,
+  });
+
+  assert.equal(result.currentUser.total, 12);
+  assert.equal(result.currentUser.correct, 9);
+  assert.equal(result.currentUser.accuracy, 0.75);
+  assert.equal(result.platform.usersCount, 6);
+  assert.equal(result.platform.medianTotal, 13);
+  assert.equal(result.percentile, 50);
+  assert.equal(result.rank.position, 2);
 });

@@ -139,15 +139,19 @@ export async function destroyAuthSession(cookieStore: CookieStoreLike) {
   });
 }
 
+export async function revokeAllAuthSessionsForUser(userId: string) {
+  await prisma.authSession.deleteMany({
+    where: {
+      userId,
+    },
+  });
+}
+
 export async function destroyAllAuthSessions(params: {
   userId: string;
   cookieStore: CookieStoreLike;
 }) {
-  await prisma.authSession.deleteMany({
-    where: {
-      userId: params.userId,
-    },
-  });
+  await revokeAllAuthSessionsForUser(params.userId);
   clearSessionCookie(params.cookieStore);
 }
 

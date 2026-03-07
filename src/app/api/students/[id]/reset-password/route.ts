@@ -3,7 +3,11 @@ import { NextResponse } from "next/server";
 
 import { badRequest, forbidden, notFound, toApiError, unauthorized } from "@/src/lib/api/errors";
 import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
-import { getAuthenticatedUserFromCookie, hashPassword } from "@/src/lib/auth/provider";
+import {
+  getAuthenticatedUserFromCookie,
+  hashPassword,
+  revokeAllAuthSessionsForUser,
+} from "@/src/lib/auth/provider";
 import { validateStudentId } from "@/src/lib/auth/validation";
 import { isTeacherRole } from "@/src/lib/auth/access";
 import { prisma } from "@/src/lib/db/prisma";
@@ -81,6 +85,7 @@ export async function POST(request: Request, { params }: RouteProps) {
         mustChangePassword: true,
       },
     });
+    await revokeAllAuthSessionsForUser(student.id);
 
     await writeAuditLog({
       actorUserId: actor.id,

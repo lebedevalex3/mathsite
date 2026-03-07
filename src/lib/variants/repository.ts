@@ -1,4 +1,5 @@
 import { prisma } from "@/src/lib/db/prisma";
+import { maybeCleanupExpiredDemoWorks } from "@/src/lib/demo-work-cleanup";
 
 import { loadVariantContentByTaskIds } from "./generator";
 import type { VariantDetail } from "./types";
@@ -51,6 +52,7 @@ export async function getVariantDetailForOwner(
   variantId: string,
   ownerUserId: string,
 ): Promise<VariantDetail | null> {
+  await maybeCleanupExpiredDemoWorks();
   const db = prisma as unknown as {
     variant: {
       findFirst(args: unknown): Promise<
@@ -135,6 +137,7 @@ export async function getWorkDetailForOwner(
     }
   | null
 > {
+  await maybeCleanupExpiredDemoWorks();
   const db = prisma as unknown as {
     work: {
       findFirst(args: unknown): Promise<
@@ -215,6 +218,7 @@ export async function listRecentWorksForOwner(
     variantsCount: number;
   }>
 > {
+  await maybeCleanupExpiredDemoWorks();
   const limit = Math.max(1, Math.min(options?.limit ?? 10, 50));
   const db = prisma as unknown as {
     work: {
@@ -268,6 +272,7 @@ export async function getWorkVariantIdsForOwner(
   workId: string,
   ownerUserId: string,
 ): Promise<{ variantIds: string[]; printProfileJson: unknown } | null> {
+  await maybeCleanupExpiredDemoWorks();
   const db = prisma as unknown as {
     work: {
       findFirst(args: unknown): Promise<

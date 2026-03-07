@@ -14,9 +14,15 @@ export type CompareAttemptRow = {
   createdAt: Date;
 };
 
+export type CompareUserSummaryRow = {
+  userId: string;
+  total: number;
+  correct: number;
+};
+
 export type AggregateCompareInput = {
   topicId: string;
-  currentUserId: string;
+  currentUserId: string | null;
   attempts: CompareAttemptRow[];
   now?: Date;
   cohortMinAttempts?: number;
@@ -79,7 +85,8 @@ export function aggregateCompare({
   const topicAttempts = attempts.filter((row) => row.topicId === topicId);
   const cutoff = compareWindowCutoff(now, windowDays);
   const windowAttempts = topicAttempts.filter((row) => row.createdAt >= cutoff);
-  const currentUserAttempts = windowAttempts.filter((row) => row.userId === currentUserId);
+  const currentUserAttempts =
+    currentUserId == null ? [] : windowAttempts.filter((row) => row.userId === currentUserId);
   const currentUser = toUserTotals(
     currentUserAttempts.length,
     currentUserAttempts.filter((row) => row.isCorrect).length,
@@ -117,7 +124,9 @@ export function aggregateCompare({
     if (left.total !== right.total) return right.total - left.total;
     return left.userId.localeCompare(right.userId);
   });
-  const rankIndex = rankedCohort.findIndex((row) => row.userId === currentUserId);
+  const rankIndex = currentUserId == null
+    ? -1
+    : rankedCohort.findIndex((row) => row.userId === currentUserId);
   const rankPosition = rankIndex >= 0 ? rankIndex + 1 : null;
 
   return {
@@ -131,6 +140,66 @@ export function aggregateCompare({
     },
     rank: {
       position: rankPosition,
+      cohortSize: usersCount,
+    },
+    percentile,
+  };
+}
+
+export function aggregateCompareFromUserSummaries(params: {
+  currentUserId: string | null;
+  rows: CompareUserSummaryRow[];
+  cohortMinAttempts?: number;
+  windowDays?: number;
+}): AggregateCompareResult {
+  const cohortMinAttempts = params.cohortMinAttempts ?? DEFAULT_COMPARE_COHORT_MIN_ATTEMPTS;
+  const windowDays = params.windowDays ?? DEFAULT_COMPARE_WINDOW_DAYS;
+  const currentRow =
+    params.currentUserId == null
+      ? null
+      : params.rows.find((row) => row.userId === params.currentUserId) ?? null;
+  const currentUser = toUserTotals(currentRow?.total ?? 0, currentRow?.correct ?? 0);
+
+  const cohortUsers = params.rows
+    .map((row) => ({
+      userId: row.userId,
+      ...toUserTotals(row.total, row.correct),
+    }))
+    .filter((row) => row.total >= cohortMinAttempts);
+
+  const usersCount = cohortUsers.length;
+  const avgAccuracy =
+    usersCount > 0
+      ? cohortUsers.reduce((sum, row) => sum + row.accuracy, 0) / usersCount
+      : null;
+  const medianTotal = median(cohortUsers.map((row) => row.total));
+  const percentile =
+    usersCount > 0
+      ? (cohortUsers.filter((row) => row.accuracy < currentUser.accuracy).length / usersCount) *
+        100
+      : null;
+
+  const rankedCohort = [...cohortUsers].sort((left, right) => {
+    if (left.accuracy !== right.accuracy) return right.accuracy - left.accuracy;
+    if (left.total !== right.total) return right.total - left.total;
+    return left.userId.localeCompare(right.userId);
+  });
+  const rankIndex =
+    params.currentUserId == null
+      ? -1
+      : rankedCohort.findIndex((row) => row.userId === params.currentUserId);
+
+  return {
+    currentUser,
+    platform: {
+      avgAccuracy,
+      medianTotal,
+      usersCount,
+      cohortMinAttempts,
+      windowDays,
+    },
+    rank: {
+      position: rankIndex >= 0 ? rankIndex + 1 : null,
       cohortSize: usersCount,
     },
     percentile,

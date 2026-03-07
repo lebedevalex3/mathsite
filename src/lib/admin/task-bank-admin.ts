@@ -1,4 +1,5 @@
 import { promises as fs } from "node:fs";
+import path from "node:path";
 
 import { clearTaskBankCache, loadTaskBank } from "@/lib/taskbank";
 import { listTeacherToolsTopics } from "@/src/lib/teacher-tools/catalog";
@@ -10,6 +11,7 @@ import {
   type TaskBank,
   type TaskStatus,
 } from "@/lib/tasks/schema";
+import { assertValidTaskBankState } from "@/src/lib/admin/task-bank-validation";
 
 export type TaskBankLocation = {
   filePath: string;
@@ -34,6 +36,8 @@ export class InvalidSkillIdError extends Error {
     this.details = params;
   }
 }
+
+const writeQueue = new Map<string, Promise<void>>();
 
 function normalizeQuery(raw: string | undefined) {
   return (raw ?? "").trim().toLowerCase();
@@ -85,8 +89,65 @@ export async function readTaskBankByTopic(topicId: string): Promise<TaskBankLoca
 }
 
 async function writeTaskBank(filePath: string, bank: TaskBank) {
-  await fs.writeFile(filePath, `${JSON.stringify(bank, null, 2)}\n`, "utf8");
+  const tempFilePath = path.join(
+    path.dirname(filePath),
+    `.${path.basename(filePath)}.${process.pid}.${Date.now()}.tmp`,
+  );
+  await fs.writeFile(tempFilePath, `${JSON.stringify(bank, null, 2)}\n`, "utf8");
+  await fs.rename(tempFilePath, filePath);
   clearTaskBankCache();
+}
+
+async function withTaskBankFileLock<T>(filePath: string, fn: () => Promise<T>): Promise<T> {
+  const previous = writeQueue.get(filePath) ?? Promise.resolve();
+
+  let release!: () => void;
+  const current = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  writeQueue.set(filePath, previous.then(() => current));
+
+  await previous;
+  try {
+    return await fn();
+  } finally {
+    release();
+    if (writeQueue.get(filePath) === current) {
+      writeQueue.delete(filePath);
+    }
+  }
+}
+
+async function mutateTaskBank(params: {
+  locate: (banks: Awaited<ReturnType<typeof loadTaskBank>>["banks"]) => {
+    filePath: string;
+    nextBank: TaskBank;
+    result: Task | boolean;
+  } | null;
+}) {
+  const initial = await loadTaskBank();
+  const located = params.locate(initial.banks);
+  if (!located) return null;
+
+  return withTaskBankFileLock(located.filePath, async () => {
+    const latest = await loadTaskBank();
+    const freshLocated = params.locate(latest.banks);
+    if (!freshLocated) return null;
+
+    const nextBanks = latest.banks.map((bank) =>
+      bank.filePath === freshLocated.filePath
+        ? { ...bank, bank: freshLocated.nextBank }
+        : bank,
+    );
+
+    await assertValidTaskBankState({
+      banks: nextBanks,
+      loadErrors: latest.errors,
+    });
+
+    await writeTaskBank(freshLocated.filePath, freshLocated.nextBank);
+    return freshLocated.result;
+  });
 }
 
 export async function createTaskInTopic(params: {
@@ -105,36 +166,49 @@ export async function createTaskInTopic(params: {
     });
   }
 
-  const location = await readTaskBankByTopic(params.topicId);
-  if (!location) {
+  const created = await mutateTaskBank({
+    locate(banks) {
+      const location = banks.find((item) => item.bank.topic_id === params.topicId);
+      if (!location) {
+        throw new Error(`Task bank not found for topic ${params.topicId}`);
+      }
+
+      const nextId = buildNextTaskId(
+        params.skillId,
+        location.bank.tasks.map((item) => item.id),
+      );
+
+      const parsed = taskSchema.safeParse({
+        id: nextId,
+        topic_id: params.topicId,
+        skill_id: params.skillId,
+        difficulty: params.difficulty,
+        difficulty_band: params.difficultyBand,
+        status: params.status ?? "draft",
+        statement_md: params.statementMd,
+        answer: params.answer,
+      });
+      if (!parsed.success) {
+        throw new Error(parsed.error.issues.map((issue) => issue.message).join("; "));
+      }
+
+      const nextBank = taskBankSchema.parse({
+        ...location.bank,
+        tasks: [...location.bank.tasks, parsed.data],
+      });
+
+      return {
+        filePath: location.filePath,
+        nextBank,
+        result: parsed.data,
+      };
+    },
+  });
+
+  if (!created || typeof created === "boolean") {
     throw new Error(`Task bank not found for topic ${params.topicId}`);
   }
-
-  const nextId = buildNextTaskId(
-    params.skillId,
-    location.bank.tasks.map((item) => item.id),
-  );
-
-  const parsed = taskSchema.safeParse({
-    id: nextId,
-    topic_id: params.topicId,
-    skill_id: params.skillId,
-    difficulty: params.difficulty,
-    difficulty_band: params.difficultyBand,
-    status: params.status ?? "draft",
-    statement_md: params.statementMd,
-    answer: params.answer,
-  });
-  if (!parsed.success) {
-    throw new Error(parsed.error.issues.map((issue) => issue.message).join("; "));
-  }
-
-  const nextBank = taskBankSchema.parse({
-    ...location.bank,
-    tasks: [...location.bank.tasks, parsed.data],
-  });
-  await writeTaskBank(location.filePath, nextBank);
-  return parsed.data;
+  return created;
 }
 
 export async function updateTaskById(params: {
@@ -145,37 +219,47 @@ export async function updateTaskById(params: {
   difficultyBand?: "A" | "B" | "C";
   status?: TaskStatus;
 }): Promise<Task | null> {
-  const { banks } = await loadTaskBank();
-  for (const item of banks) {
-    const index = item.bank.tasks.findIndex((task) => task.id === params.taskId);
-    if (index < 0) continue;
+  const updated = await mutateTaskBank({
+    locate(banks) {
+      for (const item of banks) {
+        const index = item.bank.tasks.findIndex((task) => task.id === params.taskId);
+        if (index < 0) continue;
 
-    const existing = item.bank.tasks[index];
-    const parsed = taskSchema.safeParse({
-      id: existing.id,
-      topic_id: existing.topic_id,
-      skill_id: existing.skill_id,
-      statement_md: params.statementMd ?? existing.statement_md,
-      answer: params.answer ?? existing.answer,
-      difficulty: params.difficulty ?? existing.difficulty,
-      difficulty_band: params.difficultyBand ?? existing.difficulty_band,
-      status: params.status ?? existing.status,
-    });
-    if (!parsed.success) {
-      throw new Error(parsed.error.issues.map((issue) => issue.message).join("; "));
-    }
+        const existing = item.bank.tasks[index];
+        const parsed = taskSchema.safeParse({
+          id: existing.id,
+          topic_id: existing.topic_id,
+          skill_id: existing.skill_id,
+          statement_md: params.statementMd ?? existing.statement_md,
+          answer: params.answer ?? existing.answer,
+          difficulty: params.difficulty ?? existing.difficulty,
+          difficulty_band: params.difficultyBand ?? existing.difficulty_band,
+          status: params.status ?? existing.status,
+        });
+        if (!parsed.success) {
+          throw new Error(parsed.error.issues.map((issue) => issue.message).join("; "));
+        }
 
-    const nextTasks = [...item.bank.tasks];
-    nextTasks[index] = parsed.data;
-    const nextBank = taskBankSchema.parse({
-      ...item.bank,
-      tasks: nextTasks,
-    });
-    await writeTaskBank(item.filePath, nextBank);
-    return parsed.data;
-  }
+        const nextTasks = [...item.bank.tasks];
+        nextTasks[index] = parsed.data;
+        const nextBank = taskBankSchema.parse({
+          ...item.bank,
+          tasks: nextTasks,
+        });
 
-  return null;
+        return {
+          filePath: item.filePath,
+          nextBank,
+          result: parsed.data,
+        };
+      }
+
+      return null;
+    },
+  });
+
+  if (!updated || typeof updated === "boolean") return null;
+  return updated;
 }
 
 export async function readTaskById(taskId: string): Promise<Task | null> {
@@ -188,20 +272,30 @@ export async function readTaskById(taskId: string): Promise<Task | null> {
 }
 
 export async function deleteTaskById(taskId: string): Promise<boolean> {
-  const { banks } = await loadTaskBank();
-  for (const item of banks) {
-    const nextTasks = item.bank.tasks.filter((task) => task.id !== taskId);
-    if (nextTasks.length === item.bank.tasks.length) continue;
-    if (nextTasks.length === 0) {
-      throw new Error("Cannot delete the last task in a topic bank.");
-    }
+  const deleted = await mutateTaskBank({
+    locate(banks) {
+      for (const item of banks) {
+        const nextTasks = item.bank.tasks.filter((task) => task.id !== taskId);
+        if (nextTasks.length === item.bank.tasks.length) continue;
+        if (nextTasks.length === 0) {
+          throw new Error("Cannot delete the last task in a topic bank.");
+        }
 
-    const nextBank = taskBankSchema.parse({
-      ...item.bank,
-      tasks: nextTasks,
-    });
-    await writeTaskBank(item.filePath, nextBank);
-    return true;
-  }
-  return false;
+        const nextBank = taskBankSchema.parse({
+          ...item.bank,
+          tasks: nextTasks,
+        });
+
+        return {
+          filePath: item.filePath,
+          nextBank,
+          result: true,
+        };
+      }
+
+      return null;
+    },
+  });
+
+  return deleted === true;
 }

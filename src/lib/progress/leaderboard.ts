@@ -1,6 +1,7 @@
 import {
   DEFAULT_COMPARE_COHORT_MIN_ATTEMPTS,
   DEFAULT_COMPARE_WINDOW_DAYS,
+  type CompareUserSummaryRow,
   type CompareAttemptRow,
 } from "@/src/lib/progress/compare";
 
@@ -14,7 +15,7 @@ export type LeaderboardEntry = {
 
 export type AggregateLeaderboardInput = {
   topicId: string;
-  currentUserId: string;
+  currentUserId: string | null;
   attempts: CompareAttemptRow[];
   limit?: number;
   now?: Date;
@@ -80,7 +81,9 @@ export function aggregateLeaderboard({
       return left.userId.localeCompare(right.userId);
     });
 
-  const currentUserPositionIndex = rankedUsers.findIndex((entry) => entry.userId === currentUserId);
+  const currentUserPositionIndex = currentUserId == null
+    ? -1
+    : rankedUsers.findIndex((entry) => entry.userId === currentUserId);
 
   return {
     entries: rankedUsers.slice(0, cappedLimit).map((entry, index) => ({
@@ -88,7 +91,51 @@ export function aggregateLeaderboard({
       handle: toPublicHandle(entry.userId),
       accuracy: entry.accuracy,
       attempts: entry.attempts,
-      isCurrentUser: entry.userId === currentUserId,
+      isCurrentUser: currentUserId != null && entry.userId === currentUserId,
+    })),
+    cohortSize: rankedUsers.length,
+    currentUserPosition: currentUserPositionIndex >= 0 ? currentUserPositionIndex + 1 : null,
+    cohortMinAttempts,
+    windowDays,
+  };
+}
+
+export function aggregateLeaderboardFromUserSummaries(params: {
+  currentUserId: string | null;
+  rows: CompareUserSummaryRow[];
+  limit?: number;
+  cohortMinAttempts?: number;
+  windowDays?: number;
+}): AggregateLeaderboardResult {
+  const cappedLimit = Math.max(1, Math.min(params.limit ?? 5, 20));
+  const cohortMinAttempts = params.cohortMinAttempts ?? DEFAULT_COMPARE_COHORT_MIN_ATTEMPTS;
+  const windowDays = params.windowDays ?? DEFAULT_COMPARE_WINDOW_DAYS;
+
+  const rankedUsers = params.rows
+    .map((row) => ({
+      userId: row.userId,
+      attempts: row.total,
+      accuracy: row.total > 0 ? row.correct / row.total : 0,
+    }))
+    .filter((entry) => entry.attempts >= cohortMinAttempts)
+    .sort((left, right) => {
+      if (left.accuracy !== right.accuracy) return right.accuracy - left.accuracy;
+      if (left.attempts !== right.attempts) return right.attempts - left.attempts;
+      return left.userId.localeCompare(right.userId);
+    });
+
+  const currentUserPositionIndex =
+    params.currentUserId == null
+      ? -1
+      : rankedUsers.findIndex((entry) => entry.userId === params.currentUserId);
+
+  return {
+    entries: rankedUsers.slice(0, cappedLimit).map((entry, index) => ({
+      position: index + 1,
+      handle: toPublicHandle(entry.userId),
+      accuracy: entry.accuracy,
+      attempts: entry.attempts,
+      isCurrentUser: params.currentUserId != null && entry.userId === params.currentUserId,
     })),
     cohortSize: rankedUsers.length,
     currentUserPosition: currentUserPositionIndex >= 0 ? currentUserPositionIndex + 1 : null,

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { badRequest, toApiError, unauthorized } from "@/src/lib/api/errors";
 import {
+  destroyAllAuthSessions,
   getAuthenticatedUserFromCookie,
   hashPassword,
   updateUserPassword,
@@ -64,6 +65,10 @@ export async function POST(request: Request) {
       userId: user.id,
       passwordHash: nextPasswordHash,
       mustChangePassword: false,
+    });
+    await destroyAllAuthSessions({
+      userId: user.id,
+      cookieStore,
     });
 
     await writeAuditLog({

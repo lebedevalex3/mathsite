@@ -5,7 +5,7 @@ import { prisma } from "@/src/lib/db/prisma";
 import { logApiResult, startApiSpan } from "@/src/lib/observability/api";
 import { aggregateSkillProgress } from "@/src/lib/progress/aggregate";
 import { getMasteryMinAttemptsBySkill } from "@/src/lib/progress/mastery-thresholds";
-import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
+import { getExistingViewerUser } from "@/src/lib/session/visitor";
 
 export const runtime = "nodejs";
 
@@ -23,7 +23,18 @@ export async function GET(request: Request) {
   }
 
   const cookieStore = await cookies();
-  const { userId } = await getOrCreateVisitorUser(cookieStore);
+  const { userId } = await getExistingViewerUser(cookieStore);
+
+  if (!userId) {
+    const progress = aggregateSkillProgress([], {
+      masteryMinAttemptsBySkill: getMasteryMinAttemptsBySkill(topicId),
+    });
+    logApiResult(span, 200, {
+      code: "OK",
+      meta: { topicId, skills: 0 },
+    });
+    return NextResponse.json({ ok: true, topicId, progress });
+  }
 
   const attempts = await prisma.attempt.findMany({
     where: { userId, topicId },

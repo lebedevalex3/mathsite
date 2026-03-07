@@ -2,7 +2,9 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { badRequest, toApiError } from "@/src/lib/api/errors";
+import { consumeAuthRateLimit } from "@/src/lib/auth/rate-limit";
 import { verifyCsrfRequestIfAuthenticated } from "@/src/lib/auth/csrf";
+import { maybeCleanupExpiredDemoWorks } from "@/src/lib/demo-work-cleanup";
 import { getOrCreateVisitorUser } from "@/src/lib/session/visitor";
 import { getTeacherToolsTopicSkills } from "@/src/lib/teacher-tools/catalog";
 import {
@@ -91,8 +93,17 @@ export async function POST(request: Request) {
       const { status, body } = csrfError;
       return NextResponse.json(body, { status });
     }
+    await maybeCleanupExpiredDemoWorks();
     const { userId, visitorId } = await getOrCreateVisitorUser(cookieStore);
     if (visitorId) {
+      const antiAbuse = await consumeAuthRateLimit({
+        scope: "demo-generate",
+        headers: request.headers,
+        identifier: visitorId,
+      });
+      if (antiAbuse.limited) {
+        throw new DemoRateLimitError(antiAbuse.retryAfterSeconds);
+      }
       await enforceDemoRateLimit(userId);
     }
 
@@ -157,7 +168,12 @@ export async function POST(request: Request) {
     if (error instanceof DemoRateLimitError) {
       return NextResponse.json(
         { ok: false, code: error.code, message: error.message },
-        { status: error.status },
+        {
+          status: error.status,
+          headers: error.retryAfterSeconds
+            ? { "Retry-After": String(error.retryAfterSeconds) }
+            : undefined,
+        },
       );
     }
     if (error instanceof Error && /variantsCount|plan is required|Select at least one skill|Total tasks per variant/.test(error.message)) {

@@ -1,7 +1,7 @@
 import { prisma } from "@/src/lib/db/prisma";
 import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
 
-const VISITOR_COOKIE_NAME = "visitor_id";
+export const VISITOR_COOKIE_NAME = "visitor_id";
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 
 type CookieStoreLike = {
@@ -17,13 +17,40 @@ type CookieStoreLike = {
   }): void;
 };
 
-export async function getOrCreateVisitorUser(cookieStore: CookieStoreLike) {
+export async function getExistingViewerUser(cookieStore: Pick<CookieStoreLike, "get">) {
   const authUser = await getAuthenticatedUserFromCookie(cookieStore);
   if (authUser) {
     return { userId: authUser.id, visitorId: null };
   }
 
-  let visitorId = cookieStore.get(VISITOR_COOKIE_NAME)?.value;
+  const visitorId = cookieStore.get(VISITOR_COOKIE_NAME)?.value;
+  if (!visitorId) {
+    return { userId: null, visitorId: null };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { visitorId },
+    select: { id: true },
+  });
+
+  return {
+    userId: user?.id ?? null,
+    visitorId,
+  };
+}
+
+export async function getOrCreateVisitorUser(
+  cookieStore: CookieStoreLike,
+): Promise<{ userId: string; visitorId: string | null }> {
+  const existing = await getExistingViewerUser(cookieStore);
+  if (existing.userId) {
+    return {
+      userId: existing.userId,
+      visitorId: existing.visitorId,
+    };
+  }
+
+  let visitorId = existing.visitorId;
 
   if (!visitorId) {
     visitorId = crypto.randomUUID();

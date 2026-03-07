@@ -134,6 +134,13 @@ export function tooManyRequests(
   return apiError(429, code, message);
 }
 
+export function serviceUnavailable(
+  message: string,
+  code = "SERVICE_UNAVAILABLE",
+): ApiErrorResult {
+  return apiError(503, code, message);
+}
+
 export function notFound(message: string, code = "NOT_FOUND"): ApiErrorResult {
   return apiError(404, code, message);
 }
@@ -156,6 +163,15 @@ export function toApiError(error: unknown, options: ToApiErrorOptions = {}): Api
         422,
         "INVALID_SKILL_ID",
         "Skill is not registered for the selected topic.",
+        error.details,
+      );
+    }
+
+    if (hasCodeAndDetails(error) && error.code === "TASK_BANK_VALIDATION_FAILED") {
+      return apiError(
+        422,
+        "TASK_BANK_VALIDATION_FAILED",
+        "Task bank validation failed.",
         error.details,
       );
     }
