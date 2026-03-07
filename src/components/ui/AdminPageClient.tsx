@@ -711,6 +711,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskAuditNextCursorById, setTaskAuditNextCursorById] = useState<Record<string, string | null>>({});
   const [taskAuditLoadingId, setTaskAuditLoadingId] = useState<string | null>(null);
   const [taskAuditErrorById, setTaskAuditErrorById] = useState<Record<string, string>>({});
+  const taskAuditNextCursorRef = useRef<Record<string, string | null>>({});
   const [taskAuditActionFilter, setTaskAuditActionFilter] = useState<TaskAuditActionFilter>("all");
   const [taskAuditChangedFieldFilter, setTaskAuditChangedFieldFilter] =
     useState<TaskAuditChangedFieldFilter>("all");
@@ -721,6 +722,10 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskAuditReadyOnly, setTaskAuditReadyOnly] = useState(false);
   const [taskIdFromUrl, setTaskIdFromUrl] = useState<string | null>(null);
   const [taskLinkCopiedId, setTaskLinkCopiedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    taskAuditNextCursorRef.current = taskAuditNextCursorById;
+  }, [taskAuditNextCursorById]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -1086,7 +1091,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       try {
         const url = new URL(`/api/admin/tasks/${encodeURIComponent(taskId)}/audit`, window.location.origin);
         if (options?.append) {
-          const cursor = taskAuditNextCursorById[taskId];
+          const cursor = taskAuditNextCursorRef.current[taskId];
           if (cursor) {
             url.searchParams.set("cursor", cursor);
           }
@@ -1154,7 +1159,6 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       taskAuditActorFilter,
       taskAuditChangedFieldFilter,
       taskAuditFromDate,
-      taskAuditNextCursorById,
       taskAuditReadyOnly,
       taskAuditStatusOnly,
       taskAuditToDate,
@@ -2827,3 +2831,4 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     </main>
   );
 }
+

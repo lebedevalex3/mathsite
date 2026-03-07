@@ -903,6 +903,7 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
                 </div>
               </div>
             ) : null}
+            {error ? <p className="text-sm text-red-700">{error}</p> : null}
           </div>
         ) : (
           <div className="space-y-3">
@@ -1234,3 +1235,4 @@ export function TeacherCabinetPageClient({ locale, initialReason = null }: Props
     </main>
   );
 }
+
