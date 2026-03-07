@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { MarkdownMath } from "@/lib/ui/MarkdownMath";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
+import { filterTaskSkillsByTopic, validateTaskSkillSelection } from "@/src/components/ui/admin-task-create-form.utils";
 import { buildAdminSectionErrors, formatAdminSectionFailures } from "@/src/components/ui/admin-page-client.utils";
 import { formatDateTime } from "@/src/lib/i18n/format";
 import { SKILL_KINDS, type SkillKind } from "@/src/lib/skills/kind";
@@ -250,6 +251,7 @@ const copy = {
     tasksSubtitle: "CRUD задач по выбранной теме/навыку с проверкой схемы.",
     tasksTopic: "Тема",
     tasksSkill: "Skill ID",
+    tasksSkillSearch: "Поиск навыка",
     tasksSkillSelect: "Выберите навык",
     tasksSkillRequired: "Укажите Skill ID.",
     tasksSkillInvalid: "Skill не относится к выбранной теме.",
@@ -362,6 +364,7 @@ const copy = {
     tasksSubtitle: "CRUD tasks for selected topic/skill with schema validation.",
     tasksTopic: "Topic",
     tasksSkill: "Skill ID",
+    tasksSkillSearch: "Search skill",
     tasksSkillSelect: "Select skill",
     tasksSkillRequired: "Skill ID is required.",
     tasksSkillInvalid: "Skill is not registered for selected topic.",
@@ -474,6 +477,7 @@ const copy = {
     tasksSubtitle: "CRUD-Aufgaben fuer ausgewaehltes Thema/Skill mit Schema-Pruefung.",
     tasksTopic: "Thema",
     tasksSkill: "Skill-ID",
+    tasksSkillSearch: "Skill suchen",
     tasksSkillSelect: "Skill waehlen",
     tasksSkillRequired: "Skill-ID ist erforderlich.",
     tasksSkillInvalid: "Skill gehoert nicht zum ausgewaehlten Thema.",
@@ -572,6 +576,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [savingSkillId, setSavingSkillId] = useState<string | null>(null);
   const [taskTopicFilter, setTaskTopicFilter] = useState("all");
   const [taskSkillFilter, setTaskSkillFilter] = useState("");
+  const [taskSkillSearch, setTaskSkillSearch] = useState("");
   const [taskSkillTouched, setTaskSkillTouched] = useState(false);
   const [taskQuery, setTaskQuery] = useState("");
   const [taskStatusFilter, setTaskStatusFilter] = useState<"all" | "draft" | "review" | "ready">("all");
@@ -762,21 +767,18 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   }, [skillItems, taskTopicFilter]);
 
   const taskTopicSkillOptions = useMemo(() => {
-    if (!taskTopicFilter || taskTopicFilter === "all") return [] as SkillRegistryItem[];
-    return skillItems
-      .filter((item) => item.topicId === taskTopicFilter)
-      .sort((left, right) => left.skillId.localeCompare(right.skillId));
-  }, [skillItems, taskTopicFilter]);
+    return filterTaskSkillsByTopic(skillItems, taskTopicFilter, taskSkillSearch);
+  }, [skillItems, taskSkillSearch, taskTopicFilter]);
 
   const validateTaskSkillId = useCallback(
     (skillIdRaw: string) => {
-      const skillId = skillIdRaw.trim();
-      if (!skillId) return t.tasksSkillRequired;
-      if (!taskTopicFilter || taskTopicFilter === "all") return null;
-      if (taskTopicSkillSet.size > 0 && !taskTopicSkillSet.has(skillId)) {
-        return t.tasksSkillInvalid;
-      }
-      return null;
+      return validateTaskSkillSelection({
+        skillIdRaw,
+        topicId: taskTopicFilter,
+        topicSkillSet: taskTopicSkillSet,
+        requiredMessage: t.tasksSkillRequired,
+        invalidMessage: t.tasksSkillInvalid,
+      });
     },
     [t.tasksSkillInvalid, t.tasksSkillRequired, taskTopicFilter, taskTopicSkillSet],
   );
@@ -1138,6 +1140,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     setTaskSkillTouched(false);
+    setTaskSkillSearch("");
   }, [taskTopicFilter]);
 
   useEffect(() => {
@@ -1845,7 +1848,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.tasksTitle}</h2>
         <p className="text-sm text-slate-600">{t.tasksSubtitle}</p>
-        <div className="grid gap-3 md:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-5">
           <select
             value={taskTopicFilter}
             onChange={(event) => setTaskTopicFilter(event.target.value)}
@@ -1858,6 +1861,19 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
               </option>
             ))}
           </select>
+          <input
+            type="text"
+            value={taskSkillSearch}
+            onChange={(event) => setTaskSkillSearch(event.target.value)}
+            placeholder={t.tasksSkillSearch}
+            disabled={taskTopicFilter === "all"}
+            className={[
+              "w-full rounded-xl border px-3 py-2 text-sm",
+              taskTopicFilter === "all"
+                ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-500"
+                : "border-slate-300 bg-white text-slate-900",
+            ].join(" ")}
+          />
           <select
             value={taskSkillFilter}
             onChange={(event) => setTaskSkillFilter(event.target.value)}
