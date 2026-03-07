@@ -21,6 +21,28 @@ type AuditRow = {
   actorUser: ActorView | null;
 };
 
+type TaskAuditFindManyArgs = {
+  where: Prisma.AuditLogWhereInput;
+  orderBy: Array<{ createdAt: "asc" | "desc" } | { id: "asc" | "desc" }>;
+  take: number;
+  cursor?: { id: string };
+  skip?: number;
+  select: {
+    id: true;
+    action: true;
+    payloadJson: true;
+    createdAt: true;
+    actorUser: {
+      select: {
+        id: true;
+        role: true;
+        email: true;
+        username: true;
+      };
+    };
+  };
+};
+
 export type TaskAuditListItem = {
   id: string;
   action: string;
@@ -188,4 +210,72 @@ export function matchesTaskAuditDerivedFilters(item: TaskAuditListItem, query: T
     return false;
   }
   return true;
+}
+
+export async function collectTaskAuditPage(params: {
+  taskId: string;
+  query: TaskAuditQuery;
+  findMany: (args: TaskAuditFindManyArgs) => Promise<AuditRow[]>;
+}) {
+  const { taskId, query, findMany } = params;
+  const logs: TaskAuditListItem[] = [];
+  let cursor: string | null = query.cursor;
+  let exhausted = false;
+  let hasMore = false;
+  const batchSize = Math.min(200, Math.max(query.limit * 3, 60));
+
+  while (logs.length < query.limit && !exhausted) {
+    const rows = await findMany({
+      where: buildTaskAuditWhere({ taskId, query }),
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: batchSize,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      select: {
+        id: true,
+        action: true,
+        payloadJson: true,
+        createdAt: true,
+        actorUser: {
+          select: {
+            id: true,
+            role: true,
+            email: true,
+            username: true,
+          },
+        },
+      },
+    });
+
+    if (rows.length === 0) {
+      exhausted = true;
+      break;
+    }
+
+    let reachedLimit = false;
+    for (const row of rows) {
+      cursor = row.id;
+      const mapped = mapTaskAuditRow(row);
+      if (!matchesTaskAuditDerivedFilters(mapped, query)) continue;
+      logs.push(mapped);
+      if (logs.length >= query.limit) {
+        reachedLimit = true;
+        break;
+      }
+    }
+
+    if (reachedLimit) {
+      const cursorIndex = rows.findIndex((row) => row.id === cursor);
+      hasMore = cursorIndex >= 0 && (cursorIndex < rows.length - 1 || rows.length === batchSize);
+      break;
+    }
+
+    if (rows.length < batchSize) {
+      exhausted = true;
+    }
+  }
+
+  return {
+    logs,
+    nextCursor: logs.length >= query.limit && hasMore ? cursor : null,
+  };
 }

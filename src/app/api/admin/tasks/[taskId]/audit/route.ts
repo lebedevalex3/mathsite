@@ -3,11 +3,8 @@ import { NextResponse } from "next/server";
 
 import { forbidden, toApiError, unauthorized } from "@/src/lib/api/errors";
 import {
-  buildTaskAuditWhere,
-  mapTaskAuditRow,
-  matchesTaskAuditDerivedFilters,
+  collectTaskAuditPage,
   parseTaskAuditQuery,
-  type TaskAuditListItem,
 } from "@/src/lib/admin/task-audit-feed";
 import { isAdminRole } from "@/src/lib/auth/access";
 import { getAuthenticatedUserFromCookie } from "@/src/lib/auth/provider";
@@ -36,52 +33,11 @@ export async function GET(request: Request, { params }: RouteProps) {
     const { searchParams } = new URL(request.url);
     const query = parseTaskAuditQuery(searchParams);
 
-    const logs: TaskAuditListItem[] = [];
-    let cursor: string | null = query.cursor;
-    let exhausted = false;
-    const batchSize = Math.min(200, Math.max(query.limit * 3, 60));
-
-    while (logs.length < query.limit && !exhausted) {
-      const rows = await prisma.auditLog.findMany({
-        where: buildTaskAuditWhere({ taskId, query }),
-        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-        take: batchSize,
-        ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
-        select: {
-          id: true,
-          action: true,
-          payloadJson: true,
-          createdAt: true,
-          actorUser: {
-            select: {
-              id: true,
-              role: true,
-              email: true,
-              username: true,
-            },
-          },
-        },
-      });
-
-      if (rows.length === 0) {
-        exhausted = true;
-        break;
-      }
-
-      for (const row of rows) {
-        cursor = row.id;
-        const mapped = mapTaskAuditRow(row);
-        if (!matchesTaskAuditDerivedFilters(mapped, query)) continue;
-        logs.push(mapped);
-        if (logs.length >= query.limit) break;
-      }
-
-      if (rows.length < batchSize) {
-        exhausted = true;
-      }
-    }
-
-    const nextCursor = logs.length >= query.limit && !exhausted ? cursor : null;
+    const { logs, nextCursor } = await collectTaskAuditPage({
+      taskId,
+      query,
+      findMany: (args) => prisma.auditLog.findMany(args),
+    });
 
     return NextResponse.json({
       ok: true,
