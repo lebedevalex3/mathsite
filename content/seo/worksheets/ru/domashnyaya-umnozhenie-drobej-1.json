@@ -1,0 +1,25 @@
+{
+  "id": "worksheet.fractions.self.homework.001",
+  "locale": "ru",
+  "topicId": "topic.fractions_multiplication.common",
+  "grade": 5,
+  "slug": "domashnyaya-rabota-1",
+  "sortOrder": 50,
+  "materialType": "samostoyatelnaya",
+  "formatType": "domashnyaya",
+  "difficultyProfile": "srednij",
+  "title": "Домашняя работа по умножению дробей",
+  "seoTitle": "Домашняя работа по умножению обыкновенных дробей, 5 класс",
+  "seoDescription": "Готовый лист домашней работы по умножению обыкновенных дробей: повторение вычислений и одно-два прикладных задания.",
+  "h1": "Домашняя работа по теме «Умножение обыкновенных дробей»",
+  "shortDescription": "Спокойный домашний лист на закрепление: вычисления, смешанные числа и задача на долю от числа.",
+  "teacherNote": "Домашний лист лучше выдавать после базовой самостоятельной, когда ученики уже понимают, где нужно сокращать до умножения.",
+  "tasksCount": 9,
+  "durationMinutes": 18,
+  "previewItems": [
+    "$$1 \\\\frac{2}{3} \\\\cdot \\\\frac{3}{5}$$",
+    "$$\\\\frac{7}{8} \\\\cdot 16$$",
+    "За день прочитали $$\\\\frac{2}{5}$$ книги объёмом 120 страниц. Сколько страниц прочитали?"
+  ],
+  "published": true
+}

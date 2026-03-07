@@ -1,0 +1,25 @@
+{
+  "id": "worksheet.fractions.cards.mid.001",
+  "locale": "ru",
+  "topicId": "topic.fractions_multiplication.common",
+  "grade": 5,
+  "slug": "kartochki-srednij-1",
+  "sortOrder": 30,
+  "materialType": "kartochki",
+  "formatType": "trenirovochnaya",
+  "difficultyProfile": "srednij",
+  "title": "Карточки по умножению дробей, средний вариант",
+  "seoTitle": "Карточки по умножению обыкновенных дробей, средний вариант",
+  "seoDescription": "Готовый средний комплект карточек по умножению обыкновенных дробей: смешанные числа, сокращение до умножения и выражения.",
+  "h1": "Карточки по умножению обыкновенных дробей, средний вариант",
+  "shortDescription": "Набор задач на смешанные числа, предварительное сокращение и аккуратное оформление вычислений.",
+  "teacherNote": "Подходит для второй половины темы, когда базовые случаи уже отработаны и нужно удерживать темп без перегруза текстовыми задачами.",
+  "tasksCount": 10,
+  "durationMinutes": 15,
+  "previewItems": [
+    "$$2 \\\\frac{1}{4} \\\\cdot \\\\frac{8}{9}$$",
+    "$$\\\\frac{6}{7} \\\\cdot \\\\frac{14}{15}$$",
+    "$$\\\\left(\\\\frac{3}{5}+\\\\frac{1}{10}\\\\right) \\\\cdot \\\\frac{5}{2}$$"
+  ],
+  "published": true
+}

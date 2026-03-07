@@ -1,0 +1,25 @@
+{
+  "id": "worksheet.fractions.cards.5min.001",
+  "locale": "ru",
+  "topicId": "topic.fractions_multiplication.common",
+  "grade": 5,
+  "slug": "pyatiminutka-1",
+  "sortOrder": 10,
+  "materialType": "kartochki",
+  "formatType": "pyatiminutka",
+  "difficultyProfile": "bazovyj",
+  "title": "Пятиминутка по теме «Умножение обыкновенных дробей»",
+  "seoTitle": "Пятиминутка по умножению обыкновенных дробей, 5 класс",
+  "seoDescription": "Короткий лист на 5 минут по теме «Умножение обыкновенных дробей» для 5 класса: базовый устный и письменный разогрев перед уроком.",
+  "h1": "Пятиминутка по теме «Умножение обыкновенных дробей»",
+  "shortDescription": "Короткий лист для начала урока: 6-8 базовых примеров на дробь на дробь и дробь на целое.",
+  "teacherNote": "Подходит как старт урока, устный счёт с переходом к письменной работе или короткая домашняя самопроверка.",
+  "tasksCount": 8,
+  "durationMinutes": 5,
+  "previewItems": [
+    "$$\\\\frac{2}{3} \\\\cdot \\\\frac{5}{7}$$",
+    "$$4 \\\\cdot \\\\frac{3}{8}$$",
+    "$$\\\\frac{7}{9} \\\\cdot \\\\frac{3}{7}$$"
+  ],
+  "published": true
+}

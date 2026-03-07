@@ -1,0 +1,25 @@
+{
+  "id": "worksheet.fractions.self.base.001",
+  "locale": "ru",
+  "topicId": "topic.fractions_multiplication.common",
+  "grade": 5,
+  "slug": "samostoyatelnaya-bazovaya-1",
+  "sortOrder": 40,
+  "materialType": "samostoyatelnaya",
+  "formatType": "variant",
+  "difficultyProfile": "bazovyj",
+  "title": "Самостоятельная по умножению дробей, базовый вариант",
+  "seoTitle": "Самостоятельная по умножению обыкновенных дробей, базовый вариант",
+  "seoDescription": "Базовая самостоятельная работа по умножению обыкновенных дробей для 5 класса: короткий проверочный лист без лишнего объема.",
+  "h1": "Самостоятельная по умножению обыкновенных дробей, базовый вариант",
+  "shortDescription": "Короткая проверочная работа после первого блока тренировки: вычисления, смешанные числа и один прикладной пример.",
+  "teacherNote": "Можно использовать как тихую проверку в конце урока или как самостоятельную на 10-12 минут после серии карточек.",
+  "tasksCount": 8,
+  "durationMinutes": 12,
+  "previewItems": [
+    "$$\\\\frac{5}{6} \\\\cdot \\\\frac{9}{10}$$",
+    "$$3 \\\\cdot \\\\frac{7}{12}$$",
+    "Найдите $$\\\\frac{3}{4}$$ от числа $$20$$."
+  ],
+  "published": true
+}

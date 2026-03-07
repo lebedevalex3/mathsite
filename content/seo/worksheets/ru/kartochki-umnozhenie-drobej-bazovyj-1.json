@@ -1,0 +1,25 @@
+{
+  "id": "worksheet.fractions.cards.base.001",
+  "locale": "ru",
+  "topicId": "topic.fractions_multiplication.common",
+  "grade": 5,
+  "slug": "kartochki-bazovyj-1",
+  "sortOrder": 20,
+  "materialType": "kartochki",
+  "formatType": "trenirovochnaya",
+  "difficultyProfile": "bazovyj",
+  "title": "Карточки по умножению дробей, базовый вариант",
+  "seoTitle": "Карточки по умножению обыкновенных дробей, базовый вариант",
+  "seoDescription": "Готовые карточки по умножению обыкновенных дробей для 5 класса: базовый вариант для отработки основных случаев.",
+  "h1": "Карточки по умножению обыкновенных дробей, базовый вариант",
+  "shortDescription": "Тренировочный лист с опорой на сокращение и простые случаи умножения обыкновенных дробей.",
+  "teacherNote": "Лист удобно давать после короткого объяснения алгоритма: сначала устно разобрать 2-3 примера, затем предложить карточку целиком.",
+  "tasksCount": 10,
+  "durationMinutes": 12,
+  "previewItems": [
+    "$$\\\\frac{4}{5} \\\\cdot \\\\frac{3}{8}$$",
+    "$$1 \\\\frac{1}{2} \\\\cdot \\\\frac{2}{3}$$",
+    "$$\\\\frac{3}{10} \\\\cdot 20$$"
+  ],
+  "published": true
+}

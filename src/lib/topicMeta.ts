@@ -86,7 +86,7 @@ export const topicCatalogEntries: TopicCatalogEntry[] = [
       en: ["multiplying fractions", "fraction times fraction", "fraction of a number"],
       de: ["bruchmultiplikation", "bruch mal bruch", "anteil einer zahl"],
     },
-    canRead: false,
+    canRead: true,
     canTrain: false,
   },
   {

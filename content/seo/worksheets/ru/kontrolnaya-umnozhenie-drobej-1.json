@@ -1,0 +1,25 @@
+{
+  "id": "worksheet.fractions.self.control.001",
+  "locale": "ru",
+  "topicId": "topic.fractions_multiplication.common",
+  "grade": 5,
+  "slug": "kontrolnaya-1",
+  "sortOrder": 60,
+  "materialType": "samostoyatelnaya",
+  "formatType": "kontrolnaya",
+  "difficultyProfile": "kontrolnyj",
+  "title": "Контрольная по теме «Умножение обыкновенных дробей»",
+  "seoTitle": "Контрольная по умножению обыкновенных дробей, 5 класс",
+  "seoDescription": "Контрольная работа по теме «Умножение обыкновенных дробей» для 5 класса: вычисления, смешанные числа и задачи на дробь от числа.",
+  "h1": "Контрольная по теме «Умножение обыкновенных дробей»",
+  "shortDescription": "Итоговый лист на проверку темы: базовые вычисления, выражения и одна прикладная задача.",
+  "teacherNote": "Лист можно использовать как самостоятельную повышенной строгости или как основу для собственной контрольной с заменой 1-2 заданий.",
+  "tasksCount": 6,
+  "durationMinutes": 20,
+  "previewItems": [
+    "$$\\\\frac{9}{14} \\\\cdot \\\\frac{7}{12}$$",
+    "$$2 \\\\frac{1}{5} \\\\cdot 1 \\\\frac{1}{2}$$",
+    "Найдите $$\\\\frac{7}{10}$$ от расстояния 80 км."
+  ],
+  "published": true
+}
