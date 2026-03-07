@@ -250,6 +250,8 @@ const copy = {
     tasksSubtitle: "CRUD задач по выбранной теме/навыку с проверкой схемы.",
     tasksTopic: "Тема",
     tasksSkill: "Skill ID",
+    tasksSkillRequired: "Укажите Skill ID.",
+    tasksSkillInvalid: "Skill не относится к выбранной теме.",
     tasksSearch: "Поиск по task_id и условию",
     tasksLoad: "Загрузить",
     tasksCreate: "Создать задачу",
@@ -359,6 +361,8 @@ const copy = {
     tasksSubtitle: "CRUD tasks for selected topic/skill with schema validation.",
     tasksTopic: "Topic",
     tasksSkill: "Skill ID",
+    tasksSkillRequired: "Skill ID is required.",
+    tasksSkillInvalid: "Skill is not registered for selected topic.",
     tasksSearch: "Search by task_id and statement",
     tasksLoad: "Load",
     tasksCreate: "Create task",
@@ -468,6 +472,8 @@ const copy = {
     tasksSubtitle: "CRUD-Aufgaben fuer ausgewaehltes Thema/Skill mit Schema-Pruefung.",
     tasksTopic: "Thema",
     tasksSkill: "Skill-ID",
+    tasksSkillRequired: "Skill-ID ist erforderlich.",
+    tasksSkillInvalid: "Skill gehoert nicht zum ausgewaehlten Thema.",
     tasksSearch: "Suche nach Task-ID und Aufgabe",
     tasksLoad: "Laden",
     tasksCreate: "Aufgabe erstellen",
@@ -563,6 +569,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [savingSkillId, setSavingSkillId] = useState<string | null>(null);
   const [taskTopicFilter, setTaskTopicFilter] = useState("all");
   const [taskSkillFilter, setTaskSkillFilter] = useState("");
+  const [taskSkillTouched, setTaskSkillTouched] = useState(false);
   const [taskQuery, setTaskQuery] = useState("");
   const [taskStatusFilter, setTaskStatusFilter] = useState<"all" | "draft" | "review" | "ready">("all");
   const [taskItems, setTaskItems] = useState<AdminTaskItem[]>([]);
@@ -741,6 +748,33 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           .includes(q);
       });
   }, [locale, skillItems, skillsQuery, skillsStatusFilter, skillsTopicFilter, skillsWithoutTasksOnly]);
+
+  const taskTopicSkillSet = useMemo(() => {
+    if (!taskTopicFilter || taskTopicFilter === "all") return new Set<string>();
+    return new Set(
+      skillItems
+        .filter((item) => item.topicId === taskTopicFilter)
+        .map((item) => item.skillId),
+    );
+  }, [skillItems, taskTopicFilter]);
+
+  const validateTaskSkillId = useCallback(
+    (skillIdRaw: string) => {
+      const skillId = skillIdRaw.trim();
+      if (!skillId) return t.tasksSkillRequired;
+      if (!taskTopicFilter || taskTopicFilter === "all") return null;
+      if (taskTopicSkillSet.size > 0 && !taskTopicSkillSet.has(skillId)) {
+        return t.tasksSkillInvalid;
+      }
+      return null;
+    },
+    [t.tasksSkillInvalid, t.tasksSkillRequired, taskTopicFilter, taskTopicSkillSet],
+  );
+
+  const taskSkillInlineError = useMemo(() => {
+    if (!taskSkillTouched) return null;
+    return validateTaskSkillId(taskSkillFilter);
+  }, [taskSkillFilter, taskSkillTouched, validateTaskSkillId]);
 
   function applyDraftAnswer(answer: unknown) {
     if (!answer || typeof answer !== "object") {
@@ -1093,6 +1127,10 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   }, [skillsTopicOptions, taskTopicFilter]);
 
   useEffect(() => {
+    setTaskSkillTouched(false);
+  }, [taskTopicFilter]);
+
+  useEffect(() => {
     if (taskTopicFilter === "all") return;
     void loadTasks({ topicId: taskTopicFilter });
   }, [loadTasks, taskTopicFilter]);
@@ -1252,9 +1290,11 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       setTasksError("topicId is required");
       return;
     }
+    setTaskSkillTouched(true);
     const skillId = taskSkillFilter.trim();
-    if (!skillId) {
-      setTasksError("skillId is required");
+    const skillValidationError = validateTaskSkillId(skillId);
+    if (skillValidationError) {
+      setTasksError(skillValidationError);
       return;
     }
     const answer = buildTaskAnswer();
@@ -1803,8 +1843,12 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             type="text"
             value={taskSkillFilter}
             onChange={(event) => setTaskSkillFilter(event.target.value)}
+            onBlur={() => setTaskSkillTouched(true)}
             placeholder={t.tasksSkill}
-            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className={[
+              "w-full rounded-xl bg-white px-3 py-2 text-sm text-slate-900",
+              taskSkillInlineError ? "border border-red-400" : "border border-slate-300",
+            ].join(" ")}
           />
           <input
             type="text"
@@ -1831,6 +1875,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             {t.tasksLoad}
           </button>
         </div>
+        {taskSkillInlineError ? <p className="text-xs text-red-700">{taskSkillInlineError}</p> : null}
 
         <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.tasksCreate}</p>
@@ -1933,7 +1978,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           </div>
           <button
             type="button"
-            disabled={creatingTask}
+            disabled={creatingTask || Boolean(taskSkillInlineError)}
             onClick={() => void createTask()}
             className="rounded-lg border border-slate-300 bg-slate-900 px-3 py-2 text-xs font-medium text-white hover:bg-slate-800 disabled:opacity-60"
           >
