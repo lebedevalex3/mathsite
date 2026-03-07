@@ -16,7 +16,8 @@
     "content:new-topic": "tsx scripts/content-new-topic.ts",
     "content:migrate-topic-stage2c": "tsx scripts/content-migrate-topic-stage2c.ts",
     "cleanup:demo-works": "tsx scripts/cleanup-demo-works.ts",
-    "smoke:admin": "bash scripts/smoke-admin.sh"
+    "smoke:admin": "bash scripts/smoke-admin.sh",
+    "e2e:admin:create-task": "bash scripts/e2e-admin-create-task.sh"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
