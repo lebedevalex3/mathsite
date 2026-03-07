@@ -293,6 +293,7 @@ const copy = {
     tasksHistorySummaryReady: "В ready",
     tasksCopyLink: "Скопировать ссылку",
     tasksCopyLinkSuccess: "Ссылка скопирована",
+    tasksHistoryLoadMore: "Загрузить еще",
     loading: "Загрузка...",
     errorFallback: "Не удалось выполнить действие.",
   },
@@ -401,6 +402,7 @@ const copy = {
     tasksHistorySummaryReady: "To ready",
     tasksCopyLink: "Copy link",
     tasksCopyLinkSuccess: "Link copied",
+    tasksHistoryLoadMore: "Load more",
     loading: "Loading...",
     errorFallback: "Action failed.",
   },
@@ -509,6 +511,7 @@ const copy = {
     tasksHistorySummaryReady: "Zu ready",
     tasksCopyLink: "Link kopieren",
     tasksCopyLinkSuccess: "Link kopiert",
+    tasksHistoryLoadMore: "Mehr laden",
     loading: "Laden...",
     errorFallback: "Aktion fehlgeschlagen.",
   },
@@ -578,6 +581,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   const [taskDraftRatioRight, setTaskDraftRatioRight] = useState(2);
   const [creatingTask, setCreatingTask] = useState(false);
   const [taskAuditById, setTaskAuditById] = useState<Record<string, TaskAuditItem[]>>({});
+  const [taskAuditNextCursorById, setTaskAuditNextCursorById] = useState<Record<string, string | null>>({});
   const [taskAuditLoadingId, setTaskAuditLoadingId] = useState<string | null>(null);
   const [taskAuditErrorById, setTaskAuditErrorById] = useState<Record<string, string>>({});
   const [taskAuditActionFilter, setTaskAuditActionFilter] = useState<TaskAuditActionFilter>("all");
@@ -887,10 +891,16 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   );
 
   const loadTaskAudit = useCallback(
-    async (taskId: string) => {
+    async (taskId: string, options?: { append?: boolean }) => {
       setTaskAuditLoadingId(taskId);
       try {
         const url = new URL(`/api/admin/tasks/${encodeURIComponent(taskId)}/audit`, window.location.origin);
+        if (options?.append) {
+          const cursor = taskAuditNextCursorById[taskId];
+          if (cursor) {
+            url.searchParams.set("cursor", cursor);
+          }
+        }
         if (taskAuditActionFilter !== "all") {
           url.searchParams.set("action", taskAuditActionFilter);
         }
@@ -915,14 +925,27 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         const response = await fetch(url.toString(), {
           credentials: "same-origin",
         });
-        const payload = (await response.json()) as { ok?: boolean; logs?: TaskAuditItem[]; message?: string };
+        const payload = (await response.json()) as {
+          ok?: boolean;
+          logs?: TaskAuditItem[];
+          pageInfo?: { nextCursor?: string | null };
+          message?: string;
+        };
         if (!response.ok || !payload.ok) {
           setTaskAuditErrorById((prev) => ({ ...prev, [taskId]: payload.message ?? t.errorFallback }));
           return;
         }
+        const nextLogs = Array.isArray(payload.logs) ? payload.logs : [];
         setTaskAuditById((prev) => ({
           ...prev,
-          [taskId]: Array.isArray(payload.logs) ? payload.logs : [],
+          [taskId]: options?.append ? [...(prev[taskId] ?? []), ...nextLogs] : nextLogs,
+        }));
+        setTaskAuditNextCursorById((prev) => ({
+          ...prev,
+          [taskId]:
+            typeof payload.pageInfo?.nextCursor === "string" || payload.pageInfo?.nextCursor === null
+              ? (payload.pageInfo.nextCursor ?? null)
+              : null,
         }));
         setTaskAuditErrorById((prev) => {
           const next = { ...prev };
@@ -941,6 +964,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       taskAuditActorFilter,
       taskAuditChangedFieldFilter,
       taskAuditFromDate,
+      taskAuditNextCursorById,
       taskAuditReadyOnly,
       taskAuditStatusOnly,
       taskAuditToDate,
@@ -1075,6 +1099,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     setTaskAuditById({});
+    setTaskAuditNextCursorById({});
     setTaskAuditErrorById({});
     if (!editingTaskId) return;
     void loadTaskAudit(editingTaskId);
@@ -1310,6 +1335,11 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         delete next[taskId];
         return next;
       });
+      setTaskAuditNextCursorById((prev) => {
+        const next = { ...prev };
+        delete next[taskId];
+        return next;
+      });
       setTaskAuditErrorById((prev) => {
         const next = { ...prev };
         delete next[taskId];
@@ -1345,6 +1375,11 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       }
       await loadTasks();
       setTaskAuditById((prev) => {
+        const next = { ...prev };
+        delete next[taskId];
+        return next;
+      });
+      setTaskAuditNextCursorById((prev) => {
         const next = { ...prev };
         delete next[taskId];
         return next;
@@ -1913,6 +1948,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           {taskItems.map((task) => {
             const isEditing = editingTaskId === task.id;
             const taskAudit = taskAuditById[task.id] ?? [];
+            const taskAuditNextCursor = taskAuditNextCursorById[task.id] ?? null;
             const taskAuditError = taskAuditErrorById[task.id];
             const isTaskAuditLoading = taskAuditLoadingId === task.id;
             const statusChangesTotal = taskAudit.filter((item) => item.changedFields.includes("status")).length;
@@ -2103,6 +2139,16 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                           ) : null}
                         </div>
                       ))}
+                      {taskAuditNextCursor ? (
+                        <button
+                          type="button"
+                          disabled={isTaskAuditLoading}
+                          onClick={() => void loadTaskAudit(task.id, { append: true })}
+                          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
+                        >
+                          {t.tasksHistoryLoadMore}
+                        </button>
+                      ) : null}
                     </div>
                   ) : null}
                 </div>
