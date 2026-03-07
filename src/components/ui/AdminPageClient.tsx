@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 
 import { MarkdownMath } from "@/lib/ui/MarkdownMath";
+import { buildAdminContentBoard } from "@/src/components/ui/admin-content-board.utils";
 import { SurfaceCard } from "@/src/components/ui/SurfaceCard";
 import { filterTaskSkillsByTopic, validateTaskSkillSelection } from "@/src/components/ui/admin-task-create-form.utils";
 import { buildAdminSectionErrors, formatAdminSectionFailures } from "@/src/components/ui/admin-page-client.utils";
@@ -188,10 +189,41 @@ function deriveTopicIdFromTaskId(taskId: string) {
   return `${parts[0]}.${parts[1]}`;
 }
 
+function formatBoardActionReason(
+  locale: Locale,
+  reason: string,
+  coverage: SkillReadyDeficitItem["coverage"] | null,
+) {
+  const noTasks =
+    locale === "ru" ? "нет задач" : locale === "de" ? "keine Aufgaben" : "no tasks";
+  const deficit =
+    locale === "ru" ? "не проходит ready gate" : locale === "de" ? "ready gate nicht bestanden" : "fails ready gate";
+  const missingSummary =
+    locale === "ru" ? "нет summary" : locale === "de" ? "keine Beschreibung" : "missing summary";
+  const missingTrainer =
+    locale === "ru" ? "нет trainer link" : locale === "de" ? "kein Trainer-Link" : "missing trainer link";
+
+  if (reason === "no_tasks") return noTasks;
+  if (reason === "deficit") {
+    if (!coverage) return deficit;
+    return `${deficit}: ready ${coverage.readyTotal} • A:${coverage.readyByBand.A} B:${coverage.readyByBand.B} C:${coverage.readyByBand.C}`;
+  }
+  if (reason === "missing_summary") return missingSummary;
+  if (reason === "missing_trainer") return missingTrainer;
+  return reason;
+}
+
 const copy = {
   ru: {
     title: "Админ-панель",
     subtitle: "Управление учениками и просмотр журнала аудита.",
+    workflowTitle: "Основной сценарий",
+    workflowSubtitle: "Рабочий путь для наполнения контента: сначала понять дефицит, потом поправить skill, потом добить задачи.",
+    workflowBoard: "1. Board",
+    workflowSkills: "2. Skills",
+    workflowTasks: "3. Tasks",
+    toolsTitle: "Операционные блоки",
+    toolsSubtitle: "Ученики и аудит оставлены ниже как вспомогательные инструменты, а не основной контентный поток.",
     authRequired: "Доступ только для admin.",
     back: "Назад",
     studentsTitle: "Ученики",
@@ -210,6 +242,27 @@ const copy = {
     auditFilterBlocked: "Блокировки",
     noLogs: "События не найдены.",
     refresh: "Обновить",
+    boardTitle: "Content board",
+    boardSubtitle: "Главный обзор покрытия: что добивать следующим по темам, веткам и навыкам.",
+    boardQueueTitle: "Очередь действий",
+    boardQueueHint: "Навыки, которые сейчас сильнее всего тормозят готовность продукта.",
+    boardNoActions: "Срочных контентных дефицитов не найдено.",
+    boardCoverageTitle: "Карта покрытия",
+    boardBranch: "Ветка",
+    boardUnassignedBranch: "без ветки",
+    boardBranchSkills: "Навыков",
+    boardBranchTasks: "Задач",
+    boardBranchActionable: "Требуют действия",
+    boardBranchDeficits: "Дефициты",
+    boardBranchMissingSummary: "Без summary",
+    boardBranchMissingTrainer: "Без trainer",
+    boardSummaryActionable: "Навыков к доработке",
+    boardSummaryWithoutTasks: "Навыков без задач",
+    boardSummaryMissingSummary: "Без summary",
+    boardSummaryMissingTrainer: "Без trainer",
+    boardSummaryWarnings: "Тем с warning",
+    boardOpenTasks: "Открыть задачи",
+    boardOpenSkills: "К навыкам",
     contentTitle: "Реестр контента",
     contentSubtitle: "Темы, навыки, покрытие задач, маршруты и предпосылки.",
     contentSearch: "Поиск по topic_id / названию навыка",
@@ -305,6 +358,13 @@ const copy = {
   en: {
     title: "Admin panel",
     subtitle: "Manage students and review audit log.",
+    workflowTitle: "Primary workflow",
+    workflowSubtitle: "Content production flow: find the deficit first, then fix the skill, then finish the tasks.",
+    workflowBoard: "1. Board",
+    workflowSkills: "2. Skills",
+    workflowTasks: "3. Tasks",
+    toolsTitle: "Operational panels",
+    toolsSubtitle: "Students and audit stay below as supporting tools, not as the main content workflow.",
     authRequired: "Admin access only.",
     back: "Back",
     studentsTitle: "Students",
@@ -323,6 +383,27 @@ const copy = {
     auditFilterBlocked: "Blocked",
     noLogs: "No events found.",
     refresh: "Refresh",
+    boardTitle: "Content board",
+    boardSubtitle: "Single coverage overview: what to finish next across topics, branches, and skills.",
+    boardQueueTitle: "Action queue",
+    boardQueueHint: "Skills that currently block product readiness the most.",
+    boardNoActions: "No urgent content deficits found.",
+    boardCoverageTitle: "Coverage map",
+    boardBranch: "Branch",
+    boardUnassignedBranch: "unassigned",
+    boardBranchSkills: "Skills",
+    boardBranchTasks: "Tasks",
+    boardBranchActionable: "Need action",
+    boardBranchDeficits: "Deficits",
+    boardBranchMissingSummary: "No summary",
+    boardBranchMissingTrainer: "No trainer",
+    boardSummaryActionable: "Skills to fix",
+    boardSummaryWithoutTasks: "Skills without tasks",
+    boardSummaryMissingSummary: "Missing summary",
+    boardSummaryMissingTrainer: "Missing trainer",
+    boardSummaryWarnings: "Topics with warnings",
+    boardOpenTasks: "Open tasks",
+    boardOpenSkills: "Open skills",
     contentTitle: "Content registry",
     contentSubtitle: "Topics, skills, task coverage, routes, and prerequisites.",
     contentSearch: "Search by topic_id / skill title",
@@ -418,6 +499,13 @@ const copy = {
   de: {
     title: "Admin-Bereich",
     subtitle: "Schüler verwalten und Audit-Log prüfen.",
+    workflowTitle: "Hauptablauf",
+    workflowSubtitle: "Arbeitsweg fuer Content: zuerst Defizit sehen, dann Skill korrigieren, dann Aufgaben fertigstellen.",
+    workflowBoard: "1. Board",
+    workflowSkills: "2. Skills",
+    workflowTasks: "3. Tasks",
+    toolsTitle: "Operative Bereiche",
+    toolsSubtitle: "Schueler und Audit bleiben unten als Hilfswerkzeuge, nicht als Hauptablauf fuer Content.",
     authRequired: "Nur für Admin verfügbar.",
     back: "Zurück",
     studentsTitle: "Schüler",
@@ -436,6 +524,27 @@ const copy = {
     auditFilterBlocked: "Blockiert",
     noLogs: "Keine Ereignisse gefunden.",
     refresh: "Aktualisieren",
+    boardTitle: "Content-Board",
+    boardSubtitle: "Zentraler Ueberblick: was als Naechstes in Themen, Zweigen und Skills fertig werden muss.",
+    boardQueueTitle: "Arbeitsliste",
+    boardQueueHint: "Skills, die die Produktreife derzeit am staerksten bremsen.",
+    boardNoActions: "Keine dringenden Content-Defizite gefunden.",
+    boardCoverageTitle: "Abdeckungskarte",
+    boardBranch: "Zweig",
+    boardUnassignedBranch: "ohne Zweig",
+    boardBranchSkills: "Skills",
+    boardBranchTasks: "Aufgaben",
+    boardBranchActionable: "Mit Handlungsbedarf",
+    boardBranchDeficits: "Defizite",
+    boardBranchMissingSummary: "Ohne Beschreibung",
+    boardBranchMissingTrainer: "Ohne Trainer",
+    boardSummaryActionable: "Skills zur Nacharbeit",
+    boardSummaryWithoutTasks: "Skills ohne Aufgaben",
+    boardSummaryMissingSummary: "Ohne Beschreibung",
+    boardSummaryMissingTrainer: "Ohne Trainer",
+    boardSummaryWarnings: "Themen mit Warnungen",
+    boardOpenTasks: "Aufgaben oeffnen",
+    boardOpenSkills: "Skills oeffnen",
     contentTitle: "Content-Register",
     contentSubtitle: "Themen, Skills, Aufgabenabdeckung, Routen und Voraussetzungen.",
     contentSearch: "Suche nach topic_id / Skill-Titel",
@@ -533,6 +642,9 @@ const copy = {
 export function AdminPageClient({ locale }: { locale: Locale }) {
   const t = copy[locale];
   const taskAuditQueryHydratedRef = useRef(false);
+  const boardSectionRef = useRef<HTMLElement | null>(null);
+  const skillsSectionRef = useRef<HTMLElement | null>(null);
+  const tasksSectionRef = useRef<HTMLElement | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [csrfToken, setCsrfToken] = useState("");
@@ -680,6 +792,10 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
     [t.errorFallback],
   );
 
+  const scrollToSection = useCallback((ref: { current: HTMLElement | null }) => {
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   const filteredStudents = useMemo(() => {
     const q = studentsQuery.trim().toLowerCase();
     if (!q) return students;
@@ -756,6 +872,17 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
           .includes(q);
       });
   }, [locale, skillItems, skillsQuery, skillsStatusFilter, skillsTopicFilter, skillsWithoutTasksOnly]);
+
+  const contentBoard = useMemo(
+    () =>
+      buildAdminContentBoard({
+        locale,
+        topics: contentTopics,
+        skills: skillItems,
+        deficits: skillDeficits,
+      }),
+    [contentTopics, locale, skillDeficits, skillItems],
+  );
 
   const taskTopicSkillSet = useMemo(() => {
     if (!taskTopicFilter || taskTopicFilter === "all") return new Set<string>();
@@ -934,6 +1061,23 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
       }
     },
     [t.errorFallback, taskQuery, taskSkillFilter, taskStatusFilter, taskTopicFilter],
+  );
+
+  const openSkillWorkQueue = useCallback(
+    async (params: { topicId: string; skillId: string }) => {
+      setSkillsTopicFilter(params.topicId);
+      setSkillsQuery(params.skillId);
+      setSkillsStatusFilter("all");
+      setSkillsWithoutTasksOnly(false);
+      setTaskTopicFilter(params.topicId);
+      setTaskSkillFilter(params.skillId);
+      setTaskSkillTouched(false);
+      setTaskStatusFilter("all");
+      setTaskQuery("");
+      await loadTasks({ topicId: params.topicId, skillId: params.skillId, q: "" });
+      tasksSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+    [loadTasks],
   );
 
   const loadTaskAudit = useCallback(
@@ -1497,16 +1641,51 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   }
 
   return (
-    <main className="space-y-6">
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <main className="flex flex-col space-y-6">
+      <section className="order-1 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <h1 className="text-2xl font-bold tracking-tight text-slate-950">{t.title}</h1>
         <p className="mt-2 text-sm text-slate-600">{t.subtitle}</p>
         {error ? <p className="mt-3 text-sm text-red-700">{error}</p> : null}
       </section>
 
-      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <section className="order-2 rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight text-slate-950">{t.workflowTitle}</h2>
+            <p className="mt-1 text-sm text-slate-600">{t.workflowSubtitle}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => scrollToSection(boardSectionRef)}
+              className="rounded-full border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+            >
+              {t.workflowBoard}
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToSection(skillsSectionRef)}
+              className="rounded-full border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+            >
+              {t.workflowSkills}
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToSection(tasksSectionRef)}
+              className="rounded-full border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+            >
+              {t.workflowTasks}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section ref={boardSectionRef} className="order-3 space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.studentsTitle}</h2>
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.boardTitle}</h2>
+            <p className="text-sm text-slate-600">{t.boardSubtitle}</p>
+          </div>
           <button
             type="button"
             onClick={() => void refreshAdminData()}
@@ -1515,53 +1694,285 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
             {t.refresh}
           </button>
         </div>
-        <input
-          type="text"
-          value={studentsQuery}
-          onChange={(event) => setStudentsQuery(event.target.value)}
-          placeholder={t.studentsSearch}
-          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
-        />
-        {sectionErrors.students ? <p className="text-sm text-red-700">{sectionErrors.students}</p> : null}
-        {lastReset ? (
-          <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
-            <p>
-              <span className="font-semibold">{t.temporaryPassword}:</span> <code>{lastReset.temporaryPassword}</code>
-            </p>
-            <p className="mt-1 text-xs">{t.temporaryPasswordHint}</p>
+
+        <div className="grid gap-3 md:grid-cols-5">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.boardSummaryActionable}</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-950">{contentBoard.summary.actionableSkills}</p>
           </div>
-        ) : null}
-        {filteredStudents.length === 0 ? (
-          <p className="text-sm text-slate-600">{t.noStudents}</p>
-        ) : (
-          <div className="space-y-2">
-            {filteredStudents.map((student) => (
-              <div
-                key={student.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2"
-              >
-                <div>
-                  <p className="text-sm font-semibold text-slate-950">{student.username ?? student.id}</p>
-                  <p className="text-xs text-slate-600">
-                    {student.email ?? "no-email"} • {t.classesCount}: {student.classesCount} •{" "}
-                    {formatDateTime(locale, student.createdAt)}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => void handleResetStudent(student.id)}
-                  disabled={resettingStudentId === student.id}
-                  className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
-                >
-                  {resettingStudentId === student.id ? "..." : t.resetPassword}
-                </button>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.boardSummaryWithoutTasks}</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-950">{contentBoard.summary.skillsWithoutTasks}</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.boardBranchDeficits}</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-950">{contentBoard.summary.deficitSkills}</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.boardSummaryMissingSummary}</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-950">{contentBoard.summary.missingSummary}</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t.boardSummaryMissingTrainer}</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-950">{contentBoard.summary.missingTrainer}</p>
+          </div>
+        </div>
+
+        <div className="grid gap-4 xl:grid-cols-[1.2fr,1.8fr]">
+          <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">
+            <p className="font-semibold">{t.boardQueueTitle}</p>
+            <p className="mt-1 text-xs text-amber-900">{t.boardQueueHint}</p>
+            {contentBoard.actions.length === 0 ? (
+              <p className="mt-3 text-sm">{t.boardNoActions}</p>
+            ) : (
+              <div className="mt-3 space-y-2">
+                {contentBoard.actions.slice(0, 8).map((item) => (
+                  <div key={item.skillId} className="rounded-xl border border-amber-200 bg-white p-3">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-semibold text-slate-950">
+                          {item.skillTitle} <span className="text-slate-500">({item.skillId})</span>
+                        </p>
+                        <p className="text-xs text-slate-600">
+                          {item.topicTitle} • {t.boardBranch}:{" "}
+                          {item.branchId ?? t.boardUnassignedBranch} • {t.contentTasks}: {item.tasksTotal}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => void openSkillWorkQueue({ topicId: item.topicId, skillId: item.skillId })}
+                          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
+                        >
+                          {t.boardOpenTasks}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                      {item.actionReasons.map((reason) => (
+                        <span
+                          key={`${item.skillId}-${reason}`}
+                          className="rounded-full border border-amber-200 bg-amber-100 px-2 py-1 text-amber-950"
+                        >
+                          {formatBoardActionReason(locale, reason, item.deficitCoverage)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p className="font-semibold text-slate-950">{t.boardCoverageTitle}</p>
+              <p className="mt-1 text-xs text-slate-600">
+                {t.boardSummaryWarnings}: {contentBoard.summary.topicsWithWarnings} • {t.contentTasks}:{" "}
+                {contentBoard.summary.tasksTotal} • {t.contentSkillsCoverage}: {contentBoard.summary.skillsWithTasks}/
+                {contentBoard.summary.skillsTotal}
+              </p>
+            </div>
+            {contentBoard.topics.map((topic) => (
+              <details
+                key={topic.topicId}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                open={topic.actionableSkills > 0}
+              >
+                <summary className="cursor-pointer list-none">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-950">
+                        {topic.title} <span className="text-slate-500">({topic.topicId})</span>
+                      </p>
+                      <p className="text-xs text-slate-600">
+                        {topic.domain ?? "—"} • status: {topic.status ?? "—"} • {t.boardBranchActionable}:{" "}
+                        {topic.actionableSkills}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      <span className="rounded-full border border-slate-300 bg-white px-2 py-1">
+                        {t.contentTasks}: {topic.tasksTotal}
+                      </span>
+                      <span className="rounded-full border border-slate-300 bg-white px-2 py-1">
+                        {t.boardBranchDeficits}: {topic.deficitSkills}
+                      </span>
+                      <span className="rounded-full border border-slate-300 bg-white px-2 py-1">
+                        {t.boardSummaryMissingTrainer}: {topic.missingTrainer}
+                      </span>
+                    </div>
+                  </div>
+                </summary>
+
+                {topic.warnings.length > 0 ? (
+                  <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                    <p className="font-semibold">{t.contentWarnings}</p>
+                    <ul className="mt-1 list-disc pl-4">
+                      {topic.warnings.map((warning) => (
+                        <li key={`${topic.topicId}-${warning}`}>{warning}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+
+                <div className="mt-3 grid gap-3 xl:grid-cols-2">
+                  {topic.branches.map((branch) => (
+                    <div key={`${topic.topicId}-${branch.label}`} className="rounded-xl border border-slate-200 bg-white p-3">
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-950">
+                            {t.boardBranch}: {branch.branchId ?? t.boardUnassignedBranch}
+                          </p>
+                          <p className="text-xs text-slate-600">
+                            {t.boardBranchSkills}: {branch.skillsTotal} • {t.boardBranchTasks}: {branch.tasksTotal} •{" "}
+                            {t.boardBranchActionable}: {branch.actionableSkills}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap gap-2 text-xs">
+                          <span className="rounded-full border border-slate-300 bg-slate-50 px-2 py-1">
+                            ready: {branch.readySkills}
+                          </span>
+                          <span className="rounded-full border border-slate-300 bg-slate-50 px-2 py-1">
+                            soon: {branch.soonSkills}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                          {t.boardBranchDeficits}: {branch.deficitSkills}
+                        </div>
+                        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                          {t.boardSummaryWithoutTasks}: {branch.withoutTasks}
+                        </div>
+                        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                          {t.boardBranchMissingSummary}: {branch.missingSummary}
+                        </div>
+                        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                          {t.boardBranchMissingTrainer}: {branch.missingTrainer}
+                        </div>
+                      </div>
+
+                      {branch.topActions.length > 0 ? (
+                        <div className="mt-3 space-y-2">
+                          {branch.topActions.map((item) => (
+                            <div
+                              key={`${topic.topicId}-${branch.label}-${item.skillId}`}
+                              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2"
+                            >
+                              <div className="flex flex-wrap items-start justify-between gap-2">
+                                <div>
+                                  <p className="text-xs font-semibold text-slate-950">
+                                    {item.skillTitle} <span className="text-slate-500">({item.skillId})</span>
+                                  </p>
+                                  <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-slate-600">
+                                    {item.actionReasons.map((reason) => (
+                                      <span key={`${item.skillId}-${reason}`}>
+                                        {formatBoardActionReason(locale, reason, item.deficitCoverage)}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => void openSkillWorkQueue({ topicId: item.topicId, skillId: item.skillId })}
+                                  className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
+                                >
+                                  {t.boardOpenTasks}
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="mt-3 text-xs text-slate-500">{t.boardNoActions}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </details>
             ))}
           </div>
-        )}
+        </div>
       </section>
 
-      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <section className="order-7 rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm sm:p-6">
+        <h2 className="text-lg font-semibold tracking-tight text-slate-950">{t.toolsTitle}</h2>
+        <p className="mt-1 text-sm text-slate-600">{t.toolsSubtitle}</p>
+      </section>
+
+      <section className="order-8 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+        <details open={Boolean(lastReset || sectionErrors.students)}>
+          <summary className="cursor-pointer list-none">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold tracking-tight text-slate-950">{t.studentsTitle}</h2>
+                <p className="mt-1 text-xs text-slate-600">
+                  {filteredStudents.length} • {t.classesCount.toLowerCase()}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  void refreshAdminData();
+                }}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+              >
+                {t.refresh}
+              </button>
+            </div>
+          </summary>
+          <div className="mt-4 space-y-4">
+            <input
+              type="text"
+              value={studentsQuery}
+              onChange={(event) => setStudentsQuery(event.target.value)}
+              placeholder={t.studentsSearch}
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            />
+            {sectionErrors.students ? <p className="text-sm text-red-700">{sectionErrors.students}</p> : null}
+            {lastReset ? (
+              <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+                <p>
+                  <span className="font-semibold">{t.temporaryPassword}:</span> <code>{lastReset.temporaryPassword}</code>
+                </p>
+                <p className="mt-1 text-xs">{t.temporaryPasswordHint}</p>
+              </div>
+            ) : null}
+            {filteredStudents.length === 0 ? (
+              <p className="text-sm text-slate-600">{t.noStudents}</p>
+            ) : (
+              <div className="space-y-2">
+                {filteredStudents.map((student) => (
+                  <div
+                    key={student.id}
+                    className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-slate-950">{student.username ?? student.id}</p>
+                      <p className="text-xs text-slate-600">
+                        {student.email ?? "no-email"} • {t.classesCount}: {student.classesCount} •{" "}
+                        {formatDateTime(locale, student.createdAt)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => void handleResetStudent(student.id)}
+                      disabled={resettingStudentId === student.id}
+                      className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60"
+                    >
+                      {resettingStudentId === student.id ? "..." : t.resetPassword}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </details>
+      </section>
+
+      <section className="order-6 space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.contentTitle}</h2>
         <p className="text-sm text-slate-600">{t.contentSubtitle}</p>
         <div className="grid gap-3 md:grid-cols-3">
@@ -1672,7 +2083,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         )}
       </section>
 
-      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <section ref={skillsSectionRef} className="order-4 space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.skillsTitle}</h2>
         <p className="text-sm text-slate-600">{t.skillsSubtitle}</p>
         <div className="grid gap-3 md:grid-cols-5">
@@ -1731,12 +2142,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
                   <p className="text-slate-600">{deficit.reasons.join(", ")}</p>
                   <button
                     type="button"
-                    onClick={() => {
-                      setTaskTopicFilter(deficit.topicId);
-                      setTaskSkillFilter(deficit.skillId);
-                      setTaskStatusFilter("all");
-                      void loadTasks({ topicId: deficit.topicId, skillId: deficit.skillId, q: "" });
-                    }}
+                    onClick={() => void openSkillWorkQueue({ topicId: deficit.topicId, skillId: deficit.skillId })}
                     className="mt-2 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-100"
                   >
                     {t.skillsOpenTasks}
@@ -1845,7 +2251,7 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         )}
       </section>
 
-      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <section ref={tasksSectionRef} className="order-5 space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.tasksTitle}</h2>
         <p className="text-sm text-slate-600">{t.tasksSubtitle}</p>
         <div className="grid gap-3 md:grid-cols-5">
@@ -2357,55 +2763,66 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <h2 className="text-xl font-semibold tracking-tight text-slate-950">{t.auditTitle}</h2>
-        <div className="flex flex-wrap gap-2">
-          {([
-            ["all", t.auditFilterAll],
-            ["auth", t.auditFilterAuth],
-            ["success", t.auditFilterSuccess],
-            ["failure", t.auditFilterFailure],
-            ["blocked", t.auditFilterBlocked],
-          ] as const).map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setLogsActionFilter(value)}
-              className={[
-                "rounded-full border px-3 py-1 text-xs font-medium",
-                logsActionFilter === value
-                  ? "border-slate-900 bg-slate-900 text-white"
-                  : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
-              ].join(" ")}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <input
-          type="text"
-          value={logsQuery}
-          onChange={(event) => setLogsQuery(event.target.value)}
-          placeholder={t.auditSearch}
-          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
-        />
-        {sectionErrors.logs ? <p className="text-sm text-red-700">{sectionErrors.logs}</p> : null}
-        {filteredLogs.length === 0 ? (
-          <p className="text-sm text-slate-600">{t.noLogs}</p>
-        ) : (
-          <div className="space-y-2">
-            {filteredLogs.map((item) => (
-              <div key={item.id} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-                <p className="text-sm font-semibold text-slate-950">
-                  {item.action} • {item.entityType}:{item.entityId}
-                </p>
-                <p className="text-xs text-slate-600">
-                  {formatDateTime(locale, item.createdAt)} • {item.actor?.username ?? item.actor?.email ?? "system"}
-                </p>
+      <section className="order-9 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+        <details open={Boolean(sectionErrors.logs || logsQuery.trim())}>
+          <summary className="cursor-pointer list-none">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight text-slate-950">{t.auditTitle}</h2>
+              <p className="mt-1 text-xs text-slate-600">
+                {filteredLogs.length} {t.tasksHistorySummaryTotal.toLowerCase()}
+              </p>
+            </div>
+          </summary>
+          <div className="mt-4 space-y-4">
+            <div className="flex flex-wrap gap-2">
+              {([
+                ["all", t.auditFilterAll],
+                ["auth", t.auditFilterAuth],
+                ["success", t.auditFilterSuccess],
+                ["failure", t.auditFilterFailure],
+                ["blocked", t.auditFilterBlocked],
+              ] as const).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setLogsActionFilter(value)}
+                  className={[
+                    "rounded-full border px-3 py-1 text-xs font-medium",
+                    logsActionFilter === value
+                      ? "border-slate-900 bg-slate-900 text-white"
+                      : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
+                  ].join(" ")}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <input
+              type="text"
+              value={logsQuery}
+              onChange={(event) => setLogsQuery(event.target.value)}
+              placeholder={t.auditSearch}
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            />
+            {sectionErrors.logs ? <p className="text-sm text-red-700">{sectionErrors.logs}</p> : null}
+            {filteredLogs.length === 0 ? (
+              <p className="text-sm text-slate-600">{t.noLogs}</p>
+            ) : (
+              <div className="space-y-2">
+                {filteredLogs.map((item) => (
+                  <div key={item.id} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                    <p className="text-sm font-semibold text-slate-950">
+                      {item.action} • {item.entityType}:{item.entityId}
+                    </p>
+                    <p className="text-xs text-slate-600">
+                      {formatDateTime(locale, item.createdAt)} • {item.actor?.username ?? item.actor?.email ?? "system"}
+                    </p>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        )}
+        </details>
       </section>
     </main>
   );
