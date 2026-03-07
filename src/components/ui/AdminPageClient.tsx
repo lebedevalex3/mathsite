@@ -250,6 +250,7 @@ const copy = {
     tasksSubtitle: "CRUD задач по выбранной теме/навыку с проверкой схемы.",
     tasksTopic: "Тема",
     tasksSkill: "Skill ID",
+    tasksSkillSelect: "Выберите навык",
     tasksSkillRequired: "Укажите Skill ID.",
     tasksSkillInvalid: "Skill не относится к выбранной теме.",
     tasksSearch: "Поиск по task_id и условию",
@@ -361,6 +362,7 @@ const copy = {
     tasksSubtitle: "CRUD tasks for selected topic/skill with schema validation.",
     tasksTopic: "Topic",
     tasksSkill: "Skill ID",
+    tasksSkillSelect: "Select skill",
     tasksSkillRequired: "Skill ID is required.",
     tasksSkillInvalid: "Skill is not registered for selected topic.",
     tasksSearch: "Search by task_id and statement",
@@ -472,6 +474,7 @@ const copy = {
     tasksSubtitle: "CRUD-Aufgaben fuer ausgewaehltes Thema/Skill mit Schema-Pruefung.",
     tasksTopic: "Thema",
     tasksSkill: "Skill-ID",
+    tasksSkillSelect: "Skill waehlen",
     tasksSkillRequired: "Skill-ID ist erforderlich.",
     tasksSkillInvalid: "Skill gehoert nicht zum ausgewaehlten Thema.",
     tasksSearch: "Suche nach Task-ID und Aufgabe",
@@ -756,6 +759,13 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
         .filter((item) => item.topicId === taskTopicFilter)
         .map((item) => item.skillId),
     );
+  }, [skillItems, taskTopicFilter]);
+
+  const taskTopicSkillOptions = useMemo(() => {
+    if (!taskTopicFilter || taskTopicFilter === "all") return [] as SkillRegistryItem[];
+    return skillItems
+      .filter((item) => item.topicId === taskTopicFilter)
+      .sort((left, right) => left.skillId.localeCompare(right.skillId));
   }, [skillItems, taskTopicFilter]);
 
   const validateTaskSkillId = useCallback(
@@ -1129,6 +1139,15 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
   useEffect(() => {
     setTaskSkillTouched(false);
   }, [taskTopicFilter]);
+
+  useEffect(() => {
+    if (!taskSkillFilter.trim()) return;
+    if (!taskTopicFilter || taskTopicFilter === "all") return;
+    if (taskTopicSkillSet.size === 0) return;
+    if (!taskTopicSkillSet.has(taskSkillFilter.trim())) {
+      setTaskSkillFilter("");
+    }
+  }, [taskSkillFilter, taskTopicFilter, taskTopicSkillSet]);
 
   useEffect(() => {
     if (taskTopicFilter === "all") return;
@@ -1839,17 +1858,24 @@ export function AdminPageClient({ locale }: { locale: Locale }) {
               </option>
             ))}
           </select>
-          <input
-            type="text"
+          <select
             value={taskSkillFilter}
             onChange={(event) => setTaskSkillFilter(event.target.value)}
             onBlur={() => setTaskSkillTouched(true)}
-            placeholder={t.tasksSkill}
+            disabled={taskTopicFilter === "all"}
             className={[
               "w-full rounded-xl bg-white px-3 py-2 text-sm text-slate-900",
+              taskTopicFilter === "all" ? "cursor-not-allowed bg-slate-100 text-slate-500" : "",
               taskSkillInlineError ? "border border-red-400" : "border border-slate-300",
             ].join(" ")}
-          />
+          >
+            <option value="">{t.tasksSkillSelect}</option>
+            {taskTopicSkillOptions.map((item) => (
+              <option key={item.skillId} value={item.skillId}>
+                {item.skillId} - {item.title}
+              </option>
+            ))}
+          </select>
           <input
             type="text"
             value={taskQuery}
