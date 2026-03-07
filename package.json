@@ -15,7 +15,8 @@
     "content:new-subtopic": "tsx scripts/content-new-subtopic.ts",
     "content:new-topic": "tsx scripts/content-new-topic.ts",
     "content:migrate-topic-stage2c": "tsx scripts/content-migrate-topic-stage2c.ts",
-    "cleanup:demo-works": "tsx scripts/cleanup-demo-works.ts"
+    "cleanup:demo-works": "tsx scripts/cleanup-demo-works.ts",
+    "smoke:admin": "bash scripts/smoke-admin.sh"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

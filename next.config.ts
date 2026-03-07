@@ -11,7 +11,12 @@ const withMDX = createMDX({
   },
 });
 
+const envDistDir = process.env.NEXT_DIST_DIR?.trim();
+const envTsconfigPath = process.env.NEXT_TSCONFIG_PATH?.trim();
+
 const nextConfig: NextConfig = {
+  ...(envDistDir ? { distDir: envDistDir } : {}),
+  ...(envTsconfigPath ? { typescript: { tsconfigPath: envTsconfigPath } } : {}),
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   async redirects() {
     return [
