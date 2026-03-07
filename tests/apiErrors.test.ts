@@ -50,3 +50,22 @@ test("toApiError hides dev steps in production", () => {
   assert.equal(result.body.steps, undefined);
   assert.equal(result.body.hints, undefined);
 });
+
+test("toApiError returns INVALID_SKILL_ID for unregistered skill", () => {
+  const error = Object.assign(new Error("invalid skill"), {
+    code: "INVALID_SKILL_ID",
+    details: {
+      topicId: "math.proportion",
+      skillId: "math.equations.check_root",
+    },
+  });
+
+  const result = toApiError(error);
+  assert.equal(result.status, 422);
+  assert.equal(result.body.code, "INVALID_SKILL_ID");
+  assert.equal(result.body.message, "Skill is not registered for the selected topic.");
+  assert.deepEqual(result.body.details, {
+    topicId: "math.proportion",
+    skillId: "math.equations.check_root",
+  });
+});

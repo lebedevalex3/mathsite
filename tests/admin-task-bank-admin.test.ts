@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildNextTaskId, filterTasksForAdmin } from "@/src/lib/admin/task-bank-admin";
+import {
+  InvalidSkillIdError,
+  buildNextTaskId,
+  createTaskInTopic,
+  filterTasksForAdmin,
+  isRegisteredSkillForTopic,
+} from "@/src/lib/admin/task-bank-admin";
 import type { Task } from "@/lib/tasks/schema";
 
 test("buildNextTaskId increments six-digit suffix per skill prefix", () => {
@@ -42,4 +48,28 @@ test("filterTasksForAdmin filters by skill and query text", () => {
 
   assert.equal(filtered.length, 1);
   assert.equal(filtered[0]?.id, "math.proportion.find_unknown_term.000001");
+});
+
+test("isRegisteredSkillForTopic validates topic-skill relation", () => {
+  assert.equal(
+    isRegisteredSkillForTopic("math.proportion", "math.proportion.find_unknown_term"),
+    true,
+  );
+  assert.equal(
+    isRegisteredSkillForTopic("math.proportion", "math.equations.check_root"),
+    false,
+  );
+});
+
+test("createTaskInTopic throws INVALID_SKILL_ID for unrelated skill", async () => {
+  await assert.rejects(
+    () =>
+      createTaskInTopic({
+        topicId: "math.proportion",
+        skillId: "math.equations.check_root",
+        statementMd: "test",
+        answer: { type: "number", value: 1 },
+      }),
+    (error) => error instanceof InvalidSkillIdError,
+  );
 });

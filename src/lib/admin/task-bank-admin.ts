@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 
 import { clearTaskBankCache, loadTaskBank } from "@/lib/taskbank";
+import { listTeacherToolsTopics } from "@/src/lib/teacher-tools/catalog";
 import {
   taskBankSchema,
   taskSchema,
@@ -21,8 +22,27 @@ export type TaskQueryFilters = {
   status?: TaskStatus;
 };
 
+export class InvalidSkillIdError extends Error {
+  code = "INVALID_SKILL_ID" as const;
+  details: {
+    topicId: string;
+    skillId: string;
+  };
+
+  constructor(params: { topicId: string; skillId: string }) {
+    super(`Skill ${params.skillId} is not registered for topic ${params.topicId}`);
+    this.details = params;
+  }
+}
+
 function normalizeQuery(raw: string | undefined) {
   return (raw ?? "").trim().toLowerCase();
+}
+
+export function isRegisteredSkillForTopic(topicId: string, skillId: string) {
+  const topic = listTeacherToolsTopics().find((item) => item.topicId === topicId);
+  if (!topic) return false;
+  return topic.skills.some((skill) => skill.id === skillId);
 }
 
 export function buildNextTaskId(skillId: string, existingTaskIds: string[]) {
@@ -78,6 +98,13 @@ export async function createTaskInTopic(params: {
   difficultyBand?: "A" | "B" | "C";
   status?: TaskStatus;
 }): Promise<Task> {
+  if (!isRegisteredSkillForTopic(params.topicId, params.skillId)) {
+    throw new InvalidSkillIdError({
+      topicId: params.topicId,
+      skillId: params.skillId,
+    });
+  }
+
   const location = await readTaskBankByTopic(params.topicId);
   if (!location) {
     throw new Error(`Task bank not found for topic ${params.topicId}`);

@@ -151,6 +151,15 @@ export function toApiError(error: unknown, options: ToApiErrorOptions = {}): Api
       return apiError(422, "INVALID_TEMPLATE", "Invalid variant template.", error.details);
     }
 
+    if (hasCodeAndDetails(error) && error.code === "INVALID_SKILL_ID") {
+      return apiError(
+        422,
+        "INVALID_SKILL_ID",
+        "Skill is not registered for the selected topic.",
+        error.details,
+      );
+    }
+
     if (hasCodeAndDetails(error) && error.code === "INSUFFICIENT_TASKS") {
       return apiError(
         422,
