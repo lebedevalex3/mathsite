@@ -1,0 +1,917 @@
+% =============================================================
+% mathworksheet.sty — единый стиль школьных математических листов
+% Версия: 3.0  |  Компилятор: XeLaTeX
+%
+% Поддерживаемые форматы:
+%   • Пятиминутка     — сетка 2×2 (cardgrid)
+%   • Самостоятельная — 2 колонки на полный лист (variantpage)
+%
+% Стиль: production — строгий, чистый, ч/б-дружественный
+% Математика: amsmath + amssymb (без unicode-math)
+% =============================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mathworksheet}[2024/01/01 Math Worksheet Style v3]
+
+% =============================================================
+% § 1. ПАКЕТЫ
+% =============================================================
+\RequirePackage{fontspec}
+% Математика — стандартные AMS-пакеты, не требуют доп. установки
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{geometry}
+\RequirePackage{array}
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+\RequirePackage{calc}
+\RequirePackage{tcolorbox}
+\RequirePackage{environ}
+\tcbuselibrary{skins,breakable}
+
+% =============================================================
+% § 2. ШРИФТЫ
+% DejaVu Sans — гротеск с полной кириллицей, всегда доступен
+% в стандартной установке TeX Live на Ubuntu/Debian/Windows.
+% Математика отображается шрифтом Latin Modern (встроен в TeX Live),
+% который XeLaTeX использует по умолчанию для math-режима.
+% =============================================================
+\setmainfont{DejaVu Sans}[
+  BoldFont       = DejaVu Sans Bold,
+  ItalicFont     = DejaVu Sans Oblique,
+  BoldItalicFont = DejaVu Sans Bold Oblique
+]
+
+% --- Альтернатива (PT Sans) — раскомментируйте если установлен
+% \setmainfont{PT Sans}[
+%   BoldFont   = PT Sans Bold,
+%   ItalicFont = PT Sans Italic
+% ]
+
+% =============================================================
+% § 3. ЦВЕТОВАЯ СХЕМА
+% Все оттенки серого — одинаково печатается на любом принтере
+% =============================================================
+\definecolor{mw@ink}{gray}{0.10}      % основной текст
+\definecolor{mw@mid}{gray}{0.38}      % вторичный текст (номера, подписи)
+\definecolor{mw@rule}{gray}{0.50}     % разделительные линии
+\definecolor{mw@light}{gray}{0.76}    % лёгкие разделители
+\definecolor{mw@hairline}{gray}{0.85} % самые тонкие линии (поле ответа)
+\definecolor{mw@crop}{gray}{0.58}     % линия реза
+
+% =============================================================
+% § 4. ГЕОМЕТРИЯ СТРАНИЦЫ
+% A4 landscape, поля 8 мм
+% =============================================================
+% Геометрия задаётся в каждом шаблоне отдельно:
+%   Пятиминутка / Самостоятельная: \mwgeomlandscape
+%   Контрольная (одиночная):       \mwgeomportrait
+\newcommand{\mwgeomlandscape}{%
+  \newgeometry{a4paper,landscape,left=8mm,right=8mm,top=8mm,bottom=8mm,noheadfoot}%
+}
+\newcommand{\mwgeomportrait}{%
+  \newgeometry{left=20mm,right=15mm,top=15mm,bottom=15mm,noheadfoot}%
+}
+% Landscape по умолчанию для обратной совместимости
+\geometry{a4paper,landscape,left=8mm,right=8mm,top=8mm,bottom=8mm,noheadfoot}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\pagestyle{empty}
+
+% =============================================================
+% § 5. БАЗОВЫЕ РАЗМЕРЫ
+% =============================================================
+
+% ---- Пятиминутка (сетка 2×2) --------------------------------
+% Страница 297×210 мм, поля 2×8 мм → рабочая зона 281×194 мм
+% Карточка: (281-2)/2 = 139 мм  ×  (194-2)/2 = 96 мм
+\newlength{\cardwidth}    \setlength{\cardwidth}{139mm}
+\newlength{\cardheight}   \setlength{\cardheight}{96mm}
+\newlength{\cardpad}      \setlength{\cardpad}{4.5mm}
+\newlength{\cardgap}      \setlength{\cardgap}{2mm}
+\newlength{\cardinnerwid}
+\setlength{\cardinnerwid}{\cardwidth - \cardpad - \cardpad}
+
+% ---- Самостоятельная (2 колонки, полный лист) ---------------
+% Ширина колонки: (281 - 6) / 2 = 137.5 → 137 мм
+\newlength{\swcolwidth}   \setlength{\swcolwidth}{137mm}
+\newlength{\swcolheight}  \setlength{\swcolheight}{190mm}
+\newlength{\swcolpad}     \setlength{\swcolpad}{5.5mm}
+\newlength{\swcolgap}     \setlength{\swcolgap}{6mm}
+\newlength{\swinnerwid}
+\setlength{\swinnerwid}{\swcolwidth - \swcolpad - \swcolpad}
+
+% =============================================================
+% § 6. УНИВЕРСАЛЬНЫЕ ЭЛЕМЕНТЫ
+% =============================================================
+
+% ---- Бейдж «Вариант N» (для самостоятельной) ----------------
+\newcommand{\variantbadge}[1]{%
+  \tcbox[%
+    on line,
+    colback  = white,
+    colframe = mw@ink,
+    boxrule  = 0.5pt,
+    arc      = 1.5pt,
+    boxsep   = 0pt,
+    left=3pt, right=3pt, top=1.5pt, bottom=1.5pt,
+    nobeforeafter
+  ]{\fontsize{7.5}{9}\bfseries\selectfont Вариант\,#1}%
+}
+
+% ---- Бейдж «В N» (короткий, для пятиминутки) ----------------
+\newcommand{\variantbadgeshort}[1]{%
+  \tcbox[%
+    on line,
+    colback  = white,
+    colframe = mw@ink,
+    boxrule  = 0.45pt,
+    arc      = 1.2pt,
+    boxsep   = 0pt,
+    left=2.5pt, right=2.5pt, top=1.2pt, bottom=1pt,
+    nobeforeafter
+  ]{\fontsize{7}{8.5}\bfseries\selectfont В\,#1}%
+}
+
+% ---- Строка имени -------------------------------------------
+\newcommand{\namerow}{%
+  {\fontsize{7.5}{9}\selectfont Имя и фамилия:\enspace}%
+  \hrulefill\par\vspace{2.5mm}%
+}
+
+% ---- Строка имени + класс (для самостоятельной) -------------
+\newcommand{\namerowfull}{%
+  \noindent
+  {\fontsize{7.5}{9}\selectfont Имя и фамилия:\enspace}%
+  \hrulefill
+  \hspace{4mm}%
+  {\fontsize{7.5}{9}\selectfont Класс:\enspace}%
+  \rule{14mm}{0.32pt}%
+  \par\vspace{3mm}%
+}
+
+% ---- Разделитель задач --------------------------------------
+\newcommand{\tasksep}{%
+  \par\vspace{0.5mm}%
+  {\color{mw@light}\hrule height 0.3pt}%
+  \par\vspace{1.5mm}%
+}
+
+% ---- Линия для ответа ---------------------------------------
+\newcommand{\ansline}[1][28mm]{\rule{#1}{0.35pt}}
+
+% ---- Строчная математика (textstyle) ------------------------
+\newcommand{\mf}[1]{$\textstyle #1$}
+
+% =============================================================
+% § 7. КОМАНДЫ ЗАДАНИЙ
+% \mw@taskwid — ширина текстовой колонки задания;
+% переопределяется в каждом окружении автоматически.
+% =============================================================
+\newlength{\mw@taskwid}
+\setlength{\mw@taskwid}{120mm}
+
+% Публичная команда для установки ширины колонки заданий.
+% Используйте в шаблонах вместо прямого доступа к \mw@taskwid.
+% \settaskwidth{165mm}
+\newcommand{\settaskwidth}[1]{\setlength{\mw@taskwid}{#1}}
+
+% ---- Вычислительное задание (компактный, textstyle) ---------
+% \calcrowc{номер}{выражение}
+\newcommand{\calcrowc}[2]{%
+  \noindent\begin{tabular}{@{}%
+    r@{\hspace{3pt}}l@{\hspace{5pt}}r@{\hspace{4pt}}l@{}}
+    {\color{mw@mid}\fontsize{7.5}{9}\selectfont #1.} &
+    $\textstyle #2$ & {$=$} & \rule{26mm}{0.35pt}
+  \end{tabular}\par\vspace{2.0mm}%
+}
+
+% ---- Вычислительное задание (display стиль) -----------------
+% \calcrow{номер}{выражение}
+\newcommand{\calcrow}[2]{%
+  \noindent\begin{tabular}{@{}%
+    r@{\hspace{3pt}}l@{\hspace{5pt}}r@{\hspace{4pt}}l@{}}
+    {\color{mw@mid}\fontsize{7.5}{9}\selectfont #1.} &
+    $\displaystyle #2$ & {$=$} & \rule{26mm}{0.35pt}
+  \end{tabular}\par\vspace{3mm}%
+}
+
+% ---- Произвольное задание -----------------------------------
+% \taskrow{номер}{текст}
+\newcommand{\taskrow}[2]{%
+  \noindent\begin{tabular}{@{}r@{\hspace{3pt}}p{\mw@taskwid}@{}}
+    {\color{mw@mid}\fontsize{7.5}{9}\selectfont #1.} &
+    {\fontsize{8.5}{11.5}\selectfont #2}
+  \end{tabular}\par\vspace{2.5mm}%
+}
+
+% ---- Задание с строкой для ответа ---------------------------
+% \taskrowans{номер}{текст}
+\newcommand{\taskrowans}[2]{%
+  \noindent\begin{tabular}{@{}r@{\hspace{3pt}}p{\mw@taskwid}@{}}
+    {\color{mw@mid}\fontsize{7.5}{9}\selectfont #1.} &
+    {\fontsize{8.5}{11.5}\selectfont #2}\\[4mm]
+    & \rule{\mw@taskwid - 4mm}{0.35pt}
+  \end{tabular}\par\vspace{2.5mm}%
+}
+
+% ---- Задача с полем для решения -----------------------------
+% \taskproblem{номер}{условие}{высота поля в мм}
+\newcommand{\taskproblem}[3]{%
+  \noindent\begin{tabular}{@{}r@{\hspace{3pt}}p{\mw@taskwid}@{}}
+    {\color{mw@mid}\fontsize{7.5}{9}\selectfont #1.} &
+    {\fontsize{8.5}{11.5}\selectfont #2}
+  \end{tabular}\par
+  \vspace{2mm}%
+  \mw@solutionbox{#3}%
+  \vspace{2mm}%
+}
+
+% Поле для решения: лёгкая рамочка + пунктирные строки (TikZ)
+\newcommand{\mw@solutionbox}[1]{%
+  \noindent
+  \begin{tikzpicture}
+    \pgfmathsetmacro{\boxht}{#1}
+    \pgfmathsetmacro{\lineht}{5}
+    \pgfmathtruncatemacro{\nlines}{int(\boxht/\lineht)}
+    \draw[mw@hairline, line width=0.3pt]
+      (0,0) rectangle (\mw@taskwid, \boxht mm);
+    \foreach \i in {1,...,\nlines}{%
+      \draw[mw@hairline, line width=0.25pt,
+            dash pattern=on 1.5pt off 2.5pt]
+        (1mm, \i*\lineht mm) -- (\mw@taskwid - 1mm, \i*\lineht mm);
+    }
+    \node[anchor=north west, inner sep=2pt,
+          font=\fontsize{6.5}{8}\selectfont\color{mw@rule}]
+      at (1mm, \boxht mm - 1mm) {Решение:};
+  \end{tikzpicture}%
+}
+
+% =============================================================
+% § 8. ПЯТИМИНУТКА (формат 2×2)
+% =============================================================
+
+% ---- Шапка карточки -----------------------------------------
+% \cardheader{тема}{вариант}
+\newcommand{\cardheader}[2]{%
+  \noindent
+  \begin{minipage}[b]{\cardinnerwid}%
+    {\fontsize{9.5}{11}\bfseries\selectfont Пятиминутка}%
+    \hfill
+    {\fontsize{7.5}{9}\itshape\selectfont #1}%
+    \hfill
+    \variantbadgeshort{#2}%
+  \end{minipage}\par
+  \vspace{1.2mm}%
+  {\color{mw@rule}\hrule height 0.4pt}%
+  \vspace{2.2mm}%
+}
+
+% ---- Нижняя строка карточки (опционально) -------------------
+\newcommand{\cardfoot}{%
+  \vfill
+  {\fontsize{6.5}{8}\selectfont\color{mw@rule}%
+   Класс:\,\rule{14mm}{0.28pt}\quad Дата:\,\rule{18mm}{0.28pt}}\par
+}
+
+% ---- Полная карточка пятиминутки ----------------------------
+% \quizcard{тема}{вариант}{задания}
+\newcommand{\quizcard}[3]{%
+  \setlength{\mw@taskwid}{\cardinnerwid - 8mm}%
+  \cardheader{#1}{#2}%
+  \namerow
+  \begingroup
+    \fontsize{8.5}{11}\selectfont
+    \setlength{\tabcolsep}{2.5pt}%
+    #3%
+  \endgroup
+}
+
+% ---- Вертикальная линия реза --------------------------------
+%
+% X = left margin + cardwidth + cardgap/2
+% Точно попадает в центр зазора между колонками карточек.
+%
+\newlength{\mw@vcropX}
+\setlength{\mw@vcropX}{8mm + \cardwidth + 0.5\cardgap}
+
+\newcommand{\drawcroplines}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[color=mw@crop, line width=0.28pt, dash pattern=on 3.5pt off 2pt]
+      ([xshift=\mw@vcropX]current page.south west)
+      -- ([xshift=\mw@vcropX]current page.north west);
+  \end{tikzpicture}%
+}
+
+% ---- Окружение сетки 2×2 ------------------------------------
+\newenvironment{cardgrid}{%
+  \drawcroplines
+  \vspace{-2pt}%
+  \noindent
+  \begin{tabular}{@{}p{\cardwidth}@{\hspace{\cardgap}}p{\cardwidth}@{}}%
+}{\end{tabular}}
+
+% =============================================================
+% § 9. САМОСТОЯТЕЛЬНАЯ РАБОТА (2 колонки, полный лист)
+% =============================================================
+
+% ---- Шапка блока варианта -----------------------------------
+% \swheader{название работы}{тема}{вариант}
+\newcommand{\swheader}[3]{%
+  \noindent
+  \begin{minipage}[t]{\swinnerwid}%
+    {\fontsize{10}{12}\bfseries\selectfont #1}%
+    \hfill
+    \variantbadge{#3}%
+    \par\vspace{1.8mm}%
+    {\fontsize{8}{10}\itshape\selectfont\color{mw@mid} #2}%
+    \par\vspace{2.5mm}%
+    {\color{mw@rule}\hrule height 0.5pt}%
+    \par\vspace{3mm}%
+    \namerowfull
+  \end{minipage}%
+  \par\vspace{1mm}%
+}
+
+% ---- Вертикальная линия реза (только центральная) -----------
+%
+% X = left margin + swcolwidth + swcolgap/2
+%
+\newlength{\mw@swcropX}
+\setlength{\mw@swcropX}{8mm + \swcolwidth + 0.5\swcolgap}
+
+\newcommand{\drawvcropline}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[color=mw@crop, line width=0.3pt, dash pattern=on 4pt off 2.5pt]
+      ([xshift=\mw@swcropX]current page.south west)
+      -- ([xshift=\mw@swcropX]current page.north west);
+    % Засечки реза сверху и снизу
+    \draw[color=mw@crop, line width=0.4pt]
+      ([xshift=\mw@swcropX-3mm, yshift=3mm]current page.south west)
+      -- ([xshift=\mw@swcropX+3mm, yshift=3mm]current page.south west);
+    \draw[color=mw@crop, line width=0.4pt]
+      ([xshift=\mw@swcropX-3mm, yshift=-3mm]current page.north west)
+      -- ([xshift=\mw@swcropX+3mm, yshift=-3mm]current page.north west);
+  \end{tikzpicture}%
+}
+
+% ---- Полный блок варианта -----------------------------------
+% \swblock{название работы}{тема}{вариант}{задания}
+\newcommand{\swblock}[4]{%
+  \setlength{\mw@taskwid}{\swinnerwid - 8mm}%
+  \begin{minipage}[t]{\swcolwidth}%
+    \hspace{\swcolpad}%
+    \begin{minipage}[t]{\swinnerwid}%
+      \vspace{\swcolpad}%
+      \swheader{#1}{#2}{#3}%
+      \begingroup
+        \fontsize{9}{12}\selectfont
+        \setlength{\tabcolsep}{2.5pt}%
+        #4%
+      \endgroup
+    \end{minipage}%
+  \end{minipage}%
+}
+
+% ---- Окружение двухколоночной самостоятельной ---------------
+%
+% Использование:
+%   \begin{variantpage}
+%     \swblock{...}{...}{1}{...} & \swblock{...}{...}{2}{...}
+%   \end{variantpage}
+%
+\newenvironment{variantpage}{%
+  \drawvcropline
+  \vspace{-2pt}%
+  \noindent
+  \begin{tabular}{@{}%
+    p{\swcolwidth}@{\hspace{\swcolgap}}%
+    p{\swcolwidth}@{}%
+  }%
+}{\end{tabular}}
+
+% =============================================================
+% КОНЕЦ mathworksheet.sty
+% =============================================================
+
+% =============================================================
+% § 10. КОНТРОЛЬНАЯ РАБОТА
+% =============================================================
+%
+% Два режима:
+%   control-single  — один вариант на A4 portrait
+%   control-split   — два варианта на A4 landscape (как variantpage,
+%                     но с расширенной шапкой контрольной)
+%
+% Ключевое отличие от самостоятельной:
+%   • Шапка — отдельный блок с явными служебными полями
+%   • Верхняя акцентная черта отделяет документ от края листа
+%   • Секции структурируют задания внутри работы
+%   • Поля для решения шире
+%   • Геометрия portrait даёт больше вертикального пространства
+
+% =============================================================
+% § 10.1  ГЕОМЕТРИЯ ДЛЯ CONTROL-SINGLE (portrait A4)
+%
+% Вызывается один раз в преамбуле control_single.tex
+% через \usepackage[single]{mathworksheet} — или явно:
+% \ctsetgeometry
+% =============================================================
+\newcommand{\ctsetgeometry}{%
+  \newgeometry{%
+    left   = 20mm,
+    right  = 15mm,
+    top    = 15mm,
+    bottom = 15mm,
+    noheadfoot
+  }%
+}
+
+% Ширина текста при портретном A4 с полями 20+15:
+% 210 - 20 - 15 = 175 мм
+\newlength{\cttextwidth}
+\setlength{\cttextwidth}{175mm}
+
+% =============================================================
+% § 10.2  СЛУЖЕБНЫЙ БЛОК (класс / дата / оценка)
+%
+% \ctmeta — горизонтальная строка с тремя полями
+% Используется внутри \ctheader
+% =============================================================
+\newcommand{\ctmeta}{%
+  \noindent
+  {\fontsize{8}{10}\selectfont
+   Класс:\enspace\rule{18mm}{0.32pt}%
+   \hspace{6mm}%
+   Дата:\enspace\rule{22mm}{0.32pt}%
+   \hspace{6mm}%
+   Оценка:\enspace\rule{16mm}{0.32pt}%
+  }\par
+}
+
+% Короткая версия для split-режима (меньше места)
+\newcommand{\ctmetashort}{%
+  \noindent
+  {\fontsize{7.5}{9}\selectfont
+   Класс:\enspace\rule{14mm}{0.32pt}%
+   \hspace{4mm}%
+   Дата:\enspace\rule{18mm}{0.32pt}%
+   \hspace{4mm}%
+   Оценка:\enspace\rule{13mm}{0.32pt}%
+  }\par
+}
+
+% =============================================================
+% § 10.3  ШАПКА КОНТРОЛЬНОЙ (single-режим, полная страница)
+%
+% \ctheader{название работы}{тема}{вариант}
+%
+% Структура:
+%   ━━━━━━━━━━━━━━━━━━━━━━  ← тонкая акцентная черта 0.5pt
+%   Контрольная работа    Вариант N
+%   Тема: ...
+%   ──────────────────────  ← разделитель 0.35pt
+%   Имя и фамилия: ______
+%   Класс: ___ Дата: _____ Оценка: ___
+%   ══════════════════════  ← нижняя черта шапки 0.6pt
+% =============================================================
+\newcommand{\ctheader}[3]{%
+  % --- Верхняя акцентная черта ---
+  {\color{mw@ink}\hrule height 0.55pt}%
+  \vspace{4mm}%
+  % --- Строка 1: название + вариант ---
+  \noindent
+  {\fontsize{13}{15}\bfseries\selectfont #1}%
+  \hfill
+  % Вариант — крупнее и заметнее, чем в самостоятельной
+  \ctvariantblock{#3}%
+  \par\vspace{2mm}%
+  % --- Строка 2: тема ---
+  {\fontsize{9}{11}\itshape\selectfont\color{mw@mid}
+   Тема:\enspace #2}%
+  \par\vspace{4mm}%
+  % --- Разделитель ---
+  {\color{mw@rule}\hrule height 0.35pt}%
+  \vspace{4mm}%
+  % --- Строка имени ---
+  \noindent
+  {\fontsize{9}{11}\selectfont Имя и фамилия:\enspace}%
+  \hrulefill
+  \par\vspace{3.5mm}%
+  % --- Служебные поля ---
+  \ctmeta
+  \vspace{4.5mm}%
+  % --- Нижняя черта шапки ---
+  {\color{mw@ink}\hrule height 0.55pt}%
+  \vspace{6mm}%
+}
+
+% =============================================================
+% § 10.4  БЛОК ВАРИАНТА ДЛЯ КОНТРОЛЬНОЙ
+%
+% Крупнее, чем variantbadge — контрольная официальнее.
+% Без рамочки-tcbox: просто жирный текст с подчёркиванием.
+% =============================================================
+\newcommand{\ctvariantblock}[1]{%
+  \fontsize{10}{12}\bfseries\selectfont
+  Вариант\;{\fontsize{13}{15}\selectfont #1}%
+}
+
+% =============================================================
+% § 10.5  СЕКЦИИ ВНУТРИ КОНТРОЛЬНОЙ
+%
+% \ctsection{название}        — простая секция
+% \ctsectionnum{N}{название}  — нумерованная секция
+% =============================================================
+
+% Секция: «Часть 1. Вычисли» — выделена жирным, отбита чертой снизу
+\newcommand{\ctsection}[1]{%
+  \par\vspace{4mm}%
+  \noindent
+  {\fontsize{9}{11}\bfseries\selectfont #1}%
+  \par\vspace{1mm}%
+  {\color{mw@rule}\hrule height 0.4pt}%
+  \par\vspace{3mm}%
+}
+
+% Нумерованная секция: «Часть 1.» + пробел + название
+\newcommand{\ctsectionnum}[2]{%
+  \ctsection{Часть~#1.\enspace #2}%
+}
+
+% =============================================================
+% § 10.6  ЗАДАНИЯ ДЛЯ КОНТРОЛЬНОЙ
+%
+% Все стандартные команды (§7) работают и здесь.
+% Дополнительно — расширенное поле решения для контрольной.
+%
+% \ctproblem{номер}{условие}{высота поля в мм}
+% Отличие от \taskproblem: нет рамки, только строки + «Решение:»
+% =============================================================
+
+% Широкое поле без рамки — для контрольной выглядит строже
+\newcommand{\ctproblem}[3]{%
+  \noindent\begin{tabular}{@{}r@{\hspace{4pt}}p{\mw@taskwid}@{}}
+    {\color{mw@mid}\fontsize{8}{10}\selectfont #1.} &
+    {\fontsize{9}{12}\selectfont #2}
+  \end{tabular}\par
+  \vspace{2mm}%
+  \mw@ctsolbox{#3}%
+  \vspace{3mm}%
+}
+
+% Поле для решения без рамки (строже для контрольной)
+% Только горизонтальные направляющие + метка «Решение:»
+\newcommand{\mw@ctsolbox}[1]{%
+  \noindent
+  \begin{tikzpicture}
+    \pgfmathsetmacro{\boxht}{#1}
+    \pgfmathsetmacro{\lineht}{6}
+    \pgfmathtruncatemacro{\nlines}{int(\boxht/\lineht)}
+    % Верхняя граница поля (лёгкая)
+    \draw[mw@rule, line width=0.3pt]
+      (0, \boxht mm) -- (\mw@taskwid, \boxht mm);
+    % Горизонтальные строки
+    \foreach \i in {0,...,\nlines}{%
+      \draw[mw@hairline, line width=0.28pt]
+        (0, \i*\lineht mm) -- (\mw@taskwid, \i*\lineht mm);
+    }
+    % Нижняя граница (такая же как верхняя)
+    \draw[mw@rule, line width=0.3pt]
+      (0, 0) -- (\mw@taskwid, 0);
+    % Подпись «Решение:»
+    \node[anchor=north west, inner sep=2pt,
+          font=\fontsize{6.5}{8}\selectfont\color{mw@rule}]
+      at (1mm, \boxht mm - 0.5mm) {Решение:};
+    % Подпись «Ответ:» у нижней границы
+    \node[anchor=south west, inner sep=2pt,
+          font=\fontsize{6.5}{8}\selectfont\color{mw@rule}]
+      at (1mm, 0.5mm) {Ответ:\enspace\rule{30mm}{0.28pt}};
+  \end{tikzpicture}%
+}
+
+% =============================================================
+% § 10.7  ШАПКА ДЛЯ SPLIT-РЕЖИМА
+%
+% \ctheadersplit{название}{тема}{вариант}
+%
+% Компактнее, чем \ctheader — помещается в полколонки.
+% Использует \swinnerwid (уже определён для самостоятельной).
+% =============================================================
+\newcommand{\ctheadersplit}[3]{%
+  \noindent
+  \begin{minipage}[t]{\swinnerwid}%
+    % --- Верхняя черта ---
+    {\color{mw@ink}\hrule height 0.5pt}%
+    \vspace{3mm}%
+    % --- Название + вариант ---
+    \noindent
+    {\fontsize{10}{12}\bfseries\selectfont #1}%
+    \hfill
+    \ctvariantblock{#3}%
+    \par\vspace{1.5mm}%
+    % --- Тема ---
+    {\fontsize{7.5}{9.5}\itshape\selectfont\color{mw@mid} #2}%
+    \par\vspace{3mm}%
+    % --- Разделитель ---
+    {\color{mw@rule}\hrule height 0.35pt}%
+    \vspace{3mm}%
+    % --- Имя ---
+    \noindent
+    {\fontsize{7.5}{9}\selectfont Имя и фамилия:\enspace}%
+    \hrulefill\par\vspace{2.5mm}%
+    % --- Класс / дата / оценка ---
+    \ctmetashort
+    \vspace{3mm}%
+    % --- Нижняя черта шапки ---
+    {\color{mw@ink}\hrule height 0.5pt}%
+    \vspace{4mm}%
+  \end{minipage}%
+  \par\vspace{1mm}%
+}
+
+% ---- Полный блок split-контрольной --------------------------
+% \ctblock{название}{тема}{вариант}{задания}
+\newcommand{\ctblock}[4]{%
+  \setlength{\mw@taskwid}{\swinnerwid - 6mm}%
+  \begin{minipage}[t]{\swcolwidth}%
+    \hspace{\swcolpad}%
+    \begin{minipage}[t]{\swinnerwid}%
+      \vspace{\swcolpad}%
+      \ctheadersplit{#1}{#2}{#3}%
+      \begingroup
+        \fontsize{8.5}{12}\selectfont
+        \setlength{\tabcolsep}{2.5pt}%
+        #4%
+      \endgroup
+    \end{minipage}%
+  \end{minipage}%
+}
+
+% ---- Окружение split-контрольной ----------------------------
+% Аналог variantpage, но с \drawvcropline (уже определён в §9)
+\newenvironment{controlsplit}{%
+  \drawvcropline
+  \vspace{-2pt}%
+  \noindent
+  \begin{tabular}{@{}%
+    p{\swcolwidth}@{\hspace{\swcolgap}}%
+    p{\swcolwidth}@{}%
+  }%
+}{\end{tabular}}
+
+% =============================================================
+% КОНЕЦ § 10
+% =============================================================
+
+% =============================================================
+% § 11. ДОМАШНЯЯ РАБОТА
+% =============================================================
+%
+% Концепция: «Рабочий лист с достоинством»
+%
+% Домашняя работа — единственный тип из системы, который ученик
+% держит дома, работает с ним в своём темпе, может возвращаться
+% к нему. Это не бланк для сдачи, не карточка для среза знаний.
+%
+% Дизайн-решения:
+%
+%   ФОРМАТ: A4 portrait — привычная тетрадная ориентация,
+%   удобна для работы за столом и хранения в папке.
+%
+%   ШАПКА: компактная — одна строка с названием и датой сдачи.
+%   Нет бейджа варианта, нет оценки. Только класс и имя.
+%   Левое поле шире (25 мм) — место для пометок учителя.
+%
+%   ЗАДАНИЯ: три режима плотности:
+%     \hwcalc   — компактный вычислительный блок (как calcrowc)
+%     \hwtask   — задание с пространством для записей
+%     \hwproblem — задача с явным полем, но без рамки и пунктира:
+%                  просто вертикальный левый маркер (тонкая черта)
+%                  и строка «Ответ:» внизу. Выглядит как тетрадь,
+%                  а не как бланк.
+%
+%   ПОДСКАЗКИ: опциональный блок \hwhint{текст} —
+%   лёгкий серый текст-напоминание (формула, правило).
+%   Печатается только если учитель хочет.
+%
+%   НИЖНИЙ КОЛОНТИТУЛ: тонкая строка с датой сдачи и
+%   местом для подписи учителя — лаконично.
+%
+% Отличия от других типов:
+%   Пятиминутка — жёсткий хронометраж, нет места для записей
+%   Самостоятельная — в классе, два варианта, официально
+%   Контрольная — строго, бланк, поля для оценки
+%   Домашняя — свободнее, личная работа, место для мысли
+%
+% =============================================================
+
+% =============================================================
+% § 11.1  ГЕОМЕТРИЯ ДОМАШНЕЙ РАБОТЫ
+%
+% Portrait A4, левое поле 25 мм (для пометок учителя),
+% правое 15 мм, верх/низ 18 мм.
+% =============================================================
+\newcommand{\hwsetgeometry}{%
+  \newgeometry{%
+    left   = 25mm,
+    right  = 15mm,
+    top    = 18mm,
+    bottom = 18mm,
+    noheadfoot
+  }%
+}
+
+% Ширина рабочей зоны: 210 - 25 - 15 = 170 мм
+\newlength{\hwtextwidth}
+\setlength{\hwtextwidth}{170mm}
+
+% =============================================================
+% § 11.2  ШАПКА ДОМАШНЕЙ РАБОТЫ
+%
+% \hwheader{класс}{тема}{дата сдачи}
+%
+% Макет:
+%   Домашняя работа                    Класс: ___
+%   Тема: ____________________________
+%   Имя и фамилия: ___________________  Сдать до: ___
+%   ─────────────────────────────────── (тонкая черта)
+%
+% Принципы:
+%   • Нет акцентных чёрных черт сверху — домашняя мягче контрольной
+%   • Только одна разделительная черта снизу шапки
+%   • «Сдать до:» вместо «Дата:» — акцент на личной ответственности
+%   • Нет поля «Оценка» — оценка не главная цель домашней работы
+% =============================================================
+\newcommand{\hwheader}[3]{%
+  % --- Строка 1: название + класс ---
+  \noindent
+  {\fontsize{12}{14}\bfseries\selectfont Домашняя работа}%
+  \hfill
+  {\fontsize{8.5}{10}\selectfont Класс:\enspace}%
+  \rule{18mm}{0.32pt}%
+  \par\vspace{2mm}%
+  % --- Строка 2: тема ---
+  {\fontsize{8.5}{10.5}\selectfont\color{mw@mid}%
+   Тема:\enspace}%
+  {\fontsize{8.5}{10.5}\itshape\selectfont #2}%
+  \par\vspace{3.5mm}%
+  % --- Строка 3: имя + дата сдачи ---
+  \noindent
+  {\fontsize{8.5}{10}\selectfont Имя и фамилия:\enspace}%
+  \hrulefill
+  \hspace{5mm}%
+  {\fontsize{8}{9.5}\selectfont Сдать до:\enspace}%
+  {\fontsize{8}{9.5}\bfseries\selectfont #3}%
+  \par\vspace{3.5mm}%
+  % --- Разделитель ---
+  {\color{mw@rule}\hrule height 0.45pt}%
+  \vspace{5mm}%
+}
+
+% =============================================================
+% § 11.3  ТЕМАТИЧЕСКИЙ БЛОК (необязательный)
+%
+% \hwsection{название}
+%
+% Для структурирования длинной домашней работы:
+% «Упражнения», «Задачи», «Дополнительно» и т.п.
+% Мягче, чем \ctsection: нет черты под заголовком,
+% только небольшой отступ и курсив.
+% =============================================================
+\newcommand{\hwsection}[1]{%
+  \par\vspace{5mm}%
+  \noindent
+  {\fontsize{8.5}{10}\bfseries\itshape\selectfont\color{mw@mid} #1}%
+  \par\vspace{2mm}%
+}
+
+% =============================================================
+% § 11.4  ЗАДАНИЯ ДОМАШНЕЙ РАБОТЫ
+% =============================================================
+
+% ---- Вычислительное задание ---------------------------------
+% \hwcalc{номер}{выражение}
+% Идентичен calcrowc, но с чуть большей линией ответа (30 мм)
+% и шрифтом 9pt — чуть просторнее для домашней работы.
+\newcommand{\hwcalc}[2]{%
+  \noindent\begin{tabular}{@{}%
+    r@{\hspace{4pt}}l@{\hspace{6pt}}r@{\hspace{5pt}}l@{}}
+    {\color{mw@mid}\fontsize{8}{9.5}\selectfont #1.} &
+    $\textstyle #2$ & {$=$} & \rule{30mm}{0.35pt}
+  \end{tabular}\par\vspace{2.5mm}%
+}
+
+% ---- Обычное задание ----------------------------------------
+% \hwtask{номер}{текст}
+% Задание с текстом и местом для записей под ним.
+% Отступ 15 мм под задачей — ученик пишет прямо на листе.
+\newcommand{\hwtask}[2]{%
+  \noindent\begin{tabular}{@{}r@{\hspace{4pt}}p{\mw@taskwid}@{}}
+    {\color{mw@mid}\fontsize{8}{10}\selectfont #1.} &
+    {\fontsize{9}{12}\selectfont #2}
+  \end{tabular}%
+  \par\vspace{13mm}%
+}
+
+% ---- Задание с явными строками для ответа -------------------
+% \hwtasklines{номер}{текст}{кол-во строк}
+% Под текстом задания — N тонких линий для записи решения.
+\newcommand{\hwtasklines}[3]{%
+  \noindent
+  {\color{mw@mid}\fontsize{8}{10}\selectfont #1.}\enspace
+  {\fontsize{9}{12}\selectfont\parbox[t]{\mw@taskwid}{#2}}\par
+  \vspace{2mm}%
+  \mw@hwlines{#3}{150}%
+  \vspace{3mm}%
+}
+
+% Вспомогательная команда: N строк для записи решения
+% Стиль: тонкие линии без рамки и пунктира — как в тетради
+\newcommand{\mw@hwlines}[2]{%
+  % #1 = кол-во строк, #2 = ширина в мм (числовое значение)
+  \par\noindent
+  \begin{tikzpicture}
+    \pgfmathsetmacro{\nlines}{#1}
+    \pgfmathsetmacro{\lineht}{7}
+    \pgfmathsetmacro{\totalht}{\nlines * \lineht}
+    \pgfmathsetmacro{\linewid}{#2}
+    \draw[mw@light, line width=0.6pt]
+      (0, 0) -- (0, \totalht mm);
+    \foreach \i in {1,...,#1}{%
+      \draw[mw@hairline, line width=0.3pt]
+        (3mm, \i*\lineht mm) -- (\linewid mm, \i*\lineht mm);
+    }
+    \draw[mw@hairline, line width=0.3pt]
+      (3mm, 0) -- (\linewid mm, 0);
+  \end{tikzpicture}\par%
+}
+
+% ---- Задача с полем для решения и строкой ответа ------------
+% \hwproblem{номер}{условие}{кол-во строк}
+%
+% Отличие от ctproblem и taskproblem:
+%   • Нет рамки вокруг поля — не «бланк», а «место для работы»
+%   • Левый вертикальный маркер — визуально отделяет поле,
+%     не давя на ученика рамкой
+%   • «Ответ:» — отдельная строка под полем, не внутри него
+%   • Между условием и полем — небольшой воздух
+\newcommand{\hwproblem}[3]{%
+  % Номер + условие без tabular — чтобы избежать Overfull в long text
+  \noindent
+  {\color{mw@mid}\fontsize{8}{10}\selectfont #1.}\enspace
+  {\fontsize{9}{12}\selectfont\parbox[t]{\mw@taskwid}{#2}}%
+  \par\vspace{3mm}%
+  \mw@hwlines{#3}{150}%
+  \par\vspace{2mm}%
+  % Строка ответа — явный \par гарантирует новую строку после tikz
+  \noindent
+  {\fontsize{8}{10}\selectfont\color{mw@mid} Ответ:\enspace}%
+  \rule{45mm}{0.32pt}%
+  \par\vspace{4mm}%
+}
+
+% =============================================================
+% § 11.5  БЛОК-ПОДСКАЗКА
+%
+% \hwhint{текст}
+%
+% Лёгкий серый текст с иконкой — напоминание о формуле
+% или правиле. Учитель включает его по необходимости.
+% Визуально: маленький ромб-маркер + курсивный серый текст.
+% =============================================================
+\newcommand{\hwhint}[1]{%
+  \par\vspace{1mm}%
+  \noindent
+  % Маленький ромб-маркер через \rule и inline TikZ без baseline anchor
+  \begin{tikzpicture}[baseline=0.4ex]
+    \fill[mw@light] (0, 0.5ex)
+      -- (0.85ex, 1.1ex) -- (1.7ex, 0.5ex) -- (0.85ex, -0.1ex) -- cycle;
+  \end{tikzpicture}%
+  \hspace{3pt}%
+  {\fontsize{7.5}{9.5}\itshape\selectfont\color{mw@rule} #1}%
+  \par\vspace{2mm}%
+}
+
+% =============================================================
+% § 11.6  НИЖНИЙ КОЛОНТИТУЛ ДОМАШНЕЙ РАБОТЫ
+%
+% \hwfooter
+%
+% Тонкая нижняя строка: место для подписи учителя.
+% Вставляется перед \end{document} через \vfill\hwfooter.
+% =============================================================
+\newcommand{\hwfooter}{%
+  {\color{mw@rule}\hrule height 0.35pt}%
+  \vspace{2mm}%
+  \noindent
+  {\fontsize{7}{8.5}\selectfont\color{mw@mid}%
+   Проверил:\enspace\rule{40mm}{0.28pt}%
+   \hfill
+   Подпись:\enspace\rule{30mm}{0.28pt}%
+  }%
+  \par
+}
+
+% =============================================================
+% КОНЕЦ § 11
+% =============================================================
